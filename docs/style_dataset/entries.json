@@ -1,0 +1,85 @@
+{
+  "note": "Additional style reference. Use alongside online references and general knowledge. Do not copy the characters, costumes, monsters, or emblems.",
+  "entries": [
+    {
+      "id": "ref-01",
+      "image": "images/ref-01.png",
+      "role": "portrait",
+      "informs": ["hair clumps", "eyes", "layered armor"],
+      "traits": "Short brown hair as thick upward tufts and a messy crown. Green glass iris, one catchlight. Soft jaw, small nose, clean skin. Layered armor is a construction lesson only: cloth, a quilted panel, painted metal, a fur collar, a leather pouch, and colored-lens goggles.",
+      "limit": "Use the trait. Do not reproduce the character, costume, or emblem."
+    },
+    {
+      "id": "ref-02",
+      "image": "images/ref-02.jpg",
+      "role": "creature",
+      "informs": ["color blocking", "spines", "mouth interior"],
+      "traits": "Same human construction as ref-01. Creature lesson: dark body, red mouth interior and belly, yellow eye, long dorsal spines, sail fins, teeth as silhouette.",
+      "limit": "Use the trait. Do not rebuild this monster."
+    },
+    {
+      "id": "ref-03",
+      "image": "images/ref-03.jpg",
+      "role": "costumes",
+      "informs": ["hair bobs", "headgear", "fur", "metal studs", "lens color"],
+      "traits": "Blonde bob, a coat with gold trim, monster-themed headgear with horns, eye motifs, and feathers, leather layers, a glowing gauntlet, a light coat, and colored lenses.",
+      "limit": "Use the trait. Do not rebuild these outfits."
+    },
+    {
+      "id": "ref-04",
+      "image": "images/ref-04.jpg",
+      "role": "dragon head and human",
+      "informs": ["scale size", "crest color", "short hair volume"],
+      "traits": "Large orange scale plates, a contrasting crest, a bright eye, a lighter lower jaw, and a clean tooth row. Short hair with side volume.",
+      "limit": "Use the trait. Do not reproduce the character or the creature."
+    },
+    {
+      "id": "ref-05",
+      "image": "images/ref-05.png",
+      "role": "illustration",
+      "informs": ["graphic scale colors"],
+      "traits": "A hunter beside a red and blue dragon, plus a small clothed animal companion. The companion is not a fifth body in this build.",
+      "limit": "Use the trait. Do not reproduce the characters."
+    },
+    {
+      "id": "ref-06",
+      "image": "images/ref-06.png",
+      "role": "winged creature",
+      "informs": ["wing ribs", "horn color", "lighting"],
+      "traits": "Pale scale plates, dark horns, membrane wings with visible ribs, teeth, and a strong rim light.",
+      "limit": "Use the trait. Do not reproduce this creature."
+    },
+    {
+      "id": "ref-07",
+      "image": "images/ref-07.png",
+      "role": "pointed ears and braid",
+      "informs": ["ear length", "braids", "forehead cosmetic"],
+      "traits": "Long pale hair, a side braid as a rope of clumps, long pointed ears, a small forehead mark, fur-trimmed armor, and goggles.",
+      "limit": "Use the trait. Do not reproduce the character or the costume."
+    },
+    {
+      "id": "ref-08",
+      "image": "images/ref-08.png",
+      "role": "humanoid creature group",
+      "informs": ["beast people", "dragon people"],
+      "traits": "Not a Monster Hunter Stories frame. Clothes worn on the body, tails, wings, manes, claws, and digitigrade feet as big readable shapes.",
+      "limit": "Shape reference only. Do not copy the cast."
+    },
+    {
+      "id": "ref-09",
+      "image": "images/ref-09.png",
+      "role": "human and beast-person pair",
+      "informs": ["mane", "tail", "clothing on a feline humanoid", "human hair"],
+      "traits": "Same limit as ref-08. Ordinary human hair beside a feline humanoid with a mane and a tail.",
+      "limit": "Shape reference only. Do not copy either character."
+    },
+    {
+      "id": "ref-10",
+      "image": "images/ref-10.png",
+      "role": "humanoid dragon",
+      "informs": ["crest", "wings", "clawed hands and feet", "digitigrade legs", "costume on the body"],
+      "traits": "A humanoid dragon with a crest, wings, clawed hands and feet, digitigrade legs, and clothing worn over the creature body.",
+      "limit": "Shape reference only. Do not copy the beads, wraps, or silhouette."
+    }
+  ]
+}
