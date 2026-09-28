@@ -1,25 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BODY_POSES, CLIPS, CLIP_BY_ID } from '../model/performance';
 import { useStore } from '../state/store';
-import { Toggle } from './controls';
+import { Icon } from './icons';
 
 export function PlayBar() {
   const perf = useStore((s) => s.perf);
   const st = useStore.getState;
   const clip = perf.clip;
-  const [progress, setProgress] = useState(0);
+  const [chosen, setChosen] = useState(CLIPS[0].id);
+  const [time, setTime] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [scrubbing, setScrubbing] = useState(false);
+
+  const selectedId = clip?.id ?? chosen;
+  const def = CLIP_BY_ID[selectedId];
+  const duration = def?.duration ?? 1;
+
+  useEffect(() => {
+    if (clip) setChosen(clip.id);
+  }, [clip]);
 
   useEffect(() => {
     if (!clip) {
-      setProgress(0);
+      setTime(0);
       return;
     }
     let raf = 0;
     const tick = () => {
-      const def = CLIP_BY_ID[clip.id];
-      if (def) {
+      const d = CLIP_BY_ID[clip.id];
+      if (d) {
         const t = (performance.now() / 1000 - clip.start) * clip.speed;
-        setProgress(clip.loop ? (t % def.duration) / def.duration : Math.min(1, t / def.duration));
+        setTime(clip.loop ? t % d.duration : Math.min(d.duration, t));
       }
       raf = requestAnimationFrame(tick);
     };
@@ -34,31 +45,76 @@ export function PlayBar() {
     st().setPerf({ clip: { ...clip, speed, start: now - elapsed / speed } });
   };
 
+  const seek = (clientX: number) => {
+    const r = trackRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const t = Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * duration;
+    const now = performance.now() / 1000;
+    const cur = st().perf.clip ?? { id: selectedId, start: now, speed: 1, loop: CLIP_BY_ID[selectedId]?.loop ?? false };
+    st().setPerf({ clip: { ...cur, id: selectedId, start: now - t / cur.speed } });
+  };
+
+  const fmt = (s: number) => s.toFixed(2);
+
   return (
     <div className="playbar">
-      <div className="row">
-        <span className="label">Clip</span>
-        {CLIPS.map((c) => (
-          <button key={c.id} className={`chip${clip?.id === c.id ? ' on' : ''}`} onClick={() => (clip?.id === c.id ? st().stopClip() : st().playClip(c.id))}>{c.label}</button>
-        ))}
-        <button className="btn small" disabled={!clip} onClick={() => st().stopClip()} title="Stop">■ Stop</button>
-        <Toggle label="Loop" checked={clip?.loop ?? false} onChange={(v) => clip && st().setPerf({ clip: { ...clip, loop: v } })} />
-        <select className="inp" value={clip?.speed ?? 1} disabled={!clip} onChange={(e) => setSpeed(Number(e.target.value))} title="Speed">
-          {[0.25, 0.5, 1, 1.5, 2].map((s) => <option key={s} value={s}>{s}×</option>)}
+      <div className="transport">
+        <button className="play-btn" onClick={() => (clip ? st().stopClip() : st().playClip(chosen))} title={clip ? 'Stop (face clip)' : 'Play the chosen face clip'}>
+          <Icon name={clip ? 'stop' : 'play'} size={14} stroke={2.2} />
+        </button>
+      </div>
+      <select value={selectedId} onChange={(e) => {
+        setChosen(e.target.value);
+        if (clip) st().playClip(e.target.value, clip.loop);
+      }} title="Face clip" className="clip-sel">
+        {CLIPS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+      </select>
+      <button className={`icon-btn${clip?.loop ? ' on' : ''}`} disabled={!clip} onClick={() => clip && st().setPerf({ clip: { ...clip, loop: !clip.loop } })} title="Loop">
+        <Icon name="loop" />
+      </button>
+      <select className="speed" value={clip?.speed ?? 1} disabled={!clip} onChange={(e) => setSpeed(Number(e.target.value))} title="Playback speed" style={{ width: 62 }}>
+        {[0.25, 0.5, 1, 1.5, 2].map((s) => <option key={s} value={s}>{s}×</option>)}
+      </select>
+
+      <div className="timeline-wrap">
+        <div
+          ref={trackRef}
+          className="timeline"
+          title="Drag to scrub"
+          onPointerDown={(e) => {
+            (e.target as Element).setPointerCapture?.(e.pointerId);
+            setScrubbing(true);
+            seek(e.clientX);
+          }}
+          onPointerMove={(e) => scrubbing && seek(e.clientX)}
+          onPointerUp={() => setScrubbing(false)}
+          onPointerCancel={() => setScrubbing(false)}
+        >
+          <div className="track"><div className="fillbar" style={{ width: `${(time / duration) * 100}%` }} /></div>
+          <div className="ticks" />
+          <div className="head" style={{ left: `${(time / duration) * 100}%` }} />
+        </div>
+        <span className="time">{fmt(time)} / {fmt(duration)}s</span>
+      </div>
+
+      <div className="divider" />
+      <div className="group" title="Body pose for checking fit">
+        <span className="lbl"><Icon name="pose" size={15} /></span>
+        <select value={perf.bodyPose} onChange={(e) => st().setPerf({ bodyPose: e.target.value as typeof perf.bodyPose })} className="pose-sel">
+          {BODY_POSES.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
         </select>
-        <span className="grow" />
-        <Toggle label="Auto blink" checked={perf.autoBlink} onChange={(v) => st().setPerf({ autoBlink: v })} />
-        <Toggle label="Wrinkles" checked={perf.wrinklePreview} onChange={(v) => st().setPerf({ wrinklePreview: v })} title="Show expression wrinkles in the viewport" />
-        <button className="btn small" onClick={() => st().resetPerformance()} title="Neutral face, centered gaze and head. Identity is untouched.">Reset performance</button>
       </div>
-      <div className="timeline" title={clip ? `${CLIP_BY_ID[clip.id]?.label} ${Math.round(progress * 100)}%` : 'No clip playing'}>
-        <div style={{ width: `${progress * 100}%` }} />
-      </div>
-      <div className="row">
-        <span className="label">Pose</span>
-        {BODY_POSES.map((p) => (
-          <button key={p.id} className={`chip${perf.bodyPose === p.id ? ' on' : ''}`} onClick={() => st().setPerf({ bodyPose: p.id })}>{p.label}</button>
-        ))}
+      <div className="divider" />
+      <div className="group tight">
+        <button className={`icon-btn${perf.autoBlink ? ' on' : ''}`} onClick={() => st().setPerf({ autoBlink: !perf.autoBlink })} title={`Auto blink: ${perf.autoBlink ? 'on' : 'off'}`}>
+          <Icon name="blink" />
+        </button>
+        <button className={`icon-btn${perf.wrinklePreview ? ' on' : ''}`} onClick={() => st().setPerf({ wrinklePreview: !perf.wrinklePreview })} title={`Expression wrinkles in the viewport: ${perf.wrinklePreview ? 'on' : 'off'}`}>
+          <Icon name="wrinkle" />
+        </button>
+        <button className="icon-btn opt" onClick={() => st().resetPerformance()} title="Reset performance: neutral face, centered gaze and head. Identity is untouched.">
+          <Icon name="reset" />
+        </button>
       </div>
     </div>
   );

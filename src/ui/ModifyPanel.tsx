@@ -7,7 +7,8 @@ import { ARCHETYPES, HAIR_COLORS, SKIN_TONES, STYLE_PRESETS } from '../model/pre
 import { BODY_KINDS, type BodyKind, type ControlDef, type HairPiece, type Identity } from '../model/types';
 import { useStore, type ModifyTab } from '../state/store';
 import { regionLabel } from './Viewport';
-import { ColorRow, ControlSlider, Section, Seg, Toggle, ValueSlider } from './controls';
+import { ColorRow, ControlSlider, Note, Section, Seg, Toggle, ValueSlider } from './controls';
+import { Icon } from './icons';
 import { loadBaked, saveBaked } from './LibraryPanel';
 
 const TABS: { id: ModifyTab; label: string }[] = [
@@ -53,6 +54,7 @@ function AttributeTab() {
   const years = id.values['age.years'] ?? 0;
   return (
     <>
+      <Section title="Character">
       <div className="field">
         <label>Name</label>
         <input type="text" value={id.name} onFocus={() => st().beginEdit()} onBlur={() => st().endEdit()} onChange={(e) => st().editLive((x) => {
@@ -61,11 +63,11 @@ function AttributeTab() {
       </div>
       <div className="field">
         <label>Body</label>
-        <Seg<BodyKind> value={id.bodyKind} options={BODY_KINDS.map((b) => ({ id: b.id, label: b.id === 'beast' ? 'Dragon' : b.label.replace(' humanoid', ''), title: b.hint }))} onChange={(k) => st().setBodyKind(k)} />
+        <Seg<BodyKind> full value={id.bodyKind} options={BODY_KINDS.map((b) => ({ id: b.id, label: b.id === 'beast' ? 'Dragon' : b.label.replace(' humanoid', ''), title: b.hint }))} onChange={(k) => st().setBodyKind(k)} />
       </div>
       <div className="field">
         <label>Picture style</label>
-        <Seg value={id.style} options={Object.values(STYLE_PRESETS).map((s) => ({ id: s.id, label: s.label, title: s.hint }))} onChange={(s) => st().setStyle(s)} />
+        <Seg full value={id.style} options={Object.values(STYLE_PRESETS).map((s) => ({ id: s.id, label: s.label, title: s.hint }))} onChange={(s) => st().setStyle(s)} />
       </div>
       {humanoid && (
         <div className="field">
@@ -78,44 +80,50 @@ function AttributeTab() {
       {id.bodyKind === 'adult' && (
         <div className="field">
           <label>Presentation</label>
-          <div className="chips">
-            {(['feminine', 'neutral', 'masculine'] as const).map((p) => <button key={p} className="chip" onClick={() => st().setPresentation(p)}>{p[0].toUpperCase() + p.slice(1)}</button>)}
+          <div className="seg full">
+            {(['feminine', 'neutral', 'masculine'] as const).map((p) => <button key={p} onClick={() => st().setPresentation(p)} title="Moves the presentation sliders. They stay editable.">{p[0].toUpperCase() + p.slice(1)}</button>)}
           </div>
         </div>
       )}
       {ageKeys && (
         <div className="field">
           <label>Age</label>
-          <div className="chips">
-            {([['youngAdult', 'Young adult', years < -30], ['adult', 'Adult', Math.abs(years) <= 30], ['old', 'Old', years > 30]] as const).map(([k, l, on]) => (
-              <button key={k} className={`chip${on ? ' on' : ''}`} onClick={() => st().setAge(k)}>{l}</button>
+          <div className="seg full">
+            {([['youngAdult', 'Young', years < -30], ['adult', 'Adult', Math.abs(years) <= 30], ['old', 'Old', years > 30]] as const).map(([k, l, on]) => (
+              <button key={k} className={on ? 'on' : ''} onClick={() => st().setAge(k)}>{l}</button>
             ))}
           </div>
         </div>
       )}
-      {id.bodyKind === 'child' && <div className="note">The child body is always clothed and general audience. Adult presentation, age, facial hair, and muscle sliders are not part of it.</div>}
+      {id.bodyKind === 'child' && <Note>The child body is always clothed and general audience. Adult presentation, age, facial hair, and muscle sliders are not part of it.</Note>}
+      </Section>
 
       <Section title="Worn items" count={id.equipped.length}>
-        {id.equipped.length === 0 && <div className="empty">Nothing worn. Add outfits and accessories from the library.</div>}
+        {id.equipped.length === 0 && <div className="empty"><Icon name="outfit" size={28} />Nothing worn. Add outfits and accessories from the library.</div>}
         {id.equipped.map((e) => {
           const def = ACCESSORY_BY_ID[e.id];
           const pk = packs.find((p) => p.id === e.id);
           return (
             <div key={e.uid} className={`equip-row${sel === e.uid ? ' sel' : ''}`} onClick={() => st().setUI({ selectedEquip: sel === e.uid ? null : e.uid })}>
+              <Icon name={e.slot === 'outfit' ? 'outfit' : 'accessory'} size={14} />
               <span className="nm">{def?.label ?? pk?.displayName ?? e.id}</span>
               <span className="slot">{e.slot}</span>
-              <button className="icon-btn" title="Take off" onClick={(ev) => {
+              <button className="icon-btn sm" title="Take off" onClick={(ev) => {
                 ev.stopPropagation();
                 st().unequip(e.uid);
-              }}>✕</button>
+              }}><Icon name="close" size={13} /></button>
             </div>
           );
         })}
         {selEquip && (
-          <div className="stack" style={{ marginTop: 8 }}>
-            <div className="row between">
-              <b style={{ fontSize: 12 }}>{selDef?.label ?? selPack?.displayName ?? selEquip.id}</b>
-              <Seg value={gizmo} options={[{ id: 'translate', label: 'Move' }, { id: 'rotate', label: 'Rotate' }, { id: 'scale', label: 'Scale' }]} onChange={(m) => st().setUI({ gizmoMode: m })} />
+          <div className="stack edit-card">
+            <div className="row between nowrap">
+              <b style={{ fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selDef?.label ?? selPack?.displayName ?? selEquip.id}</b>
+              <div className="row tight nowrap">
+                {(['translate', 'rotate', 'scale'] as const).map((m) => (
+                  <button key={m} className={`icon-btn${gizmo === m ? ' on' : ''}`} title={m === 'translate' ? 'Move' : m === 'rotate' ? 'Rotate' : 'Scale'} onClick={() => st().setUI({ gizmoMode: m })}><Icon name={m === 'translate' ? 'move' : m} /></button>
+                ))}
+              </div>
             </div>
             <div className="hint">Drag the gizmo in the viewport to adjust the fit. Outfits that follow the body shape ignore the offset.</div>
             {Object.entries({ ...(selDef?.colors ?? {}), ...selEquip.colors }).map(([k, v]) => (
@@ -145,8 +153,8 @@ function AttributeTab() {
             <div className="row">
               <button className="btn small" onClick={() => st().updateEquip(selEquip.uid, (e) => {
                 e.offset = { p: [0, 0, 0], r: [0, 0, 0], s: 1 };
-              })}>Reset fit</button>
-              <button className="btn small" onClick={() => st().setUI({ selectedEquip: null })}>Deselect</button>
+              })}><Icon name="reset" size={13} />Reset fit</button>
+              <button className="btn small ghost" onClick={() => st().setUI({ selectedEquip: null })}>Deselect</button>
             </div>
           </div>
         )}
@@ -154,13 +162,13 @@ function AttributeTab() {
 
       <Section title="Actions">
         <div className="row">
-          <button className="btn" onClick={() => st().randomize()} title="Random identity values inside each slider's range">Randomize</button>
-          <button className="btn" disabled={id.bodyKind !== 'adult'} onClick={() => st().makeChild()} title="Make a child counterpart of this adult">Make child</button>
-          <button className="btn" disabled={id.bodyKind !== 'adult' && id.bodyKind !== 'beast'} onClick={() => st().makeFamily()}>Make family</button>
+          <button className="btn" onClick={() => st().randomize()} title="Random identity values inside each slider's range"><Icon name="dice" size={14} />Randomize</button>
+          <button className="btn" disabled={id.bodyKind !== 'adult'} onClick={() => st().makeChild()} title="Make a child counterpart of this adult"><Icon name="child" size={14} />Make child</button>
+          <button className="btn" disabled={id.bodyKind !== 'adult' && id.bodyKind !== 'beast'} onClick={() => st().makeFamily()}><Icon name="family" size={14} />Make family</button>
         </div>
         <div className="row" style={{ marginTop: 6 }}>
-          <button className="btn danger" onClick={() => st().resetIdentity()} title="Back to the dressed default for this body. Performance is kept.">Reset identity</button>
-          <button className="btn" onClick={() => st().resetPerformance()} title="Neutral face and pose. Identity is kept.">Reset performance</button>
+          <button className="btn danger" onClick={() => st().resetIdentity()} title="Back to the dressed default for this body. Performance is kept."><Icon name="reset" size={14} />Reset identity</button>
+          <button className="btn" onClick={() => st().resetPerformance()} title="Neutral face and pose. Identity is kept."><Icon name="expression" size={14} />Reset performance</button>
         </div>
       </Section>
     </>
@@ -175,7 +183,7 @@ function PoseTab() {
   const setHead = (k: 'yaw' | 'pitch' | 'roll', v: number) => st().setPerf({ head: { ...st().perf.head, [k]: v } });
   return (
     <>
-      <div className="note">Pose and face performance are never saved into the character. Reset Performance brings everything here back to neutral.</div>
+      <Note>Pose and face performance are never saved into the character. Reset Performance brings everything here back to neutral.</Note>
       <Section title="Body pose">
         <div className="chips">
           {BODY_POSES.map((p) => <button key={p.id} className={`chip${perf.bodyPose === p.id ? ' on' : ''}`} onClick={() => st().setPerf({ bodyPose: p.id })}>{p.label}</button>)}
@@ -233,7 +241,7 @@ function MorphsTab() {
     return [...m.entries()];
   }, [visible, kind]);
   const nodes: TreeNode[] = [
-    { id: 'Currently Used', label: 'Currently used', count: used.length },
+    { id: 'Currently Used', label: 'In use', count: used.length },
     { id: 'Favorites', label: 'Favorites', count: favorites.filter((f) => CONTROL_BY_ID[f] && visible.includes(CONTROL_BY_ID[f])).length },
     { id: 'All', label: 'All', count: visible.length },
     ...tops.map(([t, n]) => ({ id: `top:${t}`, label: t, count: n })),
@@ -276,24 +284,27 @@ function MorphsTab() {
   return (
     <>
       <div className="search" style={{ marginBottom: 8 }}>
-        <span style={{ color: 'var(--faint)' }}>⌕</span>
+        <Icon name="search" size={14} />
         <input placeholder="Search sliders" value={search} onChange={(e) => st().setUI({ morphSearch: e.target.value })} />
-        {search && <button className="icon-btn" onClick={() => st().setUI({ morphSearch: '' })}>✕</button>}
+        {search && <button className="icon-btn sm" onClick={() => st().setUI({ morphSearch: '' })}><Icon name="close" size={13} /></button>}
       </div>
-      <div className="row" style={{ marginBottom: 8 }}>
-        <button className="btn small" onClick={bake} disabled={list.length === 0} title="Save the shown slider values as a reusable library preset">Bake</button>
-        <button className="btn small" onClick={resetShown} disabled={list.length === 0} title="Set the shown sliders back to zero">Reset shown</button>
-        <button className="btn small" onClick={() => st().randomize(list.map((c) => c.id))} disabled={list.length === 0}>Randomize shown</button>
+      <div className="row nowrap" style={{ marginBottom: 10 }}>
+        <span className="pill">{list.length} sliders</span>
         <span className="grow" />
-        <span className="hint">{list.length} sliders</span>
+        <button className="btn small" onClick={bake} disabled={list.length === 0} title="Save the shown slider values as a reusable library preset"><Icon name="save" size={13} />Bake</button>
+        <button className="icon-btn" onClick={() => st().randomize(list.map((c) => c.id))} disabled={list.length === 0} title="Randomize the shown sliders"><Icon name="dice" /></button>
+        <button className="icon-btn" onClick={resetShown} disabled={list.length === 0} title="Set the shown sliders back to zero"><Icon name="reset" /></button>
       </div>
       <div className="morph-layout">
         <div className="tree">
-          {nodes.map((n) => (
-            <button key={n.id} className={node === n.id && !q ? 'on' : ''} onClick={() => st().setUI({ morphNode: n.id, morphSearch: '' })}>
-              <span>{n.label}</span>
-              <span className="n">{n.count}</span>
-            </button>
+          {nodes.map((n, i) => (
+            <span key={n.id} style={{ display: 'contents' }}>
+              {i === 3 && <span className="tsep" />}
+              <button className={node === n.id && !q ? 'on' : ''} onClick={() => st().setUI({ morphNode: n.id, morphSearch: '' })} title={n.label}>
+                <span>{n.label}</span>
+                <span className="n">{n.count}</span>
+              </button>
+            </span>
           ))}
         </div>
         <div>
@@ -315,6 +326,7 @@ function MorphsTab() {
               ))}
               {list.length === 0 && (
                 <div className="empty">
+                  <Icon name={node === 'Favorites' ? 'star' : 'sliders'} size={28} />
                   {node === 'Currently Used' ? 'No slider has been moved yet.' : node === 'Favorites' ? 'Star a slider to keep it here.' : 'Nothing matches.'}
                 </div>
               )}
@@ -525,7 +537,7 @@ function PhysicsTab() {
   ];
   return (
     <>
-      <div className="note">Physics adds secondary motion in the viewport. It is part of the character, so it is saved.</div>
+      <Note>Physics adds secondary motion in the viewport. It is part of the character, so it is saved.</Note>
       {channels.map((c) => {
         const ch = id.physics[c.key];
         return (

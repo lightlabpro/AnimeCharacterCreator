@@ -109,6 +109,8 @@ export class Engine {
   private style: StylePreset = 'stories';
   private buildGen = 0;
   private framedOnce = false;
+  private userMoved = false;
+  private lastPreset = 'frame';
 
   constructor(private host: HTMLElement, private cb: EngineCallbacks) {
     this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: 'high-performance' });
@@ -125,6 +127,9 @@ export class Engine {
     this.controls.minDistance = 0.3;
     this.controls.maxDistance = 14;
     this.controls.update();
+    this.controls.addEventListener('start', () => {
+      this.userMoved = true;
+    });
     this.gizmo = new TransformControls(this.camera, this.renderer.domElement);
     this.gizmo.setSize(0.8);
     this.overlay.add(this.gizmo.getHelper());
@@ -216,6 +221,7 @@ export class Engine {
     const { id, packs, pose } = this.pending;
     this.pending = null;
     const turn = this.rig?.root.rotation.y ?? 0;
+    const prevKind = this.rig?.identity.bodyKind;
     if (this.rig) {
       this.gizmo.detach();
       this.holder.remove(this.rig.root);
@@ -235,7 +241,7 @@ export class Engine {
     const s = Math.max(0.8, rig.height * (id.bodyKind === 'beast' ? 0.9 : 0.45));
     this.shadow.scale.set(s, s, 1);
     this.applySelection();
-    if (!this.framedOnce) {
+    if (!this.framedOnce || prevKind !== id.bodyKind) {
       this.framedOnce = true;
       this.cameraPreset('frame');
     }
@@ -345,8 +351,11 @@ export class Engine {
       this.camera.position.set(...saved.position);
       this.controls.target.set(...saved.target);
       this.controls.update();
+      this.userMoved = true;
       return;
     }
+    this.lastPreset = name;
+    this.userMoved = false;
     const rig = this.rig;
     const h = rig?.height ?? 1.7;
     const box = rig ? new THREE.Box3().setFromObject(rig.root) : new THREE.Box3(new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 1.7, 0.5));
@@ -402,6 +411,12 @@ export class Engine {
     return { position: [p.x, p.y, p.z], target: [t.x, t.y, t.z] };
   }
 
+  /** Camera orientation as a quaternion [x, y, z, w], for the axis widget. */
+  viewQuaternion(): [number, number, number, number] {
+    const q = this.camera.quaternion;
+    return [q.x, q.y, q.z, q.w];
+  }
+
   screenshot(): string {
     this.render();
     return this.renderer.domElement.toDataURL('image/png');
@@ -416,8 +431,11 @@ export class Engine {
     const pr = this.renderer.getPixelRatio();
     this.rt.setSize(Math.floor(w * pr), Math.floor(h * pr));
     this.quad.material.uniforms.uTexel.value.set(1 / (w * pr), 1 / (h * pr));
-    this.camera.aspect = w / h;
+    const aspect = w / h;
+    const changed = Math.abs(aspect - this.camera.aspect) > 0.01;
+    this.camera.aspect = aspect;
     this.camera.updateProjectionMatrix();
+    if (changed && this.rig && !this.userMoved) this.cameraPreset(this.lastPreset);
   }
 
   private render() {

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { DEFAULT_POSES, PF_KEYS, POSE_LABELS, POSE_NAMES, VISEME_SHAPES, WRINKLE_REGIONS, poseWeights, type PFKeyDef } from '../model/performance';
 import type { FaceProfile } from '../model/types';
 import { useStore } from '../state/store';
-import { Section, Seg, ValueSlider } from './controls';
+import { Note, Section, Seg, ValueSlider } from './controls';
+import { Icon } from './icons';
 
 const GROUPS: PFKeyDef['group'][] = ['Eyes', 'Brows', 'Jaw', 'Visemes', 'Emotions', 'Tongue'];
 
@@ -30,15 +31,16 @@ export function FaceProfilePanel() {
 
   return (
     <div className="panel-body">
-      <div className="note">
+      <Note>
         The face profile is how this character emotes. Expression edits are saved with the character; manual keys are live performance only and are cleared by Reset Performance.
-      </div>
+      </Note>
       <div className="field">
         <label>Rig mode</label>
-        <Seg value={profile.rig} options={[{ id: 'hybrid', label: 'Hybrid', title: 'Bones for jaw and eyes, shapes for the rest' }, { id: 'bone', label: 'Bones' }, { id: 'morph', label: 'Shapes' }]} onChange={(r) => editProfile((p) => { p.rig = r; })} />
+        <Seg full value={profile.rig} options={[{ id: 'hybrid', label: 'Hybrid', title: 'Bones for jaw and eyes, shapes for the rest' }, { id: 'bone', label: 'Bones' }, { id: 'morph', label: 'Shapes' }]} onChange={(r) => editProfile((p) => { p.rig = r; })} />
       </div>
-      <div className="row" style={{ margin: '8px 0' }}>
-        <Seg value={mode} options={[{ id: 'manual', label: 'Manual keys' }, { id: 'expression', label: 'Edit expressions' }]} onChange={(m) => {
+      <div className="field">
+        <label>Edit</label>
+        <Seg full value={mode} options={[{ id: 'manual', label: 'Manual keys' }, { id: 'expression', label: 'Expressions' }]} onChange={(m) => {
           setMode(m);
           if (m === 'expression') startEditing(editing);
         }} />
@@ -52,7 +54,7 @@ export function FaceProfilePanel() {
             ))}
           </div>
           <div className="hint" style={{ marginBottom: 6 }}>Editing {POSE_LABELS[editing]}. The viewport shows the pose while you edit.</div>
-          <div className="tabs" style={{ padding: 0, marginBottom: 6 }}>
+          <div className="tabs inline">
             {GROUPS.filter((g) => g !== 'Visemes').map((g) => <button key={g} className={group === g ? 'on' : ''} onClick={() => setGroup(g)}>{g}</button>)}
           </div>
           {keys.filter((k) => k.group !== 'Visemes').map((k) => (
@@ -81,7 +83,7 @@ export function FaceProfilePanel() {
 
       {mode === 'manual' && (
         <Section title="Face keys" count={Object.keys(perf.manual).length || undefined}>
-          <div className="tabs" style={{ padding: 0, marginBottom: 6 }}>
+          <div className="tabs inline">
             {GROUPS.map((g) => <button key={g} className={group === g ? 'on' : ''} onClick={() => setGroup(g)}>{g}</button>)}
           </div>
           {keys.map((k) => (
@@ -121,8 +123,8 @@ export function FaceProfilePanel() {
               onReset={() => editProfile((p) => { p.wrinkles[r.id] = 0.5; })} />
           ))}
           <div className="row" style={{ marginTop: 6 }}>
-            <button className="btn small" onClick={() => st().playClip('wrinkles', true)}>Preview wrinkles</button>
-            <button className="btn small" onClick={() => st().stopClip()}>Stop</button>
+            <button className="btn small" onClick={() => st().playClip('wrinkles', true)}><Icon name="play" size={12} />Preview wrinkles</button>
+            <button className="btn small" onClick={() => st().stopClip()}><Icon name="stop" size={12} />Stop</button>
           </div>
         </Section>
       )}
@@ -132,8 +134,8 @@ export function FaceProfilePanel() {
           p.expressions = {};
           p.wrinkles = { forehead: 0.5, brow: 0.5, eyes: 0.5, nose: 0.4, mouth: 0.5 };
           p.rig = 'hybrid';
-        })}>Reset face profile</button>
-        <button className="btn" onClick={() => st().resetPerformance()}>Reset performance</button>
+        })}><Icon name="reset" size={14} />Reset face profile</button>
+        <button className="btn" onClick={() => st().resetPerformance()}><Icon name="expression" size={14} />Reset performance</button>
       </div>
     </div>
   );

@@ -62,6 +62,8 @@ export interface AppState {
   family: FamilyMember[];
   favorites: string[];
   filePath: string | null;
+  /** The identity as last saved or opened, used to show unsaved changes. */
+  savedIdentity: Identity | null;
 
   commit(fn: (id: Identity) => Identity | void, label?: string): void;
   /** Applies a change without an undo step. Wrap a continuous gesture in beginEdit and endEdit. */
@@ -176,6 +178,7 @@ export const useStore = create<AppState>()((set, get) => {
     family: [],
     favorites: typeof localStorage !== 'undefined' ? loadFavorites() : [],
     filePath: null,
+    savedIdentity: null,
 
     commit(fn) {
       const prev = get().identity;
@@ -279,8 +282,9 @@ export const useStore = create<AppState>()((set, get) => {
     },
 
     newCharacter(kind = 'adult') {
-      push(get().identity, newCharacter(kind, get().identity.style));
-      set({ perf: neutralPerformance(), filePath: null });
+      const cur = get().identity;
+      push(cur, newCharacter(kind, cur.bodyKind === 'robot' && kind !== 'robot' ? 'stories' : cur.style));
+      set({ perf: neutralPerformance(), filePath: null, savedIdentity: null });
     },
     resetIdentity() {
       const cur = get().identity;
@@ -437,7 +441,7 @@ export const useStore = create<AppState>()((set, get) => {
       const id = get().identity;
       const path = await saveTextFile(`${id.name.replace(/[^\w\- ]+/g, '').trim() || 'character'}.json`, serializeCharacter(id));
       if (path) {
-        set({ filePath: path });
+        set({ filePath: path, savedIdentity: id });
         get().toast(`Saved ${path}`);
       }
     },
@@ -447,7 +451,7 @@ export const useStore = create<AppState>()((set, get) => {
       try {
         const id = deserializeCharacter(file.text);
         get().loadIdentity(id);
-        set({ filePath: file.path, perf: neutralPerformance() });
+        set({ filePath: file.path, perf: neutralPerformance(), savedIdentity: get().identity });
         get().toast(`Opened ${file.path}`);
       } catch (e) {
         get().toast(`Could not open that file: ${(e as Error).message}`);

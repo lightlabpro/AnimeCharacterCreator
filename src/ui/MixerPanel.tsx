@@ -1,11 +1,28 @@
 import { useRef, useState } from 'react';
-import { applyArchetype } from '../model/character';
+import { applyArchetype, clone } from '../model/character';
 import { MIX_SCOPES, WHEEL_SLOTS, scopeControlIds, slotDirection, wheelWeights, type MixScope, type MixerSlot } from '../model/mixer';
 import { POSE_LABELS, POSE_NAMES } from '../model/performance';
 import { ARCHETYPES } from '../model/presets';
 import { openTextFile, saveTextFile } from '../library/platform';
 import { useStore } from '../state/store';
-import { Section, Seg } from './controls';
+import { Note, Section, Seg } from './controls';
+import { Icon } from './icons';
+import { useThumbnail } from './useThumbnail';
+import { hashString } from '../viewport/parts';
+
+function SlotMini({ slot, index }: { slot: MixerSlot | null; index: number }) {
+  const base = useStore((s) => s.identity);
+  const key = slot ? `mixer:${hashString(JSON.stringify(slot.values))}:${base.bodyKind}:${base.archetype}:${base.style}:${base.colors.skin ?? ''}` : null;
+  const [ref, url] = useThumbnail<HTMLDivElement>(key, slot ? () => {
+    const s = useStore.getState();
+    const identity = clone(s.identity);
+    for (const k of scopeControlIds(s.mixer.scope)) delete identity.values[k];
+    identity.values = { ...identity.values, ...slot.values };
+    identity.looks = { ...identity.looks, ...slot.looks };
+    return { identity, frame: 'head' };
+  } : undefined);
+  return <div ref={ref} className="mini">{url ? <img src={url} alt="" /> : slot ? slot.label.slice(0, 2).toUpperCase() : index + 1}</div>;
+}
 
 const SIZE = 260;
 const C = SIZE / 2;
@@ -72,12 +89,12 @@ export function MixerPanel() {
 
   return (
     <div className="panel-body">
-      <div className="note">
+      <Note>
         Fill the wheel with faces, then drag the handle toward the faces you want to blend. Only the chosen scope changes. Each drag is one undo step.
-      </div>
-      <div className="row between" style={{ margin: '6px 0' }}>
+      </Note>
+      <div className="row between nowrap" style={{ margin: '6px 0 10px' }}>
         <Seg value={mixer.mode} options={[{ id: 'mix', label: 'Mix' }, { id: 'edit', label: 'Edit slots' }]} onChange={(m) => st().setMixer({ mode: m })} />
-        <button className="btn small" onClick={() => st().setMixer({ handle: [0, 0] })} title="Move the handle back to the center. The current face is kept.">Center</button>
+        <button className="btn small" onClick={() => st().setMixer({ handle: [0, 0] })} title="Move the handle back to the center. The current face is kept."><Icon name="frame" size={13} />Center</button>
       </div>
       <div className="field">
         <label>Scope</label>
@@ -87,8 +104,15 @@ export function MixerPanel() {
       </div>
 
       <svg ref={svgRef} className="wheel" width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
-        <circle cx={C} cy={C} r={R} fill="var(--bg0)" stroke="var(--line2)" />
+        <defs>
+          <radialGradient id="wheelFill" cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stopColor="#23262d" />
+            <stop offset="100%" stopColor="#15161a" />
+          </radialGradient>
+        </defs>
+        <circle cx={C} cy={C} r={R} fill="url(#wheelFill)" stroke="var(--line2)" />
         <circle cx={C} cy={C} r={R * 0.5} fill="none" stroke="var(--line)" strokeDasharray="3 4" />
+        <circle cx={C} cy={C} r={3} fill="var(--faint)" />
         {Array.from({ length: WHEEL_SLOTS }, (_, i) => {
           const [dx, dy] = slotDirection(i);
           return <line key={`l${i}`} x1={C} y1={C} x2={C + dx * R} y2={C + dy * R} stroke="var(--line)" />;
@@ -108,7 +132,8 @@ export function MixerPanel() {
             }}>
               <circle className="bg" cx={x} cy={y} r={17} />
               {w > 0.01 && <circle cx={x} cy={y} r={17} fill="none" stroke="var(--accent2)" strokeWidth={2} strokeDasharray={`${w * 107} 107`} transform={`rotate(-90 ${x} ${y})`} />}
-              <text x={x} y={y}>{s ? s.label.slice(0, 5) : i + 1}</text>
+              <title>{s ? s.label : `Slot ${i + 1}`}</title>
+              <text x={x} y={y}>{s ? s.label.slice(0, 2).toUpperCase() : i + 1}</text>
             </g>
           );
         })}
@@ -119,15 +144,20 @@ export function MixerPanel() {
       <Section title="Slots" count={`${filled.filter(Boolean).length}/${WHEEL_SLOTS}`}>
         <div className="slot-list">
           {mixer.slots.map((s, i) => (
-            <div key={i} className="slot-card">
-              <div className="t">{i + 1}. {s ? s.label : 'Empty'}</div>
-              <div className="w">{s ? `${Object.keys(s.values).length} values · weight ${Math.round(weights[i] * 100)}%` : 'No face'}</div>
-              <div className="row tight">
-                <button className="btn small" onClick={() => st().mixerCapture(i, st().identity, st().identity.name)} title="Store the current face in this slot">Capture</button>
-                {s && <button className="btn small" onClick={() => st().mixerClear(i)}>Clear</button>}
+            <div key={i} className={`slot-card${s ? ' filled' : ''}`}>
+              <div className="top">
+                <SlotMini slot={s} index={i} />
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div className="t">{s ? s.label : `Slot ${i + 1}`}</div>
+                  <div className="w">{s ? `${Math.round(weights[i] * 100)}% weight` : 'Empty'}</div>
+                </div>
+              </div>
+              <div className="row tight nowrap">
+                <button className="btn small" style={{ flex: 1 }} onClick={() => st().mixerCapture(i, st().identity, st().identity.name)} title="Store the current face in this slot"><Icon name="camera" size={12} />Capture</button>
+                {s && <button className="icon-btn sm" title="Clear slot" onClick={() => st().mixerClear(i)}><Icon name="trash" size={13} /></button>}
               </div>
               {humanoid && (
-                <select className="inp" value="" onChange={(e) => {
+                <select value="" onChange={(e) => {
                   const a = ARCHETYPES.find((x) => x.id === e.target.value);
                   if (a) st().mixerCapture(i, applyArchetype(st().identity, a.id), a.label);
                 }}>
@@ -136,7 +166,7 @@ export function MixerPanel() {
                 </select>
               )}
               {family.length > 0 && (
-                <select className="inp" value="" onChange={(e) => {
+                <select value="" onChange={(e) => {
                   const f = family[Number(e.target.value)];
                   if (f) st().mixerCapture(i, f.identity, f.label);
                 }}>
@@ -151,13 +181,13 @@ export function MixerPanel() {
 
       <Section title="Wheel tools">
         <div className="row">
-          <button className="btn small" onClick={() => st().randomize(scopeControlIds(st().mixer.scope))}>Randomize scope</button>
-          <button className="btn small" onClick={saveWheel}>Save wheel</button>
-          <button className="btn small" onClick={loadWheel}>Load wheel</button>
-          <button className="btn small danger" onClick={() => st().setMixer({ slots: Array(WHEEL_SLOTS).fill(null), handle: [0, 0] })}>Clear all</button>
+          <button className="btn small" onClick={() => st().randomize(scopeControlIds(st().mixer.scope))}><Icon name="dice" size={13} />Randomize scope</button>
+          <button className="btn small" onClick={saveWheel}><Icon name="save" size={13} />Save wheel</button>
+          <button className="btn small" onClick={loadWheel}><Icon name="folder" size={13} />Load wheel</button>
+          <button className="btn small danger" onClick={() => st().setMixer({ slots: Array(WHEEL_SLOTS).fill(null), handle: [0, 0] })}><Icon name="trash" size={13} />Clear all</button>
         </div>
         <div className="row" style={{ marginTop: 6 }}>
-          <button className="btn small" disabled={id.bodyKind !== 'adult' && id.bodyKind !== 'beast'} onClick={() => st().makeFamily()}>Make family</button>
+          <button className="btn small" disabled={id.bodyKind !== 'adult' && id.bodyKind !== 'beast'} onClick={() => st().makeFamily()}><Icon name="family" size={13} />Make family</button>
           {family.map((f, i) => <button key={i} className="btn small ghost" onClick={() => st().loadIdentity(f.identity)} title="Open this family member">{f.label}</button>)}
         </div>
       </Section>
