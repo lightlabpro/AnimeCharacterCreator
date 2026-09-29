@@ -3,7 +3,7 @@ import { changedControls } from '../model/character';
 import { CONTROLS, CONTROL_BY_ID, controlPath, controlsFor, isControlVisible } from '../model/controls';
 import { ACCESSORY_BY_ID, hairStylesFor, lookSlotsFor, type HairSlot } from '../model/looks';
 import { BODY_POSES, POSE_LABELS, POSE_NAMES, PF_KEYS, VISEME_KEYS } from '../model/performance';
-import { ARCHETYPES, HAIR_COLORS, SKIN_TONES, STYLE_PRESETS } from '../model/presets';
+import { ARCHETYPES, HAIR_COLORS, SKIN_TONES, STYLE_PRESETS, resolveStyle, type RenderOverrides } from '../model/presets';
 import { BODY_KINDS, type BodyKind, type ControlDef, type HairPiece, type Identity } from '../model/types';
 import { useStore, type ModifyTab } from '../state/store';
 import { regionLabel } from './Viewport';
@@ -520,8 +520,62 @@ function MaterialTab() {
           {arr.map((c) => <ControlSlider key={c.id} id={c.id} />)}
         </Section>
       ))}
+      <RenderSection />
       <div className="hint">Skin layers, makeup, markings, and scars are painted in the Appearance panel.</div>
     </>
+  );
+}
+
+type NumKey = { [K in keyof RenderOverrides]-?: RenderOverrides[K] extends number | undefined ? K : never }[keyof RenderOverrides];
+
+const RENDER_SLIDERS: { key: NumKey; label: string; min: number; max: number; step?: number }[] = [
+  { key: 'shadeShift', label: 'Shade shift', min: -1, max: 1 },
+  { key: 'toony', label: 'Toony', min: 0, max: 1 },
+  { key: 'outline', label: 'Line width', min: 0, max: 3, step: 0.05 },
+  { key: 'lineColorMix', label: 'Line tint', min: 0, max: 1 },
+  { key: 'hull', label: 'Outline shell', min: 0, max: 4, step: 0.05 },
+  { key: 'rimLit', label: 'Lit rim', min: 0, max: 1 },
+  { key: 'rimShadow', label: 'Shadow rim', min: 0, max: 1 },
+  { key: 'hatch', label: 'Hatching', min: 0, max: 1 },
+  { key: 'grain', label: 'Grain', min: 0, max: 0.15, step: 0.005 },
+  { key: 'diffusion', label: 'Diffusion', min: 0, max: 0.6 },
+  { key: 'bloom', label: 'Bloom', min: 0, max: 1.5 },
+  { key: 'light2Strength', label: 'Light 2', min: 0, max: 1 },
+  { key: 'glowEyes', label: 'Glow eyes', min: 0, max: 1 },
+  { key: 'gobo', label: 'Dappled light', min: 0, max: 1 },
+  { key: 'dof', label: 'Depth of field', min: 0, max: 1 },
+  { key: 'particles', label: 'Particles', min: 0, max: 1 },
+];
+
+/** Overrides for the current picture style. They stay on this machine and apply to every character in that style. */
+function RenderSection() {
+  const style = useStore((s) => s.identity.style);
+  const overrides = useStore((s) => s.renderOverrides[style]);
+  const st = useStore.getState;
+  const s = resolveStyle(style, overrides);
+  const current: Record<NumKey, number> = {
+    shadeShift: s.shadeShift, toony: s.toony, outline: s.outline, lineColorMix: s.lineColorMix, hull: s.hull,
+    rimLit: s.screenRim.lit, rimShadow: s.screenRim.shadow, hatch: s.hatch, grain: s.grain, diffusion: s.diffusion, bloom: s.bloom,
+    light2Strength: s.light2.strength, glowEyes: s.glowEyes, gobo: s.gobo, dof: s.dof, particles: s.particles,
+  };
+  const changed = overrides ? Object.keys(overrides).length : 0;
+  return (
+    <Section title="Render" count={changed ? `${changed} changed` : undefined} defaultOpen={false}
+      right={<button className="btn small" disabled={!changed} onClick={() => st().resetRenderOverrides(style)} title="Go back to the preset values">Reset to preset</button>}>
+      <div className="hint" style={{ marginBottom: 6 }}>Adjusts the {STYLE_PRESETS[style].label} style for every character. Saved on this computer.</div>
+      {RENDER_SLIDERS.map((r) => (
+        <ValueSlider key={r.key} label={r.label} value={current[r.key]} min={r.min} max={r.max} step={r.step ?? 0.01}
+          onLive={(v) => st().setRenderOverride(style, { [r.key]: v }, false)}
+          onCommit={(v) => st().setRenderOverride(style, { [r.key]: v })} />
+      ))}
+      <div className="field">
+        <label>Hatch mode</label>
+        <Seg value={s.hatchMode} options={[{ id: 'surface', label: 'Surface', title: 'Strokes stick to the character as it moves' }, { id: 'screen', label: 'Screen', title: 'Strokes stay fixed on the screen' }]}
+          onChange={(m) => st().setRenderOverride(style, { hatchMode: m })} />
+      </div>
+      <ColorRow label="Light 2 color" value={s.light2.color} onLive={(c) => st().setRenderOverride(style, { light2Color: c }, false)} onChange={(c) => st().setRenderOverride(style, { light2Color: c })}
+        onEnd={() => st().setRenderOverride(style, {})} />
+    </Section>
   );
 }
 

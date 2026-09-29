@@ -4,6 +4,7 @@ import { BEAST_REGION_DRAG, CONTROL_BY_ID, REGION_DRAG, ROBOT_REGION_DRAG, isCon
 import type { Region } from '../model/types';
 import { useStore } from '../state/store';
 import { Engine } from '../viewport/engine';
+import { clearThumbnails, setThumbnailOverrides } from '../viewport/thumbnails';
 
 export const useHover = create<{ region: Region | null; equip: string | null; dragKeys: string[] }>(() => ({ region: null, equip: null, dragKeys: [] }));
 
@@ -27,7 +28,9 @@ export function Viewport() {
   const packs = useStore((s) => s.packs);
   const perf = useStore((s) => s.perf);
   const ui = useStore((s) => s.ui);
+  const renderOverrides = useStore((s) => s.renderOverrides);
   const packMap = useMemo(() => new Map(packs.map((p) => [p.id, p])), [packs]);
+  const firstOverrides = useRef(true);
   const dragState = useRef<{ keys: [string | undefined, string | undefined]; start: [number, number] } | null>(null);
 
   useEffect(() => {
@@ -107,6 +110,17 @@ export function Viewport() {
   useEffect(() => {
     if (engineRef) engineRef.perf = perf;
   }, [perf]);
+
+  useEffect(() => {
+    engineRef?.setRenderOverrides(renderOverrides);
+    setThumbnailOverrides(renderOverrides);
+    if (firstOverrides.current) {
+      firstOverrides.current = false;
+      return;
+    }
+    const t = window.setTimeout(clearThumbnails, 500);
+    return () => window.clearTimeout(t);
+  }, [renderOverrides]);
 
   useEffect(() => {
     const e = engineRef;

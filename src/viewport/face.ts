@@ -32,6 +32,7 @@ uniform float uLashT;
 uniform float uSide;
 uniform float uSelect;
 uniform float uGlow;
+uniform float uGlowEyes;
 uniform vec3 uLightDir;
 uniform float uSaturation;
 uniform float uBrightness;
@@ -85,9 +86,16 @@ void main() {
       if (pupil < 1.0) iris = uIrisDark * 0.25;
       iris *= 1.0 - 0.3 * shade;
       col = iris + uIris * uGlow;
+      if (uGlowEyes > 0.0) {
+        float band = smoothstep(0.52, 0.64, r) * (1.0 - smoothstep(0.78, 0.9, r));
+        col = mix(col, uIrisDark * 0.15, uGlowEyes * 0.7 * (1.0 - band));
+        col += (uIris * 1.6 + 0.35) * band * uGlowEyes * 1.8;
+      }
     }
     vec2 cl = (p - c - vec2(-0.32, 0.36) * uIrisSize) / vec2(0.2, 0.26) / uIrisSize;
     if (length(cl) < 1.0) col = mix(col, vec3(1.0), clamp(uCatch, 0.0, 1.0));
+    vec2 cl2 = (p - c - vec2(0.3, -0.34) * uIrisSize) / vec2(0.09, 0.11) / uIrisSize;
+    if (length(cl2) < 1.0) col = mix(col, vec3(1.0), clamp(uCatch, 0.0, 1.0) * 0.8);
     if (p.y > yLid - 0.06) col = mix(col, uLash, 0.35);
   }
   float lum = dot(col, vec3(0.299, 0.587, 0.114));
@@ -122,6 +130,7 @@ export function eyeMaterial(side: 1 | -1): THREE.ShaderMaterial {
       uSide: { value: side },
       uSelect: { value: 0 },
       uGlow: { value: 0 },
+      uGlowEyes: sharedUniforms.uGlowEyes,
       uLightDir: sharedUniforms.uLightDir,
       uSaturation: sharedUniforms.uSaturation,
       uBrightness: sharedUniforms.uBrightness,

@@ -2,7 +2,7 @@ import { CONTROLS, CONTROL_BY_ID, controlRange, isControlVisible } from './contr
 import { ACCESSORY_BY_ID, CHILD_HAIR_FALLBACK, FULL_HAIR_STYLES, HAIR_STYLES, defaultLooks, type AccessoryDef } from './looks';
 import { emptyAppearance } from './appearance';
 import {
-  AGE_PRESETS_ADULT, AGE_PRESETS_BEAST, ARCHETYPE_BY_ID, OLD_HAIR_GRAY, PRESENTATION_PRESETS,
+  AGE_PRESETS_ADULT, AGE_PRESETS_BEAST, ARCHETYPE_BY_ID, OLD_HAIR_GRAY, PRESENTATION_PRESETS, isStylePreset,
 } from './presets';
 import type { BodyKind, Equipped, FacialHairPiece, HairPiece, Identity, StylePreset } from './types';
 
@@ -260,7 +260,8 @@ export function deserializeCharacter(text: string): Identity {
   if (!raw || typeof raw !== 'object' || !raw.bodyKind) throw new Error('This file is not a saved character.');
   const kind = raw.bodyKind as BodyKind;
   if (!['adult', 'child', 'robot', 'beast'].includes(kind)) throw new Error(`Unknown body kind: ${raw.bodyKind}`);
-  const base = newCharacter(kind, raw.style ?? 'stories');
+  if (!isStylePreset(raw.style)) raw.style = 'stories';
+  const base = newCharacter(kind, raw.style);
   const id: Identity = {
     ...base,
     ...raw,

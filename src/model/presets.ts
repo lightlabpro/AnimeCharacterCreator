@@ -160,36 +160,200 @@ export const HAIR_COLORS: { id: string; label: string; root: string; tip: string
   { id: 'gray', label: 'Gray', root: '#8a8a90', tip: '#cfcfd4' },
 ];
 
+type RGB = [number, number, number];
+
+/**
+ * Everything one picture style sets. Shading values reach every toon material through shared uniforms,
+ * line and post values reach the post pipeline. See docs/shading-style-guide.md for what each style is after.
+ */
 export interface StyleSettings {
   id: StylePreset;
   label: string;
   hint: string;
+  /** Light steps above the shadow. 1 is Capcom's hard two-tone. */
   bands: number;
+  /** Width of the light/shadow boundary before the per-material multiplier. */
   softness: number;
+  /** MToon Toony: 1 is razor sharp, 0 doubles the softness. */
+  toony: number;
+  /** MToon Shade Shift: moves the boundary toward the light (negative) or away (positive). */
+  shadeShift: number;
+  /** Painted boundary: texture brightness and brush noise push the threshold around. */
+  painted: number;
+  /** Shading rim strength. Zero when the screen rim replaces it. */
   rim: number;
   saturation: number;
   brightness: number;
-  shadowTint: [number, number, number];
+  /** First shadow color as a multiplier of the lit color. Hue-shifted, never gray. */
+  shadowTint: RGB;
+  /** Second, darker shadow inside the first, from forced-shadow masks and deep occlusion. */
+  shadow2Tint: RGB;
+  /** Color change applied to shadowed pixels only. */
+  shadowGrade: RGB;
   specBoost: number;
+  edgeHighlight: number;
+  lightColor: string;
+  /** Ambient from one fixed direction, on shadows only. */
+  ambient: number;
+  ambientColor: string;
+  /** Fill light, on shadows only. */
+  fill: number;
+  fillColor: string;
+  /** Second colored light, used by gradient-mapped looks such as Comic. */
+  light2: { dir: RGB; color: string; strength: number };
+  /** Blend of face normals toward the head proxy, 0 to 1. */
+  faceSmooth: number;
+  /** Depth and normal edge width in pixels. */
   outline: number;
+  /** Line color as a multiple of the surface color. */
   outlineDark: number;
+  /** 1 colors lines by the surface under them, 0 uses near black. */
+  lineColorMix: number;
+  /** Inverted-hull outline width in pixels, 0 turns it off. */
+  hull: number;
+  /** Normal edge sensitivity for creases, 0 turns them off. */
+  creases: number;
+  /** Sketchy line wobble in pixels. */
+  lineJitter: number;
+  /** Ink layer offset in pixels, for print misregistration. */
+  inkOffset: number;
+  /** Screen-space rim of constant width: lit side, shadow side, width in pixels. */
+  screenRim: { lit: number; shadow: number; width: number };
+  /** Shadow hatching strength, density, and whether strokes stick to the surface or the screen. */
+  hatch: number;
+  hatchScale: number;
+  hatchMode: 'surface' | 'screen';
+  /** Halftone dots in the highlights and midtones. */
+  halftone: number;
+  grain: number;
+  /** Four-sector Kuwahara radius in pixels, 0 turns it off. */
+  kuwahara: number;
+  /** Character-only bloom that keeps the brightest channel, so skin stays warm. */
+  diffusion: number;
+  /** Bloom on HDR emissive above 1. */
+  bloom: number;
+  /** Warm brightening at the screen edges and a darkening gradient from the top. */
+  flare: number;
+  para: number;
+  fog: number;
+  splitTone: { shadow: string; highlight: string; amount: number };
+  vignette: number;
+  sparkle: number;
+  /** Glowing ring eyes, 0 to 1. */
+  glowEyes: number;
   background: [string, string];
 }
 
+const STORIES: StyleSettings = {
+  id: 'stories', label: 'Stories', hint: 'Default. Hard two-tone cel shading, colored lines, soft fur, and a film-like finish.',
+  bands: 1, softness: 0.035, toony: 0.6, shadeShift: 0, painted: 0, rim: 0.12,
+  saturation: 1.04, brightness: 1.0, shadowTint: [0.74, 0.66, 0.86], shadow2Tint: [0.56, 0.48, 0.7], shadowGrade: [0.96, 0.97, 1.04],
+  specBoost: 1, edgeHighlight: 0.6, lightColor: '#fff6ea', ambient: 0.12, ambientColor: '#9ab4e0', fill: 0.1, fillColor: '#b8c4ff',
+  light2: { dir: [-0.6, 0.2, -0.5], color: '#8fb4ff', strength: 0 }, faceSmooth: 0.75,
+  outline: 1.0, outlineDark: 0.42, lineColorMix: 1, hull: 1.3, creases: 0.5, lineJitter: 0, inkOffset: 0,
+  screenRim: { lit: 0.35, shadow: 0.12, width: 2.5 },
+  hatch: 0, hatchScale: 1, hatchMode: 'surface', halftone: 0, grain: 0.015, kuwahara: 0,
+  diffusion: 0.22, bloom: 0.25, flare: 0.14, para: 0.18, fog: 0.12,
+  splitTone: { shadow: '#3a4a8a', highlight: '#ffd9a8', amount: 0.08 }, vignette: 0.2, sparkle: 0.6, glowEyes: 0,
+  background: ['#58708c', '#1d2330'],
+};
+
 export const STYLE_PRESETS: Record<StylePreset, StyleSettings> = {
-  stories: {
-    id: 'stories', label: 'Stories', hint: 'Default. Soft shadow bands, painted faces, a thin rim.',
-    bands: 3, softness: 0.22, rim: 0.4, saturation: 1.0, brightness: 1.0, shadowTint: [0.72, 0.66, 0.82], specBoost: 1, outline: 1.1, outlineDark: 0.38,
-    background: ['#58708c', '#1d2330'],
-  },
+  stories: STORIES,
   breath: {
-    id: 'breath', label: 'Breath', hint: 'Brighter painted color and cleaner illustration edges.',
-    bands: 2, softness: 0.12, rim: 0.28, saturation: 1.18, brightness: 1.08, shadowTint: [0.8, 0.7, 0.8], specBoost: 0.8, outline: 1.3, outlineDark: 0.3,
-    background: ['#8aa4b8', '#2a2c3a'],
+    ...STORIES,
+    id: 'breath', label: 'Breath', hint: 'Muted earthy paint, planar steps, thin lines in the surface color, and watercolor grain.',
+    bands: 2, softness: 0.06, toony: 0.5, painted: 0.55, rim: 0.08,
+    saturation: 0.86, brightness: 1.03, shadowTint: [0.8, 0.7, 0.72], shadow2Tint: [0.62, 0.52, 0.6], shadowGrade: [0.94, 0.96, 1.06],
+    specBoost: 0.6, edgeHighlight: 0.3, lightColor: '#ffeccc', ambientColor: '#8aa0b8', fillColor: '#a8b4d0',
+    outline: 0.9, outlineDark: 0.55, hull: 0.8, creases: 0.3,
+    screenRim: { lit: 0.2, shadow: 0, width: 2 },
+    grain: 0.05, kuwahara: 2, diffusion: 0.16, bloom: 0.15, flare: 0.1, para: 0.12, fog: 0.22,
+    splitTone: { shadow: '#40506a', highlight: '#ffe0b0', amount: 0.14 }, vignette: 0.28, sparkle: 0.3,
+    background: ['#b8b09a', '#4a4438'],
   },
   legends: {
-    id: 'legends', label: 'Legends', hint: 'Cleaner cel bands and chunkier painted metal.',
-    bands: 2, softness: 0.04, rim: 0.22, saturation: 1.08, brightness: 1.04, shadowTint: [0.66, 0.7, 0.84], specBoost: 1.6, outline: 1.6, outlineDark: 0.25,
-    background: ['#9ab8d0', '#2a3444'],
+    ...STORIES,
+    id: 'legends', label: 'Legends', hint: 'Toy-like chunky shapes, near-flat shading, thick dark lines, glossy metal, bright sky.',
+    bands: 1, softness: 0.02, toony: 0.8, rim: 0.05,
+    saturation: 1.14, brightness: 1.05, shadowTint: [0.7, 0.74, 0.88], shadow2Tint: [0.55, 0.58, 0.75], shadowGrade: [1, 1, 1],
+    specBoost: 1.7, edgeHighlight: 0.8, lightColor: '#ffffff', ambient: 0.16, ambientColor: '#b0d0ff', fill: 0.05,
+    faceSmooth: 0.9, outline: 1.4, outlineDark: 0.22, lineColorMix: 0.5, hull: 2.2, creases: 0.35,
+    screenRim: { lit: 0.15, shadow: 0, width: 2 },
+    grain: 0, diffusion: 0.1, bloom: 0.2, flare: 0.05, para: 0.05, fog: 0.05,
+    splitTone: { shadow: '#2a3a7a', highlight: '#fff4d0', amount: 0.04 }, vignette: 0.12, sparkle: 0.3,
+    background: ['#9ad0f0', '#3a6aa0'],
+  },
+  comic: {
+    ...STORIES,
+    id: 'comic', label: 'Comic', hint: 'Duotone light per lamp, ink hatching in the shadows, sketchy lines, halftone, and glowing ring eyes.',
+    bands: 1, softness: 0.05, toony: 0.7, rim: 0,
+    saturation: 1.1, brightness: 1.02, shadowTint: [0.5, 0.36, 0.5], shadow2Tint: [0.3, 0.2, 0.34], shadowGrade: [0.9, 0.9, 1.08],
+    specBoost: 0.9, edgeHighlight: 0.5, lightColor: '#ffd2b0', ambient: 0.08, ambientColor: '#4a6ad0', fill: 0.22, fillColor: '#4a78ff',
+    light2: { dir: [-0.7, 0.35, -0.4], color: '#50e0a0', strength: 0.55 }, faceSmooth: 0.6,
+    outline: 1.5, outlineDark: 0.12, lineColorMix: 0.25, hull: 1.8, creases: 0.9, lineJitter: 1.2, inkOffset: 0.8,
+    screenRim: { lit: 0.25, shadow: 0.3, width: 3 },
+    hatch: 0.85, hatchScale: 1.2, hatchMode: 'surface', halftone: 0.45, grain: 0.035, kuwahara: 0,
+    diffusion: 0.1, bloom: 0.8, flare: 0.08, para: 0.2, fog: 0,
+    splitTone: { shadow: '#302040', highlight: '#ffe6c8', amount: 0.1 }, vignette: 0.35, sparkle: 0.2, glowEyes: 1,
+    background: ['#3a3a40', '#141418'],
   },
 };
+
+/** Style values a person can override from the Render section. Stored per style. */
+export interface RenderOverrides {
+  shadeShift?: number;
+  toony?: number;
+  outline?: number;
+  lineColorMix?: number;
+  hull?: number;
+  rimLit?: number;
+  rimShadow?: number;
+  hatch?: number;
+  hatchMode?: 'surface' | 'screen';
+  grain?: number;
+  bloom?: number;
+  diffusion?: number;
+  light2Color?: string;
+  light2Strength?: number;
+  gobo?: number;
+  dof?: number;
+  particles?: number;
+  glowEyes?: number;
+}
+
+/** Extras that are off in every preset and only come from the Render section. */
+export interface RenderExtras {
+  gobo: number;
+  dof: number;
+  particles: number;
+}
+
+/** The preset with the person's overrides applied. */
+export function resolveStyle(style: StylePreset, o: RenderOverrides = {}): StyleSettings & RenderExtras {
+  const base = STYLE_PRESETS[style] ?? STYLE_PRESETS.stories;
+  const pick = <T,>(v: T | undefined, d: T) => (v === undefined ? d : v);
+  return {
+    ...base,
+    shadeShift: pick(o.shadeShift, base.shadeShift),
+    toony: pick(o.toony, base.toony),
+    outline: pick(o.outline, base.outline),
+    lineColorMix: pick(o.lineColorMix, base.lineColorMix),
+    hull: pick(o.hull, base.hull),
+    screenRim: { ...base.screenRim, lit: pick(o.rimLit, base.screenRim.lit), shadow: pick(o.rimShadow, base.screenRim.shadow) },
+    hatch: pick(o.hatch, base.hatch),
+    hatchMode: pick(o.hatchMode, base.hatchMode),
+    grain: pick(o.grain, base.grain),
+    bloom: pick(o.bloom, base.bloom),
+    diffusion: pick(o.diffusion, base.diffusion),
+    light2: { ...base.light2, color: pick(o.light2Color, base.light2.color), strength: pick(o.light2Strength, base.light2.strength) },
+    glowEyes: pick(o.glowEyes, base.glowEyes),
+    gobo: pick(o.gobo, 0),
+    dof: pick(o.dof, 0),
+    particles: pick(o.particles, 0),
+  };
+}
+
+export function isStylePreset(v: unknown): v is StylePreset {
+  return typeof v === 'string' && Object.prototype.hasOwnProperty.call(STYLE_PRESETS, v);
+}

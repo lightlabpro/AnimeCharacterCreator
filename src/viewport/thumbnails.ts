@@ -1,10 +1,13 @@
 import * as THREE from 'three';
 import type { ImportedPack } from '../library/importer';
 import { neutralPerformance, resolvePerformance, wrinkleActivation, type PerformanceState } from '../model/performance';
-import type { Identity } from '../model/types';
+import type { RenderOverrides } from '../model/presets';
+import type { Identity, StylePreset } from '../model/types';
 import { buildRig } from './build';
 import { attachPacks } from './gltfPacks';
+import { PostPipeline } from './postPipeline';
 import type { Rig } from './rig';
+import { withStyle } from './toonMaterial';
 
 export type ThumbFrame = 'body' | 'head' | 'hair' | 'bust' | 'feet' | 'hands';
 
@@ -16,88 +19,29 @@ export interface ThumbJob {
 
 const SIZE = 256;
 
-const quadVertex = /* glsl */ `
-varying vec2 vUv;
-void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
-`;
+let overrides: Partial<Record<StylePreset, RenderOverrides>> = {};
 
-/** Same depth-edge outline as the viewport, over a transparent background so cards supply their own. */
-const quadFragment = /* glsl */ `
-uniform sampler2D tColor;
-uniform sampler2D tDepth;
-uniform vec2 uTexel;
-uniform float uNear;
-uniform float uFar;
-varying vec2 vUv;
-float lin(float d) {
-  float z = d * 2.0 - 1.0;
-  return 2.0 * uNear * uFar / (uFar + uNear - z * (uFar - uNear));
+/** Keeps thumbnails in step with the Render section. Call clearThumbnails() afterwards to redraw. */
+export function setThumbnailOverrides(o: Partial<Record<StylePreset, RenderOverrides>>) {
+  overrides = o;
 }
-void main() {
-  float d0 = texture2D(tDepth, vUv).r;
-  vec4 c0 = texture2D(tColor, vUv);
-  float z0 = lin(d0);
-  float best = d0;
-  vec2 bestUv = vUv;
-  float edge = 0.0;
-  vec2 offs[8];
-  offs[0] = vec2(1.0, 0.0); offs[1] = vec2(-1.0, 0.0); offs[2] = vec2(0.0, 1.0); offs[3] = vec2(0.0, -1.0);
-  offs[4] = vec2(0.7, 0.7); offs[5] = vec2(-0.7, 0.7); offs[6] = vec2(0.7, -0.7); offs[7] = vec2(-0.7, -0.7);
-  for (int i = 0; i < 8; i++) {
-    vec2 uv = vUv + offs[i] * uTexel * 1.2;
-    float d = texture2D(tDepth, uv).r;
-    float z = lin(d);
-    float nearZ = min(z, z0);
-    float diff = abs(z - z0) / max(nearZ, 1e-3);
-    edge = max(edge, smoothstep(0.03, 0.08, diff));
-    if (d < best) { best = d; bestUv = uv; }
-  }
-  if (best >= 1.0) edge = 0.0;
-  vec3 lineCol = texture2D(tColor, bestUv).rgb * 0.35;
-  float a = d0 >= 1.0 ? edge : max(c0.a, edge);
-  vec3 col = d0 >= 1.0 ? lineCol : mix(c0.rgb, lineCol, edge);
-  gl_FragColor = vec4(col, a);
-  #include <colorspace_fragment>
-}
-`;
 
 class ThumbRenderer {
   renderer: THREE.WebGLRenderer;
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(26, 1, 0.05, 60);
-  rt: THREE.WebGLRenderTarget;
-  quadScene = new THREE.Scene();
-  quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  post: PostPipeline;
 
   constructor() {
     this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, premultipliedAlpha: false, preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(1);
     this.renderer.setSize(SIZE, SIZE, false);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-    this.rt = new THREE.WebGLRenderTarget(SIZE, SIZE, { type: THREE.HalfFloatType, depthTexture: new THREE.DepthTexture(SIZE, SIZE), samples: 0 });
-    this.rt.depthTexture!.type = THREE.UnsignedIntType;
-    const quad = new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
-      new THREE.ShaderMaterial({
-        vertexShader: quadVertex,
-        fragmentShader: quadFragment,
-        depthTest: false,
-        depthWrite: false,
-        transparent: true,
-        uniforms: {
-          tColor: { value: this.rt.texture },
-          tDepth: { value: this.rt.depthTexture },
-          uTexel: { value: new THREE.Vector2(1 / SIZE, 1 / SIZE) },
-          uNear: { value: this.camera.near },
-          uFar: { value: this.camera.far },
-        },
-      }),
-    );
-    quad.frustumCulled = false;
-    this.quadScene.add(quad);
+    this.post = new PostPipeline(this.renderer, true);
+    this.post.setSize(SIZE, SIZE, 1);
   }
 
-  frame(rig: Rig, frame: ThumbFrame) {
+  frame(rig: Rig, frame: ThumbFrame): number {
     rig.root.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(rig.root);
     const center = box.getCenter(new THREE.Vector3());
@@ -143,19 +87,15 @@ class ThumbRenderer {
     this.camera.position.copy(target).addScaledVector(dir, dist);
     this.camera.lookAt(target);
     this.camera.updateProjectionMatrix();
+    return dist;
   }
 
-  render(): string {
-    const r = this.renderer;
-    r.setRenderTarget(this.rt);
-    r.setClearColor(0x000000, 0);
-    r.clear();
-    r.render(this.scene, this.camera);
-    r.setRenderTarget(null);
-    r.setClearColor(0x000000, 0);
-    r.clear();
-    r.render(this.quadScene, this.quadCam);
-    return r.domElement.toDataURL('image/png');
+  render(style: StylePreset, focus: number, beast: boolean): string {
+    return withStyle(style, overrides[style], (s) => {
+      this.post.setStyle({ ...s, particles: 0, flare: 0, para: 0, vignette: 0 });
+      this.post.render(this.scene, this.camera, { time: 0, focus, sensitivity: beast ? 0.6 : 1 });
+      return this.renderer.domElement.toDataURL('image/png');
+    });
   }
 }
 
@@ -179,8 +119,8 @@ async function renderJob(job: ThumbJob, packs: Map<string, ImportedPack>): Promi
     const w = resolvePerformance(perf, job.identity.faceProfile, 0, 0);
     rig.update({ w, time: 0, dt: 0, perf, wrinkle: wrinkleActivation({}, job.identity.faceProfile) });
     renderer.scene.add(rig.root);
-    renderer.frame(rig, job.frame);
-    return renderer.render();
+    const focus = renderer.frame(rig, job.frame);
+    return renderer.render(job.identity.style, focus, job.identity.bodyKind === 'beast');
   } finally {
     renderer.scene.remove(rig.root);
     rig.dispose();

@@ -284,7 +284,7 @@ function buildHeadGear(ctx: BuildCtx, b: HumanoidBody, e: Equipped, def: Accesso
   const R = b.headR;
   if (def.id === 'goggles') {
     const frame = gearMat(ctx, e, c.frame, 'leather');
-    const lens = ctx.mat(c.lens, 'glass', { opacity: 0.75 });
+    const lens = ctx.mat(c.lens, 'lens', { opacity: 0.9 });
     const band = reg.add(parent, new THREE.TorusGeometry(1, 0.035, 8, 40), frame, { region: 'skull', name: 'EQ_Goggles' });
     band.scale.set(R.x * 1.04, R.z * 1.05, h);
     band.rotation.x = Math.PI / 2 - 0.35;

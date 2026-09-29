@@ -40,7 +40,7 @@ export function buildDragon(ctx: BuildCtx): { root: THREE.Group; head: THREE.Obj
   const belly = ctx.mat(c.belly, 'skin');
   const hornMat = ctx.mat(c.horn, 'scale', wear > 0 ? { wear } : undefined);
   const clawMat = ctx.mat(c.claw, 'scale');
-  const mem = ctx.mat(c.membrane, 'skin', { opacity: 0.94, side: THREE.DoubleSide });
+  const mem = ctx.mat(c.membrane, 'membrane', { opacity: 0.94, side: THREE.DoubleSide });
   const dark = ctx.mat('#2a1418', 'dark');
   const cavity = ctx.mat('#6a1e24', 'dark');
   const teeth = ctx.mat('#fbf8f2', 'skin');
@@ -359,7 +359,7 @@ export function buildDragon(ctx: BuildCtx): { root: THREE.Group; head: THREE.Obj
         const a = (k / 6) * Math.PI * 2;
         reg.cone(inner, gearMat(ctx, e, col.metal, 'metal'), V(Math.cos(a) * r * 1.05, 0, Math.sin(a) * r * 1.05), V(Math.cos(a), 0, Math.sin(a)), u * 0.04, u * 0.12, { region: 'neck' });
       }
-      reg.ellipsoid(inner, ctx.mat(col.gem, 'glass', { opacity: 0.9, emissive: col.gem, emissiveStrength: 0.3 }), V(0, 0, r * 1.1), V(u * 0.09, u * 0.12, u * 0.06), { region: 'neck' });
+      reg.ellipsoid(inner, ctx.mat(col.gem, 'crystal', { opacity: 0.9, emissive: col.gem, emissiveStrength: 0.3 }), V(0, 0, r * 1.1), V(u * 0.09, u * 0.12, u * 0.06), { region: 'neck' });
     } else if (def.id === 'dragon_harness') {
       const { inner } = equipRoot(ctx, e, 'SOC-Back', body);
       inner.position.set(0, 0, 0);

@@ -1,6 +1,6 @@
 export type BodyKind = 'adult' | 'child' | 'robot' | 'beast';
 export type LibraryTag = 'humanoid' | 'robot' | 'full_beast';
-export type StylePreset = 'stories' | 'breath' | 'legends';
+export type StylePreset = 'stories' | 'breath' | 'legends' | 'comic';
 
 export const BODY_KINDS: { id: BodyKind; label: string; hint: string }[] = [
   { id: 'adult', label: 'Adult humanoid', hint: 'Human and every human-beast. About 7 to 7.5 heads tall.' },

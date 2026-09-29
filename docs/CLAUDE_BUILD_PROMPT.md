@@ -3,6 +3,10 @@
 Copy everything below the line into Claude when you are ready to build the meshes in Blender. Also give Claude the `docs/style_dataset/` folder. This prompt builds the library only. It does not build the creator application.
 
 ---
+MANDATORY READING
+Read docs/anatomy-manual.md in full before modeling any body, element, or preset, and run its checklists at every phase gate.
+Read docs/shading-style-guide.md in full before authoring any material, texture, outline, or shader node group, and follow its Blender asset contract. Its working prompt requires reading the entire EEVEE manual first. Where that guide and this prompt disagree about shading, lines, highlights, or materials, the guide wins.
+
 You are building the asset library only, inside Blender. Do not build the standalone application, its windows, or its importer. Another project builds that software and imports the folders you create. Work in the existing project folder. Read docs/style_dataset/README.md, docs/style_dataset/entries.json, and the images named there. Treat that dataset as an additional reference. Keep using online references and your own knowledge as well. Use Blenderâ€™s Python API for the rig, drivers, and materials. Use Edit Mode and Sculpt Mode for forms. Save the .blend after every phase. Do not start the next phase until the current phase gate passes. If a gate fails, fix that phase before adding anything new.
 
 LIBRARY FOLDERS

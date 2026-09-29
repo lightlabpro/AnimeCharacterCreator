@@ -8,6 +8,7 @@ import { CONTROL_BY_ID, controlRange } from '../model/controls';
 import { ACCESSORY_BY_ID } from '../model/looks';
 import { captureSlot, WHEEL_SLOTS, blendFaces, wheelWeights, type MixScope, type MixerSlot } from '../model/mixer';
 import { neutralPerformance, type PerformanceState } from '../model/performance';
+import type { RenderOverrides } from '../model/presets';
 import type { BodyKind, Equipped, Identity, Region, StylePreset } from '../model/types';
 import { hairSlotForPack, importLibrary, libraryTabFor, type ImportReport, type ImportedPack, type ScanResult } from '../library/importer';
 import { libraryOf } from '../model/types';
@@ -61,6 +62,8 @@ export interface AppState {
   mixer: MixerState;
   family: FamilyMember[];
   favorites: string[];
+  /** Render section overrides per style. Saved on this machine, not in the character. */
+  renderOverrides: Partial<Record<StylePreset, RenderOverrides>>;
   filePath: string | null;
   /** The identity as last saved or opened, used to show unsaved changes. */
   savedIdentity: Identity | null;
@@ -103,6 +106,8 @@ export interface AppState {
 
   importScan(scan: ScanResult): void;
   toggleFavorite(id: string): void;
+  setRenderOverride(style: StylePreset, patch: RenderOverrides, persist?: boolean): void;
+  resetRenderOverrides(style: StylePreset): void;
   setUI(p: Partial<UIState>): void;
   toast(text: string): void;
   requestCamera(name: string): void;
@@ -131,6 +136,25 @@ function loadFavorites(): string[] {
 function saveFavorites(f: string[]) {
   try {
     localStorage.setItem('creator.favorites', JSON.stringify(f));
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+const OVERRIDES_KEY = 'creator.renderOverrides';
+
+function loadOverrides(): Partial<Record<StylePreset, RenderOverrides>> {
+  try {
+    const raw = JSON.parse(localStorage.getItem(OVERRIDES_KEY) ?? '{}');
+    return raw && typeof raw === 'object' ? raw : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveOverrides(o: Partial<Record<StylePreset, RenderOverrides>>) {
+  try {
+    localStorage.setItem(OVERRIDES_KEY, JSON.stringify(o));
   } catch {
     /* storage unavailable */
   }
@@ -177,6 +201,7 @@ export const useStore = create<AppState>()((set, get) => {
     mixer: { scope: 'head', mode: 'mix', slots: Array(WHEEL_SLOTS).fill(null), handle: [0, 0], base: null, expression: null },
     family: [],
     favorites: typeof localStorage !== 'undefined' ? loadFavorites() : [],
+    renderOverrides: typeof localStorage !== 'undefined' ? loadOverrides() : {},
     filePath: null,
     savedIdentity: null,
 
@@ -302,6 +327,17 @@ export const useStore = create<AppState>()((set, get) => {
       get().commit((id) => {
         id.style = style;
       });
+    },
+    setRenderOverride(style, patch, persist = true) {
+      const all = { ...get().renderOverrides, [style]: { ...(get().renderOverrides[style] ?? {}), ...patch } };
+      set({ renderOverrides: all });
+      if (persist) saveOverrides(all);
+    },
+    resetRenderOverrides(style) {
+      const all = { ...get().renderOverrides };
+      delete all[style];
+      set({ renderOverrides: all });
+      saveOverrides(all);
     },
     setArchetype(aid) {
       get().commit((id) => applyArchetype(id, aid));

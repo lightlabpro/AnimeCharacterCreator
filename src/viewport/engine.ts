@@ -2,63 +2,14 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import type { ImportedPack } from '../library/importer';
-import { STYLE_PRESETS } from '../model/presets';
+import { STYLE_PRESETS, type RenderOverrides } from '../model/presets';
 import { CLIP_BY_ID, clipFinished, resolvePerformance, sampleClip, wrinkleActivation, type PerformanceState } from '../model/performance';
 import type { Identity, Region, StylePreset } from '../model/types';
 import { buildRig } from './build';
 import { attachPacks, packMeshes } from './gltfPacks';
+import { PostPipeline } from './postPipeline';
 import type { Rig } from './rig';
 import { applyStyle } from './toonMaterial';
-
-const quadVertex = /* glsl */ `
-varying vec2 vUv;
-void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
-`;
-
-const quadFragment = /* glsl */ `
-uniform sampler2D tColor;
-uniform sampler2D tDepth;
-uniform vec2 uTexel;
-uniform float uNear;
-uniform float uFar;
-uniform float uWidth;
-uniform float uDark;
-uniform vec3 uBgTop;
-uniform vec3 uBgBottom;
-varying vec2 vUv;
-float lin(float d) {
-  float z = d * 2.0 - 1.0;
-  return 2.0 * uNear * uFar / (uFar + uNear - z * (uFar - uNear));
-}
-void main() {
-  float d0 = texture2D(tDepth, vUv).r;
-  vec4 c0 = texture2D(tColor, vUv);
-  vec3 bg = mix(uBgBottom, uBgTop, smoothstep(0.0, 1.0, vUv.y));
-  float vig = 1.0 - 0.25 * length(vUv - vec2(0.5, 0.55));
-  bg *= vig;
-  vec3 col = d0 >= 1.0 ? bg : mix(bg, c0.rgb, c0.a);
-  float z0 = lin(d0);
-  float best = d0;
-  vec2 bestUv = vUv;
-  float edge = 0.0;
-  vec2 offs[8];
-  offs[0] = vec2(1.0, 0.0); offs[1] = vec2(-1.0, 0.0); offs[2] = vec2(0.0, 1.0); offs[3] = vec2(0.0, -1.0);
-  offs[4] = vec2(0.7, 0.7); offs[5] = vec2(-0.7, 0.7); offs[6] = vec2(0.7, -0.7); offs[7] = vec2(-0.7, -0.7);
-  for (int i = 0; i < 8; i++) {
-    vec2 uv = vUv + offs[i] * uTexel * uWidth;
-    float d = texture2D(tDepth, uv).r;
-    float z = lin(d);
-    float nearZ = min(z, z0);
-    float diff = abs(z - z0) / max(nearZ, 1e-3);
-    edge = max(edge, smoothstep(0.03, 0.08, diff));
-    if (d < best) { best = d; bestUv = uv; }
-  }
-  vec3 lineCol = texture2D(tColor, bestUv).rgb * uDark;
-  if (best >= 1.0) edge = 0.0;
-  gl_FragColor = vec4(mix(col, lineCol, edge), 1.0);
-  #include <colorspace_fragment>
-}
-`;
 
 export interface EngineCallbacks {
   onHover(region: Region | null, equipUid: string | null): void;
@@ -82,10 +33,7 @@ export class Engine {
   gizmo: TransformControls;
   rig: Rig | null = null;
   holder = new THREE.Group();
-  private rt: THREE.WebGLRenderTarget;
-  private quad: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
-  private quadScene = new THREE.Scene();
-  private quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  private post: PostPipeline;
   private shadow: THREE.Mesh;
   private raycaster = new THREE.Raycaster();
   private pointer = new THREE.Vector2();
@@ -107,6 +55,7 @@ export class Engine {
   private drag: { x: number; y: number } | null = null;
   private resizeObs: ResizeObserver;
   private style: StylePreset = 'stories';
+  private overrides: Partial<Record<StylePreset, RenderOverrides>> = {};
   private buildGen = 0;
   private framedOnce = false;
   private userMoved = false;
@@ -159,30 +108,8 @@ export class Engine {
     this.shadow.renderOrder = -1;
     this.scene.add(this.shadow);
 
-    this.rt = new THREE.WebGLRenderTarget(4, 4, { type: THREE.HalfFloatType, depthTexture: new THREE.DepthTexture(4, 4) });
-    this.rt.depthTexture!.type = THREE.UnsignedIntType;
-    this.quad = new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
-      new THREE.ShaderMaterial({
-        vertexShader: quadVertex,
-        fragmentShader: quadFragment,
-        depthTest: false,
-        depthWrite: false,
-        uniforms: {
-          tColor: { value: this.rt.texture },
-          tDepth: { value: this.rt.depthTexture },
-          uTexel: { value: new THREE.Vector2(1 / 4, 1 / 4) },
-          uNear: { value: this.camera.near },
-          uFar: { value: this.camera.far },
-          uWidth: { value: 1.1 },
-          uDark: { value: 0.38 },
-          uBgTop: { value: new THREE.Color('#58708c') },
-          uBgBottom: { value: new THREE.Color('#1d2330') },
-        },
-      }),
-    );
-    this.quad.frustumCulled = false;
-    this.quadScene.add(this.quad);
+    this.post = new PostPipeline(this.renderer, false);
+    this.post.setStyle(applyStyle(this.style));
 
     const el = this.renderer.domElement;
     el.addEventListener('pointermove', this.onMove);
@@ -199,12 +126,13 @@ export class Engine {
 
   setStyle(style: StylePreset) {
     this.style = style;
-    const s = applyStyle(style);
-    const u = this.quad.material.uniforms;
-    u.uWidth.value = s.outline;
-    u.uDark.value = s.outlineDark;
-    u.uBgTop.value.set(s.background[0]);
-    u.uBgBottom.value.set(s.background[1]);
+    this.post.setStyle(applyStyle(style, this.overrides[style]));
+  }
+
+  /** The person's Render section overrides, per style. */
+  setRenderOverrides(o: Partial<Record<StylePreset, RenderOverrides>>) {
+    this.overrides = o;
+    this.setStyle(this.style);
   }
 
   setCharacter(id: Identity, packs: Map<string, ImportedPack>, pose: PerformanceState['bodyPose']) {
@@ -429,8 +357,7 @@ export class Engine {
     this.renderer.domElement.style.width = `${w}px`;
     this.renderer.domElement.style.height = `${h}px`;
     const pr = this.renderer.getPixelRatio();
-    this.rt.setSize(Math.floor(w * pr), Math.floor(h * pr));
-    this.quad.material.uniforms.uTexel.value.set(1 / (w * pr), 1 / (h * pr));
+    this.post.setSize(Math.floor(w * pr), Math.floor(h * pr), pr);
     const aspect = w / h;
     const changed = Math.abs(aspect - this.camera.aspect) > 0.01;
     this.camera.aspect = aspect;
@@ -440,19 +367,17 @@ export class Engine {
 
   private render() {
     const r = this.renderer;
-    r.setRenderTarget(this.rt);
-    r.setClearColor(0x000000, 0);
-    r.clear();
-    r.render(this.scene, this.camera);
-    r.setRenderTarget(null);
-    r.autoClear = false;
-    r.clear();
-    r.render(this.quadScene, this.quadCam);
+    this.post.render(this.scene, this.camera, {
+      time: performance.now() / 1000,
+      focus: this.camera.position.distanceTo(this.controls.target),
+      sensitivity: this.rig?.identity.bodyKind === 'beast' ? 0.6 : 1,
+    });
     if (this.gizmo.object) {
+      r.autoClear = false;
       r.clearDepth();
       r.render(this.overlay, this.camera);
+      r.autoClear = true;
     }
-    r.autoClear = true;
   }
 
   private loop = () => {
@@ -495,7 +420,7 @@ export class Engine {
     this.gizmo.dispose();
     this.controls.dispose();
     this.rig?.dispose();
-    this.rt.dispose();
+    this.post.dispose();
     this.renderer.dispose();
     this.renderer.domElement.remove();
   }

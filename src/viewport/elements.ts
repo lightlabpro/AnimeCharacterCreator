@@ -190,7 +190,7 @@ export function buildEars(ctx: BuildCtx, b: HumanoidBody, headColor: string) {
   const spread = n('earEl.spread');
   const outer = ctx.mat(headColor, b.coverage > 0 ? 'fur' : 'skin');
   const inner = ctx.mat(mixHex(id.colors.belly, '#f0a0a8', 0.35), 'skin');
-  const membrane = ctx.mat(id.colors.membrane, 'skin', { opacity: 0.92 });
+  const membrane = ctx.mat(id.colors.membrane, 'membrane', { opacity: 0.92 });
   const mane = ctx.mat(id.colors.mane, 'fur');
   S.forEach((s, i) => {
     const g = new THREE.Group();
@@ -264,7 +264,7 @@ export function buildHorns(ctx: BuildCtx, b: HumanoidBody) {
       g.position.copy(scalpPoint(b.headR, s * 1.35, 0.35, 0.95));
       b.g.head.add(g);
       for (let k = 0; k < 3; k += 1) {
-        const f = reg.cone(g, ctx.mat(id.colors.membrane, 'skin', { opacity: 0.9 }), V(0, 0, -k * 0.04 * h), V(s * 0.4, 1, -0.6 - k * 0.3), 0.05 * h * th, 0.28 * h * len * (1 - k * 0.2), { region: 'horns', name: 'CHR_HeadFin' });
+        const f = reg.cone(g, ctx.mat(id.colors.membrane, 'membrane', { opacity: 0.9 }), V(0, 0, -k * 0.04 * h), V(s * 0.4, 1, -0.6 - k * 0.3), 0.05 * h * th, 0.28 * h * len * (1 - k * 0.2), { region: 'horns', name: 'CHR_HeadFin' });
         f.scale.x *= 0.25;
       }
       return;
@@ -331,7 +331,7 @@ export function buildFrill(ctx: BuildCtx, b: HumanoidBody) {
   const flare = 0.5 + 0.5 * Math.max(0, n('frill.flare'));
   const arc = Math.PI * (0.8 + 0.5 * flare);
   const g = new THREE.CircleGeometry(size, 24, -Math.PI / 2 - arc / 2 + Math.PI, arc);
-  const mat = ctx.mat(id.colors.membrane, 'skin', { opacity: 0.94, side: THREE.DoubleSide });
+  const mat = ctx.mat(id.colors.membrane, 'membrane', { opacity: 0.94, side: THREE.DoubleSide });
   const m = reg.add(b.g.head, g, mat, { region: 'frill', name: 'CHR_Frill' });
   m.position.set(0, -0.32 * h, -0.1 * h);
   m.rotation.x = -0.35 - 0.4 * (1 - flare);
@@ -504,7 +504,7 @@ export function buildTail(ctx: BuildCtx, b: HumanoidBody): ((f: FrameState) => v
   if (look === 'feline' && tip > 1.05) reg.ellipsoid(end, tipMat, endP, V(u * 0.1 * tip, u * 0.1 * tip, u * 0.16 * tip), { region: 'tail' });
   if (look === 'canine') reg.ellipsoid(end, tipMat, endP.clone().multiplyScalar(0.6), V(u * 0.14 * tip, u * 0.14 * tip, u * 0.26 * tip), { region: 'tail' });
   if (look === 'fish') {
-    const fm = ctx.mat(id.colors.membrane, 'skin', { opacity: 0.9 });
+    const fm = ctx.mat(id.colors.membrane, 'membrane', { opacity: 0.9 });
     for (const s of [1, -1]) {
       const c = reg.cone(end, fm, endP, V(0, s * 0.8, -1), u * 0.18 * tip, u * 0.5 * tip, { region: 'tail' });
       c.scale.x *= 0.15;
@@ -538,7 +538,7 @@ export function buildWings(ctx: BuildCtx, b: HumanoidBody): ((f: FrameState) => 
   const spanF = n('wing.span') >= 0 ? 1 + n('wing.span') * 0.4 : 1 + n('wing.span') * 0.4;
   const fold = (n('wing.fold') + 1) / 2;
   const boneMat = ctx.mat(mixHex(b.bodyColor, '#000000', 0.15), b.coverage > 0 ? 'scale' : 'skin');
-  const mem = ctx.mat(id.colors.membrane, 'skin', { opacity: 0.93, side: THREE.DoubleSide });
+  const mem = ctx.mat(id.colors.membrane, 'membrane', { opacity: 0.93, side: THREE.DoubleSide });
   const feather = ctx.mat(id.colors.surfaceSecondary === '#2a1e1a' ? '#f4f0e8' : id.colors.surfaceSecondary, 'fur', { side: THREE.DoubleSide });
   const featherTip = ctx.mat(b.bodyColor, 'fur', { side: THREE.DoubleSide });
   const anchor = socket(ctx, 'SOC-Wings', b.g.chest, V(0, b.dims.torsoLen * 0.22, -b.dims.chestD * 0.85));

@@ -322,7 +322,7 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   const headMat = toon({
     color: headColor,
     kind: kindFor,
-    face: { map: faceTex, rect: new THREE.Vector4(layout.cx, layout.cy, layout.hx, layout.hy), front: 0.12 * h, headInv },
+    face: { map: faceTex, rect: new THREE.Vector4(layout.cx, layout.cy, layout.hx, layout.hy), front: 0.12 * h, headInv, radii: V(R.x, R.y, R.z * 1.15) },
     wrinkleMap: wrinkleTexture(layout),
   });
   const plainHead = ctx.mat(headColor, kindFor);

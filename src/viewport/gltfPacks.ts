@@ -33,18 +33,41 @@ function loadPack(pack: ImportedPack): Promise<GLTF> | null {
   return p;
 }
 
-function kindFor(name: string): ToonKind {
+/** Material category from the material or mesh name. The order matters: the first match wins. */
+export function kindFor(name: string): ToonKind {
   const n = name.toLowerCase();
+  const words = n.split(/[^a-z]+/);
   if (n.includes('hair')) return 'hair';
-  if (n.includes('metal') || n.includes('paint') || n.includes('armor')) return 'metal';
+  if (n.includes('lens') || n.includes('goggle')) return 'lens';
+  if (n.includes('crystal') || words.includes('gem') || words.includes('ice')) return 'crystal';
+  if (n.includes('membrane') || words.includes('aura')) return 'membrane';
+  if (n.includes('velvet')) return 'velvet';
+  if (n.includes('metal') || n.includes('paint') || n.includes('armor') || n.includes('gold') || n.includes('steel')) return 'metal';
   if (n.includes('leather') || n.includes('strap')) return 'leather';
   if (n.includes('skin')) return 'skin';
   if (n.includes('scale')) return 'scale';
   if (n.includes('fur')) return 'fur';
-  if (n.includes('glass') || n.includes('lens')) return 'glass';
+  if (n.includes('glass')) return 'glass';
   if (n.includes('glow') || n.includes('emiss')) return 'emissive';
   return 'cloth';
 }
+
+/** Outline shells draw in the post pass's line color: black with zero alpha marks a line pixel. */
+const outlineShellMaterial = new THREE.ShaderMaterial({
+  vertexShader: /* glsl */ `
+#include <common>
+#include <morphtarget_pars_vertex>
+#include <skinning_pars_vertex>
+void main() {
+  #include <skinbase_vertex>
+  #include <begin_vertex>
+  #include <morphtarget_vertex>
+  #include <skinning_vertex>
+  #include <project_vertex>
+}`,
+  fragmentShader: 'void main() { gl_FragColor = vec4(0.0); }',
+  blending: THREE.NoBlending,
+});
 
 /** Replaces imported PBR materials with the toon shader so packs match the procedural parts. */
 function toonify(root: THREE.Object3D, colorOverrides: Record<string, string>) {
@@ -53,16 +76,36 @@ function toonify(root: THREE.Object3D, colorOverrides: Record<string, string>) {
     if (!mesh.isMesh) return;
     const src = (Array.isArray(mesh.material) ? mesh.material[0] : mesh.material) as THREE.MeshStandardMaterial;
     const name = src?.name ?? mesh.name;
-    const kind = kindFor(name);
+    const meshName = mesh.name.toLowerCase();
+    if (meshName.endsWith('_shadow')) {
+      mesh.visible = false;
+      mesh.userData.shadowProxy = true;
+      return;
+    }
+    if (meshName.endsWith('_outline')) {
+      mesh.material = outlineShellMaterial;
+      mesh.userData.outlineShell = true;
+      mesh.userData.pickable = false;
+      return;
+    }
+    const kind = meshName.endsWith('_line') ? 'dark' : kindFor(name);
     const key = Object.keys(colorOverrides).find((k) => name.toLowerCase().includes(k.toLowerCase()));
     const color = key ? colorOverrides[key] : `#${(src?.color ?? new THREE.Color('#cccccc')).getHexString()}`;
+    const emissive = src?.emissive && src.emissive.getHex() !== 0 ? src.emissive : null;
     const m = toon({
       color,
       kind,
       map: src?.map ?? undefined,
+      recolor: !!key && !!src?.map,
+      aoMap: src?.aoMap ?? undefined,
+      ilmMap: src?.metalnessMap ?? src?.roughnessMap ?? undefined,
+      emissiveMap: src?.emissiveMap ?? undefined,
+      normalMap: src?.normalMap ?? undefined,
+      normalScale: src?.normalScale ? Math.min(0.5, src.normalScale.x * 0.35) : undefined,
       opacity: src?.transparent ? src.opacity : 1,
-      emissive: src?.emissive ? `#${src.emissive.getHexString()}` : undefined,
-      emissiveStrength: kind === 'emissive' ? 1 : 0,
+      side: src?.side,
+      emissive: emissive ? `#${emissive.getHexString()}` : undefined,
+      emissiveStrength: emissive ? src.emissiveIntensity ?? 1 : kind === 'emissive' ? 1 : 0,
     });
     mesh.material = m;
     mesh.userData.pickable = true;
