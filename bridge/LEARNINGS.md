@@ -111,3 +111,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: knowledge/body-profiles/mirai.json; check of amshani against mirai targets exits 12 with sensible directions
 - status: unverified: single reference band, thresholds not yet validated on more models
 - use: More references of different builds widen the band; MHS3 reference still needed
+
+## 2026-10-05 [code] Navia glb measured; orientation from skeleton
+- finding: Sketchfab glb files import into Blender Y-up (root-node rotation), which made Blender-side measurements nonsense while the plain-glTF path was right. measure() now orients from the skeleton (up = head minus feet, x = left minus right), so any file orientation works and both paths agree. The glTF loader takes joint positions from inverse bind matrices. usdz import in Blender 5.0.1 yields no armature bones, so use the glb. Navia has the coat/hat merged into the meshes, so only joint metrics are reliable.
+- evidence: tests/py/test_body_audit.py Orientation; navia python vs blender metrics identical to 4 decimals; knowledge/body-profiles/navia.json
+- status: confirmed
+- use: Prefer references with separate body meshes; export references as glb or measure from .blend/.fbx

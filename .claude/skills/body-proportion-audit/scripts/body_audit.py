@@ -92,12 +92,32 @@ def mirror_p95(V, n=1500):
     d = np.concatenate([np.sqrt(((S[i:i + 250, None, :] - W[None]) ** 2).sum(-1)).min(1) for i in range(0, len(S), 250)])
     return float(np.percentile(d, 95))
 
+def orientation(J):
+    """Rotation matrix R (rows = new x, y, z axes) that makes the skeleton stand along +Z with left/right along x, or None when
+    the rig has no feet/head or no left/right pair. Files arrive Y-up, Z-up or rotated by an export root node; trust the skeleton."""
+    import numpy as np
+    feet = [np.array(J[k]) for k in ("foot_L", "foot_R", "shin_L", "shin_R") if k in J]
+    if "head" not in J or not feet: return None
+    up = np.array(J["head"]) - np.mean(feet, 0)
+    if np.linalg.norm(up) < 1e-9: return None
+    z = up / np.linalg.norm(up)
+    for a, b in (("upper_arm_L", "upper_arm_R"), ("thigh_L", "thigh_R"), ("foot_L", "foot_R")):
+        if a in J and b in J:
+            d = np.array(J[a]) - np.array(J[b]); d -= z * d.dot(z)
+            if np.linalg.norm(d) > 1e-9:
+                x = d / np.linalg.norm(d); y = np.cross(z, x); return np.stack([x, y, z])
+    return None
+
 def measure(V, T, raw_joints, name="model"):
     """Returns {'name', 'height', 'metrics': {...}, 'joints_found': [...], 'notes': [...]} with every length divided by height."""
     import numpy as np
     V = np.asarray(V, float); T = np.asarray(T, int)
     zmin, zmax = float(V[:, 2].min()), float(V[:, 2].max()); H = zmax - zmin
     J = pick_joints(raw_joints); m, notes = {}, []
+    R = orientation(J)
+    if R is not None and not np.allclose(R, np.eye(3), atol=1e-3):
+        V = V @ R.T; J = {k: tuple(R @ np.array(v)) for k, v in J.items()}; notes.append("reoriented from the skeleton (file was not Z-up with left/right on x)")
+        zmin, zmax = float(V[:, 2].min()), float(V[:, 2].max()); H = zmax - zmin
     if H <= 0: raise ValueError("mesh has no height")
     zf = lambda k: (J[k][2] - zmin) / H if k in J else None
     def both(k, f):
@@ -270,11 +290,16 @@ def load_gltf(path):
             idx = _accessor(g, bufs, prim["indices"]).reshape(-1) if "indices" in prim else np.arange(len(P))
             Vs.append(zup(P)); Ts.append(idx.reshape(-1, 3).astype(int) + off); off += len(P)
     if not Vs: raise ValueError("no body mesh found (every mesh was filtered out or has no POSITION)")
-    names = {j for s in g.get("skins", []) for j in s["joints"]} or set(range(len(nodes)))
     joints = {}
-    for j in names:
-        n = nodes[j]; nm = n.get("extras", {}).get("name") or n.get("name", "")
-        joints[nm] = tuple(zup(world(j)[:3, 3][None])[0])
+    for sk in g.get("skins", []):
+        # With inverse bind matrices, inverse(IBM) is the joint's bind position in mesh space, exactly the space the vertices are in.
+        ibm = _accessor(g, bufs, sk["inverseBindMatrices"]).reshape(-1, 4, 4).transpose(0, 2, 1) if "inverseBindMatrices" in sk else None
+        for k, j in enumerate(sk["joints"]):
+            n = nodes[j]; nm = n.get("extras", {}).get("name") or n.get("name", "")
+            p = np.linalg.inv(ibm[k])[:3, 3] if ibm is not None else world(j)[:3, 3]
+            joints[nm] = tuple(zup(p[None])[0])
+    if not joints:
+        for j, n in enumerate(nodes): joints[n.get("extras", {}).get("name") or n.get("name", "")] = tuple(zup(world(j)[:3, 3][None])[0])
     return np.concatenate(Vs), np.concatenate(Ts), joints
 
 # ---------------------------------------------------------------- Blender
@@ -312,6 +337,7 @@ def blender_import(path):
         bpy.ops.wm.read_factory_settings(use_empty=True)
         if ext in (".glb", ".gltf"): bpy.ops.import_scene.gltf(filepath=path)
         elif ext == ".fbx": bpy.ops.import_scene.fbx(filepath=path)
+        elif ext in (".usd", ".usda", ".usdc", ".usdz"): bpy.ops.wm.usd_import(filepath=path)
         elif ext == ".obj": bpy.ops.wm.obj_import(filepath=path)
         else: raise ValueError(f"cannot import {ext}")
 

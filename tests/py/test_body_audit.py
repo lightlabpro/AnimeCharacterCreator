@@ -91,6 +91,14 @@ class Measure(unittest.TestCase):
         a = ba.measure(*body(1.0), "a")["metrics"]; b = ba.measure(*body(1.72), "b")["metrics"]
         for k in a: self.assertAlmostEqual(a[k], b[k], places=3, msg=k)
 
+class Orientation(unittest.TestCase):
+    def test_any_rotation_measures_the_same(self):
+        V, T, J = body(); a = ba.measure(V, T, J, "a")["metrics"]
+        for R in (np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]]), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]]), np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])):
+            prof = ba.measure(V @ R.T, T, {k: tuple(R @ np.array(v)) for k, v in J.items()}, "b")
+            self.assertTrue(prof["notes"] or np.allclose(R, np.eye(3)))
+            for k in a: self.assertAlmostEqual(a[k], prof["metrics"][k], places=3, msg=k)
+
 class Targets(unittest.TestCase):
     def setUp(self):
         self.ref = ba.measure(*body(), "ref"); self.t = ba.build_targets([self.ref])
