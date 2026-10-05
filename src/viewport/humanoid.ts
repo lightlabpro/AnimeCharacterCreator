@@ -4,6 +4,7 @@ import type { Region } from '../model/types';
 import { leafLayers } from '../model/appearance';
 import { applyMouthUniforms, BrowRibbon, eyeGeometry, eyeMaterial, mouthMaterial, solveBrow, solveEye, solveMouth, squareToDiscUv, type BrowShape } from './face';
 import { facialHairGeometry, hairGeometry, scalpShell, type HairHead } from './hair';
+import { HEAD_TUNING, headDims } from '../model/headShape';
 import { conformGrid, HeadSurface, hashString, V } from './parts';
 import { groundSnap, poseAngles, socket, type BuildCtx } from './rig';
 import { faceTexture, surfaceTexture, wrinkleTexture, type FaceLayout } from './textures';
@@ -256,19 +257,7 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   });
 
   // Head
-  const skullW = 1 + 0.1 * n('skull.width') + 0.07 * pos('face.heart') - 0.04 * pos('face.diamond') + 0.05 * pos('face.round');
-  const R = V(0.39 * h * skullW, 0.43 * h * (1 + 0.06 * n('skull.crown') + 0.05 * pos('face.long')), 0.42 * h * (1 + 0.1 * n('skull.depth')));
-  const faceSoft = n('face.softness');
-  const jawWidth = 1 + 0.18 * n('jaw.width') + 0.14 * pos('face.square') + 0.1 * pos('face.round') - 0.16 * pos('face.heart') - 0.1 * pos('face.diamond') + 0.05 * faceSoft + 0.06 * pos('age.jawSoft');
-  const jawLen = 1 + 0.14 * pos('face.long') + 0.06 * n('jaw.height');
-  const jawC = V(0, -0.3 * h * jawLen - 0.03 * h * pos('age.jawSoft'), 0.07 * h);
-  const jawR = V(0.3 * h * jawWidth * (child ? 1.05 : 1), 0.27 * h * jawLen * (1 + 0.05 * young), 0.31 * h);
-  const chinW = 1 + 0.3 * n('chin.width') - 0.3 * pos('face.heart') - 0.2 * pos('face.diamond') + 0.2 * pos('face.square');
-  const chinC = V(0, jawC.y - jawR.y * 0.72 - 0.035 * h * n('chin.length'), jawC.z + jawR.z * 0.55);
-  const chinR = V(0.1 * h * chinW, 0.085 * h * (1 + 0.3 * n('chin.length')), 0.085 * h);
-  const cheekR = 0.12 * h * (1 + 0.25 * n('cheek.full') + 0.18 * pos('face.round') + 0.12 * young + 0.08 * faceSoft);
-  const cheekC = V(0.2 * h * (1 + 0.08 * n('cheek.bone') + 0.08 * pos('face.diamond')), -0.15 * h + 0.03 * h * n('cheek.bone'), 0.19 * h);
-
+  const { R, jawC, jawR, chinC, chinR, cheekR, cheekC, noseY } = headDims(n, h, child, young);
   const surf = new HeadSurface();
   surf.add(V(0, 0, 0), R);
   surf.add(jawC, jawR);
@@ -280,13 +269,12 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   if (browRidge > 0.05) surf.add(ridgeC, ridgeR);
 
   const eyeSize = n('eye.size');
-  const ew = 0.1 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
+  const ew = 0.088 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
   const eh = ew * (1.1 + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
   const forward = n('eye.forward');
-  const ex = 0.168 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
+  const ex = 0.142 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
   const ey = -0.06 * h + 0.05 * h * n('eye.height');
   const eye = { x: ex, y: ey, w: ew, h: eh };
-  const noseY = -0.2 * h - 0.02 * h * n('nose.length');
   const mouthY = -0.335 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
   const mouthW = 0.085 * h * (1 + 0.25 * n('mouth.width'));
   const browBase = n('brow.height');
@@ -400,7 +388,7 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
     const np = new THREE.Vector3();
     const nn = new THREE.Vector3();
     surf.hit(0, noseY, np, nn);
-    const noseLen = 0.07 * h * noseSize * (1 + 0.3 * n('nose.length'));
+    const noseLen = 0.07 * h * noseSize * (1 + 0.3 * n('nose.length')) * HEAD_TUNING.noseZ;
     const bridge = 1 + 0.5 * n('nose.bridgeHeight');
     reg.ellipsoid(headG, plainHead, np.clone().add(V(0, 0.01 * h * n('nose.tipUp'), -0.01 * h)), V(0.035 * h * noseSize * (1 + 0.35 * n('nose.tipWidth') + 0.2 * pos('nose.nostril')), 0.04 * h * noseSize, noseLen * bridge * 0.6), { region: 'nose', name: 'CHR_Nose' });
     const bp = new THREE.Vector3();

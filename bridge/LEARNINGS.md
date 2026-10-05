@@ -33,3 +33,15 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: bridge/tools/export_contract.py output committed; skill zips built and the validator zip runs after extraction
 - status: confirmed
 - use: chat: install bridge/skill-packages/*.zip, paste bridge/CHAT_PRIMER.md into the project instructions, reply with a BRIDGE-ENTRY
+
+## 2026-10-05 [code] chat head vs reference head: measured
+- finding: The chat's last Blender head is 0.07-0.10H too wide at the cranium, 0.06H too shallow front to back (width:depth 0.91 vs reference 0.72), chin 0.035H too far back relative to the nose, jaw slightly wide. This wrong form is the likely cause of the wrong toon lighting.
+- evidence: head_profile.py on the front and side panels of Sammy's comparison image (knowledge/from-chat/head-comparison-2026-10-05.webp), chin rows read by eye, accuracy about 0.03H, one reference head
+- status: confirmed for the numbers, unverified for the lighting cause
+- use: chat: run head-shape-audit on the Blender head before any more shading work; fix cranium width and depth first
+
+## 2026-10-05 [code] app ellipsoid head had the same flaw, now fitted
+- finding: The creator's default head had cranium 0.70H, width:depth 0.88, jaw at 0.8H 0.57H, nose ahead of chin 0.08H. Fitted to the reference: 0.59H, 0.74, 0.34H, 0.11H. A plain ellipsoid skull is widest too low (0.3-0.4H) where the reference is flat-sided 0.2-0.35H.
+- evidence: scripts/fit_head.ts, tests/headShape.test.ts, src/model/headShape.ts HEAD_TUNING; screenshots of the running app
+- status: confirmed
+- use: chat: build temples flat and vertical, not an egg. Code: the app head still has no jaw angle or cheekbones, the real fix is a sculpted head mesh from the library

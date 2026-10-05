@@ -1,0 +1,63 @@
+{
+  "note": "fractions of head height H, 0 = top of skull, 1 = chin tip",
+  "facing": "left",
+  "front": {
+    "H_px": 349,
+    "width": {
+      "0.05": 0.361,
+      "0.1": 0.479,
+      "0.15": 0.55,
+      "0.2": 0.579,
+      "0.25": 0.579,
+      "0.3": 0.57,
+      "0.35": 0.562,
+      "0.4": 0.539,
+      "0.45": 0.143,
+      "0.5": 0.642,
+      "0.55": 0.639,
+      "0.6": 0.605,
+      "0.65": 0.51,
+      "0.7": 0.212,
+      "0.75": 0.41,
+      "0.8": 0.372,
+      "0.85": 0.289,
+      "0.9": 0.266,
+      "0.95": 0.189,
+      "0.97": 0.14
+    }
+  },
+  "side": {
+    "H_px": 333,
+    "behind_nose": {
+      "0.05": 0.318,
+      "0.1": 0.225,
+      "0.15": 0.177,
+      "0.2": 0.144,
+      "0.25": 0.126,
+      "0.3": 0.111,
+      "0.35": 0.099,
+      "0.4": 0.087,
+      "0.45": 0.141,
+      "0.5": 0.099,
+      "0.55": 0.078,
+      "0.6": 0.051,
+      "0.65": 0.012,
+      "0.7": 0.0,
+      "0.75": 0.066,
+      "0.8": 0.057,
+      "0.85": 0.078,
+      "0.9": 0.114,
+      "0.95": 0.108,
+      "0.97": 0.114
+    },
+    "skull_depth_at_0.3": 0.799
+  },
+  "source": "Sammy comparison image, \"Industry reference\" row, front and side panels (400px screenshots, chin read by eye: front y=365, side y=362). Accuracy about +-0.03H. Re-measure from the reference mesh if you have it.",
+  "derived": {
+    "width_to_depth_ratio": 0.72,
+    "cranium_width_H": 0.579,
+    "skull_depth_H": 0.799,
+    "nose_ahead_of_chin_H": 0.114,
+    "nose_ahead_of_forehead_0.3_H": 0.111
+  }
+}

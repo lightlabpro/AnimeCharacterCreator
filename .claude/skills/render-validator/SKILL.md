@@ -16,6 +16,9 @@ Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-gene
    # example: python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png`
    Needs only numpy and Pillow (`pip install numpy pillow`). Run it outside Blender on the saved PNGs.
 
+## Geometry first
+A wrong head shape cannot be fixed by shading. Before the loop below, run the `head-shape-audit` skill on any character with a head; if it fails, fix the form first. `scripts/head_profile.py` here does the same check from images.
+
 ## The loop (never skip a step)
 1. **Render** the fixed views in Blender: run `scripts/blender_render_views.py` (fixed cameras, flat background, Standard view transform, transparent PNG). Never change cameras between iterations.
 2. **Measure:** `validate.py measure work/<tag> --view front=r_front.png --view face=r_face.png ...`

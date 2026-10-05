@@ -12,6 +12,9 @@ Read in this order. Both Claudes use the same files.
 | `../.claude/skills/render-validator/` | Quality gate for Blender renders | Code builds it, both calibrate it |
 | `../.claude/skills/creator-bridge/` | How the two Claudes share memory | Both |
 | `../bridge/LEARNINGS.md` | Append-only measurements and decisions | Both |
+| `head-targets.json` | Reference head profile (fractions of head height) used by the head audit and the app's tests | Code, replaced by exact numbers when the chat measures the reference mesh |
+| `../.claude/skills/head-shape-audit/` | Measures a head mesh against the reference and lists fixes | Code builds it, chat runs it |
+| `../.claude/skills/ai-3d-pipeline/` | Staged character pipeline with a gate per stage | Both |
 | `from-chat/` | Studies and measurements that live in the chat project (head ratios, hair clump stats, MHS3 video studies) | Chat |
 
 ## Quick facts
