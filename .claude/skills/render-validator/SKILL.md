@@ -12,9 +12,8 @@ Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-gene
 
 ## Setup (once per character)
 1. Collect references: ideally one image per view (`front`, `three_quarter`, `side`, `back`, `face`). A view without a reference still gets the render-only gates. Good references: `docs/style_dataset/images/ref-01.png` and `docs/reference/mhs3/`.
-2. `python3 <skill dir>/scripts/validate.py init   # in the repo: .claude/skills/render-validator/scripts/validate.py
-   # example: python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png`
-   Needs only numpy and Pillow (`pip install numpy pillow`). Run it outside Blender on the saved PNGs.
+2. Initialise: `python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png --require-mesh --require-head`
+   (in the chat, use the installed skill's `scripts/validate.py`). Needs only numpy and Pillow (`pip install numpy pillow`). Run it outside Blender on the saved PNGs. Every `--ref` view becomes a required view unless you pass `--require-view` explicitly.
 
 ## Geometry first
 A wrong head shape cannot be fixed by shading. Before the loop below, run the `head-shape-audit` skill on any character with a head; if it fails, fix the form first. `scripts/head_profile.py` here does the same check from images.
@@ -25,8 +24,11 @@ A wrong head shape cannot be fixed by shading. Before the loop below, run the `h
    - Mesh stats come from `scripts/mesh_stats.py` (run in Blender, or on an exported OBJ). They gate triangle budget, non-manifold edges, zero-area faces, loose parts and n-gons, and the contract flag lists `ID-`, `PF-` and `SOC-` names the app will ignore.
    - Initialise with `--require-mesh` and one `--require-view` per view you must check, so a missing view or missing stats is UNKNOWN, never a quiet pass.
    - Hard gates, every view: figure visible and not clipped, no magenta (missing texture), warm non-grey shadows, a toon number of tone bands, hard shading edges, an outline present.
-   - Reference gates, per view with a reference: silhouette IoU, tolerant edge F-score, Lab palette overlap.
+   - Reference gates, per view with a reference: **contour distance** (mean gap between the two outlines, the best shape separator), tolerant edge F-score, silhouette IoU (weak, secondary), Lab palette overlap (style, not shape).
+   - It reports `moved px` since the previous iteration and prints `MICRO-CHANGE` when a still-failing view moved under 1 px: that was a tweak, not a fix.
+   - `--head-audit head_audit.json` adds the head-shape gate (init with `--require-head` so it is UNKNOWN until supplied).
    - Exit codes: 0 ok, **12 failed** (keep iterating), **13 unknown** (a required view or stat was not measured, which is never a pass), 2 usage.
+   - Backgrounds: transparent PNG is best. Flat colours and vertical gradients (the creator's own backdrop) are handled; busy or textured backgrounds are not, so render with a clean background.
    - It prints `MEASURE_FAIL` plus the failing criteria, writes `iter_NN/sheet.png` (reference | render | edge overlay | silhouette diff), and flags `NO_CHANGE`, `REGRESSION`, `WORSE` and `PLATEAU`.
 3. **Look at the sheet** with the Read tool. Describe every defect in plain words (for example "forehead slopes back", "shadow is grey", "lash not darker than brow"). Do not guess from the numbers.
 4. **Fix** one named defect at a time, in Blender. Re-render and go back to step 2. Loop until `MEASURE_OK`.
@@ -36,7 +38,7 @@ A wrong head shape cannot be fixed by shading. Before the loop below, run the `h
     "defects_fixed_since_last": ["forehead now vertical", "shadow tint now orange"],
     "criteria": {"face_structure": {"score": 0-3, "evidence": "one concrete sentence about what is visible"}, ...}}
    ```
-   Scores: 0 = broken, 1 = clearly wrong, 2 = acceptable, 3 = matches the reference. Every criterion needs a quoted visual-evidence sentence (20+ characters).
+   Scores: 0 = broken, 1 = clearly wrong, 2 = acceptable, 3 = matches the reference. Every criterion needs its own visual-evidence sentence (6+ words, different for each criterion). Scores must differ somewhere: a uniform review is rejected.
    Criteria (all required): `proportions_match_reference`, `silhouette_reads_like_reference`, `face_structure`, `eyes_lash_highlights`, `brows`, `hair_clumps_and_tones`, `shading_hard_warm_shadows`, `outlines_thin_and_coloured`, `colour_palette_match`, `no_artifacts_or_melted_parts`, `thumbnail_squint_test`.
    **In the normal chat (no subagent tool):** the independent reviewer is Sammy, or a deliberately context-free pass where you look only at `sheet.png` and the criteria list without reading your own notes, and say so in the `evidence` text. Never mark a self-review as `independent` unless that was true. Save the workspace folder with the project files, because the chat sandbox may reset between turns.
    For a stronger check, ask the reviewer twice with reference and render swapped in the sheet and keep the lower score (position bias).
@@ -49,7 +51,7 @@ Renders and counts only. It cannot judge edge-loop flow, deformation under a pos
 
 ## Rules
 - Never edit `validate.py`, the thresholds or `review.json` to make a result pass. If a threshold looks wrong, tell the user and propose a change; do not apply it silently.
-- Do not write the review yourself. A self-review never passes.
+- Do not write the review yourself. A self-review never passes. The gate also rejects a uniform review (every score equal), repeated or very short evidence, and a review not bound to the current renders.
 - On `PLATEAU` or `WORSE`: revert to the best iteration, then change strategy on one failing criterion (a different technique, not a bigger tweak). After two failed strategies, ask the user.
 - On `REGRESSION`: fix it before anything else.
 - Fix the model, not the render: no post-processing the PNG, no moving the camera, no lighting tricks that the shipped shader would not reproduce.
@@ -58,8 +60,15 @@ Renders and counts only. It cannot judge edge-loop flow, deformation under a pos
 ## Shared memory
 After every real run, log the measured per-criterion values and the verdict with `python3 bridge/tools/log.py` (see the `creator-bridge` skill). The thresholds improve only when both Claudes feed it real numbers.
 
+## Report
+`validate.py report work/<tag>` writes `report.md`: every iteration with its stage, failing and unknown counts, margin, contour distance and how far each view moved. Paste the latest block into a `BRIDGE-ENTRY` when you log a stage.
+
 ## Calibration (do this early, it matters more than the metric names)
-Thresholds in `validate.py` (`DEFAULTS`) are starting points. Toon statistics were checked on the MHS3 reference stills (tone bands 5-14, hard-edge ratio 0.18-0.57, shadow chroma 4-40), but the reference gates (`sil_iou` 0.80, `edge_f` 0.35, `palette` 0.55) are unvalidated. Render 10-20 characters you judge good and bad, run `measure` on them, and propose floors that separate the two. Pass overrides with `init --config thresholds.json`.
+The shipped floors come from real heads and are recorded with their data and caveats in `knowledge/validator-calibration.json`. In short: contour distance separates same-head from different-head cleanly (under 4.2 px vs from 9.7 px), edge overlap well, silhouette IoU barely (about 0.03), palette tells style but not shape. It is one reference head in one pose, so recalibrate for each new character:
+
+`python3 scripts/calibrate.py --ref ref_front.png --augment --good my_good_render.png --bad my_bad_render.png --write thresholds.json`, then `validate.py init ... --config thresholds.json`.
+
+Calibrate.py says `NOT USEFUL` when your good and bad groups overlap on a metric. Believe it: do not gate on that metric, and say so in the log.
 
 ## Limits
 Silhouette and edge metrics need a reference drawn from a similar camera and pose. Against concept art in a very different pose, rely on palette and the independent review. The metrics detect gross shape, colour and toon-style defects. They cannot see a wrong eye shape or a stiff hairstyle, which is why the independent review is required.

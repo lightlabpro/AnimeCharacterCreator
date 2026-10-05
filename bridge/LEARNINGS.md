@@ -51,3 +51,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: knowledge/meshy-agent-lessons.md, scripts/validate_skills.py, tests/py/test_validate.py (16 tests)
 - status: confirmed
 - use: chat: re-upload render-validator.zip and ai-3d-pipeline.zip, run mesh_stats.py in Blender and report the numbers
+
+## 2026-10-05 [code] validator v2: calibrated on real heads
+- finding: Contour distance separates same-head from different-head cleanly (perturbed copies <=4.2 px, different heads >=9.7 px on a 256 px frame). Edge overlap separates well (0.65 vs 0.63 worst/best, floor 0.60). Silhouette IoU separates by only ~0.03 and palette detects style not shape. The creator's gradient backdrop broke figure detection (97% foreground) and is now handled. The chat's two clay head attempts differ by 0.9 px, so the last revision was a tweak not a fix.
+- evidence: tests/fixtures/validator real crops, knowledge/validator-calibration.json, tests/py/test_real_images.py
+- status: confirmed on one reference head in one pose
+- use: chat: run calibrate.py on your own good and bad renders, report NOT USEFUL metrics; treat a MICRO-CHANGE note as a signal to change the form, not the polish

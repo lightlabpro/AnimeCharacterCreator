@@ -6,6 +6,7 @@ Only needs numpy + Pillow. Subcommands:
   init     create a validation workspace
   measure  score renders against references (objective metrics + hard gates), build a contact sheet
   gate     combine the latest measurement with a structured visual review and return PASS/ITERATE
+  report   write report.md: iteration history, stages, failing checks, how far each render moved
 
 Exit codes (same convention as Meshy's agent CLI checks): 0 pass, 12 a check FAILED (keep iterating),
 13 UNKNOWN (something required was not measured, which is never a pass), 2 usage error.
@@ -20,7 +21,9 @@ from PIL import Image, ImageDraw
 SIZE = 256
 EXIT_FAIL, EXIT_UNKNOWN, EXIT_USAGE = 12, 13, 2
 DEFAULTS = {
-    "require_mesh": False,          # init --require-mesh: measure reports UNKNOWN until mesh stats are supplied
+    "require_mesh": False,
+    "require_head": False,          # init --require-head: UNKNOWN until --head-audit is supplied
+    "micro_change_px": 1.0,         # a failing view that moved less than this since last iteration was only tweaked          # init --require-mesh: measure reports UNKNOWN until mesh stats are supplied
     "mesh": {                       # mesh health gates. A key missing from the stats file is UNKNOWN, not a pass
         "tri_budget": [18000, 28000],   # nude base body, from docs/CLAUDE_BUILD_PROMPT.md
         "max_non_manifold_edges": 0,
@@ -35,9 +38,12 @@ DEFAULTS = {
     "review_floor": 2,              # every review criterion must score >= this (0-3)
     "min_evidence_chars": 20,
     "floors": {                     # reference-based, per view with a reference. CALIBRATE on your own renders
-        "sil_iou": 0.80,
-        "edge_f": 0.35,
-        "palette": 0.55,
+        "sil_iou": 0.75,            # weak separator (margin about 0.03 on real heads), kept as a secondary check
+        "edge_f": 0.60,             # perturbed copies >= 0.65 (even heavily blurred clay), different heads <= 0.54
+        "palette": 0.60,            # separates style (clay vs toon 0.01-0.03), not shape
+    },
+    "ceilings": {                   # lower is better
+        "contour_px": 7.0,          # perturbed copies <= 4.2, different heads >= 9.7 (normalised 256 px frame)
     },
     "hard": {                       # render-only gates, every view
         "coverage": [0.03, 0.90],
@@ -82,6 +88,26 @@ def shift_or(mask, r, op):
 def dilate(m, r): return shift_or(m, r, np.logical_or)
 def erode(m, r): return shift_or(m, r, np.logical_and)
 
+def background_rows(lab, strip=0.05, jump=10.0):
+    """Background colour for every row, so flat colours AND vertical gradients (the creator's own backdrop) work.
+    Takes the median of the left and right edge strips per row. Where the two disagree, or the value jumps
+    from the row above, the figure is touching that edge (shoulders), so the previous row's colour is kept."""
+    h, w, _ = lab.shape
+    k = max(int(w * strip), 2)
+    left = np.median(lab[:, :k], axis=1)
+    right = np.median(lab[:, -k:], axis=1)
+    out = np.zeros((h, 3))
+    prev = (np.median(lab[:3, :k], axis=(0, 1)) + np.median(lab[:3, -k:], axis=(0, 1))) / 2
+    for y in range(h):
+        cand = left[y] if np.linalg.norm(left[y] - right[y]) < jump else None
+        if cand is None:
+            near = [c for c in (left[y], right[y]) if np.linalg.norm(c - prev) < jump]
+            cand = near[0] if near else prev
+        elif np.linalg.norm(cand - prev) >= jump:
+            cand = prev
+        out[y] = prev = cand
+    return out
+
 def foreground(im):
     """Return (rgb uint8, mask bool). Uses alpha if it carries information, else the border colour."""
     if im.mode in ("RGBA", "LA", "PA"):
@@ -90,9 +116,8 @@ def foreground(im):
             return rgba[..., :3].copy(), rgba[..., 3] > 16
     rgb = np.asarray(im.convert("RGB"))
     lab = rgb2lab(rgb)
-    border = np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]])
-    bg = np.median(border, axis=0)
-    mask = np.linalg.norm(lab - bg, axis=-1) > 12
+    bg = background_rows(lab)
+    mask = np.linalg.norm(lab - bg[:, None, :], axis=-1) > 12
     mask = erode(dilate(mask, 2), 2)           # close pin-holes
     return rgb.copy(), mask
 
@@ -144,6 +169,22 @@ def edge_f(ea, eb, tol=3):
     prec = (ea & dilate(eb, tol)).sum() / ea.sum()
     rec = (eb & dilate(ea, tol)).sum() / eb.sum()
     return float(2 * prec * rec / (prec + rec)) if prec + rec else 0.0
+
+def contour_px(ma, mb, cap=40):
+    """Mean distance between the two silhouette outlines, in pixels of the normalised 256 frame (lower is better).
+    Calibrated on real heads: perturbed copies of one image stay under 4.2 px, different heads start at 9.7 px.
+    Far more discriminating than silhouette IoU, which separated the same sets by only about 0.03."""
+    def contour(m): return m & ~erode(m, 1)
+    ca, cb = contour(ma), contour(mb)
+    if not ca.any() or not cb.any(): return float(cap)
+    def dist(c):
+        d = np.full(c.shape, float(cap)); d[c] = 0; seen = c.copy(); frontier = c.copy()
+        for r in range(1, cap):
+            nxt = dilate(frontier, 1) & ~seen
+            if not nxt.any(): break
+            d[nxt] = r; seen |= nxt; frontier = nxt
+        return d
+    return float((dist(cb)[ca].mean() + dist(ca)[cb].mean()) / 2)
 
 def palette_sim(ra, ma, rb, mb):
     """Histogram intersection of figure pixels in coarse Lab bins. Tolerates pose and layout changes."""
@@ -223,6 +264,7 @@ def cmd_init(a):
             if isinstance(v, dict) and k in cfg: cfg[k].update(v)
             else: cfg[k] = v
     cfg["require_mesh"] = bool(a.require_mesh)
+    cfg["require_head"] = bool(a.require_head)
     cfg["required_views"] = list(a.require_view) if a.require_view else list(refs)
     save_state(a.workspace, {"refs": refs, "config": cfg, "iterations": [], "created": time.time()})
     print(f"workspace ready: {a.workspace}\nreferences: {', '.join(refs) or '(none, render-only gates)'}")
@@ -296,11 +338,18 @@ def cmd_measure(a):
             iou = sil_iou(mask, rm); ef = edge_f(edges(rgb, mask), edges(rr, rm)); pal = palette_sim(rgb, mask, rr, rm)
             for key, val in (("sil_iou", iou), ("edge_f", ef), ("palette", pal)):
                 add(key, val, val >= fl[key], fl[key], "reference", (val - fl[key]) / fl[key])
+            cp = contour_px(mask, rm); ceil = cfg["ceilings"]["contour_px"]
+            add("contour_px", cp, cp <= ceil, ceil, "reference", (ceil - cp) / ceil)
             per_view_ssim = ssim_info(rgb, rr)
             ref_tile = (rr, rm)
         else:
             per_view_ssim = None
-        per_view[name] = {"checks": checks, "ssim_info_only": per_view_ssim, "aspect": info.get("aspect")}
+        change = None
+        prev_mask = os.path.join(a.workspace, f"iter_{n - 1:02d}", f"mask_{name}.png") if n > 1 else None
+        if prev_mask and os.path.exists(prev_mask):
+            change = round(contour_px(mask, np.asarray(Image.open(prev_mask)) > 127), 2)
+        Image.fromarray((mask * 255).astype(np.uint8)).save(os.path.join(idir, f"mask_{name}.png"))
+        per_view[name] = {"checks": checks, "ssim_info_only": per_view_ssim, "aspect": info.get("aspect"), "change_px": change}
         tiles.append((name, rgb, mask, ref_tile))
     failing = [f"{v}:{k}" for v, d in per_view.items() for k, c in d["checks"].items() if not c["ok"]]
     score = margin_score(per_view)
@@ -316,9 +365,15 @@ def cmd_measure(a):
         failing += [f"mesh:{k}" for k, c in mesh_checks.items() if c["ok"] is False]
     elif cfg.get("require_mesh"):
         unknown.append("mesh:not supplied")
+    head = None
+    if a.head_audit:
+        with open(a.head_audit) as fh: head = json.load(fh)
+        if not head.get("ok"): failing.append("head:shape (" + "; ".join(head.get("bad", [])[:3]) + ")")
+    elif cfg.get("require_head"):
+        unknown.append("head:audit not supplied")
     rec = {"n": n, "render_hash": h, "views": per_view, "failing": failing, "unknown": unknown, "margin_score": round(score, 4),
            "time": time.time(), "renders": views, "stage": a.stage, "mesh": mesh_checks, "orphan_names": orphans,
-           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None}
+           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None, "head_audit": head}
     its.append(rec); save_state(a.workspace, st)
     sheet = build_sheet(tiles)
     sheet_path = os.path.join(idir, "sheet.png"); sheet.save(sheet_path)
@@ -342,6 +397,10 @@ def cmd_measure(a):
             notes.append(f"PLATEAU: no meaningful gain in {w} iterations. Revert to best, narrow scope to ONE failing criterion, change strategy (different technique, not a bigger tweak), or ask the human.")
     print(f"iteration {n}  stage {a.stage or '-'}  render_hash {h}")
     print(f"contact sheet: {sheet_path}   (left to right per view: reference | render | edge overlay red=ref cyan=render | silhouette diff)")
+    for v, d in per_view.items():
+        ch = d.get("change_px")
+        if ch is not None and ch < cfg["micro_change_px"] and any(not c["ok"] for c in d["checks"].values()):
+            notes.append(f"MICRO-CHANGE: [{v}] moved only {ch} px since the last iteration and still fails. That was a tweak, not a fix. Take the biggest named defect and change the form.")
     for v, d in per_view.items():
         line = "  ".join(f"{k}={c['value']}{'' if c['ok'] else ' <FAIL'}" for k, c in d["checks"].items())
         print(f"[{v}] {line}")
@@ -406,6 +465,11 @@ def cmd_gate(a):
         if e.get("score", 0) < cfg["review_floor"]: low.append(f"{c}={e.get('score')}")
         if len(str(e.get("evidence", "")).strip()) < cfg["min_evidence_chars"]:
             why.append(f"criterion '{c}' needs a concrete visual evidence sentence")
+    ev = [" ".join(str(e.get("evidence", "")).lower().split()) for e in crit.values() if e]
+    if len(set(ev)) < len(ev): why.append("evidence repeats between criteria. Each criterion needs its own observation of the sheet.")
+    if any(len(x.split()) < 6 for x in ev): why.append("evidence is too short: write what is visible (6+ words), not a verdict.")
+    scores = {e.get("score") for e in crit.values() if e}
+    if len(crit) >= len(REVIEW_CRITERIA) and len(scores) == 1: why.append("every criterion has the same score. Score the weakest area honestly; a uniform review is a rubber stamp.")
     if low: why.append("criteria below floor: " + ", ".join(low) + ". Each needs a named defect and a targeted fix.")
     if len(its) > 1 and not rev.get("defects_fixed_since_last"):
         why.append("list defects_fixed_since_last: every iteration must be tied to a named defect.")
@@ -415,14 +479,34 @@ def cmd_gate(a):
         sys.exit(EXIT_FAIL)
     print(f"PASS after {len(its)} iterations (final render_hash {last['render_hash']}). Show the user the final sheet.")
 
+def cmd_report(a):
+    st = load_state(a.workspace); its = st["iterations"]
+    lines = [f"# Validation report: {os.path.basename(os.path.abspath(a.workspace))}", "",
+             f"{len(its)} iterations. Required views: {', '.join(st['config'].get('required_views', [])) or '-'}.", "",
+             "| # | stage | failing | unknown | margin | contour px (per view) | moved px |", "|---|---|---|---|---|---|---|"]
+    for r in its:
+        cp = ", ".join(f"{v}:{d['checks']['contour_px']['value']}" for v, d in r["views"].items() if "contour_px" in d["checks"]) or "-"
+        mv = ", ".join(f"{v}:{d['change_px']}" for v, d in r["views"].items() if d.get("change_px") is not None) or "-"
+        lines.append(f"| {r['n']} | {r.get('stage') or '-'} | {len(r['failing'])} | {len(r.get('unknown', []))} | {r['margin_score']} | {cp} | {mv} |")
+    if its:
+        last = its[-1]
+        lines += ["", "## Latest", f"- failing: {', '.join(last['failing']) or 'none'}", f"- unknown: {', '.join(last.get('unknown', [])) or 'none'}",
+                  f"- orphan contract names: {', '.join(last.get('orphan_names', [])) or 'none'}", f"- render hash: {last['render_hash']}"]
+        best = max(its, key=lambda r: r["margin_score"]); lines.append(f"- best iteration so far: {best['n']} (margin {best['margin_score']})")
+    lines += ["", "Scope: renders and supplied stats only. Edge-loop flow, deformation and hand detail are not measured."]
+    out = os.path.join(a.workspace, "report.md")
+    with open(out, "w") as f: f.write("\n".join(lines) + "\n")
+    print("\n".join(lines)); print(f"\nwritten to {out}")
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest="cmd", required=True)
-    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
-    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
+    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
+    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--head-audit", help="head_audit.json written by head-shape-audit/scripts/head_audit.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
+    r = sp.add_parser("report"); r.add_argument("workspace")
     g = sp.add_parser("gate"); g.add_argument("workspace"); g.add_argument("--review", required=True)
     a = p.parse_args()
-    {"init": cmd_init, "measure": cmd_measure, "gate": cmd_gate}[a.cmd](a)
+    {"init": cmd_init, "measure": cmd_measure, "gate": cmd_gate, "report": cmd_report}[a.cmd](a)
 
 if __name__ == "__main__":
     main()

@@ -25,8 +25,8 @@ def run(*args):
     p = subprocess.run([sys.executable, str(SCRIPT), *map(str, args)], capture_output=True, text=True)
     return p.returncode, p.stdout + p.stderr
 
-def review(path, render_hash, reviewer="independent", score=2, drop=None):
-    crit = {c: {"score": score, "evidence": "A concrete visible observation about the sheet."} for c in CRITERIA if c != drop}
+def review(path, render_hash, reviewer="independent", score=2, drop=None):  # scores alternate score, score+1 so the review is not uniform
+    crit = {c: {"score": score + (i % 2), "evidence": f"Observation {i} about {c.replace('_', ' ')} visible on the contact sheet."} for i, c in enumerate(CRITERIA) if c != drop}
     path.write_text(json.dumps({"reviewer": reviewer, "render_hash": render_hash, "defects_fixed_since_last": ["x"], "criteria": crit}))
 
 def last_hash(ws):
@@ -124,6 +124,55 @@ class MeshStats(unittest.TestCase):
             p.write_text("v 0 0 0\nv 1 0 0\nv 2 0 0\nv 5 5 5\nv 6 5 5\nv 5 6 5\nv 9 9 9\nf 1 2 3\nf 4 5 6\n")
             st = json.loads(subprocess.run([sys.executable, str(MESH), str(p)], capture_output=True, text=True).stdout)
             self.assertEqual(st["zero_area_faces"], 1); self.assertEqual(st["loose_parts"], 2); self.assertEqual(st["loose_verts"], 1)
+
+
+class StricterGate(unittest.TestCase):
+    def setUp(self):
+        self.t = tempfile.TemporaryDirectory(); self.d = pathlib.Path(self.t.name)
+        for i, n in enumerate(("ref", "g1", "g2", "g3")): figure(self.d / f"{n}.png", tweak=i)
+        self.ws = self.d / "ws"
+        run("init", self.ws, "--ref", f"front={self.d/'ref.png'}")
+        for n in ("g1", "g2", "g3"): run("measure", self.ws, "--view", f"front={self.d/(n + '.png')}")
+        self.h = last_hash(self.ws)
+    def tearDown(self): self.t.cleanup()
+    def gate(self, crit): 
+        (self.d / "r.json").write_text(json.dumps({"reviewer": "independent", "render_hash": self.h, "defects_fixed_since_last": ["x"], "criteria": crit}))
+        return run("gate", self.ws, "--review", self.d / "r.json")
+
+    def test_uniform_review_is_a_rubber_stamp(self):
+        code, out = self.gate({c: {"score": 3, "evidence": f"Unique remark number {i} about this criterion on the sheet."} for i, c in enumerate(CRITERIA)})
+        self.assertEqual(code, 12); self.assertIn("same score", out)
+
+    def test_repeated_evidence_is_rejected(self):
+        code, out = self.gate({c: {"score": 2 + i % 2, "evidence": "The whole sheet looks acceptable to me overall."} for i, c in enumerate(CRITERIA)})
+        self.assertEqual(code, 12); self.assertIn("repeats", out)
+
+    def test_short_evidence_is_rejected(self):
+        code, out = self.gate({c: {"score": 2 + i % 2, "evidence": f"fine {i} ok yes"} for i, c in enumerate(CRITERIA)})
+        self.assertEqual(code, 12); self.assertIn("too short", out)
+
+    def test_tiny_change_with_a_failing_view_is_called_a_tweak(self):
+        figure(self.d / "flat.png", flat=True)
+        ws = self.d / "ws2"; run("init", ws, "--ref", f"front={self.d/'ref.png'}")
+        run("measure", ws, "--view", f"front={self.d/'flat.png'}")
+        figure(self.d / "flat2.png", flat=True, tweak=4)
+        code, out = run("measure", ws, "--view", f"front={self.d/'flat2.png'}")
+        self.assertEqual(code, 12); self.assertIn("MICRO-CHANGE", out)
+
+    def test_head_audit_gate(self):
+        ws = self.d / "ws3"; run("init", ws, "--ref", f"front={self.d/'ref.png'}", "--require-head")
+        code, out = run("measure", ws, "--view", f"front={self.d/'g1.png'}")
+        self.assertEqual(code, 13); self.assertIn("head:audit", out)
+        (self.d / "bad.json").write_text(json.dumps({"ok": False, "bad": ["Cranium too wide: scale the skull in X only."]}))
+        code, out = run("measure", ws, "--view", f"front={self.d/'g2.png'}", "--head-audit", self.d / "bad.json")
+        self.assertEqual(code, 12); self.assertIn("head:shape", out)
+        (self.d / "ok.json").write_text(json.dumps({"ok": True, "bad": []}))
+        code, out = run("measure", ws, "--view", f"front={self.d/'g3.png'}", "--head-audit", self.d / "ok.json")
+        self.assertEqual(code, 0, out)
+
+    def test_report_lists_every_iteration(self):
+        code, out = run("report", self.ws)
+        self.assertEqual(code, 0); self.assertIn("3 iterations", out); self.assertTrue((self.ws / "report.md").exists())
 
 
 class SkillsInSync(unittest.TestCase):

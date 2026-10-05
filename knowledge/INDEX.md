@@ -15,6 +15,7 @@ Read in this order. Both Claudes use the same files.
 | `head-targets.json` | Reference head profile (fractions of head height) used by the head audit and the app's tests | Code, replaced by exact numbers when the chat measures the reference mesh |
 | `../.claude/skills/head-shape-audit/` | Measures a head mesh against the reference and lists fixes | Code builds it, chat runs it |
 | `../.claude/skills/ai-3d-pipeline/` | Staged character pipeline with a gate per stage | Both |
+| `validator-calibration.json` | Where the validator's floors came from: data, ranges, findings and caveats | Code, re-run with calibrate.py when new data arrives |
 | `meshy-agent-lessons.md` | What Meshy's agent repo does well (tri-state checks, route choice, skill validation) and where it was applied | Code |
 | `from-chat/` | Studies and measurements that live in the chat project (head ratios, hair clump stats, MHS3 video studies) | Chat |
 

@@ -1,0 +1,69 @@
+{
+  "calibrated": "2026-10-05",
+  "data": "tests/fixtures/validator: 320px crops of Sammy's comparison image (reference clay head, two clay attempts, the toon attempt, an MHS3 still). Positives: 4 base images x 6 perturbations (shift, scale 1.06, blur 1.6, brightness 1.12, rotate 2.5 deg, JPEG q55). Negatives: 6 pairs of clearly different heads.",
+  "positives": 24,
+  "negatives": 6,
+  "ranges": {
+    "sil_iou": {
+      "positives_min_max": [
+        0.787,
+        0.999
+      ],
+      "negatives_min_max": [
+        0.633,
+        0.736
+      ]
+    },
+    "edge_f": {
+      "positives_min_max": [
+        0.652,
+        1.0
+      ],
+      "negatives_min_max": [
+        0.38,
+        0.63
+      ]
+    },
+    "palette": {
+      "positives_min_max": [
+        0.619,
+        0.999
+      ],
+      "negatives_min_max": [
+        0.014,
+        0.555
+      ]
+    },
+    "contour_px": {
+      "positives_min_max": [
+        0.023,
+        4.228
+      ],
+      "negatives_min_max": [
+        8.939,
+        14.415
+      ]
+    }
+  },
+  "shipped": {
+    "floors": {
+      "sil_iou": 0.75,
+      "edge_f": 0.6,
+      "palette": 0.6
+    },
+    "ceilings": {
+      "contour_px": 7.0
+    }
+  },
+  "findings": [
+    "contour_px separates best: perturbed copies stay under 4.2 px, different heads start at 9.7 px (256 px frame).",
+    "edge_f separates well but is sensitive to blur on low-contrast clay renders (0.65 worst case).",
+    "sil_iou separates by only about 0.03 on busts. Kept as a secondary check.",
+    "palette detects style (clay vs toon scores 0.01-0.03) but not head shape.",
+    "The chat's two clay attempts differ by 0.9 px of outline: the last revision was a tweak, not a fix."
+  ],
+  "caveats": [
+    "One reference head, one pose (front), busts not isolated heads, 320 px crops. Re-calibrate on your own renders with calibrate.py before trusting the floors for a new character.",
+    "Negatives are different heads, not near-misses. A subtle error (jaw 0.05H too wide) is the head audit's job, not these floors'."
+  ]
+}

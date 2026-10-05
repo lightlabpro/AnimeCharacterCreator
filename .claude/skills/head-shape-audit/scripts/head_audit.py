@@ -118,7 +118,11 @@ def run_in_blender():
     H = top.matrix_world.translation.z - chin.matrix_world.translation.z
     pts = [p for p in pts if p[2] >= chin.matrix_world.translation.z - 0.02 * H]
     prof = profile_from_points(pts, top.matrix_world.translation.z, chin.matrix_world.translation.z, -1)
-    print(json.dumps(prof, indent=1)); report(prof)
+    print(json.dumps(prof, indent=1)); ok = report(prof)
+    bad, _ = verdict(prof)
+    out = bpy.path.abspath("//head_audit.json")
+    with open(out, "w") as f: json.dump({"ok": ok, "bad": [FIX[k] for k in dict.fromkeys(bad)], "profile": prof}, f, indent=2)
+    print("wrote", out, "for validate.py measure --head-audit")
 
 if __name__ == "__main__":
     try:
