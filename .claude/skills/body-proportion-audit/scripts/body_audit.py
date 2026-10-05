@@ -43,24 +43,25 @@ def canon(name, leg_is_thigh=False):
     if key == "leg" and leg_is_thigh: j = "thigh"          # VRoid/Unity style: Leg, knee, ankle (Mixamo: UpLeg, Leg, Foot)
     return (j, side) if j else (None, None)
 
-def pick_joints(raw):
-    """raw: {authored bone name: (x,y,z)} -> {'upper_arm_L': xyz, 'head': xyz, ...}. Duplicates: first pick wins by lowest name,
-    except spine (several bones): pelvis = hips/pelvis else the lowest spine bone, 'chest' = the highest."""
+def pick_names(names, zof):
+    """names -> {'upper_arm_L': bone name, 'head': ..., 'pelvis': ..., 'chest': ...}. Alias names (elbow, knee, ankle, wrist) are the real
+    joints on VRoid-style rigs but IK pole targets on others: used only when no explicit bone provides that joint.
+    Several spine bones: pelvis = hips/pelvis else the lowest, chest = the highest (zof gives a bone's height)."""
     out, spines = {}, []
-    leg_is_thigh = any(re.search(r"knee", n, re.I) for n in raw)
-    # Alias names (elbow, knee, ankle, wrist) are the real joints on VRoid-style rigs but IK pole targets on others: use them only
-    # when no explicit bone (upperarm, lowerarm, upperleg, lowerleg, foot, hand) provides that joint.
+    leg_is_thigh = any(re.search(r"knee", n, re.I) for n in names)
     is_alias = lambda n: bool(re.search(r"elbow|knee|ankle|wrist", n, re.I))
-    for name in sorted(raw, key=lambda n: (is_alias(n), n)):
+    for name in sorted(names, key=lambda n: (is_alias(n), n)):
         j, side = canon(name, leg_is_thigh)
         if not j or "twist" in name.lower() or "roll" in name.lower(): continue
-        p = tuple(float(v) for v in raw[name])
-        if j == "spine": spines.append((p[2], p)); continue
-        key = f"{j}_{side}" if side else j
-        out.setdefault(key, p)
+        if j == "spine": spines.append((zof(name), name)); continue
+        out.setdefault(f"{j}_{side}" if side else j, name)
     if spines:
         spines.sort(); out.setdefault("pelvis", spines[0][1]); out["chest"] = spines[-1][1]
     return out
+
+def pick_joints(raw):
+    """raw: {authored bone name: (x,y,z)} -> {'upper_arm_L': xyz, 'head': xyz, ...}."""
+    return {k: tuple(float(v) for v in raw[n]) for k, n in pick_names(list(raw), lambda n: float(raw[n][2])).items()}
 
 # ---------------------------------------------------------------- measuring
 def _d(a, b): return math.dist(a, b)

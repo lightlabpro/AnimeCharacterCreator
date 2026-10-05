@@ -117,3 +117,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/py/test_body_audit.py Orientation; navia python vs blender metrics identical to 4 decimals; knowledge/body-profiles/navia.json
 - status: confirmed
 - use: Prefer references with separate body meshes; export references as glb or measure from .blend/.fbx
+
+## 2026-10-05 [code] anatomy rules and pose stress built
+- finding: Hard structural rules (anatomy_rules.py) and numpy LBS pose stress plus slider sweep (pose_stress.py) now exist. Fold-over fraction at 90 degree bends separates good from broken best: production Navia 1-2%, hobby models 3-34%, rigid-weighted fixture 22-28%. Triangle area stretch alone is noisy. Triangles straddling the moving subtree define the blend zone (so rigid weights fail instead of being unknown). Mirai's IK rig fails chain_order: foot not parented under shin. Costume bones (hair, sleeves) differ left/right legitimately, so only body and finger bones fail the symmetry rule.
+- evidence: tests/py/test_anatomy.py (19), knowledge/anatomy-calibration.md
+- status: unverified: thresholds calibrated on three real models only
+- use: Run on every body export; send BRIDGE-ENTRY with numbers when a result looks unfair
