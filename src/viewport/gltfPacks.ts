@@ -217,7 +217,8 @@ export function moveEquipToPackSockets(rig: Rig, packScene: THREE.Object3D) {
 
 /**
  * Applies the body pack's own pose clip, if it has one. A clip named POSE-<pose> (apose, relaxed, tpose, hero, wave, sit)
- * is sampled at its first frame, so the pack's skeleton takes the pose the user picked. Packs without such a clip stay in
+ * is sampled at its LAST frame, so the pack's skeleton takes the pose the user picked: a one-key pose clip, or a clip
+ * that runs from the rest pose into the pose, both end in it. Packs without such a clip stay in
  * their rest pose. Returns true when a clip was applied.
  */
 export function applyPackPose(scene: THREE.Object3D, clips: THREE.AnimationClip[], pose: BodyPose): boolean {
@@ -225,8 +226,11 @@ export function applyPackPose(scene: THREE.Object3D, clips: THREE.AnimationClip[
   const clip = clips.find((c) => squash(c.name) === `pose${pose}`);
   if (!clip) return false;
   const mixer = new THREE.AnimationMixer(scene);
-  mixer.clipAction(clip).play();
-  mixer.update(0);
+  const action = mixer.clipAction(clip);
+  action.setLoop(THREE.LoopOnce, 1); // a looping action would wrap back to its first frame at exactly the clip duration
+  action.clampWhenFinished = true;
+  action.play();
+  mixer.setTime(clip.duration);
   scene.userData.poseMixer = mixer; // kept alive: stopping an action would restore the rest pose
   return true;
 }

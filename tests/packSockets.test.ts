@@ -86,6 +86,15 @@ describe('pack pose clips', () => {
     expect(arm.quaternion.angleTo(new THREE.Quaternion())).toBeCloseTo(Math.PI / 2, 4);
   });
 
+  it('samples the LAST frame, so a clip that goes from rest to the pose ends in the pose', () => {
+    const { root, arm } = scene();
+    const q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
+    const rest = new THREE.Quaternion();
+    const c = new THREE.AnimationClip('POSE-tpose', 0.5, [new THREE.QuaternionKeyframeTrack('DEF-upperarm.L.quaternion', [0, 0.5], [...rest.toArray(), ...q.toArray()])]);
+    expect(applyPackPose(root, [c], 'tpose')).toBe(true);
+    expect(arm.quaternion.angleTo(new THREE.Quaternion())).toBeCloseTo(Math.PI / 2, 4);
+  });
+
   it('matches names loosely, so POSE_TPose and pose.tpose work', () => {
     for (const name of ['POSE_TPose', 'pose.tpose', 'Pose-Tpose']) {
       const { root } = scene();

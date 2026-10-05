@@ -265,6 +265,53 @@ class HashIntegrity(unittest.TestCase):
             self.assertIn("front:touches_border", out); self.assertNotIn("face:touches_border", out)
 
 
+class CameraDrift(unittest.TestCase):
+    def manifest(self, d, name, el=0, scale_mult=1.0, height=1.72, engine="CYCLES"):
+        m = {"blender": "5.0.1", "engine": engine, "resolution": 1024, "view_transform": "Standard", "head_from_landmarks": False,
+             "character_height": height, "head_height": height * 0.15,
+             "views": {"front": {"azimuth": 0, "elevation": el, "frame": "body", "ortho_scale": height * 1.12 * scale_mult},
+                       "face": {"azimuth": 0, "elevation": 0, "frame": "head", "ortho_scale": height * 0.15 * 1.9 * scale_mult}}}
+        (d / name).write_text(json.dumps(m)); return d / name
+
+    def setUp(self):
+        self.t = tempfile.TemporaryDirectory(); self.d = pathlib.Path(self.t.name)
+        for i, n in enumerate(("ref", "a", "b", "c")): figure(self.d / f"{n}.png", tweak=i)
+        self.ws = self.d / "ws"; run("init", self.ws, "--ref", f"front={self.d/'ref.png'}")
+    def tearDown(self): self.t.cleanup()
+    def measure(self, img, manifest): return run("measure", self.ws, "--view", f"front={self.d/img}", "--manifest", manifest)
+
+    def test_same_camera_rules_pass_even_when_the_character_is_taller(self):
+        self.measure("a.png", self.manifest(self.d, "m1.json"))
+        code, out = self.measure("b.png", self.manifest(self.d, "m2.json", height=1.9, scale_mult=1.0))     # taller, same rules
+        self.assertNotIn("cameras:changed", out)
+
+    def test_a_changed_angle_fails(self):
+        self.measure("a.png", self.manifest(self.d, "m1.json"))
+        code, out = self.measure("b.png", self.manifest(self.d, "m2.json", el=10))
+        self.assertEqual(code, 12); self.assertIn("cameras:changed", out); self.assertIn("front", out)
+
+    def test_a_changed_framing_ratio_fails(self):
+        self.measure("a.png", self.manifest(self.d, "m1.json"))
+        code, out = self.measure("b.png", self.manifest(self.d, "m2.json", scale_mult=0.8))
+        self.assertEqual(code, 12); self.assertIn("cameras:changed", out)
+
+    def test_a_changed_render_engine_fails(self):
+        self.measure("a.png", self.manifest(self.d, "m1.json"))
+        code, out = self.measure("b.png", self.manifest(self.d, "m2.json", engine="BLENDER_EEVEE"))
+        self.assertEqual(code, 12); self.assertIn("engine", out)
+
+    def test_missing_manifest_is_unknown_when_required(self):
+        ws = self.d / "ws2"; run("init", ws, "--ref", f"front={self.d/'ref.png'}", "--require-manifest")
+        code, out = run("measure", ws, "--view", f"front={self.d/'a.png'}")
+        self.assertEqual(code, 13); self.assertIn("cameras:manifest", out)
+
+    def test_unknown_head_audit_is_not_a_pass(self):
+        ws = self.d / "ws3"; run("init", ws, "--ref", f"front={self.d/'ref.png'}", "--require-head")
+        (self.d / "h.json").write_text(json.dumps({"status": "unknown", "ok": False, "bad": [], "unknown": ["width@0.9"]}))
+        code, out = run("measure", ws, "--view", f"front={self.d/'a.png'}", "--head-audit", self.d / "h.json")
+        self.assertEqual(code, 13); self.assertIn("head:audit could not measure", out)
+
+
 class SkillsInSync(unittest.TestCase):
     def test_skills_zips_and_contract_validate(self):
         r = subprocess.run([sys.executable, str(root / "scripts/validate_skills.py")], capture_output=True, text=True)

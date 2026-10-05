@@ -7,6 +7,16 @@ description: Checks exported asset-library packs (glTF + pack.json + manifest.js
 
 The app is a mixer that drives your pack by **name**. A pack that imports fine can still do nothing: a misspelled `ID-` key, shape keys that start above 0, textures packed inside a .glb, a body with no `DEF-` bones. This checks all of that without opening the app, and says exactly which name or file to fix.
 
+## Export from Blender (use this, not File > Export)
+`scripts/export_pack.py` (edit its CONFIG block, then Run Script, or `blender -b file.blend -P export_pack.py`) exports the pack, writes `pack.json`, updates `manifest.json`, and runs the checker. Facts verified in real Blender 5.0.1 (the creator targets 5.2; re-check after a major Blender upgrade):
+- **The exporter writes your CURRENT shape key values as the default morph weights.** A key left at 1.0 arrives in the app already applied, and `check_pack.py` fails it (`nonzero_weights`). New keys made by script start at 1.0. `export_pack.py` zeroes them for the export and restores your values afterwards.
+- `extras.targetNames` (the shape key names the app looks up) is written automatically. `Basis` is not exported.
+- `.` in bone names survives in the file (`DEF-upper_arm.L`); three.js renames it when loading and the app handles that.
+- Custom properties such as `socket_name` on empties are only exported with `export_extras=True`; the script sets it.
+- Only deform bones are exported with `export_def_bones=True` (helper bones like `MCH-` stay out); modifiers are NOT applied (`export_apply=False`), or the armature and shape keys would be lost.
+- One animation clip per action (`export_animation_mode='ACTIONS'`); an action called `POSE-tpose` arrives as `POSE-tpose`.
+- Shape keys are exported as sparse accessors by default; the app's loader reads them.
+
 ## Run it
 ```
 python3 scripts/check_pack.py <library root or one pack folder> --contract knowledge/expected-contract.json
@@ -29,7 +39,7 @@ Exit codes: 0 pass, **12 a check failed**, **13 something could not be measured*
 | Pose clips | WARN for an animation that looks like a pose but is not `POSE-<apose\|relaxed\|tpose\|hero\|wave\|sit>` | INFO lists the clips the app will use |
 
 ## Pose clips (optional, additive)
-A clip named `POSE-<pose>` in the **body** glTF is applied to its skeleton (first frame) when that pose is picked in the app: `POSE-apose`, `POSE-relaxed`, `POSE-tpose`, `POSE-hero`, `POSE-wave`, `POSE-sit`. A body without them stays in its rest pose. Bone names in the clips are the bone names in the pack. Motion packs (the Motion library tab) are not played yet.
+A clip named `POSE-<pose>` in the **body** glTF is applied to its skeleton when that pose is picked, sampled at the clip's LAST frame (a one-key pose clip, or a clip from rest into the pose, both end in the pose) in the app: `POSE-apose`, `POSE-relaxed`, `POSE-tpose`, `POSE-hero`, `POSE-wave`, `POSE-sit`. A body without them stays in its rest pose. Bone names in the clips are the bone names in the pack. Motion packs (the Motion library tab) are not played yet.
 
 ## Names the loader changes
 Three.js's glTF loader strips `.` and other reserved characters from node names (`DEF-upper_arm.L` loads as `DEF-upper_armL`) and keeps the authored name in `userData.name`. The app matches on the authored name, so Rigify-style `.L` / `.R` suffixes work. Shape keys are not renamed.

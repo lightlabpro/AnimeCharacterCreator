@@ -20,6 +20,13 @@ CATEGORY_ROOTS = {
 }
 SOCKETED = ("hair", "facial_hair", "elements", "accessories", "parts")
 NO_MESH_OK = ("materials", "motions", "presets", "morphs")
+UNSUPPORTED_EXT = {
+    "KHR_draco_mesh_compression": "Export with Draco compression turned off.",
+    "EXT_meshopt_compression": "Export without meshopt compression.",
+    "KHR_texture_basisu": "Export textures as PNG or JPEG, not KTX2.",
+}
+MORPH_LAYERS_WARN, MORPH_LAYERS_MAX = 220, 256      # three.js stores each target as a layer of one array texture; WebGL2 guarantees 256 layers
+MORPH_MB_WARN, MORPH_MB_MAX = 256, 1024             # float32 RGBA texels: vertices x (1 position + 1 if normals) x 16 bytes x targets
 TRI_HARD = (500, 120000)          # outside this a mesh is almost certainly wrong
 TRI_BODY_SOFT = (18000, 28000)    # nude base body, docs/CLAUDE_BUILD_PROMPT.md
 HEIGHT = {"adult": (1.5, 2.2), "child": (1.0, 1.6)}
@@ -31,6 +38,9 @@ class Report:
     def warn(self, p, c, m): self.add("WARN", p, c, m)
     def unknown(self, p, c, m): self.add("UNKNOWN", p, c, m)
     def count(self, level): return sum(1 for i in self.items if i["level"] == level)
+
+def read_json(path):
+    with open(path, encoding="utf-8") as fh: return json.load(fh)
 
 def norm(p): return p.replace("\\", "/").rstrip("/")
 
@@ -115,6 +125,10 @@ def check_gltf(R, pid, folder, main, pack, category, contract):
             if ext == ".glb": R.fail(pid, "embedded_texture", f"{main}: textures are packed inside the .glb. The app's loader breaks these: export GLTF_SEPARATE.")
         elif uri.startswith("data:"): R.fail(pid, "embedded_texture", f"{main}: a texture is embedded as a data URI. Export textures as separate files.")
         elif not os.path.exists(os.path.join(folder, uri)): R.fail(pid, "missing_file", f"{main}: texture {uri} is missing from the pack folder")
+    # extensions the app cannot decode: its glTF loader has no Draco, Meshopt or KTX2 decoder set
+    for ext in sorted(set(g.get("extensionsRequired", [])) | set(g.get("extensionsUsed", []))):
+        if ext in UNSUPPORTED_EXT:
+            R.fail(pid, "unsupported_extension", f"{main}: uses {ext}. The app has no decoder for it and the pack will not load. {UNSUPPORTED_EXT[ext]}")
     # morph targets
     known_id = set(contract.get("identity_shape_keys", [])) if contract else set()
     known_pf = set(contract.get("performance_shape_keys", [])) if contract else set()
@@ -127,6 +141,16 @@ def check_gltf(R, pid, folder, main, pack, category, contract):
         if len(names) != tcount: R.fail(pid, "target_names_mismatch", f"mesh {m.get('name')}: {tcount} targets but {len(names)} names")
         if any(abs(w) > 1e-6 for w in m.get("weights", [])): R.fail(pid, "nonzero_weights", f"mesh {m.get('name')}: shape keys must start at 0, found non-zero default weights")
         all_names += names
+        prim = m["primitives"][0]
+        verts = g["accessors"][prim["attributes"]["POSITION"]]["count"] if "POSITION" in prim.get("attributes", {}) else 0
+        has_normals = any("NORMAL" in t for t in prim.get("targets", []))
+        mb = verts * (2 if has_normals else 1) * 16 * tcount / 1048576
+        R.add("INFO", pid, "morph_memory", f"mesh {m.get('name')}: {tcount} morph targets x {verts} vertices{' with normals' if has_normals else ''} = about {mb:.0f} MB of GPU texture (and the same again in memory while it uploads)")
+        if tcount > MORPH_LAYERS_MAX: R.fail(pid, "too_many_targets", f"mesh {m.get('name')}: {tcount} shape keys exceeds {MORPH_LAYERS_MAX}, the number of array texture layers WebGL2 guarantees. Some GPUs will fail to render it. Split the keys across meshes or remove unused ones.")
+        elif tcount > MORPH_LAYERS_WARN: R.warn(pid, "many_targets", f"mesh {m.get('name')}: {tcount} shape keys is close to the {MORPH_LAYERS_MAX} layer limit")
+        if mb > MORPH_MB_MAX: R.fail(pid, "morph_memory", f"mesh {m.get('name')}: morph targets need about {mb:.0f} MB of GPU texture, over {MORPH_MB_MAX} MB. Reduce vertices or keys, or export without morph normals.")
+        elif mb > MORPH_MB_WARN: R.warn(pid, "morph_memory", f"mesh {m.get('name')}: morph targets need about {mb:.0f} MB of GPU texture. Exporting without morph normals halves it.")
+        if any("JOINTS_1" in p.get("attributes", {}) for p in m["primitives"]): R.warn(pid, "joint_influences", f"mesh {m.get('name')}: more than 4 bone influences per vertex. The app's skinning reads 4, the rest are ignored. Limit influences to 4 when exporting.")
         for nme in names:
             if not nme.startswith(("ID-", "PF-")): R.warn(pid, "unprefixed_key", f"shape key '{nme}' has no ID- or PF- prefix. The app ignores it.")
             elif contract and nme.startswith("ID-") and nme not in known_id: R.warn(pid, "orphan_key", f"'{nme}' is not an identity key the app reads. It will do nothing.")
@@ -202,7 +226,7 @@ def check(root, contract, R=None):
     entries = {}
     if os.path.exists(mpath):
         try:
-            manifest = json.load(open(mpath))
+            manifest = read_json(mpath)
             for e in manifest.get("packs", []):
                 if not isinstance(e, dict) or not e.get("folder"): R.fail("manifest", "manifest_entry", f"entry without a folder: {e}"); continue
                 entries[norm(os.path.join(root, e["folder"]))] = e
@@ -210,7 +234,7 @@ def check(root, contract, R=None):
     seen = set()
     for folder in folders:
         rel = norm(os.path.relpath(folder, root)); pid = rel
-        try: pack = json.load(open(os.path.join(folder, "pack.json")))
+        try: pack = read_json(os.path.join(folder, "pack.json"))
         except Exception as e: R.fail(pid, "pack_json", f"pack.json is not valid JSON ({e})"); continue
         missing = [k for k in ("id", "display_name", "library", "slot") if not isinstance(pack.get(k), str) or not pack.get(k, "").strip()]
         if missing: R.fail(pid, "pack_fields", f"pack.json is missing {', '.join(missing)}"); continue
@@ -259,7 +283,7 @@ def main():
     if not os.path.isdir(a.path): print(f"not a folder: {a.path}", file=sys.stderr); sys.exit(2)
     contract = None
     if a.contract:
-        try: contract = json.load(open(a.contract))
+        try: contract = read_json(a.contract)
         except Exception as e: print(f"cannot read contract: {e}", file=sys.stderr); sys.exit(2)
     R = check(a.path, contract)
     order = {"FAIL": 0, "UNKNOWN": 1, "WARN": 2, "INFO": 3}

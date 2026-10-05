@@ -76,7 +76,8 @@ def cmd_measure(a):
         print(f"side: forehead(0.3) is {b['0.3']:.2f}H behind the nose, chin(0.95) {b.get('0.95', b['0.97']):.2f}H behind the nose, skull depth {prof['side']['skull_depth_at_0.3']:.2f}H")
 
 def cmd_compare(a):
-    ref = json.load(open(a.ref)); cand = json.load(open(a.cand)); bad = []
+    with open(a.ref) as fr, open(a.cand) as fc: ref, cand = json.load(fr), json.load(fc)
+    bad = []
     def check(name, r, c, tol):
         if r is None or c is None: return
         d = c - r; flag = abs(d) > tol

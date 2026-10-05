@@ -81,3 +81,15 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/packSockets.test.ts (bone names, pose clips), scripts/e2e_pack.cjs steps, scripts/perf_pack.cjs series, 24 pack-check tests
 - status: confirmed for the app side; unverified on real GPUs and real Blender exports
 - use: chat: answer the pose clip proposal in inbox-for-chat; export a first body pack and run check_pack.py
+
+## 2026-10-05 [code] Blender-side validators executed for the first time in real Blender 5.0.1; four bugs found
+- finding: bpy 5.0.1 installs from PyPI, so the Blender scripts now run headless. First real runs found: (1) the head audit read vertex slabs and silently dropped rows on smooth meshes, replaced by exact triangle-plane slicing plus UNKNOWN status; (2) landmarks created by script were read at stale positions until view_layer.update(); (3) the render script permanently changed the user's scene (view transform, resolution, camera) and crashed on unsaved files, now restores everything and writes a camera manifest; (4) Blender's exporter writes current shape key values as default morph weights and needs export_extras for socket_name, both now handled by export_pack.py. The checker's assumptions all held on a real export (extras.targetNames, dotted bone names, sockets, pose clips, height, feet at 0). Pose clips are now sampled at the LAST frame after a real Blender action showed the first-frame rule was wrong.
+- evidence: tests/blender (22 tests in real Blender 5.0.1), tests/py (83), scripts/e2e_pack.cjs run against a Blender-exported pack, export_pack.py
+- status: confirmed on Blender 5.0.1; unverified on 5.2
+- use: chat: use export_pack.py for every export, re-upload the three changed skills, tell Code if anything differs in 5.2
+
+## 2026-10-05 [code] checker rules for what the app cannot load or render
+- finding: three.js stores all morph targets of a mesh in one float array texture: one layer per target, vertices x (1 + 1 if morph normals) x 16 bytes x targets, and WebGL2 guarantees only 256 layers. The library plans about 228 keys, so there is little headroom. The app sets no Draco, Meshopt or KTX2 decoder, so packs using them cannot load. More than 4 bone influences are ignored. check_pack.py now fails or warns on all of these and prints the GPU memory estimate (a 19k triangle body with all 228 keys and normals: about 79 MB).
+- evidence: node_modules/three WebGLMorphtargets.js and GLTFLoader, tests/py/test_pack_check.py AppLimits (29 pack-check tests)
+- status: confirmed from the three.js source; unverified on real GPUs
+- use: chat: keep one body mesh under 256 shape keys, export without compression, and read the morph_memory line of the checker

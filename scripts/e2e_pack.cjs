@@ -14,6 +14,7 @@ const { spawnSync } = require('child_process');
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, x, i, all) => (x.startsWith('--') ? [...a, [x.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : true]] : a), []));
 const url = args.url || 'http://localhost:5173';
 const packId = args.id || 'body_test';
+const armName = args.arm || 'DEF-upperarm.L';   // authored name of the left upper-arm bone in the pack
 const playwright = process.env.PLAYWRIGHT_PATH || '/opt/node-tools/node_modules/playwright';
 const results = [];
 const step = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? '  ' + detail : ''}`); return !!ok; };
@@ -90,30 +91,37 @@ const step = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); c
   const blink = await read('PF-Blink');
   step('performance: PF-Blink = 1 drives the pack key', blink !== null && blink > 0.9, `value ${blink}`);
   // Poses: the pack's own POSE-<pose> clip is applied to its skeleton when that pose is picked.
-  const armAngle = () => page.evaluate((id) => {
+  // A Blender rig stores each bone's rest orientation in its node rotation, so measure the angle from the REST quaternion, not from identity.
+  const armQuat = () => page.evaluate(([id, armName]) => {
     const root = window.creator.engine().rig.root.getObjectByName('PACK_' + id); let arm = null;
-    root.traverse((o) => { if (o.userData && o.userData.name === 'DEF-upperarm.L') arm = o; });   // three strips the dot from loaded names
-    return arm ? +arm.quaternion.angleTo(new arm.quaternion.constructor()).toFixed(3) : null;
-  }, packId);
+    root.traverse((o) => { if (o.userData && o.userData.name === armName) arm = o; });   // three strips the dot from loaded names
+    return arm ? arm.quaternion.toArray() : null;
+  }, [packId, armName]);
+  const angleFrom = (rest, q) => {
+    if (!rest || !q) return null;
+    const dot = Math.min(1, Math.abs(rest[0] * q[0] + rest[1] * q[1] + rest[2] * q[2] + rest[3] * q[3]));
+    return +(2 * Math.acos(dot)).toFixed(3);
+  };
+  const restQuat = await armQuat();
   const settle = (what) => page.waitForFunction((id) => !!window.creator.engine().rig.root.getObjectByName('PACK_' + id) && window.creator.engine().rig.identity.body === id, packId, { timeout: 30000 }).catch(() => {});
   await page.evaluate(() => window.creator.store.getState().setPerf({ bodyPose: 'tpose' }));
   await settle(); await page.waitForTimeout(2500);
-  const tpose = await armAngle();
+  const tpose = angleFrom(restQuat, await armQuat());
   step('pose: picking T-pose applies the pack clip POSE-tpose (arm raised 90 degrees)', tpose !== null && Math.abs(tpose - Math.PI / 2) < 0.05, `arm angle ${tpose} rad`);
   await page.evaluate(() => window.creator.store.getState().setPerf({ bodyPose: 'apose' }));
   await settle(); await page.waitForTimeout(2500);
-  const rest = await armAngle();
+  const rest = angleFrom(restQuat, await armQuat());
   step('pose: back to A-pose returns the skeleton to rest', rest !== null && rest < 0.02, `arm angle ${rest} rad`);
   // Limb length: the control reaches a bone whose authored name has a .L suffix (the loader renames it DEF-upperarmL).
-  const armScale = () => page.evaluate((id) => {
+  const armScale = () => page.evaluate(([id, armName]) => {
     const root = window.creator.engine().rig.root.getObjectByName('PACK_' + id); let arm = null;
-    root.traverse((o) => { if (o.userData && o.userData.name === 'DEF-upperarm.L') arm = o; });
+    root.traverse((o) => { if (o.userData && o.userData.name === armName) arm = o; });
     return arm ? +arm.scale.y.toFixed(3) : null;
-  }, packId);
+  }, [packId, armName]);
   await page.evaluate(() => window.creator.store.getState().setValue('upperArm.length', 100));
   await settle(); await page.waitForTimeout(2500);
   const longArm = await armScale();
-  step('bones: "Upper arm length" = 100 scales DEF-upperarm.L even though the loader renames it', longArm !== null && longArm > 1.05, `scale.y ${longArm}`);
+  step(`bones: "Upper arm length" = 100 scales ${armName} even though the loader renames it`, longArm !== null && longArm > 1.05, `scale.y ${longArm}`);
   await finish(browser, errors);
 })().catch((e) => { console.error(e); process.exit(1); });
 

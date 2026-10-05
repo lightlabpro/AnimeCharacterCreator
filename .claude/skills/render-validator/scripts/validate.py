@@ -33,6 +33,7 @@ DEFAULTS = {
     },
     "reference_isolation": {"max_coverage": 0.65, "max_border_fg": 0.40},   # real isolated references: coverage <= 0.56, border <= 0.34. Busy scenes: border 0.5-0.9
     "consistency_tolerance": 0.04,  # body views (front/three_quarter/side/back) must be the same height within this fraction
+    "require_manifest": False,       # init --require-manifest: UNKNOWN until --manifest (r_manifest.json from blender_render_views.py) is supplied
     "min_iterations": 3,            # gate refuses PASS before this many measured iterations
     "plateau_window": 3,            # iterations compared for plateau detection
     "plateau_delta": 0.02,          # min improvement of the margin score across the window
@@ -293,6 +294,7 @@ def cmd_init(a):
     cfg["require_mesh"] = bool(a.require_mesh)
     cfg["require_head"] = bool(a.require_head)
     cfg["reviews_required"] = a.reviews
+    cfg["require_manifest"] = bool(a.require_manifest)
     cfg["required_views"] = list(a.require_view) if a.require_view else list(refs)
     save_state(a.workspace, {"refs": refs, "config": cfg, "iterations": [], "created": time.time()})
     print(f"workspace ready: {a.workspace}\nreferences: {', '.join(refs) or '(none, render-only gates)'}")
@@ -322,6 +324,26 @@ def check_mesh(stats, cfg, contract):
         implemented = [n for n in stats.get("shape_keys", []) if n in known]
         checks["contract_keys_implemented"] = {"value": len(implemented), "ok": True, "limit": f"of {len(known)} the app reads"}
     return checks, unknown, orphans
+
+def camera_signature(man):
+    """The camera RULES, not the fitted numbers: a taller character legitimately changes the absolute scale, a changed
+    angle, framing mode, resolution, engine or colour transform does not. Scale is compared as a ratio to the body or head size."""
+    sig = {"engine": man.get("engine"), "resolution": man.get("resolution"), "view_transform": man.get("view_transform"),
+           "blender": man.get("blender"), "head_from_landmarks": man.get("head_from_landmarks"), "views": {}}
+    for name, v in man.get("views", {}).items():
+        base = man.get("head_height") if v.get("frame") == "head" else man.get("character_height")
+        ratio = round(v["ortho_scale"] / base, 2) if base else None
+        sig["views"][name] = [v.get("azimuth"), v.get("elevation"), v.get("frame"), ratio]
+    return sig
+
+def camera_changes(prev, cur):
+    out = []
+    for k in ("engine", "resolution", "view_transform", "blender", "head_from_landmarks"):
+        if prev.get(k) != cur.get(k): out.append(f"{k} {prev.get(k)} -> {cur.get(k)}")
+    for name in sorted(set(prev["views"]) | set(cur["views"])):
+        if name not in prev["views"] or name not in cur["views"]: out.append(f"view {name} added or removed")
+        elif prev["views"][name] != cur["views"][name]: out.append(f"{name} {prev['views'][name]} -> {cur['views'][name]}")
+    return out
 
 def margin_score(per_view):
     """Smallest normalised margin across all checked metrics. >=0 means every floor is cleared."""
@@ -416,15 +438,26 @@ def cmd_measure(a):
         failing += [f"mesh:{k}" for k, c in mesh_checks.items() if c["ok"] is False]
     elif cfg.get("require_mesh"):
         unknown.append("mesh:not supplied")
+    manifest_sig = None
+    if a.manifest:
+        with open(a.manifest) as fh: manifest_sig = camera_signature(json.load(fh))
+        prev_sig = next((i["camera_signature"] for i in reversed(its) if i.get("camera_signature")), None)
+        if prev_sig:
+            changes = camera_changes(prev_sig, manifest_sig)
+            if changes: failing.append("cameras:changed (" + "; ".join(changes[:3]) + "). Never change cameras between iterations; re-render all views with the same set-up.")
+    elif cfg.get("require_manifest"):
+        unknown.append("cameras:manifest not supplied")
     head = None
     if a.head_audit:
         with open(a.head_audit) as fh: head = json.load(fh)
-        if not head.get("ok"): failing.append("head:shape (" + "; ".join(head.get("bad", [])[:3]) + ")")
+        status = head.get("status") or ("pass" if head.get("ok") else "fail")      # older files only had "ok"
+        if status == "fail": failing.append("head:shape (" + "; ".join(head.get("bad", [])[:3]) + ")")
+        elif status == "unknown": unknown.append("head:audit could not measure " + ", ".join(head.get("unknown", [])[:4]))
     elif cfg.get("require_head"):
         unknown.append("head:audit not supplied")
     rec = {"n": n, "render_hash": h, "views": per_view, "failing": failing, "unknown": unknown, "margin_score": round(score, 4),
            "time": time.time(), "renders": views, "stage": a.stage, "mesh": mesh_checks, "orphan_names": orphans,
-           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None, "head_audit": head}
+           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None, "head_audit": head, "camera_signature": manifest_sig}
     its.append(rec); save_state(a.workspace, st)
     sheet = build_sheet(tiles)
     sheet_path = os.path.join(idir, "sheet.png"); sheet.save(sheet_path)
@@ -574,8 +607,8 @@ def cmd_report(a):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest="cmd", required=True)
-    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--reviews", type=int, default=1, help="independent reviews the gate requires (2 is recommended for a final pass)"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
-    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--head-audit", help="head_audit.json written by head-shape-audit/scripts/head_audit.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
+    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--require-manifest", action="store_true", help="UNKNOWN until --manifest is supplied"); i.add_argument("--reviews", type=int, default=1, help="independent reviews the gate requires (2 is recommended for a final pass)"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
+    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--manifest", help="r_manifest.json written by blender_render_views.py; cameras must not change between iterations"); m.add_argument("--head-audit", help="head_audit.json written by head-shape-audit/scripts/head_audit.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
     r = sp.add_parser("report"); r.add_argument("workspace")
     g = sp.add_parser("gate"); g.add_argument("workspace"); g.add_argument("--review", required=True, action="append", help="review JSON, repeat for several reviewers (each needs a distinct reviewer_id)")
     a = p.parse_args()

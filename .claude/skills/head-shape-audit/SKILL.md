@@ -23,6 +23,9 @@ Also seen but not measured (mark as visual): the reference has deep eye sockets 
 
 Also found on the creator app's own ellipsoid head (so it is a common trap): a plain ellipsoid skull is widest around 0.3-0.4H, while the reference is flat-sided from 0.2H to 0.35H. Build the temples flat and vertical, not as a bulging egg.
 
+## How it measures
+The audit slices the real triangles with a plane at each height and takes the exact outline extents, so it does not depend on where your vertices happen to lie (an earlier vertex-slab version dropped rows on smooth meshes). If a row still cannot be measured the audit says UNKNOWN, writes `"status": "unknown"` to `head_audit.json`, and the validator treats that as not measured, never a pass. Checked in Blender against an analytic ellipsoid (widths within 1.2% of the head height at every tested row, and the same result at three different tessellations).
+
 ## Procedure (Blender)
 1. Create two empties, `LM_top` at the highest point of the skull (not the hair) and `LM_chin` at the chin tip. Leave them.
 2. Run `scripts/head_audit.py` in Blender's Text Editor (edit `HEAD_OBJECTS` at the top if your head mesh has another name). It slices the evaluated mesh, prints a table, lists fixes in the order to work, and prints a `BRIDGE-ENTRY` you can log.

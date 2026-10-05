@@ -14,13 +14,16 @@ import numpy as np
 
 KEYS_ID = ["ID-FaceRound", "ID-EyeSize", "ID-BodyBulk", "ID-BodyLean", "ID-SkullWidth", "ID-SkullWidth_Neg"]
 KEYS_PF = ["PF-Blink", "PF-Blink_L", "PF-Blink_R", "PF-JawOpen"]
+def read_json(path):
+    with open(path, encoding="utf-8") as fh: return json.load(fh)
+
 def documented_sockets():
     """All SOC- names from the contract file when it can be found (so a clean test pack passes), else a small default set."""
     here = os.path.dirname(os.path.abspath(__file__))
     for up in range(2, 6):
         p = os.path.normpath(os.path.join(here, *[".."] * up, "knowledge", "expected-contract.json"))
         if os.path.exists(p):
-            try: return json.load(open(p))["documented_sockets"]
+            try: return read_json(p)["documented_sockets"]
             except Exception: pass
     return ["SOC-HairFront", "SOC-HairBack", "SOC-Eyewear", "SOC-Chest"]
 SOCKETS = documented_sockets()
@@ -60,7 +63,7 @@ def contract_keys():
     for up in range(2, 6):
         p = os.path.normpath(os.path.join(here, *[".."] * up, "knowledge", "expected-contract.json"))
         if os.path.exists(p):
-            d = json.load(open(p)); return d["identity_shape_keys"], d["performance_shape_keys"]
+            d = read_json(p); return d["identity_shape_keys"], d["performance_shape_keys"]
     raise SystemExit("--all-keys needs knowledge/expected-contract.json next to the skill")
 
 def build(out, pid, defect, all_keys=False):

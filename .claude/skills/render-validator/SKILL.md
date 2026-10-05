@@ -15,6 +15,9 @@ Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-gene
 2. Initialise: `python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png --require-mesh --require-head`
    (in the chat, use the installed skill's `scripts/validate.py`). Needs only numpy and Pillow (`pip install numpy pillow`). Run it outside Blender on the saved PNGs. Every `--ref` view becomes a required view unless you pass `--require-view` explicitly.
 
+## Verified in Blender
+`blender_render_views.py`, `mesh_stats.py` and the head audit have been run in real Blender 5.0.1 (headless, `pip install bpy==5.0.1`) with 22 integration tests in `tests/blender/`. Facts: the renderer uses the scene's own engine, materials and lights (a scene without lights or shaders renders black silhouettes, which is fine for shape checks but fails the toon gates); it writes `r_manifest.json` and restores every scene setting it touched; `mesh_stats.py` matches Blender's own bmesh counts for triangles, boundary and non-manifold edges, loose parts, zero-area faces and n-gons. Pass `--manifest r_manifest.json` to `measure` (init with `--require-manifest`) and the validator fails an iteration whose camera rules changed (angles, framing ratio, resolution, engine, view transform, Blender version). Tested on 5.0.1; run the Blender tests on 5.2 when you can.
+
 ## Geometry first
 A wrong head shape cannot be fixed by shading. Before the loop below, run the `head-shape-audit` skill on any character with a head; if it fails, fix the form first. `scripts/head_profile.py` here does the same check from images.
 

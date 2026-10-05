@@ -38,6 +38,40 @@ class CleanPack(unittest.TestCase):
             tmp, out = lib(t); to_glb(out, with_image=True); code, text = check(tmp)
             self.assertEqual(code, 12); self.assertIn("embedded_texture", text)
 
+def edit(folder, fn):
+    p = folder / "body_test.gltf"; g = json.load(open(p)); fn(g); json.dump(g, open(p, "w"))
+
+class AppLimits(unittest.TestCase):
+    def codes(self, fn):
+        with tempfile.TemporaryDirectory() as t:
+            tmp, out = lib(t); edit(out, fn); code, text = check(tmp); return code, text
+
+    def test_draco_meshopt_and_ktx2_fail_because_the_app_has_no_decoders(self):
+        for ext in ("KHR_draco_mesh_compression", "EXT_meshopt_compression", "KHR_texture_basisu"):
+            code, text = self.codes(lambda g, e=ext: g.update({"extensionsUsed": [e], "extensionsRequired": [e]}))
+            self.assertEqual(code, 12, ext); self.assertIn("unsupported_extension", text)
+
+    def test_supported_extensions_are_fine(self):
+        code, text = self.codes(lambda g: g.update({"extensionsUsed": ["KHR_materials_emissive_strength", "KHR_texture_transform", "KHR_mesh_quantization"]}))
+        self.assertEqual(code, 0, text)
+
+    def test_more_shape_keys_than_webgl2_guarantees_layers_for_fails(self):
+        def many(g, n):
+            m = g["meshes"][0]; p = m["primitives"][0]; base = len(p["targets"])
+            p["targets"] += [p["targets"][i % base] for i in range(n - base)]
+            m["extras"]["targetNames"] += [f"ID-Dummy{i}" for i in range(n - base)]; m["weights"] += [0.0] * (n - base)
+        code, text = self.codes(lambda g: many(g, 300)); self.assertEqual(code, 12); self.assertIn("too_many_targets", text)
+        code, text = self.codes(lambda g: many(g, 230)); self.assertEqual(code, 0, text); self.assertIn("many_targets", text)     # a warning only
+
+    def test_the_gpu_memory_estimate_is_reported_and_large_ones_warn(self):
+        code, text = self.codes(lambda g: None); self.assertIn("MB of GPU texture", text)
+        def big(g): g["accessors"][g["meshes"][0]["primitives"][0]["attributes"]["POSITION"]]["count"] = 4_000_000
+        code, text = self.codes(big); self.assertIn("morph_memory", text)
+
+    def test_more_than_four_bone_influences_warn(self):
+        code, text = self.codes(lambda g: g["meshes"][0]["primitives"][0]["attributes"].update({"JOINTS_1": 0, "WEIGHTS_1": 0}))
+        self.assertEqual(code, 0, text); self.assertIn("joint_influences", text)
+
 class PoseClips(unittest.TestCase):
     def test_pose_clips_are_reported(self):
         with tempfile.TemporaryDirectory() as t:
