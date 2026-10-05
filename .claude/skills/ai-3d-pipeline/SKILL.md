@@ -25,8 +25,8 @@ Provenance and confidence: the staged structure is well sourced for open systems
 | 3 Topology | quads around eyes, mouth, joints; hair and clothes as separate shells | `mesh_stats.py` passes (tri budget, no non-manifold, no zero-area) and loops are visible in a wire render | `render-validator` |
 | 4 UV and texture | face UV island, iris island, shade masks | no stretching, seams away from the face | `anime-character-modeling` |
 | 5 Toon shading | hard ramp, warm shadow tint, outlines | `render-validator` PASS on every required view | `render-validator` |
-| 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys | names in `knowledge/expected-contract.json`; pose test | `creator-bridge` |
-| 7 Export | glTF separate files, `pack.json` | the creator imports it and a slider moves it | `creator-bridge` |
+| 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys, `SOC-` sockets | names in `knowledge/expected-contract.json`; `check_pack.py`; pose test | `library-pack-check` |
+| 7 Export | glTF separate files, `pack.json`, `manifest.json` | `check_pack.py` prints PACK_CHECK_OK, then the creator imports it and a slider moves it | `library-pack-check` |
 
 ## Rules (each one is something Meshy's skills enforce, adapted)
 1. **Shortest route.** Do only the stages the request needs. A request for a prop does not need a rig. A flat-colour model does not need a PBR pass.

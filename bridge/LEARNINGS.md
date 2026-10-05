@@ -69,3 +69,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/py (48 tests), scripts/capture_views.cjs, src/viewport/cleanCapture.ts, ws run against tests/fixtures/validator/mhs3.png
 - status: confirmed
 - use: chat: crop references to the character or use a transparent PNG; an unusable reference now returns exit 13 with the reason
+
+## 2026-10-05 [code] pack pipeline proven end to end; one integration gap fixed; placeholders are placeholders
+- finding: The app's procedural bodies are placeholders, so effort moved to the import pipeline. A generated contract pack imports through the real Import button, a slider drives its ID- key to 1, performance drives its PF- key, and a hat attaches to the pack's SOC-HeadTop. Found and fixed a gap: accessory and hair packs attached to the placeholder rig's sockets (0.48 m off in the test), now they move onto the SOC- nodes inside the body pack. A loaded body pack hides all procedural parts including face and hair, so the body pack must carry eyes, brows and mouth, and hair must come as separate packs.
+- evidence: scripts/e2e_pack.cjs, tests/py/test_e2e_pack.py, tests/packSockets.test.ts, check_pack.py with 21 tests, 70 Python tests total
+- status: confirmed
+- use: chat: run check_pack.py on every export and reply with the findings for your first body pack; every socket documented in CLAUDE_BUILD_PROMPT.md must exist in the body export

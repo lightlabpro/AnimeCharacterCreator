@@ -5,6 +5,7 @@ import '@fontsource-variable/inter';
 import './ui/styles.css';
 import { useStore } from './state/store';
 import { captureViews, type CaptureOptions } from './viewport/cleanCapture';
+import { getEngine } from './ui/Viewport';
 
 if (import.meta.env.DEV) (window as unknown as { creatorStore: typeof useStore }).creatorStore = useStore;
 
@@ -12,6 +13,7 @@ if (import.meta.env.DEV) (window as unknown as { creatorStore: typeof useStore }
 if (import.meta.env.DEV || new URLSearchParams(window.location.search).has('capture')) {
   (window as unknown as { creator: unknown }).creator = {
     store: useStore,
+    engine: () => getEngine(),
     captureViews: (opts?: CaptureOptions) => {
       const s = useStore.getState();
       return captureViews(s.identity, new Map(s.packs.map((p) => [p.id, p])), { overrides: s.renderOverrides, ...opts });

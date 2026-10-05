@@ -304,6 +304,46 @@
     "SOC-Wing_L",
     "SOC-Wings"
   ],
+  "documented_sockets": [
+    "SOC-Back",
+    "SOC-Beard",
+    "SOC-Cape",
+    "SOC-Chest",
+    "SOC-Ear_L",
+    "SOC-Ear_R",
+    "SOC-Eyewear",
+    "SOC-Foot_L",
+    "SOC-Foot_R",
+    "SOC-ForeArm_L",
+    "SOC-ForeArm_R",
+    "SOC-HairBack",
+    "SOC-HairExtra",
+    "SOC-HairFront",
+    "SOC-HairScalp",
+    "SOC-HairSide_L",
+    "SOC-HairSide_R",
+    "SOC-Hand_L",
+    "SOC-Hand_R",
+    "SOC-HeadTop",
+    "SOC-Hip_L",
+    "SOC-Hip_R",
+    "SOC-Moustache",
+    "SOC-Neck",
+    "SOC-OrganicForeArm_L",
+    "SOC-Shin_L",
+    "SOC-Shin_R",
+    "SOC-Shoulder_L",
+    "SOC-Shoulder_R",
+    "SOC-Sideburn_L",
+    "SOC-Sideburn_R",
+    "SOC-Thigh_L",
+    "SOC-Thigh_R",
+    "SOC-UpperArm_L",
+    "SOC-UpperArm_R",
+    "SOC-Waist",
+    "SOC-Weapon_L",
+    "SOC-Weapon_R"
+  ],
   "sliders": [
     {
       "id": "face.round",
@@ -1713,6 +1753,7 @@
     "sliders": 143,
     "identity_shape_keys": 169,
     "performance_shape_keys": 59,
-    "sockets": 30
+    "sockets": 30,
+    "documented_sockets": 38
   }
 }

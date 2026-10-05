@@ -17,6 +17,7 @@ Read in this order. Both Claudes use the same files.
 | `../.claude/skills/ai-3d-pipeline/` | Staged character pipeline with a gate per stage | Both |
 | `validator-calibration.json` | Where the validator's floors came from: data, ranges, findings and caveats | Code, re-run with calibrate.py when new data arrives |
 | `meshy-agent-lessons.md` | What Meshy's agent repo does well (tri-state checks, route choice, skill validation) and where it was applied | Code |
+| `../.claude/skills/library-pack-check/` | Checks exported packs against the app contract; test-pack generator | Code builds it, chat runs it on every export |
 | `from-chat/` | Studies and measurements that live in the chat project (head ratios, hair clump stats, MHS3 video studies) | Chat |
 
 ## Quick facts

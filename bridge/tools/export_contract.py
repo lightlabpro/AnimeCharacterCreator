@@ -36,6 +36,10 @@ pf = sorted(set(re.findall(r"'(PF-[A-Za-z0-9_]+)'", all_src)))
 soc = sorted(set(re.findall(r"'(SOC-[A-Za-z0-9_]+)'", all_src)))
 id_keys = sorted({s["shape_key"] for s in sliders if s["shape_key"]} | {s["shape_key_negative"] for s in sliders if s["shape_key_negative"]})
 
+doc = (root / "docs" / "CLAUDE_BUILD_PROMPT.md").read_text(encoding="utf-8", errors="ignore")
+sock_para = doc[doc.index("SOCKETS"):doc.index("IDENTITY BODY")] if "SOCKETS" in doc and "IDENTITY BODY" in doc else ""
+documented_sockets = sorted(set(re.findall(r"SOC-[A-Za-z_]+", sock_para)))
+
 out = {
     "generated": datetime.date.today().isoformat(),
     "note": "Names the app drives at runtime. A pack missing a name means that control does nothing on that pack.",
@@ -49,8 +53,9 @@ out = {
     "identity_shape_keys": id_keys,
     "performance_shape_keys": pf,
     "sockets": soc,
+    "documented_sockets": documented_sockets,
     "sliders": sliders,
-    "counts": {"sliders": len(sliders), "identity_shape_keys": len(id_keys), "performance_shape_keys": len(pf), "sockets": len(soc)},
+    "counts": {"sliders": len(sliders), "identity_shape_keys": len(id_keys), "performance_shape_keys": len(pf), "sockets": len(soc), "documented_sockets": len(documented_sockets)},
 }
 dest = root / "knowledge" / "expected-contract.json"
 if "--check" in __import__("sys").argv:

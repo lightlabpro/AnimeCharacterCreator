@@ -185,6 +185,25 @@ function findSocket(root: THREE.Object3D): THREE.Object3D | null {
   return found;
 }
 
+/**
+ * Hair, accessories and outfits are built on the placeholder rig's sockets. When a body pack is loaded, the placeholder
+ * body is hidden, so each pack-backed equip moves onto the SOC- node of the same name inside the body pack. It keeps
+ * its local offset, and follows the pack's skeleton because the socket node sits under the pack's bones.
+ */
+export function moveEquipToPackSockets(rig: Rig, packScene: THREE.Object3D) {
+  const sockets = new Map<string, THREE.Object3D>();
+  packScene.traverse((o) => {
+    const name = (o.userData?.socket_name as string | undefined) ?? o.name;
+    if (name.startsWith('SOC-') && !sockets.has(name)) sockets.set(name, o);
+  });
+  if (!sockets.size) return;
+  for (const obj of Object.values(rig.equipObjects)) {
+    const pack = obj.userData.pack as ImportedPack | undefined;
+    const node = pack?.socket ? sockets.get(pack.socket) : undefined;
+    if (node && obj.parent !== node) node.add(obj);
+  }
+}
+
 export interface PackAttachResult {
   loaded: string[];
   failed: { id: string; reason: string }[];
@@ -207,6 +226,7 @@ export async function attachPacks(rig: Rig, packs: Map<string, ImportedPack>, is
         for (const m of rig.meshes) if (!m.userData.equipUid) m.visible = false;
         scene.name = `PACK_${bodyPack.id}`;
         rig.root.add(scene);
+        moveEquipToPackSockets(rig, scene);
         const drive = performanceDriver(scene);
         rig.addUpdater((f) => drive(f.w));
         result.loaded.push(bodyPack.id);
