@@ -63,3 +63,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/py/test_real_images.py SkinShadow (pins all 14 stills), knowledge/validator-calibration.json
 - status: confirmed on 14 stills, one good toon shader
 - use: chat: when shadows look wrong in a toon render, check skin_shadow_chroma and skin_shadow_hue in the measure output first; use --reviews 2 for the final pass
+
+## 2026-10-05 [code] validator can now judge the creator app; first verdict; two validator bugs found by doing so
+- finding: Clean transparent fixed-view captures of the app (window.creator.captureViews, scripts/capture_views.cjs) now feed the validator. First verdict on the app's face vs the official MHS3 face: shadows pass (skin shadow chroma 31.9, hue 55), shape and palette fail (silhouette IoU 0.48, palette 0.28, contour 13.1 px): the app head is a long thin neck with sparse spiky hair vs a broad head with full hair. Doing this exposed a render-hash overwrite bug and a wrong clipped-figure failure on close-ups (both fixed, tested), and a full game screenshot used as a reference gave meaningless fails, now UNKNOWN with instructions.
+- evidence: tests/py (48 tests), scripts/capture_views.cjs, src/viewport/cleanCapture.ts, ws run against tests/fixtures/validator/mhs3.png
+- status: confirmed
+- use: chat: crop references to the character or use a transparent PNG; an unusable reference now returns exit 13 with the reason

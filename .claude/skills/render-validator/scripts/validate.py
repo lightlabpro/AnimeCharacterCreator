@@ -31,6 +31,7 @@ DEFAULTS = {
         "max_loose_parts": 8,
         "max_ngon_share": 0.02,
     },
+    "reference_isolation": {"max_coverage": 0.65, "max_border_fg": 0.40},   # real isolated references: coverage <= 0.56, border <= 0.34. Busy scenes: border 0.5-0.9
     "consistency_tolerance": 0.04,  # body views (front/three_quarter/side/back) must be the same height within this fraction
     "min_iterations": 3,            # gate refuses PASS before this many measured iterations
     "plateau_window": 3,            # iterations compared for plateau detection
@@ -123,6 +124,14 @@ def foreground(im):
     mask = np.linalg.norm(lab - bg[:, None, :], axis=-1) > 12
     mask = erode(dilate(mask, 2), 2)           # close pin-holes
     return rgb.copy(), mask
+
+def reference_isolation(im, limits):
+    """Is this image an isolated character (usable as a reference) or a busy scene? Returns (usable, coverage, border_share).
+    Heuristic from real data: it catches obvious scenes (screenshots with a room around the character), not every painting."""
+    m = foreground(im)[1]; m = dilate(erode(m, 1), 1)
+    border = np.concatenate([m[0], m[-1], m[:, 0], m[:, -1]])
+    cov, bs = float(m.mean()), float(border.mean())
+    return (cov <= limits["max_coverage"] and bs <= limits["max_border_fg"]), cov, bs
 
 def normalise(im):
     """Crop to the figure, pad to square, resize. Returns rgb(SIZE,SIZE,3), mask(SIZE,SIZE), info."""
@@ -287,6 +296,10 @@ def cmd_init(a):
     cfg["required_views"] = list(a.require_view) if a.require_view else list(refs)
     save_state(a.workspace, {"refs": refs, "config": cfg, "iterations": [], "created": time.time()})
     print(f"workspace ready: {a.workspace}\nreferences: {', '.join(refs) or '(none, render-only gates)'}")
+    for name, path in refs.items():
+        usable, cov, bs = reference_isolation(load(path), cfg["reference_isolation"])
+        if not usable:
+            print(f"WARNING: reference '{name}' is not an isolated character (covers {cov:.0%}, its border {bs:.0%} is figure). Its comparison checks will be UNKNOWN. Crop to the character or use a transparent PNG.")
 
 def check_mesh(stats, cfg, contract):
     """Returns (checks, unknown, orphans). Each check: {value, ok(True/False/None=unknown), limit}."""
@@ -329,6 +342,7 @@ def cmd_measure(a):
     n = len(its) + 1
     idir = os.path.join(a.workspace, f"iter_{n:02d}"); os.makedirs(idir, exist_ok=True)
     per_view, tiles = {}, []
+    unknown = [f"view:{v}" for v in cfg.get("required_views", []) if v not in views]
     for name, path in views.items():
         rgb, mask, info = normalise(load(path))
         checks = {}
@@ -340,7 +354,8 @@ def cmd_measure(a):
         add("coverage", info["coverage"], lo <= info["coverage"] <= hi, [lo, hi], "hard", min(info["coverage"] - lo, hi - info["coverage"]) / max(lo, 1e-6))
         if info.get("empty"): add("empty_render", True, False, "figure must be visible", "hard", -1)
         tb = bool(info.get("touches_border", True))
-        add("touches_border", tb, not tb, "figure must not be clipped", "hard", -1 if tb else 0)
+        closeup = name.startswith(("face", "head", "bust", "close"))     # a close-up crops the shoulders on purpose
+        add("touches_border", tb and not closeup, not (tb and not closeup), "figure must not be clipped (close-ups exempt)", "hard", -1 if (tb and not closeup) else 0)
         raw = np.asarray(load(path).convert("RGB")).astype(int)
         mag = float(((raw[..., 0] > 240) & (raw[..., 1] < 20) & (raw[..., 2] > 240)).mean())
         add("magenta_frac", mag, mag <= hd["magenta_frac"], hd["magenta_frac"], "hard", (hd["magenta_frac"] - mag) / max(hd["magenta_frac"], 1e-6))
@@ -357,15 +372,21 @@ def cmd_measure(a):
             add("skin_shadow_hue", ss["hue"], hlo <= ss["hue"] <= hhi, [hlo, hhi], "toon", min(ss["hue"] - hlo, hhi - ss["hue"]) / (hhi - hlo))
         ref_tile = None
         if name in st["refs"]:
-            rr, rm, rinfo = normalise(load(st["refs"][name]))
-            fl = cfg["floors"]
-            iou = sil_iou(mask, rm); ef = edge_f(edges(rgb, mask), edges(rr, rm)); pal = palette_sim(rgb, mask, rr, rm)
-            for key, val in (("sil_iou", iou), ("edge_f", ef), ("palette", pal)):
-                add(key, val, val >= fl[key], fl[key], "reference", (val - fl[key]) / fl[key])
-            cp = contour_px(mask, rm); ceil = cfg["ceilings"]["contour_px"]
-            add("contour_px", cp, cp <= ceil, ceil, "reference", (ceil - cp) / ceil)
-            per_view_ssim = ssim_info(rgb, rr)
-            ref_tile = (rr, rm)
+            ref_im = load(st["refs"][name])
+            usable, rcov, rbs = reference_isolation(ref_im, cfg["reference_isolation"])
+            if not usable:
+                unknown.append(f"ref:{name} is not an isolated character (covers {rcov:.0%}, border {rbs:.0%}). Crop the reference to the character or give a transparent PNG")
+                per_view_ssim = None
+            else:
+                rr, rm, rinfo = normalise(ref_im)
+                fl = cfg["floors"]
+                iou = sil_iou(mask, rm); ef = edge_f(edges(rgb, mask), edges(rr, rm)); pal = palette_sim(rgb, mask, rr, rm)
+                for key, val in (("sil_iou", iou), ("edge_f", ef), ("palette", pal)):
+                    add(key, val, val >= fl[key], fl[key], "reference", (val - fl[key]) / fl[key])
+                cp = contour_px(mask, rm); ceil = cfg["ceilings"]["contour_px"]
+                add("contour_px", cp, cp <= ceil, ceil, "reference", (ceil - cp) / ceil)
+                per_view_ssim = ssim_info(rgb, rr)
+                ref_tile = (rr, rm)
         else:
             per_view_ssim = None
         change = None
@@ -379,12 +400,11 @@ def cmd_measure(a):
     body = [v for v in per_view if v in ("front", "three_quarter", "side", "back") and per_view[v]["bbox_h_frac"]]
     if len(body) > 1:
         hs = [per_view[v]["bbox_h_frac"] for v in body]; mean = sum(hs) / len(hs); tol = cfg["consistency_tolerance"]
-        for v, h in zip(body, hs):
-            dev = abs(h - mean) / mean
+        for v, bh in zip(body, hs):
+            dev = abs(bh - mean) / mean
             per_view[v]["checks"]["height_consistency"] = {"value": round(dev, 4), "ok": dev <= tol, "limit": tol, "kind": "consistency", "margin": round((tol - dev) / tol, 4)}
     failing = [f"{v}:{k}" for v, d in per_view.items() for k, c in d["checks"].items() if not c["ok"]]
     score = margin_score(per_view)
-    unknown = [f"view:{v}" for v in cfg.get("required_views", []) if v not in views]
     mesh_checks, orphans = None, []
     if a.mesh_stats:
         with open(a.mesh_stats) as fh: stats = json.load(fh)
@@ -464,7 +484,8 @@ def build_sheet(tiles):
             overlay[er] = (230, 40, 40); overlay[eg] = (30, 190, 220); overlay[er & eg] = (20, 20, 20)
             diff = np.full_like(rgb, 255)
             diff[rm & mask] = (190, 190, 190); diff[rm & ~mask] = (230, 40, 40); diff[~rm & mask] = (30, 190, 220)
-        row = np.concatenate([ref_img, rgb, overlay, diff], axis=1)
+        shown = rgb.copy(); shown[~mask] = 235          # transparent pixels show as light grey, not black
+        row = np.concatenate([ref_img, shown, overlay, diff], axis=1)
         im = Image.fromarray(row); d = ImageDraw.Draw(im); d.text((4, 4), name, fill=(0, 0, 0))
         rows.append(np.asarray(im))
     return Image.fromarray(np.concatenate(rows, axis=0))

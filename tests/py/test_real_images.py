@@ -49,6 +49,26 @@ class ShippedFloorsOnRealHeads(unittest.TestCase):
         self.assertLess(max(p["contour_px"] for p in pos), min(n["contour_px"] for n in neg))
         self.assertGreater(min(p["edge_f"] for p in pos), max(n["edge_f"] for n in neg))
 
+class ReferenceUsability(unittest.TestCase):
+    LIM = V.DEFAULTS["reference_isolation"]
+    def test_isolated_character_references_are_usable(self):
+        for n in ("ref_front", "toon_front", "mhs3", "now_front"):
+            self.assertTrue(V.reference_isolation(IM[n], self.LIM)[0], n)
+
+    def test_a_full_game_screenshot_is_not_a_usable_reference(self):
+        usable, cov, border = V.reference_isolation(Image.open(root / "docs/style_dataset/images/ref-01.png"), self.LIM)
+        self.assertFalse(usable, f"coverage {cov:.2f} border {border:.2f}")
+
+    def test_an_unusable_reference_makes_the_comparison_unknown_not_failed(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            ws = pathlib.Path(t) / "ws"
+            subprocess.run([sys.executable, str(SK / "validate.py"), "init", str(ws), "--ref", f"face={root / 'docs/style_dataset/images/ref-01.png'}"], capture_output=True)
+            r = subprocess.run([sys.executable, str(SK / "validate.py"), "measure", str(ws), "--view", f"face={FX / 'toon_front.png'}"], capture_output=True, text=True)
+            self.assertEqual(r.returncode, 13, r.stdout); self.assertIn("not an isolated character", r.stdout)
+            self.assertNotIn("contour_px", r.stdout)
+
+
 class SkinShadow(unittest.TestCase):
     def check(self, rgb, mask):
         ss = V.skin_shadow(rgb, mask)

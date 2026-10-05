@@ -11,7 +11,7 @@ The gate is built to resist the usual failure, which is declaring victory after 
 Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-generation benchmarks never trust one number. They use fixed multi-view renders, several independent signals and calibrated judges. Optimizing any single proxy score makes it keep rising while true quality peaks and then falls, and LLM judges are biased toward their own work. So this gate uses per-criterion floors (no averaging), an independent reviewer, a minimum iteration count, and regression and plateau detection.
 
 ## Setup (once per character)
-1. Collect references: ideally one image per view (`front`, `three_quarter`, `side`, `back`, `face`). A view without a reference still gets the render-only gates. Good references: `docs/style_dataset/images/ref-01.png` and `docs/reference/mhs3/`.
+1. Collect references, **cropped to the character** (or a transparent PNG). A full game screenshot with a room around the character is not a usable reference: `init` warns and its comparison checks come back UNKNOWN (exit 13) instead of a misleading fail. Ideally one image per view (`front`, `three_quarter`, `side`, `back`, `face`). A view without a reference still gets the render-only gates. Good references: `docs/style_dataset/images/ref-01.png` and `docs/reference/mhs3/`.
 2. Initialise: `python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png --require-mesh --require-head`
    (in the chat, use the installed skill's `scripts/validate.py`). Needs only numpy and Pillow (`pip install numpy pillow`). Run it outside Blender on the saved PNGs. Every `--ref` view becomes a required view unless you pass `--require-view` explicitly.
 
@@ -29,6 +29,7 @@ A wrong head shape cannot be fixed by shading. Before the loop below, run the `h
    - It reports `moved px` since the previous iteration and prints `MICRO-CHANGE` when a still-failing view moved under 1 px: that was a tweak, not a fix.
    - `--head-audit head_audit.json` adds the head-shape gate (init with `--require-head` so it is UNKNOWN until supplied).
    - Exit codes: 0 ok, **12 failed** (keep iterating), **13 unknown** (a required view or stat was not measured, which is never a pass), 2 usage.
+   - The creator's own renders: `node scripts/capture_views.cjs --out work/app --views front,three_quarter,side,back,face` (needs the dev server, see CLAUDE.md) writes clean transparent PNGs from fixed views at one scale, ready for `--view`.
    - Backgrounds: transparent PNG is best. Flat colours and vertical gradients (the creator's own backdrop) are handled; busy or textured backgrounds are not, so render with a clean background.
    - It prints `MEASURE_FAIL` plus the failing criteria, writes `iter_NN/sheet.png` (reference | render | edge overlay | silhouette diff), and flags `NO_CHANGE`, `REGRESSION`, `WORSE` and `PLATEAU`.
 3. **Look at the sheet** with the Read tool. Describe every defect in plain words (for example "forehead slopes back", "shadow is grey", "lash not darker than brow"). Do not guess from the numbers.

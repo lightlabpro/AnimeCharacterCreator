@@ -238,6 +238,33 @@ class Consistency(unittest.TestCase):
         self.assertNotIn("height_consistency", out)
 
 
+class HashIntegrity(unittest.TestCase):
+    def test_render_hash_is_a_16_char_digest_and_multi_view_reruns_are_caught(self):
+        with tempfile.TemporaryDirectory() as t:
+            d = pathlib.Path(t)
+            figure(d / "a.png"); figure(d / "b.png", tweak=1); figure(d / "ref.png")
+            ws = d / "ws"; run("init", ws, "--ref", f"front={d/'ref.png'}")
+            views = ["--view", f"front={d/'a.png'}", "--view", f"side={d/'b.png'}"]
+            code, out = run("measure", ws, *views)
+            h = last_hash(ws)
+            self.assertRegex(h, r"^[0-9a-f]{16}$")
+            self.assertIn(f"render_hash {h}", out)
+            code, out = run("measure", ws, *views)          # identical second run with several views
+            self.assertEqual(code, 12); self.assertIn("NO_CHANGE", out)
+
+    def test_close_up_views_may_crop_the_shoulders(self):
+        with tempfile.TemporaryDirectory() as t:
+            d = pathlib.Path(t)
+            im = Image.new("RGB", (400, 400), (230, 235, 240)); dr = ImageDraw.Draw(im)
+            dr.ellipse([120, 60, 280, 260], fill=(240, 200, 170), outline=(70, 40, 30), width=3)
+            dr.ellipse([200, 60, 280, 260], fill=(200, 130, 90), outline=(70, 40, 30), width=3)
+            dr.rectangle([60, 250, 340, 400], fill=(60, 110, 70), outline=(30, 40, 30), width=3)   # shoulders run off the bottom edge
+            im.save(d / "face.png"); im.save(d / "front.png")
+            ws = d / "ws"; run("init", ws)
+            _, out = run("measure", ws, "--view", f"face={d/'face.png'}", "--view", f"front={d/'front.png'}")
+            self.assertIn("front:touches_border", out); self.assertNotIn("face:touches_border", out)
+
+
 class SkillsInSync(unittest.TestCase):
     def test_skills_zips_and_contract_validate(self):
         r = subprocess.run([sys.executable, str(root / "scripts/validate_skills.py")], capture_output=True, text=True)
