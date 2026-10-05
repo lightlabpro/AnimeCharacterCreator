@@ -299,3 +299,27 @@ class ValidatorPipelineOnRealBlenderOutput(BlenderCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@unittest.skipUnless(HAVE_BPY, "needs bpy")
+class BodyAuditCase(BlenderCase):
+    def test_blender_measure_matches_gltf_measure(self):
+        """A glTF imported by Blender's own importer must measure the same as the plain-Python glTF loader."""
+        sys.path.insert(0, str(root / "tests/py"))
+        import test_body_audit as tb
+        ba = load(SK / "body-proportion-audit/scripts/body_audit.py", "body_audit")
+        V, T, J = tb.body(); path = str(self.dir / "ref.gltf"); tb.glb(V, T, J, path)
+        py = ba.measure(*ba.load_gltf(path), "py")["metrics"]
+        ba.blender_import(path)
+        bl = ba.measure(*ba.blender_collect(), "bl")["metrics"]
+        for k in ("hip_z", "knee_z", "shoulder_z", "wrist_z", "head_to_top", "shoulder_width", "hip_width", "width_at_hip", "rig_asymmetry"):
+            self.assertIn(k, bl); self.assertAlmostEqual(py[k], bl[k], delta=0.01, msg=k)
+
+    def test_rest_pose_and_shape_keys_do_not_leak_into_measurement(self):
+        ba = load(SK / "body-proportion-audit/scripts/body_audit.py", "body_audit")
+        self.fx.character(shape_key_value=1.0)
+        body = bpy.data.objects["CHR_Body"]; arm = bpy.data.objects["CHR_Armature"]
+        h0 = ba.measure(*ba.blender_collect(), "a")["height"]
+        self.assertEqual(body.data.shape_keys.key_blocks["ID-FaceRound"].value, 1.0)      # restored afterwards
+        self.assertEqual(arm.data.pose_position, "POSE")
+        self.assertGreater(h0, 1.0)

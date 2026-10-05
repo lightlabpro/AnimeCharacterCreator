@@ -1,6 +1,7 @@
-node_modules/
-dist/
 *.log
+*.pyc
 .vite/
 __pycache__/
-*.pyc
+bpyenv/
+dist/
+node_modules/

@@ -93,3 +93,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: node_modules/three WebGLMorphtargets.js and GLTFLoader, tests/py/test_pack_check.py AppLimits (29 pack-check tests)
 - status: confirmed from the three.js source; unverified on real GPUs
 - use: chat: keep one body mesh under 256 shape keys, export without compression, and read the morph_memory line of the checker
+
+## 2026-10-05 [code] body proportions from reference models
+- finding: Anatomy checks should compare against targets measured from real reference meshes with Blender python, not guessed bands. body_audit.py measures joints (Rigify/Mixamo/VRM names) and mesh slices as fractions of height, builds min/max bands from several references, and checks candidates (exit 0/12/13); rig and mesh symmetry use fixed ceilings.
+- evidence: tests/py/test_body_audit.py (9) and tests/blender BodyAuditCase: Blender importer and plain glTF loader agree; scale invariant; long legs, asymmetric rig/mesh fail; missing joints unknown. Blender's glTF importer adds an Icosphere bone-shape mesh that must be excluded.
+- status: unverified: tool built on synthetic figures, no real reference measured yet
+- use: Run blender-measure on each reference model and send the JSON; then Code builds body-targets.json
