@@ -31,6 +31,7 @@ DEFAULTS = {
         "max_loose_parts": 8,
         "max_ngon_share": 0.02,
     },
+    "consistency_tolerance": 0.04,  # body views (front/three_quarter/side/back) must be the same height within this fraction
     "min_iterations": 3,            # gate refuses PASS before this many measured iterations
     "plateau_window": 3,            # iterations compared for plateau detection
     "plateau_delta": 0.02,          # min improvement of the margin score across the window
@@ -52,7 +53,9 @@ DEFAULTS = {
         "shadow_chroma_min": 8.0,   # MHS3 refs 4-40, median 15; Lab chroma of the darkest quarter of the figure: warm, never grey
         "tone_levels": [3, 14],     # dominant luminance bands; MHS3 refs measure 5-14
         "hard_edge_ratio_min": 0.15,# MHS3 refs 0.18-0.57; share of shading transitions that are sharp steps, not smooth gradients
-        "outline_ring_min": 0.15,   # MHS3 refs 0.04-0.92; share of silhouette ring that is darker than the surface inside it
+        "outline_ring_min": 0.15,
+        "skin_shadow_chroma_min": 10.0,   # shadowed skin must stay saturated; all 14 measured MHS3 stills are >= 10.3, most 19+
+        "skin_shadow_hue": [30, 75],      # orange-brown; MHS3 stills 35-69 degrees. Grey or green-ish shadow fails   # MHS3 refs 0.04-0.92; share of silhouette ring that is darker than the surface inside it
     },
 }
 REVIEW_CRITERIA = [
@@ -131,6 +134,7 @@ def normalise(im):
         return np.full((SIZE, SIZE, 3), 255, np.uint8), np.zeros((SIZE, SIZE), bool), info
     info["touches_border"] = bool(mask[0].any() or mask[-1].any() or mask[:, 0].any() or mask[:, -1].any())
     info["aspect"] = float((xs.max() - xs.min() + 1) / (ys.max() - ys.min() + 1))
+    info["bbox_h"] = int(ys.max() - ys.min() + 1); info["bbox_w"] = int(xs.max() - xs.min() + 1); info["img_h"] = int(mask.shape[0])
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
     rgb, mask = rgb[y0:y1, x0:x1], mask[y0:y1, x0:x1]
     s = max(rgb.shape[:2])
@@ -205,6 +209,20 @@ def ssim_info(ra, rb):
     cov = ((a - ma) * (b - mb)).mean()
     return float(((2 * ma * mb + c1) * (2 * cov + c2)) / ((ma ** 2 + mb ** 2 + c1) * (va + vb + c2)))
 
+def skin_shadow(rgb, mask):
+    """Colour of the shadowed skin, from skin-like pixels only (hue 25-95 deg, chroma > 8), so coats and fur
+    cannot pollute it. Returns None when the view shows too little skin to judge.
+    Real MHS3 stills (14 measured): shadow chroma 10-52 (mostly 19+), hue 35-69 deg, usually shifting toward red vs the lit skin."""
+    lab = rgb2lab(rgb); L = lab[..., 0]
+    hue = np.degrees(np.arctan2(lab[..., 2], lab[..., 1])); ch = np.hypot(lab[..., 1], lab[..., 2])
+    sk = mask & (hue > 25) & (hue < 95) & (ch > 8) & (L > 30) & (L < 92)
+    if sk.sum() < 300: return None
+    Ls = L[sk]
+    dark = sk & (L <= np.percentile(Ls, 30)); lit = sk & (L >= np.percentile(Ls, 70))
+    def col(k): return float(np.hypot(lab[k][:, 1], lab[k][:, 2]).mean()), float(np.degrees(np.arctan2(lab[k][:, 2].mean(), lab[k][:, 1].mean())))
+    (dc, dh), (lc, lh) = col(dark), col(lit)
+    return {"chroma": dc, "hue": dh, "hue_shift": dh - lh, "pixels": int(sk.sum())}
+
 def toon_stats(rgb, mask):
     out = {}
     if mask.sum() < 50: return {"shadow_chroma": 0.0, "tone_levels": 0, "hard_edge_ratio": 0.0, "outline_ring": 0.0}
@@ -265,6 +283,7 @@ def cmd_init(a):
             else: cfg[k] = v
     cfg["require_mesh"] = bool(a.require_mesh)
     cfg["require_head"] = bool(a.require_head)
+    cfg["reviews_required"] = a.reviews
     cfg["required_views"] = list(a.require_view) if a.require_view else list(refs)
     save_state(a.workspace, {"refs": refs, "config": cfg, "iterations": [], "created": time.time()})
     print(f"workspace ready: {a.workspace}\nreferences: {', '.join(refs) or '(none, render-only gates)'}")
@@ -331,6 +350,11 @@ def cmd_measure(a):
         add("tone_levels", ts["tone_levels"], lo <= ts["tone_levels"] <= hi, [lo, hi], "toon", min(ts["tone_levels"] - lo, hi - ts["tone_levels"]) / max(hi - lo, 1) )
         add("hard_edge_ratio", ts["hard_edge_ratio"], ts["hard_edge_ratio"] >= hd["hard_edge_ratio_min"], hd["hard_edge_ratio_min"], "toon", (ts["hard_edge_ratio"] - hd["hard_edge_ratio_min"]) / hd["hard_edge_ratio_min"])
         add("outline_ring", ts["outline_ring"], ts["outline_ring"] >= hd["outline_ring_min"], hd["outline_ring_min"], "toon", (ts["outline_ring"] - hd["outline_ring_min"]) / hd["outline_ring_min"])
+        ss = skin_shadow(rgb, mask)
+        if ss is not None:
+            smin = hd["skin_shadow_chroma_min"]; hlo, hhi = hd["skin_shadow_hue"]
+            add("skin_shadow_chroma", ss["chroma"], ss["chroma"] >= smin, smin, "toon", (ss["chroma"] - smin) / smin)
+            add("skin_shadow_hue", ss["hue"], hlo <= ss["hue"] <= hhi, [hlo, hhi], "toon", min(ss["hue"] - hlo, hhi - ss["hue"]) / (hhi - hlo))
         ref_tile = None
         if name in st["refs"]:
             rr, rm, rinfo = normalise(load(st["refs"][name]))
@@ -349,8 +373,15 @@ def cmd_measure(a):
         if prev_mask and os.path.exists(prev_mask):
             change = round(contour_px(mask, np.asarray(Image.open(prev_mask)) > 127), 2)
         Image.fromarray((mask * 255).astype(np.uint8)).save(os.path.join(idir, f"mask_{name}.png"))
-        per_view[name] = {"checks": checks, "ssim_info_only": per_view_ssim, "aspect": info.get("aspect"), "change_px": change}
+        per_view[name] = {"checks": checks, "ssim_info_only": per_view_ssim, "aspect": info.get("aspect"), "change_px": change,
+                          "skin_shadow": ss, "bbox_h_frac": (info["bbox_h"] / info["img_h"]) if info.get("bbox_h") else None}
         tiles.append((name, rgb, mask, ref_tile))
+    body = [v for v in per_view if v in ("front", "three_quarter", "side", "back") and per_view[v]["bbox_h_frac"]]
+    if len(body) > 1:
+        hs = [per_view[v]["bbox_h_frac"] for v in body]; mean = sum(hs) / len(hs); tol = cfg["consistency_tolerance"]
+        for v, h in zip(body, hs):
+            dev = abs(h - mean) / mean
+            per_view[v]["checks"]["height_consistency"] = {"value": round(dev, 4), "ok": dev <= tol, "limit": tol, "kind": "consistency", "margin": round((tol - dev) / tol, 4)}
     failing = [f"{v}:{k}" for v, d in per_view.items() for k, c in d["checks"].items() if not c["ok"]]
     score = margin_score(per_view)
     unknown = [f"view:{v}" for v in cfg.get("required_views", []) if v not in views]
@@ -438,6 +469,31 @@ def build_sheet(tiles):
         rows.append(np.asarray(im))
     return Image.fromarray(np.concatenate(rows, axis=0))
 
+def review_problems(rev, last, cfg, n_iters, tag=""):
+    """Everything wrong with one review file. `tag` prefixes messages when several reviews are combined."""
+    why = []
+    if rev.get("render_hash") != last["render_hash"]:
+        why.append(f"{tag}review is not bound to the latest renders (needs render_hash {last['render_hash']}). Review the current sheet.")
+    if rev.get("reviewer") != "independent":
+        why.append(f'{tag}review must come from an independent reviewer (reviewer: "independent"), not the model author. Spawn a reviewer agent that has not seen your reasoning.')
+    crit = rev.get("criteria", {})
+    low = []
+    for c in REVIEW_CRITERIA:
+        e = crit.get(c)
+        if not e: why.append(f"{tag}review missing criterion '{c}'"); continue
+        if e.get("score", 0) < cfg["review_floor"]: low.append(f"{c}={e.get('score')}")
+        if len(str(e.get("evidence", "")).strip()) < cfg["min_evidence_chars"]:
+            why.append(f"{tag}criterion '{c}' needs a concrete visual evidence sentence")
+    ev = [" ".join(str(e.get("evidence", "")).lower().split()) for e in crit.values() if e]
+    if len(set(ev)) < len(ev): why.append(f"{tag}evidence repeats between criteria. Each criterion needs its own observation of the sheet.")
+    if any(len(x.split()) < 6 for x in ev): why.append(f"{tag}evidence is too short: write what is visible (6+ words), not a verdict.")
+    scores = {e.get("score") for e in crit.values() if e}
+    if len(crit) >= len(REVIEW_CRITERIA) and len(scores) == 1: why.append(f"{tag}every criterion has the same score. Score the weakest area honestly; a uniform review is a rubber stamp.")
+    if low: why.append(f"{tag}criteria below floor: " + ", ".join(low) + ". Each needs a named defect and a targeted fix.")
+    if n_iters > 1 and not rev.get("defects_fixed_since_last"):
+        why.append(f"{tag}list defects_fixed_since_last: every iteration must be tied to a named defect.")
+    return why
+
 def cmd_gate(a):
     st = load_state(a.workspace); cfg = st["config"]; its = st["iterations"]
     if not its: print("ITERATE: nothing measured yet. Run measure first."); sys.exit(EXIT_FAIL)
@@ -449,35 +505,31 @@ def cmd_gate(a):
     if last["failing"]: why.append("objective gates still failing: " + ", ".join(last["failing"]))
     if len(its) < cfg["min_iterations"]:
         why.append(f"only {len(its)} measured iteration(s); at least {cfg['min_iterations']} are required. A first draft is never final.")
-    try:
-        with open(a.review) as f: rev = json.load(f)
-    except Exception as e:
-        print(f"ITERATE: cannot read review file ({e}). Create it as described in SKILL.md."); sys.exit(EXIT_FAIL)
-    if rev.get("render_hash") != last["render_hash"]:
-        why.append(f"review is not bound to the latest renders (needs render_hash {last['render_hash']}). Review the current sheet.")
-    if rev.get("reviewer") != "independent":
-        why.append('review must come from an independent reviewer (reviewer: "independent"), not the model author. Spawn a reviewer agent that has not seen your reasoning.')
-    crit = rev.get("criteria", {})
-    low = []
-    for c in REVIEW_CRITERIA:
-        e = crit.get(c)
-        if not e: why.append(f"review missing criterion '{c}'"); continue
-        if e.get("score", 0) < cfg["review_floor"]: low.append(f"{c}={e.get('score')}")
-        if len(str(e.get("evidence", "")).strip()) < cfg["min_evidence_chars"]:
-            why.append(f"criterion '{c}' needs a concrete visual evidence sentence")
-    ev = [" ".join(str(e.get("evidence", "")).lower().split()) for e in crit.values() if e]
-    if len(set(ev)) < len(ev): why.append("evidence repeats between criteria. Each criterion needs its own observation of the sheet.")
-    if any(len(x.split()) < 6 for x in ev): why.append("evidence is too short: write what is visible (6+ words), not a verdict.")
-    scores = {e.get("score") for e in crit.values() if e}
-    if len(crit) >= len(REVIEW_CRITERIA) and len(scores) == 1: why.append("every criterion has the same score. Score the weakest area honestly; a uniform review is a rubber stamp.")
-    if low: why.append("criteria below floor: " + ", ".join(low) + ". Each needs a named defect and a targeted fix.")
-    if len(its) > 1 and not rev.get("defects_fixed_since_last"):
-        why.append("list defects_fixed_since_last: every iteration must be tied to a named defect.")
+    revs = []
+    for path in a.review:
+        try:
+            with open(path) as f: revs.append(json.load(f))
+        except Exception as e:
+            print(f"ITERATE: cannot read review file {path} ({e}). Create it as described in SKILL.md."); sys.exit(EXIT_FAIL)
+    need = cfg.get("reviews_required", 1)
+    if len(revs) < need:
+        why.append(f"this workspace needs {need} independent reviews, got {len(revs)}. Use one reviewer per --review, each with its own reviewer_id.")
+    for i, rev in enumerate(revs):
+        why += review_problems(rev, last, cfg, len(its), tag=f"[review {i + 1}] " if len(revs) > 1 else "")
+    if len(revs) > 1:
+        ids = [r.get("reviewer_id") for r in revs]
+        if any(not x for x in ids) or len(set(ids)) < len(ids):
+            why.append("with several reviews every one needs a distinct reviewer_id, so one reviewer cannot be counted twice.")
+        for c in REVIEW_CRITERIA:
+            sc = [r.get("criteria", {}).get(c, {}).get("score") for r in revs]
+            sc = [x for x in sc if isinstance(x, (int, float))]
+            if len(sc) > 1 and max(sc) - min(sc) >= 2:
+                why.append(f"reviewers disagree on '{c}' ({min(sc)} vs {max(sc)}). Re-examine the sheet for that criterion before gating again.")
     if why:
         print("ITERATE")
         for w in why: print(" - " + w)
         sys.exit(EXIT_FAIL)
-    print(f"PASS after {len(its)} iterations (final render_hash {last['render_hash']}). Show the user the final sheet.")
+    print(f"PASS after {len(its)} iterations with {len(revs)} independent review(s) (final render_hash {last['render_hash']}). Show the user the final sheet.")
 
 def cmd_report(a):
     st = load_state(a.workspace); its = st["iterations"]
@@ -501,10 +553,10 @@ def cmd_report(a):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest="cmd", required=True)
-    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
+    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--reviews", type=int, default=1, help="independent reviews the gate requires (2 is recommended for a final pass)"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
     m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--head-audit", help="head_audit.json written by head-shape-audit/scripts/head_audit.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
     r = sp.add_parser("report"); r.add_argument("workspace")
-    g = sp.add_parser("gate"); g.add_argument("workspace"); g.add_argument("--review", required=True)
+    g = sp.add_parser("gate"); g.add_argument("workspace"); g.add_argument("--review", required=True, action="append", help="review JSON, repeat for several reviewers (each needs a distinct reviewer_id)")
     a = p.parse_args()
     {"init": cmd_init, "measure": cmd_measure, "gate": cmd_gate, "report": cmd_report}[a.cmd](a)
 

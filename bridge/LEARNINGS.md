@@ -57,3 +57,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/fixtures/validator real crops, knowledge/validator-calibration.json, tests/py/test_real_images.py
 - status: confirmed on one reference head in one pose
 - use: chat: run calibrate.py on your own good and bad renders, report NOT USEFUL metrics; treat a MICRO-CHANGE note as a signal to change the form, not the polish
+
+## 2026-10-05 [code] validator: skin-shadow gate from 14 real MHS3 stills, two-reviewer gate, cross-view consistency
+- finding: Shadowed skin in 14 official MHS3 stills has chroma 10-52 (mostly 19+) and hue 35-69 deg; the shadow:lit chroma ratio varies 0.45-1.8 so it is not gated. The user's toon shader measures chroma 25.6 hue 68.9 and passes; grey clay heads have no skin pixels. Known gap: a green or blue shadow on skin passes both the skin and the grey gates, only the review criterion shading_hard_warm_shadows catches it.
+- evidence: tests/py/test_real_images.py SkinShadow (pins all 14 stills), knowledge/validator-calibration.json
+- status: confirmed on 14 stills, one good toon shader
+- use: chat: when shadows look wrong in a toon render, check skin_shadow_chroma and skin_shadow_hue in the measure output first; use --reviews 2 for the final pass

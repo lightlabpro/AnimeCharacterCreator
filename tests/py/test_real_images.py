@@ -49,6 +49,47 @@ class ShippedFloorsOnRealHeads(unittest.TestCase):
         self.assertLess(max(p["contour_px"] for p in pos), min(n["contour_px"] for n in neg))
         self.assertGreater(min(p["edge_f"] for p in pos), max(n["edge_f"] for n in neg))
 
+class SkinShadow(unittest.TestCase):
+    def check(self, rgb, mask):
+        ss = V.skin_shadow(rgb, mask)
+        if ss is None: return None
+        hd = V.DEFAULTS["hard"]; lo, hi = hd["skin_shadow_hue"]
+        return ss["chroma"] >= hd["skin_shadow_chroma_min"] and lo <= ss["hue"] <= hi
+
+    def test_all_measured_mhs3_stills_with_skin_pass(self):
+        import glob
+        paths = sorted(glob.glob(str(root / "docs/reference/mhs3/*.p*")) + glob.glob(str(root / "docs/style_dataset/images/*")))
+        judged = 0
+        for p in paths:
+            rgb, m, _ = V.normalise(Image.open(p)); r = self.check(rgb, m)
+            if r is None: continue
+            judged += 1; self.assertTrue(r, f"{p} fails the skin shadow gate: {V.skin_shadow(rgb, m)}")
+        self.assertGreaterEqual(judged, 12)
+
+    def test_the_good_toon_shader_passes_and_the_official_still_passes(self):
+        for n in ("toon_front", "mhs3"):
+            rgb, m, _ = V.normalise(IM[n]); self.assertTrue(self.check(rgb, m), n)
+
+    def test_grey_clay_has_no_skin_to_judge(self):
+        for n in ("ref_front", "now_front"):
+            rgb, m, _ = V.normalise(IM[n]); self.assertIsNone(V.skin_shadow(rgb, m))
+
+    def test_a_grey_shadow_on_skin_is_caught_by_the_whole_figure_gate(self):
+        # The skin gate only sees skin-coloured pixels, so a grey shadow drops out of it. The whole-figure gate catches grey.
+        import numpy as np
+        img = np.zeros((200, 200, 3), np.uint8); img[:] = (230, 235, 240)
+        img[40:160, 60:140] = (240, 200, 170); img[40:160, 100:140] = (165, 160, 155)
+        rgb, m, _ = V.normalise(Image.fromarray(img))
+        self.assertLess(V.toon_stats(rgb, m)["shadow_chroma"], V.DEFAULTS["hard"]["shadow_chroma_min"])
+
+    def test_known_gap_a_green_or_blue_shadow_on_skin_passes_both_gates(self):
+        # Documented limitation: it needs the independent review (shading_hard_warm_shadows). If this ever starts failing, a gate improved: update the docs.
+        import numpy as np
+        img = np.zeros((200, 200, 3), np.uint8); img[:] = (230, 235, 240)
+        img[40:160, 60:140] = (240, 200, 170); img[40:160, 100:140] = (150, 185, 150)
+        rgb, m, _ = V.normalise(Image.fromarray(img))
+        self.assertGreaterEqual(V.toon_stats(rgb, m)["shadow_chroma"], V.DEFAULTS["hard"]["shadow_chroma_min"])
+
 class CalibrationTool(unittest.TestCase):
     def test_reports_separation_and_proposes_floors(self):
         r = subprocess.run([sys.executable, str(SK / "calibrate.py"), "--ref", str(FX / "ref_front.png"), "--augment",

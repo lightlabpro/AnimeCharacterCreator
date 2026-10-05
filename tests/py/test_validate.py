@@ -175,6 +175,69 @@ class StricterGate(unittest.TestCase):
         self.assertEqual(code, 0); self.assertIn("3 iterations", out); self.assertTrue((self.ws / "report.md").exists())
 
 
+class TwoReviewers(unittest.TestCase):
+    def setUp(self):
+        self.t = tempfile.TemporaryDirectory(); self.d = pathlib.Path(self.t.name)
+        for i, n in enumerate(("ref", "g1", "g2", "g3")): figure(self.d / f"{n}.png", tweak=i)
+        self.ws = self.d / "ws"
+        run("init", self.ws, "--ref", f"front={self.d/'ref.png'}", "--reviews", "2")
+        for n in ("g1", "g2", "g3"): run("measure", self.ws, "--view", f"front={self.d/(n + '.png')}")
+        self.h = last_hash(self.ws)
+    def tearDown(self): self.t.cleanup()
+    def rev(self, name, rid, scores=None, who="independent"):
+        crit = {c: {"score": (scores or {}).get(c, 2 + i % 2), "evidence": f"{name} saw detail {i} about {c.replace('_', ' ')} on the sheet."} for i, c in enumerate(CRITERIA)}
+        (self.d / f"{name}.json").write_text(json.dumps({"reviewer": who, "reviewer_id": rid, "render_hash": self.h, "defects_fixed_since_last": ["x"], "criteria": crit}))
+        return self.d / f"{name}.json"
+    def gate(self, *paths):
+        args = []
+        for p in paths: args += ["--review", p]
+        return run("gate", self.ws, *args)
+
+    def test_one_review_is_not_enough_when_two_are_required(self):
+        code, out = self.gate(self.rev("a", "r1")); self.assertEqual(code, 12); self.assertIn("needs 2", out)
+
+    def test_two_distinct_reviewers_pass(self):
+        code, out = self.gate(self.rev("a", "r1"), self.rev("b", "r2")); self.assertEqual(code, 0, out); self.assertIn("2 independent", out)
+
+    def test_the_same_reviewer_cannot_count_twice(self):
+        code, out = self.gate(self.rev("a", "r1"), self.rev("b", "r1")); self.assertEqual(code, 12); self.assertIn("distinct reviewer_id", out)
+
+    def test_large_disagreement_blocks_the_pass(self):
+        code, out = self.gate(self.rev("a", "r1", {"brows": 3}), self.rev("b", "r2", {"brows": 1}))
+        self.assertEqual(code, 12); self.assertIn("disagree on 'brows'", out)
+
+    def test_either_reviewer_scoring_low_blocks(self):
+        code, out = self.gate(self.rev("a", "r1"), self.rev("b", "r2", {"face_structure": 1}))
+        self.assertEqual(code, 12); self.assertIn("[review 2]", out)
+
+
+class Consistency(unittest.TestCase):
+    def setUp(self):
+        self.t = tempfile.TemporaryDirectory(); self.d = pathlib.Path(self.t.name)
+        self.ws = self.d / "ws"
+    def tearDown(self): self.t.cleanup()
+    def sized(self, name, h):
+        im = Image.new("RGB", (400, 600), (230, 235, 240)); d = ImageDraw.Draw(im); top = 300 - h // 2
+        d.ellipse([140, top, 260, top + h // 3], fill=(240, 200, 170), outline=(70, 40, 30), width=3)
+        d.ellipse([190, top, 260, top + h // 3], fill=(200, 130, 90), outline=(70, 40, 30), width=3)
+        d.rectangle([160, top + h // 3, 240, top + h], fill=(240, 200, 170), outline=(70, 40, 30), width=3)
+        im.save(self.d / name)
+    def test_same_height_views_pass_and_a_shorter_one_fails(self):
+        for n, h in (("f.png", 420), ("s.png", 424), ("b.png", 418), ("short.png", 340)):
+            self.sized(n, h)
+        run("init", self.ws)
+        code, out = run("measure", self.ws, "--view", f"front={self.d/'f.png'}", "--view", f"side={self.d/'s.png'}", "--view", f"back={self.d/'b.png'}")
+        self.assertNotIn("height_consistency <FAIL", out)
+        ws2 = self.d / "ws2"; run("init", ws2)
+        code, out = run("measure", ws2, "--view", f"front={self.d/'f.png'}", "--view", f"side={self.d/'short.png'}")
+        self.assertEqual(code, 12); self.assertIn("height_consistency", out)
+
+    def test_a_single_view_has_nothing_to_compare(self):
+        self.sized("f.png", 420); run("init", self.ws)
+        code, out = run("measure", self.ws, "--view", f"front={self.d/'f.png'}")
+        self.assertNotIn("height_consistency", out)
+
+
 class SkillsInSync(unittest.TestCase):
     def test_skills_zips_and_contract_validate(self):
         r = subprocess.run([sys.executable, str(root / "scripts/validate_skills.py")], capture_output=True, text=True)
