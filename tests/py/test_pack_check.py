@@ -38,6 +38,23 @@ class CleanPack(unittest.TestCase):
             tmp, out = lib(t); to_glb(out, with_image=True); code, text = check(tmp)
             self.assertEqual(code, 12); self.assertIn("embedded_texture", text)
 
+class PoseClips(unittest.TestCase):
+    def test_pose_clips_are_reported(self):
+        with tempfile.TemporaryDirectory() as t:
+            tmp, _ = lib(t); code, out = check(tmp)
+            self.assertEqual(code, 0, out); self.assertIn("POSE-tpose", out); self.assertIn("POSE-hero", out)
+
+    def test_a_pack_without_pose_clips_says_so(self):
+        with tempfile.TemporaryDirectory() as t:
+            tmp, _ = lib(t, defect="no_poses"); code, out = check(tmp)
+            self.assertEqual(code, 0, out); self.assertIn("rest pose", out)
+
+    def test_a_misnamed_pose_clip_is_a_warning(self):
+        with tempfile.TemporaryDirectory() as t:
+            tmp, out = lib(t); g = json.load(open(out / "body_test.gltf")); g["animations"][0]["name"] = "POSE-crouch"
+            json.dump(g, open(out / "body_test.gltf", "w")); code, text = check(tmp)
+            self.assertEqual(code, 0, text); self.assertIn("pose_name", text)
+
 class Defects(unittest.TestCase):
     def expect(self, defect, code_name, level="FAIL", exit_code=12):
         with tempfile.TemporaryDirectory() as t:

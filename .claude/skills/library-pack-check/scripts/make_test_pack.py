@@ -9,7 +9,7 @@ that start at 0 and SOC- sockets. It exists to prove the pipeline (checker, impo
 Defects, one at a time, to test the checker: embedded, nonzero_weights, no_targetnames, orphan_key, floating, tiny,
 no_bones, no_sockets, missing_bin, bad_library, no_slot
 """
-import argparse, base64, json, os, struct
+import argparse, base64, json, math, os, struct
 import numpy as np
 
 KEYS_ID = ["ID-FaceRound", "ID-EyeSize", "ID-BodyBulk", "ID-BodyLean", "ID-SkullWidth", "ID-SkullWidth_Neg"]
@@ -27,7 +27,7 @@ SOCKETS = documented_sockets()
 # Deliberately away from where the app's placeholder body keeps these sockets, so a test can tell which one an accessory attached to.
 SOCKET_AT = {"SOC-HeadTop": (0.0, 2.2, 0.0), "SOC-Chest": (0.0, 1.3, 0.0)}
 BONES = ["DEF-spine", "DEF-head", "DEF-upperarm.L", "DEF-upperarm.R"]
-DEFECTS = {"embedded", "nonzero_weights", "no_targetnames", "orphan_key", "floating", "tiny", "no_bones", "no_sockets", "missing_bin", "bad_library", "no_slot"}
+DEFECTS = {"no_poses", "embedded", "nonzero_weights", "no_targetnames", "orphan_key", "floating", "tiny", "no_bones", "no_sockets", "missing_bin", "bad_library", "no_slot"}
 
 def box(cx, cy, cz, sx, sy, sz, n=18):
     """A box whose six faces are n x n grids, so the test mesh has a realistic triangle count (about 20k for the figure)."""
@@ -55,12 +55,20 @@ def figure(tiny=False, floating=False):
         base = len(verts); verts += [(x * scale, (y + lift) * scale, z * scale) for x, y, z in v]; faces += [tuple(base + k for k in tri) for tri in f]; part_of += [i] * len(v)
     return np.array(verts, np.float32), np.array(faces, np.uint32), np.array(part_of)
 
-def build(out, pid, defect):
+def contract_keys():
+    here = os.path.dirname(os.path.abspath(__file__))
+    for up in range(2, 6):
+        p = os.path.normpath(os.path.join(here, *[".."] * up, "knowledge", "expected-contract.json"))
+        if os.path.exists(p):
+            d = json.load(open(p)); return d["identity_shape_keys"], d["performance_shape_keys"]
+    raise SystemExit("--all-keys needs knowledge/expected-contract.json next to the skill")
+
+def build(out, pid, defect, all_keys=False):
     os.makedirs(out, exist_ok=True)
     V, F, part = figure(defect == "tiny", defect == "floating")
     N = np.zeros_like(V); N[:, 2] = 1
     targets = {}
-    names = (KEYS_ID + KEYS_PF) + (["ID-NotInTheApp"] if defect == "orphan_key" else [])
+    names = (sum(contract_keys(), []) if all_keys else (KEYS_ID + KEYS_PF)) + (["ID-NotInTheApp"] if defect == "orphan_key" else [])
     for k in names:
         d = np.zeros_like(V)
         if "Bulk" in k: d[part <= 1, 0] = np.sign(V[part <= 1, 0]) * 0.03
@@ -99,11 +107,21 @@ def build(out, pid, defect):
     if defect != "no_sockets":
         for s in SOCKETS: nodes.append({"name": s, "translation": list(SOCKET_AT.get(s, (0, 1.0, 0)))}); root_children.append(len(nodes) - 1)
     nodes.append({"name": "Root", "children": root_children}); root = len(nodes) - 1
+    animations = []
+    if nb and defect != "no_poses":
+        # Pose clips, one rotation key on DEF-upperarm.L: POSE-tpose raises the arm 90 degrees, POSE-hero 30. The app plays POSE-<pose> when that pose is picked.
+        arm = 1 + BONES.index("DEF-upperarm.L")
+        for pose, deg in (("tpose", 90.0), ("hero", 30.0)):
+            t = np.array([0.0, 0.04], np.float32); a = math.radians(deg) / 2
+            q = np.array([[0, 0, math.sin(a), math.cos(a)]] * 2, np.float32)
+            ti = add(t.reshape(-1, 1), 5126, "SCALAR", 2, minmax=True); qi = add(q, 5126, "VEC4", 2)
+            animations.append({"name": f"POSE-{pose}", "samplers": [{"input": ti, "output": qi, "interpolation": "LINEAR"}], "channels": [{"sampler": 0, "target": {"node": arm, "path": "rotation"}}]})
     blob = b"".join(chunks)
     gltf = {"asset": {"version": "2.0", "generator": "make_test_pack.py"}, "scene": 0, "scenes": [{"nodes": [root]}], "nodes": nodes, "meshes": [mesh],
             "materials": [{"name": "Body_Skin", "pbrMetallicRoughness": {"baseColorFactor": [0.9, 0.75, 0.65, 1.0]}}],
             "accessors": accs, "bufferViews": views, "buffers": [{"byteLength": len(blob)}]}
     if skin: gltf["skins"] = [skin]
+    if animations: gltf["animations"] = animations
     if defect == "embedded": gltf["buffers"][0]["uri"] = "data:application/octet-stream;base64," + base64.b64encode(blob).decode()
     else:
         gltf["buffers"][0]["uri"] = f"{pid}.bin"
@@ -142,9 +160,9 @@ def build_accessory(out, pid, socket):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("out"); ap.add_argument("--id", default="body_test"); ap.add_argument("--defect", choices=sorted(DEFECTS))
-    ap.add_argument("--kind", choices=["body", "accessory"], default="body"); ap.add_argument("--socket", default="SOC-HeadTop")
+    ap.add_argument("--all-keys", action="store_true", help="a morph target for every ID- and PF- key the app drives (a realistic, heavy body)"); ap.add_argument("--kind", choices=["body", "accessory"], default="body"); ap.add_argument("--socket", default="SOC-HeadTop")
     a = ap.parse_args()
-    print("wrote", build_accessory(a.out, a.id, a.socket) if a.kind == "accessory" else build(a.out, a.id, a.defect))
+    print("wrote", build_accessory(a.out, a.id, a.socket) if a.kind == "accessory" else build(a.out, a.id, a.defect, a.all_keys))
 
 if __name__ == "__main__":
     main()

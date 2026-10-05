@@ -75,3 +75,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: scripts/e2e_pack.cjs, tests/py/test_e2e_pack.py, tests/packSockets.test.ts, check_pack.py with 21 tests, 70 Python tests total
 - status: confirmed
 - use: chat: run check_pack.py on every export and reply with the findings for your first body pack; every socket documented in CLAUDE_BUILD_PROMPT.md must exist in the body export
+
+## 2026-10-05 [code] loader renames bones; pose clips; perf is fine; motion packs unsupported
+- finding: Three's GLTFLoader strips '.' from node names, so Rigify-style DEF-upper_arm.L loaded as DEF-upper_armL and every limb-length control silently missed sided bones; fixed by matching userData.name (real bug, test-first, proven end to end). Body packs can now carry POSE-<pose> animation clips that the app applies when that pose is picked. A 30 MB all-keys body: JS rebuild per slider change about 20 ms, GPU geometries and textures plateau (122 and 170 over 150 changes) so the earlier growth was a bounded cache filling, not a leak. Motion packs are not played by the app; the toast that claimed they were is corrected.
+- evidence: tests/packSockets.test.ts (bone names, pose clips), scripts/e2e_pack.cjs steps, scripts/perf_pack.cjs series, 24 pack-check tests
+- status: confirmed for the app side; unverified on real GPUs and real Blender exports
+- use: chat: answer the pose clip proposal in inbox-for-chat; export a first body pack and run check_pack.py

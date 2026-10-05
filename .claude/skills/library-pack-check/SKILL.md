@@ -26,15 +26,22 @@ Exit codes: 0 pass, **12 a check failed**, **13 something could not be measured*
 | Body packs | no skin; no `DEF-` bones; no `SOC-` sockets; lowest point not at y=0 (feet on the floor); height outside 1.5-2.2 m (adult) or 1.0-1.6 m (child); triangles outside 500-120,000 | WARN outside the 18k-28k body budget; INFO for key coverage |
 | Sockets | WARN: a body pack missing sockets listed in `docs/CLAUDE_BUILD_PROMPT.md`; an accessory whose `socket` no body provides and nothing documents | |
 | Bounds | UNKNOWN when POSITION accessors have no min/max | enable "Include min/max" / use a standard exporter |
+| Pose clips | WARN for an animation that looks like a pose but is not `POSE-<apose\|relaxed\|tpose\|hero\|wave\|sit>` | INFO lists the clips the app will use |
+
+## Pose clips (optional, additive)
+A clip named `POSE-<pose>` in the **body** glTF is applied to its skeleton (first frame) when that pose is picked in the app: `POSE-apose`, `POSE-relaxed`, `POSE-tpose`, `POSE-hero`, `POSE-wave`, `POSE-sit`. A body without them stays in its rest pose. Bone names in the clips are the bone names in the pack. Motion packs (the Motion library tab) are not played yet.
+
+## Names the loader changes
+Three.js's glTF loader strips `.` and other reserved characters from node names (`DEF-upper_arm.L` loads as `DEF-upper_armL`) and keeps the authored name in `userData.name`. The app matches on the authored name, so Rigify-style `.L` / `.R` suffixes work. Shape keys are not renamed.
 
 ## What it cannot see
 How the mesh deforms, edge-loop quality, shading, and whether the art is good. The `render-validator` and the `head-shape-audit` cover looks; a pose test covers deformation. A pass here means the app can find and drive everything in the pack, not that it is finished.
 
 ## Worked example and test packs
-`python3 scripts/make_test_pack.py OUT_DIR` writes a small valid body pack (1.72 m, 19k triangles, 6 `ID-` keys, 4 `PF-` keys, all 38 documented sockets, skinned to `DEF-` bones). `--defect NAME` writes a broken one (embedded, nonzero_weights, no_targetnames, orphan_key, floating, tiny, no_bones, no_sockets, missing_bin, bad_library, no_slot). `--kind accessory --socket SOC-HeadTop` writes a hat. Compare your export's structure with it when a finding is unclear.
+`python3 scripts/make_test_pack.py OUT_DIR` writes a small valid body pack (1.72 m, 19k triangles, 6 `ID-` keys, 4 `PF-` keys, all 38 documented sockets, skinned to `DEF-` bones). `--defect NAME` writes a broken one (embedded, nonzero_weights, no_targetnames, orphan_key, floating, tiny, no_bones, no_sockets, missing_bin, bad_library, no_slot). `--all-keys` adds a morph target for every `ID-` and `PF-` key the app drives (a realistic heavy body, 30 MB). `--kind accessory --socket SOC-HeadTop` writes a hat. Compare your export's structure with it when a finding is unclear.
 
 ## In the loop
 1. Export the pack. 2. Run `check_pack.py`. 3. Fix every FAIL and UNKNOWN, read the WARNs. 4. Only then run the visual gates. 5. Log the INFO coverage line (how many of the app's `ID-`/`PF-` keys the pack implements) with `bridge/tools/log.py`.
 
 ## Proven end to end
-`node scripts/e2e_pack.cjs` (repo root, dev server running) imports a generated pack through the real Import button, applies it, and checks that "Round face" = 100 drives `ID-FaceRound` to 1, `PF-Blink` is driven by performance, and a hat attaches to the body pack's own `SOC-HeadTop`. If a pack passes this checker but a control still does nothing in the app, tell Code: it is an app bug.
+`node scripts/e2e_pack.cjs` (repo root, dev server running) imports a generated pack through the real Import button, applies it, and checks that "Round face" = 100 drives `ID-FaceRound` to 1, `PF-Blink` is driven by performance, and a hat attaches to the body pack's own `SOC-HeadTop`. If a pack passes this checker but a control still does nothing in the app, tell Code: it is an app bug. `node scripts/perf_pack.cjs --all-keys-body` style runs (`perf_pack.cjs`) measure slider-drag cost with a heavy pack and plot GPU resource counts to catch leaks.

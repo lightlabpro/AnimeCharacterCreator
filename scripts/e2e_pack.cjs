@@ -89,6 +89,31 @@ const step = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); c
   await page.waitForTimeout(2500);
   const blink = await read('PF-Blink');
   step('performance: PF-Blink = 1 drives the pack key', blink !== null && blink > 0.9, `value ${blink}`);
+  // Poses: the pack's own POSE-<pose> clip is applied to its skeleton when that pose is picked.
+  const armAngle = () => page.evaluate((id) => {
+    const root = window.creator.engine().rig.root.getObjectByName('PACK_' + id); let arm = null;
+    root.traverse((o) => { if (o.userData && o.userData.name === 'DEF-upperarm.L') arm = o; });   // three strips the dot from loaded names
+    return arm ? +arm.quaternion.angleTo(new arm.quaternion.constructor()).toFixed(3) : null;
+  }, packId);
+  const settle = (what) => page.waitForFunction((id) => !!window.creator.engine().rig.root.getObjectByName('PACK_' + id) && window.creator.engine().rig.identity.body === id, packId, { timeout: 30000 }).catch(() => {});
+  await page.evaluate(() => window.creator.store.getState().setPerf({ bodyPose: 'tpose' }));
+  await settle(); await page.waitForTimeout(2500);
+  const tpose = await armAngle();
+  step('pose: picking T-pose applies the pack clip POSE-tpose (arm raised 90 degrees)', tpose !== null && Math.abs(tpose - Math.PI / 2) < 0.05, `arm angle ${tpose} rad`);
+  await page.evaluate(() => window.creator.store.getState().setPerf({ bodyPose: 'apose' }));
+  await settle(); await page.waitForTimeout(2500);
+  const rest = await armAngle();
+  step('pose: back to A-pose returns the skeleton to rest', rest !== null && rest < 0.02, `arm angle ${rest} rad`);
+  // Limb length: the control reaches a bone whose authored name has a .L suffix (the loader renames it DEF-upperarmL).
+  const armScale = () => page.evaluate((id) => {
+    const root = window.creator.engine().rig.root.getObjectByName('PACK_' + id); let arm = null;
+    root.traverse((o) => { if (o.userData && o.userData.name === 'DEF-upperarm.L') arm = o; });
+    return arm ? +arm.scale.y.toFixed(3) : null;
+  }, packId);
+  await page.evaluate(() => window.creator.store.getState().setValue('upperArm.length', 100));
+  await settle(); await page.waitForTimeout(2500);
+  const longArm = await armScale();
+  step('bones: "Upper arm length" = 100 scales DEF-upperarm.L even though the loader renames it', longArm !== null && longArm > 1.05, `scale.y ${longArm}`);
   await finish(browser, errors);
 })().catch((e) => { console.error(e); process.exit(1); });
 

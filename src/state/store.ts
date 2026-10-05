@@ -323,7 +323,7 @@ export const useStore = create<AppState>()((set, get) => {
         return;
       }
       if (tab === 'Motion') {
-        get().toast(`${pack.displayName} is a motion. Motions play on imported glTF bodies that contain the same action.`);
+        get().toast(`${pack.displayName} is a motion pack. Playing motion packs is not supported yet. Body poses come from POSE-<name> clips inside the body pack.`);
         return;
       }
       get().equip(pack.id, { slot: pack.slot, colors: {}, exclusive: true });

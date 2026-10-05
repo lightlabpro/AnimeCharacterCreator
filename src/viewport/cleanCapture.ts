@@ -71,7 +71,7 @@ export async function captureViews(identity: Identity, packs: Map<string, Import
   const out: Record<string, string> = {};
   try {
     const hasPacks = !!identity.body || Object.values(rig.equipObjects).some((o) => o.userData.pack);
-    if (hasPacks) await attachPacks(rig, packs, () => true);
+    if (hasPacks) await attachPacks(rig, packs, () => true, perf.bodyPose);
     const w = resolvePerformance(perf, identity.faceProfile, 0, 0);
     rig.update({ w, time: 0, dt: 0, perf, wrinkle: wrinkleActivation({}, identity.faceProfile) });
     scene.add(rig.root);

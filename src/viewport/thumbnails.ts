@@ -115,7 +115,7 @@ async function renderJob(job: ThumbJob, packs: Map<string, ImportedPack>): Promi
   const rig = buildRig(job.identity, packs, perf.bodyPose);
   try {
     const hasPacks = !!job.identity.body || Object.values(rig.equipObjects).some((o) => o.userData.pack);
-    if (hasPacks) await attachPacks(rig, packs, () => true);
+    if (hasPacks) await attachPacks(rig, packs, () => true, perf.bodyPose);
     const w = resolvePerformance(perf, job.identity.faceProfile, 0, 0);
     rig.update({ w, time: 0, dt: 0, perf, wrinkle: wrinkleActivation({}, job.identity.faceProfile) });
     renderer.scene.add(rig.root);

@@ -138,6 +138,16 @@ def check_gltf(R, pid, folder, main, pack, category, contract):
         elif contract:
             R.add("INFO", pid, "coverage", f"implements {nid} of {len(known_id)} identity keys and {npf} of {len(known_pf)} performance keys the app drives")
             if nid == 0: R.warn(pid, "no_identity_keys", "none of the identity (ID-) keys the app reads are present")
+    # pose clips: POSE-<pose> animations are applied to the body when that pose is picked
+    poses = ("apose", "relaxed", "tpose", "hero", "wave", "sit")
+    squash = lambda n: re.sub(r"[^a-z]", "", n.lower())
+    clips = [a.get("name", "") for a in g.get("animations", [])]
+    if clips:
+        good = [c for c in clips if squash(c) in {"pose" + p for p in poses}]
+        stray = [c for c in clips if squash(c).startswith("pose") and c not in good]
+        R.add("INFO", pid, "pose_clips", f"{len(clips)} animations; pose clips the app uses: {', '.join(good) or 'none'}")
+        for c in stray: R.warn(pid, "pose_name", f"animation '{c}' looks like a pose but is not one of POSE-{{{'|'.join(poses)}}}, so the app ignores it")
+    elif is_body: R.add("INFO", pid, "pose_clips", "no POSE-<pose> clips: the body stays in its rest pose when a pose is picked")
     # bones and sockets
     bones = set()
     for s in g.get("skins", []):

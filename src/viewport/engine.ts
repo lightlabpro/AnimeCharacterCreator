@@ -162,7 +162,7 @@ export class Engine {
     const gen = ++this.buildGen;
     const hasPacks = !!id.body || Object.values(rig.equipObjects).some((o) => o.userData.pack);
     if (hasPacks) {
-      attachPacks(rig, packs, () => gen === this.buildGen).then((r) => {
+      attachPacks(rig, packs, () => gen === this.buildGen, pose).then((r) => {
         if (gen === this.buildGen && r.failed.length) this.cb.onPackReport(r.failed);
       });
     }

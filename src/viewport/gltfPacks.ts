@@ -4,6 +4,7 @@ import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js';
 import type { ImportedPack } from '../library/importer';
 import { assetUrl, resolveRelative } from '../library/platform';
 import { CONTROLS } from '../model/controls';
+import type { BodyPose } from '../model/performance';
 import type { Identity } from '../model/types';
 import type { Rig } from './rig';
 import { toon, type ToonKind } from './toonMaterial';
@@ -116,8 +117,18 @@ function boneKey(prop: string): string {
   return prop.replace(/_(length|scale|width)$/, '').replace(/_/g, '').toLowerCase();
 }
 
+/** The name as authored in Blender. GLTFLoader strips characters such as "." from node names (DEF-upper_arm.L loads as DEF-upper_armL) and keeps the original in userData.name. */
+export function authoredName(o: THREE.Object3D): string {
+  return (o.userData?.name as string | undefined) ?? o.name;
+}
+
 function boneBase(name: string): string {
-  return name.replace(/^DEF-/, '').replace(/[._](L|R|l|r)$/, '').replace(/[^a-zA-Z]/g, '').toLowerCase();
+  return name
+    .replace(/^DEF-/, '')
+    .replace(/[._](L|R|l|r)$/, '')
+    .replace(/(?<=[a-z0-9])[LR]$/, '') // a side suffix whose separator was already stripped by the loader
+    .replace(/[^a-zA-Z]/g, '')
+    .toLowerCase();
 }
 
 /** Writes identity values into ID- shape keys, bone scale properties, and armature extras. */
@@ -144,8 +155,8 @@ export function applyIdentityToScene(root: THREE.Object3D, id: Identity) {
         if (k.startsWith('ID-')) mesh.morphTargetInfluences[i] = morphW[k] ?? 0;
       }
     }
-    if ((o as THREE.Bone).isBone && o.name.startsWith('DEF-')) {
-      const b = boneScale[boneBase(o.name)];
+    if ((o as THREE.Bone).isBone && authoredName(o).startsWith('DEF-')) {
+      const b = boneScale[boneBase(authoredName(o))];
       if (b) {
         if (!o.userData.restScale) o.userData.restScale = o.scale.clone();
         const r = o.userData.restScale as THREE.Vector3;
@@ -180,7 +191,7 @@ function performanceDriver(root: THREE.Object3D) {
 function findSocket(root: THREE.Object3D): THREE.Object3D | null {
   let found: THREE.Object3D | null = null;
   root.traverse((o) => {
-    if (!found && (o.name.startsWith('SOC-') || o.userData?.socket_name)) found = o;
+    if (!found && (authoredName(o).startsWith('SOC-') || o.userData?.socket_name)) found = o;
   });
   return found;
 }
@@ -193,7 +204,7 @@ function findSocket(root: THREE.Object3D): THREE.Object3D | null {
 export function moveEquipToPackSockets(rig: Rig, packScene: THREE.Object3D) {
   const sockets = new Map<string, THREE.Object3D>();
   packScene.traverse((o) => {
-    const name = (o.userData?.socket_name as string | undefined) ?? o.name;
+    const name = (o.userData?.socket_name as string | undefined) ?? authoredName(o);
     if (name.startsWith('SOC-') && !sockets.has(name)) sockets.set(name, o);
   });
   if (!sockets.size) return;
@@ -204,13 +215,29 @@ export function moveEquipToPackSockets(rig: Rig, packScene: THREE.Object3D) {
   }
 }
 
+/**
+ * Applies the body pack's own pose clip, if it has one. A clip named POSE-<pose> (apose, relaxed, tpose, hero, wave, sit)
+ * is sampled at its first frame, so the pack's skeleton takes the pose the user picked. Packs without such a clip stay in
+ * their rest pose. Returns true when a clip was applied.
+ */
+export function applyPackPose(scene: THREE.Object3D, clips: THREE.AnimationClip[], pose: BodyPose): boolean {
+  const squash = (n: string) => n.toLowerCase().replace(/[^a-z]/g, '');
+  const clip = clips.find((c) => squash(c.name) === `pose${pose}`);
+  if (!clip) return false;
+  const mixer = new THREE.AnimationMixer(scene);
+  mixer.clipAction(clip).play();
+  mixer.update(0);
+  scene.userData.poseMixer = mixer; // kept alive: stopping an action would restore the rest pose
+  return true;
+}
+
 export interface PackAttachResult {
   loaded: string[];
   failed: { id: string; reason: string }[];
 }
 
 /** Loads glTF packs for the body and every pack-backed equip on the rig. Safe to call after the rig is replaced. */
-export async function attachPacks(rig: Rig, packs: Map<string, ImportedPack>, isCurrent: () => boolean): Promise<PackAttachResult> {
+export async function attachPacks(rig: Rig, packs: Map<string, ImportedPack>, isCurrent: () => boolean, pose: BodyPose = 'apose'): Promise<PackAttachResult> {
   const result: PackAttachResult = { loaded: [], failed: [] };
   const id = rig.identity;
   const jobs: Promise<void>[] = [];
@@ -227,6 +254,7 @@ export async function attachPacks(rig: Rig, packs: Map<string, ImportedPack>, is
         scene.name = `PACK_${bodyPack.id}`;
         rig.root.add(scene);
         moveEquipToPackSockets(rig, scene);
+        applyPackPose(scene, gltf.animations, pose);
         const drive = performanceDriver(scene);
         rig.addUpdater((f) => drive(f.w));
         result.loaded.push(bodyPack.id);
