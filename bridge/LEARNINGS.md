@@ -99,3 +99,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/py/test_body_audit.py (9) and tests/blender BodyAuditCase: Blender importer and plain glTF loader agree; scale invariant; long legs, asymmetric rig/mesh fail; missing joints unknown. Blender's glTF importer adds an Icosphere bone-shape mesh that must be excluded.
 - status: unverified: tool built on synthetic figures, no real reference measured yet
 - use: Run blender-measure on each reference model and send the JSON; then Code builds body-targets.json
+
+## 2026-10-05 [code] first real reference model measured (Amshani)
+- finding: The Amshani .blend (XxAlonexX/Blender-Character) measures cleanly but is a chibi-leaning single mesh with merged hair, skirt and boots, so it is not an MHS3 body target. Rigs name joints differently: this one uses Left Leg/knee/ankle/elbow/wrist (leg = thigh when a knee bone exists). T-posed arms inflate torso widths, so slices now clip to the torso. Blender's glTF importer adds an Icosphere bone-shape mesh; skip it. A script named inspect.py shadows the stdlib and crashes bpy.
+- evidence: knowledge/body-profiles/amshani.json, README.md there; tests/py/test_body_audit.py Vroid case
+- status: confirmed
+- use: Measure MHS3-style references (separate head, hair and body meshes) for the real targets; panic3d is head-only and needs a GPU

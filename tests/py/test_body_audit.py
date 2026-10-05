@@ -58,8 +58,15 @@ class Names(unittest.TestCase):
     def test_rigs(self):
         for n, want in (("DEF-upper_arm.L", ("upper_arm", "L")), ("DEF-upperarm.R", ("upper_arm", "R")), ("mixamorig:LeftForeArm", ("forearm", "L")),
                         ("mixamorig:LeftUpLeg", ("thigh", "L")), ("mixamorig:RightLeg", ("shin", "R")), ("J_Bip_L_UpperArm", ("upper_arm", "L")),
-                        ("DEF-spine.001", ("spine", None)), ("Hips", ("pelvis", None)), ("HeadTop_End", (None, None)), ("LeftHandIndex1", (None, None))):
+                        ("DEF-spine.001", ("spine", None)), ("Hips", ("pelvis", None)), ("Left elbow", ("forearm", "L")), ("Right wrist", ("hand", "R")), ("Left ankle", ("foot", "L")), ("Left knee", ("shin", "L")), ("HeadTop_End", (None, None)), ("LeftHandIndex1", (None, None))):
             self.assertEqual(ba.canon(n), want, n)
+
+class Vroid(unittest.TestCase):
+    def test_leg_is_thigh_only_when_a_knee_bone_exists(self):
+        J = ba.pick_joints({"Left Leg": (0.1, 0, .5), "Left knee": (0.1, 0, .3), "Left ankle": (0.1, 0, .05)})
+        self.assertEqual((J["thigh_L"][2], J["shin_L"][2], J["foot_L"][2]), (.5, .3, .05))
+        J = ba.pick_joints({"mixamorig:LeftUpLeg": (0.1, 0, .5), "mixamorig:LeftLeg": (0.1, 0, .3), "mixamorig:LeftFoot": (0.1, 0, .05)})
+        self.assertEqual((J["thigh_L"][2], J["shin_L"][2]), (.5, .3))
 
 class Measure(unittest.TestCase):
     def test_ratios_and_gltf_roundtrip(self):

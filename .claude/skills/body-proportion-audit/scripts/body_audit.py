@@ -20,11 +20,12 @@ SKIP_MESH = re.compile(r"hair|brow|lash|eye|teeth|tongue|cloth|cape|weapon|sword
 JOINT_WORDS = {
     "head": "head", "neck": "neck", "hips": "pelvis", "pelvis": "pelvis", "spine": "spine", "chest": "spine", "upperchest": "spine",
     "thigh": "thigh", "upleg": "thigh", "upperleg": "thigh", "leg": "shin", "shin": "shin", "calf": "shin", "lowerleg": "shin",
+    "knee": "shin", "ankle": "foot", "elbow": "forearm", "wrist": "hand",
     "foot": "foot", "toes": "toe", "toe": "toe", "toebase": "toe", "ball": "toe",
     "upperarm": "upper_arm", "arm": "upper_arm", "forearm": "forearm", "lowerarm": "forearm", "hand": "hand",
     "shoulder": "clavicle", "clavicle": "clavicle",
 }
-def canon(name):
+def canon(name, leg_is_thigh=False):
     """'DEF-upper_arm.L' / 'mixamorig:LeftForeArm' / 'J_Bip_L_UpperArm' -> ('upper_arm', 'L'). Returns (None, None) if not a body joint."""
     s = name.split(":")[-1]
     s = re.sub(r"^(def|mch|org|tweak|ctrl|j_bip|j_adj)[-_.]", "", s, flags=re.I)
@@ -39,14 +40,16 @@ def canon(name):
     toks = [t for t in toks if not t.isdigit() and t not in ("j", "bip", "c", "g")]
     key = "".join(toks)
     j = JOINT_WORDS.get(key)
+    if key == "leg" and leg_is_thigh: j = "thigh"          # VRoid/Unity style: Leg, knee, ankle (Mixamo: UpLeg, Leg, Foot)
     return (j, side) if j else (None, None)
 
 def pick_joints(raw):
     """raw: {authored bone name: (x,y,z)} -> {'upper_arm_L': xyz, 'head': xyz, ...}. Duplicates: first pick wins by lowest name,
     except spine (several bones): pelvis = hips/pelvis else the lowest spine bone, 'chest' = the highest."""
     out, spines = {}, []
+    leg_is_thigh = any(re.search(r"knee", n, re.I) for n in raw)
     for name in sorted(raw):
-        j, side = canon(name)
+        j, side = canon(name, leg_is_thigh)
         if not j or "twist" in name.lower() or "roll" in name.lower(): continue
         p = tuple(float(v) for v in raw[name])
         if j == "spine": spines.append((p[2], p)); continue
@@ -59,7 +62,9 @@ def pick_joints(raw):
 # ---------------------------------------------------------------- measuring
 def _d(a, b): return math.dist(a, b)
 
-def slice_width(V, T, z, axis):
+def slice_width(V, T, z, axis, xlim=None):
+    """Extent along `axis` of the surface at height z. xlim keeps only crossing points with |x| <= xlim, so arms held out
+    or down do not count as torso."""
     import numpy as np
     a, b, c = V[T[:, 0]], V[T[:, 1]], V[T[:, 2]]
     pts = []
@@ -68,10 +73,12 @@ def slice_width(V, T, z, axis):
         hit = ((p[:, 2] - z) * (q[:, 2] - z) <= 0) & (np.abs(dz) > 1e-12)
         if hit.any():
             t = (z - p[hit, 2]) / dz[hit]
-            pts.append(p[hit, axis] + (q[hit, axis] - p[hit, axis]) * t)
+            pts.append(p[hit, :2] + (q[hit, :2] - p[hit, :2]) * t[:, None])
     if not pts: return None
     P = np.concatenate(pts)
-    return float(P.max() - P.min())
+    if xlim is not None: P = P[np.abs(P[:, 0]) <= xlim]
+    if len(P) == 0: return None
+    return float(P[:, axis].max() - P[:, axis].min())
 
 def mirror_p95(V, n=1500):
     """95th percentile of the distance from a mirrored (x -> -x) sample point to the nearest surface vertex, in metres."""
@@ -117,8 +124,10 @@ def measure(V, T, raw_joints, name="model"):
             sym.append(max(abs(L[0] + R[0]), abs(L[1] - R[1]), abs(L[2] - R[2])) / H)
     if sym: m["rig_asymmetry"] = max(sym)
     # mesh slices at joint heights (width = x extent, depth = y extent), same fractions on every model
+    xlim = None
+    if "upper_arm_L" in J and "upper_arm_R" in J: xlim = max(abs(J["upper_arm_L"][0]), abs(J["upper_arm_R"][0])) + 0.03 * H     # torso only: deltoid, not the arm
     def sl(zz, axis):
-        w = slice_width(V, T, zmin + zz * H, axis); return None if w is None else w / H
+        w = slice_width(V, T, zmin + zz * H, axis, xlim); return None if w is None else w / H
     if "shoulder_z" in m and "hip_z" in m:
         waist = m["hip_z"] + 0.35 * (m["shoulder_z"] - m["hip_z"])
         for key, zz, ax in (("width_at_shoulder", m["shoulder_z"], 0), ("width_at_hip", m["hip_z"], 0), ("width_at_waist", waist, 0), ("depth_at_waist", waist, 1)):
