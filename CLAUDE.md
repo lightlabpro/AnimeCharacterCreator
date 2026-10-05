@@ -5,3 +5,5 @@
 - Develop on the branch the session names. Do not open a PR unless asked. Never commit tokens.
 - Changing the asset contract (names in `docs/CLAUDE_BUILD_PROMPT.md`) needs an inbox item to the chat first.
 - Head proportions are tested against `knowledge/head-targets.json` (`tests/headShape.test.ts`). To retune the ellipsoid head run `npx vite-node scripts/fit_head.ts`. Python tests: `python3 -m unittest discover -s tests/py`.
+- Skills live in `.claude/skills/`. After editing one run `python3 bridge/tools/package_skills.py`, then `python3 scripts/validate_skills.py` (checks frontmatter, links, script paths, zip drift and the contract). CI runs both plus the Python tests.
+- Validator exit codes: 0 pass, 12 failed, 13 unknown (not measured, never a pass), 2 usage.

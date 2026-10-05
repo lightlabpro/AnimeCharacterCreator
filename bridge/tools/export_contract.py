@@ -53,5 +53,12 @@ out = {
     "counts": {"sliders": len(sliders), "identity_shape_keys": len(id_keys), "performance_shape_keys": len(pf), "sockets": len(soc)},
 }
 dest = root / "knowledge" / "expected-contract.json"
-dest.write_text(json.dumps(out, indent=2), encoding="utf-8")
-print(f"wrote {dest.relative_to(root)}: {out['counts']}")
+if "--check" in __import__("sys").argv:
+    old = json.loads(dest.read_text(encoding="utf-8"))
+    old.pop("generated", None); new = {k: v for k, v in out.items() if k != "generated"}
+    if old != new:
+        raise SystemExit("knowledge/expected-contract.json is stale. Run: python3 bridge/tools/export_contract.py")
+    print("contract is current")
+else:
+    dest.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    print(f"wrote {dest.relative_to(root)}: {out['counts']}")

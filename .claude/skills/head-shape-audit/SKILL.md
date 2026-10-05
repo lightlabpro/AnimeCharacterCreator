@@ -31,7 +31,7 @@ Also found on the creator app's own ellipsoid head (so it is a common trap): a p
 5. Log the final numbers with `bridge/tools/log.py`. If the reference mesh is available, run the audit on it first and paste its output over `TARGETS` in the script, then tell Code so `knowledge/head-targets.json` is replaced.
 
 ## Procedure (images, no Blender)
-`python3 <render-validator>/scripts/head_profile.py measure --front f.png --side s.png --front-chin-y <row> --side-chin-y <row> --out cand.json` then `compare --ref knowledge/head-targets.json --cand cand.json`. Read the chin row off the image. Accuracy is about ±0.03H, so treat results within tolerance 0.04 as a pass.
+This route needs the `render-validator` skill installed as well, because the script lives there: `python3 <render-validator>/scripts/head_profile.py measure --front f.png --side s.png --front-chin-y <row> --side-chin-y <row> --out cand.json` then `compare --ref knowledge/head-targets.json --cand cand.json`. Read the chin row off the image. Accuracy is about ±0.03H, so treat results within tolerance 0.04 as a pass.
 
 ## Fix recipes (what to do in Blender)
 - **Cranium too wide, skull too shallow:** scale X in with proportional editing (large falloff), then push the back of the skull out in Y. The head is deeper than it is wide.

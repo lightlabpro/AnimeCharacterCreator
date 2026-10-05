@@ -1,35 +1,41 @@
 ---
 name: ai-3d-pipeline
-description: How to build or fix a stylized 3D character the way the AI 3D generators (Meshy, Tripo, Hunyuan3D, TRELLIS, Rodin) are structured, as a staged pipeline with a check after every stage. Use when starting a character, when a model looks wrong and you do not know which stage failed, or when deciding whether to use an AI generator for a blockout. Based on the research report in reports/AI 3D generation pipelines.md.
+description: How to build or fix a stylized 3D character as a staged pipeline with a gate after every stage, using what the AI 3D generators (Meshy, Tripo, Hunyuan3D, TRELLIS) and Meshy's agent skills do. Use when starting a character, when a model looks wrong and you do not know which stage failed, when choosing the shortest route for a request, when deciding whether to use an AI generator for a blockout, or before rigging or export.
 ---
 
-# Staged 3D character pipeline (what the generators teach)
+# Staged 3D character pipeline
 
-Production generators are not one model. They are stages: shape, then texture, then optional retopology, then rig. Each stage has its own failure modes and its own check. Do the same by hand: never fix a later stage while an earlier one is wrong.
+Production generators are stages (shape, texture, optional retopology, rig), and each stage has its own failure modes and its own check. Do the same by hand. Never fix a later stage while an earlier one is wrong, and never spend effort (or money) on a stage whose input has not passed its gate.
 
-Confidence: the staged structure is well sourced for the open systems (Hunyuan3D, TRELLIS, TripoSG). For Meshy itself only press-level facts exist; treat its internals as inference. Anime characters are the weak spot for every generator (small VRoid-based training sets, baked realistic shading), so assume human cleanup.
+Provenance and confidence: the staged structure is well sourced for open systems (Hunyuan3D, TRELLIS, TripoSG) in `reports/AI 3D generation pipelines.md`. The routing rules, limits and preconditions below come from Meshy's public agent skills (`meshy-dev/meshy-3d-agent` 0.6.0, Meshy CLI 0.4.0), which describe how to drive Meshy, not how its models work. Meshy's model internals remain unpublished.
+
+## Read what this request needs
+| Need | Reference |
+| --- | --- |
+| Pick the shortest route for a request, reuse what exists | [routes](references/routes.md) |
+| Limits and preconditions before texturing, UV, rigging, export | [preconditions](references/preconditions.md) |
+| Decide whether to use Meshy for a blockout, and how to spend safely | [meshy](references/meshy.md) |
 
 ## Stages and gates
 | Stage | Output | Gate before moving on | Skill / tool |
 | --- | --- | --- | --- |
-| 0 References | front/side/three-quarter sheet, reference head | references agree with each other on proportions | `anthropic-skills:anime-character-modeling` |
-| 1 Blockout | whole-body volumes at correct proportions (7-7.5 heads adult) | silhouette overlay on the reference sheet | `render-validator` (silhouette IoU) |
+| 0 References | front/side/three-quarter sheet, reference head | views agree on proportions | `anthropic-skills:anime-character-modeling` |
+| 1 Blockout | whole-body volumes (7-7.5 heads adult) | silhouette overlay on the sheet | `render-validator` |
 | 2 Head form | skull, jaw, nose, sockets, ears | `head-shape-audit` prints HEAD_SHAPE_OK | `head-shape-audit` |
-| 3 Topology | quads around eyes, mouth, joints; hair and clothes as separate shells | loops visible in a wire render, deformation test | `anime-character-modeling` |
+| 3 Topology | quads around eyes, mouth, joints; hair and clothes as separate shells | `mesh_stats.py` passes (tri budget, no non-manifold, no zero-area) and loops are visible in a wire render | `render-validator` |
 | 4 UV and texture | face UV island, iris island, shade masks | no stretching, seams away from the face | `anime-character-modeling` |
-| 5 Toon shading | hard ramp, warm shadow tint, outlines | `render-validator` PASS on front, three-quarter, side, face | `render-validator` |
-| 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys | names exist in `knowledge/expected-contract.json`; pose test | `creator-bridge` |
-| 7 Export | glTF separate files, `pack.json` | the creator imports it and the slider moves it | `creator-bridge` |
+| 5 Toon shading | hard ramp, warm shadow tint, outlines | `render-validator` PASS on every required view | `render-validator` |
+| 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys | names in `knowledge/expected-contract.json`; pose test | `creator-bridge` |
+| 7 Export | glTF separate files, `pack.json` | the creator imports it and a slider moves it | `creator-bridge` |
 
-## Rules that come from how the field evaluates 3D
-- **Fixed views.** Evaluate from the same cameras every time (front, three-quarter, side, back, face). Moving the camera hides defects.
-- **Several independent signals.** One score gets gamed. Use geometry audit, image metrics and a separate reviewer together.
-- **Defects first.** Ask for a list of defects with evidence before any score.
-- **Stage-local fixes.** A shading problem that a form fix would solve is not a shading problem.
-- **Pose stress.** Static renders hide skinning collapse. Before export, pose the arms, neck and jaw once.
-
-## Using an AI generator in the loop (optional, be honest about it)
-A generator is useful for a fast blockout or a reference silhouette, not for the final asset: topology is not deformation-ready for faces, textures carry baked lighting, hands and hair are weak, and rigs assume a T or A pose with no face rig. If you use one: generate from a clean turnaround sheet, import only as a reference, retopologise by hand, and send it through the same gates. Licence of the output and of the training data are the user's call; never assume it is safe for commercial use.
+## Rules (each one is something Meshy's skills enforce, adapted)
+1. **Shortest route.** Do only the stages the request needs. A request for a prop does not need a rig. A flat-colour model does not need a PBR pass.
+2. **Reuse before regenerate.** A follow-up ("a lower poly version", "now with the other hair") edits or derives from the existing asset and runs only the missing step. Rebuilding from scratch is the wrong answer.
+3. **Gate on measurements, and unknown is not a pass.** If a count, a view or a stat was not measured, the stage is UNKNOWN. Say so. Never write "looks fine" over something nobody checked.
+4. **A render proves little about structure.** An image cannot show edge-loop flow, deformation, watertightness or polygon count. State what the check did not cover. Missing preview: say it was not visually checked.
+5. **Ask before a new cost.** Work inside the agreed plan proceeds. A new paid stage, a second variant or a rerun after a disappointing result needs the user's yes first. Estimates come only from a stated source, and the real charge is reported afterwards, or reported as unknown, never assumed zero.
+6. **Unknown outcome: reconcile, do not repeat.** If a submission may have gone through (a lost response, a timeout), look for the existing result before submitting again. A timeout is not a failure.
+7. **Keep the trail.** Record the stage name, the source asset and the check results for every iteration, so the next request is cheap and nothing is rebuilt blindly. The validator's `--stage` tag and `bridge/LEARNINGS.md` are that record.
 
 ## Log it
-Every stage that fails a gate teaches something. Log the measured cause, not the fix you tried first, with `python3 bridge/tools/log.py` (see `creator-bridge`).
+A failed gate teaches something: log the measured cause, not the fix you tried first, with `python3 bridge/tools/log.py` (see `creator-bridge`).

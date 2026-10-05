@@ -45,3 +45,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: scripts/fit_head.ts, tests/headShape.test.ts, src/model/headShape.ts HEAD_TUNING; screenshots of the running app
 - status: confirmed
 - use: chat: build temples flat and vertical, not an egg. Code: the app head still has no jaw angle or cheekbones, the real fix is a sculpted head mesh from the library
+
+## 2026-10-05 [code] lessons from Meshy's agent repo applied to the validators
+- finding: The Meshy agent repo is a CLI skill layer with no model internals. Its useful ideas are tri-state checks (unknown is not a pass), face-count gates before expensive stages, honest previews, shortest-route and reuse rules, and a validator for the skills themselves. All five were applied; the skill validator immediately caught a stale zip and a cross-skill script reference that would have broken a chat install.
+- evidence: knowledge/meshy-agent-lessons.md, scripts/validate_skills.py, tests/py/test_validate.py (16 tests)
+- status: confirmed
+- use: chat: re-upload render-validator.zip and ai-3d-pipeline.zip, run mesh_stats.py in Blender and report the numbers

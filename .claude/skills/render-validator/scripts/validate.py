@@ -7,14 +7,27 @@ Only needs numpy + Pillow. Subcommands:
   measure  score renders against references (objective metrics + hard gates), build a contact sheet
   gate     combine the latest measurement with a structured visual review and return PASS/ITERATE
 
-Exit code 0 means PASS (gate) or measurements OK (measure). Anything else means keep iterating.
+Exit codes (same convention as Meshy's agent CLI checks): 0 pass, 12 a check FAILED (keep iterating),
+13 UNKNOWN (something required was not measured, which is never a pass), 2 usage error.
+
+Scope: this measures renders and the mesh stats you supply. A render cannot show topology flow, edge loops,
+deformation or watertightness; mesh stats cover counts and health, and the independent review covers the rest.
 """
 import argparse, hashlib, json, os, sys, time
 import numpy as np
 from PIL import Image, ImageDraw
 
 SIZE = 256
+EXIT_FAIL, EXIT_UNKNOWN, EXIT_USAGE = 12, 13, 2
 DEFAULTS = {
+    "require_mesh": False,          # init --require-mesh: measure reports UNKNOWN until mesh stats are supplied
+    "mesh": {                       # mesh health gates. A key missing from the stats file is UNKNOWN, not a pass
+        "tri_budget": [18000, 28000],   # nude base body, from docs/CLAUDE_BUILD_PROMPT.md
+        "max_non_manifold_edges": 0,
+        "max_zero_area_faces": 0,
+        "max_loose_parts": 8,
+        "max_ngon_share": 0.02,
+    },
     "min_iterations": 3,            # gate refuses PASS before this many measured iterations
     "plateau_window": 3,            # iterations compared for plateau detection
     "plateau_delta": 0.02,          # min improvement of the margin score across the window
@@ -174,6 +187,10 @@ def toon_stats(rgb, mask):
     return out
 
 # ---------------------------------------------------------------- workspace
+def _usage(msg):
+    print(msg, file=sys.stderr)
+    return EXIT_USAGE
+
 def state_path(ws): return os.path.join(ws, "state.json")
 def load_state(ws):
     with open(state_path(ws)) as f: return json.load(f)
@@ -184,7 +201,7 @@ def parse_views(items):
     out = {}
     for it in items or []:
         name, _, path = it.partition("=")
-        if not path: sys.exit(f"bad view '{it}', use name=path")
+        if not path: sys.exit(_usage(f"bad view '{it}', use name=path"))
         out[name] = path
     return out
 
@@ -198,15 +215,39 @@ def cmd_init(a):
     os.makedirs(a.workspace, exist_ok=True)
     refs = parse_views(a.ref)
     for n, p in refs.items():
-        if not os.path.exists(p): sys.exit(f"missing reference {p}")
+        if not os.path.exists(p): sys.exit(_usage(f"missing reference {p}"))
     cfg = json.loads(json.dumps(DEFAULTS))
     if a.config:
         with open(a.config) as f: user = json.load(f)
         for k, v in user.items():
             if isinstance(v, dict) and k in cfg: cfg[k].update(v)
             else: cfg[k] = v
+    cfg["require_mesh"] = bool(a.require_mesh)
+    cfg["required_views"] = list(a.require_view) if a.require_view else list(refs)
     save_state(a.workspace, {"refs": refs, "config": cfg, "iterations": [], "created": time.time()})
     print(f"workspace ready: {a.workspace}\nreferences: {', '.join(refs) or '(none, render-only gates)'}")
+
+def check_mesh(stats, cfg, contract):
+    """Returns (checks, unknown, orphans). Each check: {value, ok(True/False/None=unknown), limit}."""
+    m = cfg["mesh"]; checks, unknown = {}, []
+    def put(key, value, ok, limit):
+        checks[key] = {"value": value, "ok": ok, "limit": limit}
+        if ok is None: unknown.append(f"mesh:{key}")
+    tris = stats.get("tris")
+    lo, hi = m["tri_budget"]
+    put("tris", tris, None if tris is None else lo <= tris <= hi, [lo, hi])
+    for key, limit_key in (("non_manifold_edges", "max_non_manifold_edges"), ("zero_area_faces", "max_zero_area_faces"),
+                           ("loose_parts", "max_loose_parts"), ("ngon_share", "max_ngon_share")):
+        v = stats.get(key)
+        put(key, v, None if v is None else v <= m[limit_key], m[limit_key])
+    orphans = []
+    if contract:
+        known = set(contract.get("identity_shape_keys", [])) | set(contract.get("performance_shape_keys", [])) | set(contract.get("sockets", []))
+        for name in stats.get("shape_keys", []) + stats.get("sockets", []):
+            if name.startswith(("ID-", "PF-", "SOC-")) and name not in known: orphans.append(name)
+        implemented = [n for n in stats.get("shape_keys", []) if n in known]
+        checks["contract_keys_implemented"] = {"value": len(implemented), "ok": True, "limit": f"of {len(known)} the app reads"}
+    return checks, unknown, orphans
 
 def margin_score(per_view):
     """Smallest normalised margin across all checked metrics. >=0 means every floor is cleared."""
@@ -216,14 +257,14 @@ def margin_score(per_view):
 def cmd_measure(a):
     st = load_state(a.workspace); cfg = st["config"]
     views = parse_views(a.view)
-    if not views: sys.exit("give at least one --view name=render.png")
+    if not views: sys.exit(_usage("give at least one --view name=render.png"))
     for p in views.values():
-        if not os.path.exists(p): sys.exit(f"missing render {p}")
+        if not os.path.exists(p): sys.exit(_usage(f"missing render {p}"))
     h = sha(views.values())
     its = st["iterations"]
     if its and its[-1]["render_hash"] == h:
         print("NO_CHANGE: these renders are byte-identical to the previous iteration. Change the model, then re-render.")
-        sys.exit(1)
+        sys.exit(EXIT_FAIL)
     n = len(its) + 1
     idir = os.path.join(a.workspace, f"iter_{n:02d}"); os.makedirs(idir, exist_ok=True)
     per_view, tiles = {}, []
@@ -263,8 +304,21 @@ def cmd_measure(a):
         tiles.append((name, rgb, mask, ref_tile))
     failing = [f"{v}:{k}" for v, d in per_view.items() for k, c in d["checks"].items() if not c["ok"]]
     score = margin_score(per_view)
-    rec = {"n": n, "render_hash": h, "views": per_view, "failing": failing, "margin_score": round(score, 4),
-           "time": time.time(), "renders": views}
+    unknown = [f"view:{v}" for v in cfg.get("required_views", []) if v not in views]
+    mesh_checks, orphans = None, []
+    if a.mesh_stats:
+        with open(a.mesh_stats) as fh: stats = json.load(fh)
+        contract = None
+        if a.contract:
+            with open(a.contract) as fh: contract = json.load(fh)
+        mesh_checks, mu, orphans = check_mesh(stats, cfg, contract)
+        unknown += mu
+        failing += [f"mesh:{k}" for k, c in mesh_checks.items() if c["ok"] is False]
+    elif cfg.get("require_mesh"):
+        unknown.append("mesh:not supplied")
+    rec = {"n": n, "render_hash": h, "views": per_view, "failing": failing, "unknown": unknown, "margin_score": round(score, 4),
+           "time": time.time(), "renders": views, "stage": a.stage, "mesh": mesh_checks, "orphan_names": orphans,
+           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None}
     its.append(rec); save_state(a.workspace, st)
     sheet = build_sheet(tiles)
     sheet_path = os.path.join(idir, "sheet.png"); sheet.save(sheet_path)
@@ -286,16 +340,24 @@ def cmd_measure(a):
         recent = [i["margin_score"] for i in its[-w:]]
         if max(recent) - its[-w - 1]["margin_score"] < cfg["plateau_delta"] and score < 0:
             notes.append(f"PLATEAU: no meaningful gain in {w} iterations. Revert to best, narrow scope to ONE failing criterion, change strategy (different technique, not a bigger tweak), or ask the human.")
-    print(f"iteration {n}  render_hash {h}")
+    print(f"iteration {n}  stage {a.stage or '-'}  render_hash {h}")
     print(f"contact sheet: {sheet_path}   (left to right per view: reference | render | edge overlay red=ref cyan=render | silhouette diff)")
     for v, d in per_view.items():
         line = "  ".join(f"{k}={c['value']}{'' if c['ok'] else ' <FAIL'}" for k, c in d["checks"].items())
         print(f"[{v}] {line}")
     for t in notes: print(t)
+    if mesh_checks:
+        print("[mesh] " + "  ".join(f"{k}={c['value']}{'' if c['ok'] is True else (' <FAIL' if c['ok'] is False else ' <UNKNOWN')}" for k, c in mesh_checks.items()))
+    if orphans:
+        print(f"WARNING: {len(orphans)} ID-/PF-/SOC- names are not in the app contract and will do nothing there: " + ", ".join(orphans[:8]) + (" ..." if len(orphans) > 8 else ""))
+    print("SCOPE: renders and supplied mesh stats only. This cannot see edge-loop flow, deformation or hand detail.")
     if failing:
         print("MEASURE_FAIL: " + ", ".join(failing))
         print("Look at the sheet, name each defect in plain words, fix the model, re-render, run measure again.")
-        sys.exit(1)
+        sys.exit(EXIT_FAIL)
+    if unknown:
+        print("MEASURE_UNKNOWN: not measured, so not a pass: " + ", ".join(unknown))
+        sys.exit(EXIT_UNKNOWN)
     print("MEASURE_OK: objective gates pass. Now run the visual review (see SKILL.md), then `gate`.")
 
 def build_sheet(tiles):
@@ -319,15 +381,19 @@ def build_sheet(tiles):
 
 def cmd_gate(a):
     st = load_state(a.workspace); cfg = st["config"]; its = st["iterations"]
-    if not its: print("ITERATE: nothing measured yet. Run measure first."); sys.exit(1)
+    if not its: print("ITERATE: nothing measured yet. Run measure first."); sys.exit(EXIT_FAIL)
     last = its[-1]; why = []
+    if last.get("unknown"):
+        print("UNKNOWN: required checks were not measured, which is never a pass: " + ", ".join(last["unknown"]))
+        print("Supply the missing views or mesh stats, run measure again, then gate.")
+        sys.exit(EXIT_UNKNOWN)
     if last["failing"]: why.append("objective gates still failing: " + ", ".join(last["failing"]))
     if len(its) < cfg["min_iterations"]:
         why.append(f"only {len(its)} measured iteration(s); at least {cfg['min_iterations']} are required. A first draft is never final.")
     try:
         with open(a.review) as f: rev = json.load(f)
     except Exception as e:
-        print(f"ITERATE: cannot read review file ({e}). Create it as described in SKILL.md."); sys.exit(1)
+        print(f"ITERATE: cannot read review file ({e}). Create it as described in SKILL.md."); sys.exit(EXIT_FAIL)
     if rev.get("render_hash") != last["render_hash"]:
         why.append(f"review is not bound to the latest renders (needs render_hash {last['render_hash']}). Review the current sheet.")
     if rev.get("reviewer") != "independent":
@@ -346,14 +412,14 @@ def cmd_gate(a):
     if why:
         print("ITERATE")
         for w in why: print(" - " + w)
-        sys.exit(1)
+        sys.exit(EXIT_FAIL)
     print(f"PASS after {len(its)} iterations (final render_hash {last['render_hash']}). Show the user the final sheet.")
 
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest="cmd", required=True)
-    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config")
-    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)")
+    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
+    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
     g = sp.add_parser("gate"); g.add_argument("workspace"); g.add_argument("--review", required=True)
     a = p.parse_args()
     {"init": cmd_init, "measure": cmd_measure, "gate": cmd_gate}[a.cmd](a)

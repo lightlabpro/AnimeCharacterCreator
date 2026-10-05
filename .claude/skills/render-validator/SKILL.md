@@ -21,9 +21,12 @@ A wrong head shape cannot be fixed by shading. Before the loop below, run the `h
 
 ## The loop (never skip a step)
 1. **Render** the fixed views in Blender: run `scripts/blender_render_views.py` (fixed cameras, flat background, Standard view transform, transparent PNG). Never change cameras between iterations.
-2. **Measure:** `validate.py measure work/<tag> --view front=r_front.png --view face=r_face.png ...`
+2. **Measure:** `validate.py measure work/<tag> --view front=r_front.png --view face=r_face.png ... --stage <blockout|head|shading|...> --mesh-stats mesh_stats.json --contract knowledge/expected-contract.json`
+   - Mesh stats come from `scripts/mesh_stats.py` (run in Blender, or on an exported OBJ). They gate triangle budget, non-manifold edges, zero-area faces, loose parts and n-gons, and the contract flag lists `ID-`, `PF-` and `SOC-` names the app will ignore.
+   - Initialise with `--require-mesh` and one `--require-view` per view you must check, so a missing view or missing stats is UNKNOWN, never a quiet pass.
    - Hard gates, every view: figure visible and not clipped, no magenta (missing texture), warm non-grey shadows, a toon number of tone bands, hard shading edges, an outline present.
    - Reference gates, per view with a reference: silhouette IoU, tolerant edge F-score, Lab palette overlap.
+   - Exit codes: 0 ok, **12 failed** (keep iterating), **13 unknown** (a required view or stat was not measured, which is never a pass), 2 usage.
    - It prints `MEASURE_FAIL` plus the failing criteria, writes `iter_NN/sheet.png` (reference | render | edge overlay | silhouette diff), and flags `NO_CHANGE`, `REGRESSION`, `WORSE` and `PLATEAU`.
 3. **Look at the sheet** with the Read tool. Describe every defect in plain words (for example "forehead slopes back", "shadow is grey", "lash not darker than brow"). Do not guess from the numbers.
 4. **Fix** one named defect at a time, in Blender. Re-render and go back to step 2. Loop until `MEASURE_OK`.
@@ -40,6 +43,9 @@ A wrong head shape cannot be fixed by shading. Before the loop below, run the `h
 6. **Gate:** `validate.py gate work/<tag> --review work/<tag>/review.json`
    - `ITERATE` lists every reason. It returns this when objective gates fail, when fewer than 3 iterations have been measured, when the review is self-authored, stale (wrong `render_hash`), missing criteria or evidence, or any score is below 2, or when you did not name what you fixed.
    - `PASS` means you may show the user the final sheet.
+
+## Scope: what this cannot see
+Renders and counts only. It cannot judge edge-loop flow, deformation under a pose, hand-sculpted detail or watertightness beyond the stats. Say which of those you did not check. The independent review and a pose test cover some of them.
 
 ## Rules
 - Never edit `validate.py`, the thresholds or `review.json` to make a result pass. If a threshold looks wrong, tell the user and propose a change; do not apply it silently.
