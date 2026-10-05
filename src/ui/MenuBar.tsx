@@ -55,8 +55,10 @@ export const SHORTCUTS: [string, string][] = [
   ['D', 'Drag body regions on or off'],
   ['W / E / R', 'Gizmo move, rotate, scale'],
   ['B', 'Blink'],
+  ['Hold \\', 'Compare with the saved version (or the starting point)'],
   ['Esc', 'Deselect and close menus'],
   ['Double-click a slider', 'Reset it to zero'],
+  ['Shift + arrow keys on a slider', 'Step by 10'],
   ['Drag a body region', 'Edit its sliders. Front and side views drive different axes.'],
 ];
 
@@ -93,12 +95,24 @@ export function useShortcuts() {
       else if (k === 'e') st.setUI({ gizmoMode: 'rotate' });
       else if (k === 'r') st.setUI({ gizmoMode: 'scale' });
       else if (k === 'b') st.playClip('blink', false);
-      else if (k === 'escape') st.setUI({ selectedEquip: null, highlight: null });
+      else if (k === '\\') {
+        if (!st.ui.compare) st.setUI({ compare: true });
+      } else if (k === 'escape') st.setUI({ selectedEquip: null, highlight: null });
       else return;
       e.preventDefault();
     };
+    const onUp = (e: KeyboardEvent) => {
+      if (e.key === '\\' && useStore.getState().ui.compare) useStore.getState().setUI({ compare: false });
+    };
+    const onBlur = () => useStore.getState().ui.compare && useStore.getState().setUI({ compare: false });
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('keyup', onUp);
+    window.addEventListener('blur', onBlur);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('keyup', onUp);
+      window.removeEventListener('blur', onBlur);
+    };
   }, []);
 }
 

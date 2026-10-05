@@ -39,6 +39,12 @@ interface UIState {
   toast: { text: string; nonce: number } | null;
   showImportReport: boolean;
   gizmoMode: 'translate' | 'rotate' | 'scale';
+  /** How far Randomize may stray from neutral, 0.1 to 1. */
+  randomAmount: number;
+  /** Sliders that Randomize leaves alone. */
+  locked: string[];
+  /** Holding the compare key shows the saved version, or the starting point when nothing is saved. */
+  compare: boolean;
 }
 
 interface MixerState {
@@ -168,6 +174,57 @@ function clampValue(identity: Identity, key: string, value: number): number {
 }
 
 export const useStore = create<AppState>()((set, get) => {
+  /** Glides the morph values from one identity to another so presets, undo and randomize read as a blend, not a jump. */
+  let glideToken = 0;
+  let glideTarget: Identity | null = null;
+  const settle = () => {
+    glideToken++;
+    if (glideTarget) {
+      const target = glideTarget;
+      glideTarget = null;
+      set({ identity: target });
+    }
+  };
+  const glide = (from: Identity, to: Identity, ms = 260) => {
+    glideToken++;
+    glideTarget = null;
+    if (typeof requestAnimationFrame === 'undefined' || from.bodyKind !== to.bodyKind) return;
+    const moving = [...new Set([...Object.keys(from.values), ...Object.keys(to.values)])].filter((k) => (from.values[k] ?? 0) !== (to.values[k] ?? 0));
+    if (!moving.length) return;
+    const token = glideToken;
+    const t0 = performance.now();
+    const frame = (t: number): Identity => {
+      const values = { ...to.values };
+      for (const k of moving) {
+        const a = from.values[k] ?? 0;
+        const b = to.values[k] ?? 0;
+        values[k] = a + (b - a) * t;
+      }
+      return { ...to, values };
+    };
+    let shown = frame(0);
+    glideTarget = to;
+    set({ identity: shown });
+    const step = (now: number) => {
+      if (token !== glideToken || get().identity !== shown) return;
+      const t = Math.min(1, (now - t0) / ms);
+      if (t >= 1) {
+        glideTarget = null;
+        set({ identity: to });
+        return;
+      }
+      shown = frame(1 - Math.pow(1 - t, 3));
+      set({ identity: shown });
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  const commitGlide = (fn: (id: Identity) => Identity | void) => {
+    const prev = get().identity;
+    get().commit(fn);
+    glide(prev, get().identity);
+  };
+
   const push = (prev: Identity, next: Identity) => {
     const past = [...get().past, prev].slice(-HISTORY_LIMIT);
     set({ identity: next, past, future: [] });
@@ -197,6 +254,9 @@ export const useStore = create<AppState>()((set, get) => {
       toast: null,
       showImportReport: false,
       gizmoMode: 'translate',
+      randomAmount: 0.55,
+      locked: [],
+      compare: false,
     },
     mixer: { scope: 'head', mode: 'mix', slots: Array(WHEEL_SLOTS).fill(null), handle: [0, 0], base: null, expression: null },
     family: [],
@@ -206,12 +266,14 @@ export const useStore = create<AppState>()((set, get) => {
     savedIdentity: null,
 
     commit(fn) {
+      settle();
       const prev = get().identity;
       const draft = clone(prev);
       const result = fn(draft) ?? draft;
       push(prev, result);
     },
     editLive(fn) {
+      settle();
       const draft = clone(get().identity);
       set({ identity: fn(draft) ?? draft });
     },
@@ -249,7 +311,7 @@ export const useStore = create<AppState>()((set, get) => {
           get().toast(`${pack.displayName} has no preset file to apply.`);
           return;
         }
-        get().commit((id) => {
+        commitGlide((id) => {
           if (preset.values) id.values = { ...id.values, ...preset.values };
           if (preset.looks) id.looks = { ...id.looks, ...preset.looks };
           if (preset.colors) id.colors = { ...id.colors, ...preset.colors };
@@ -267,9 +329,11 @@ export const useStore = create<AppState>()((set, get) => {
       get().equip(pack.id, { slot: pack.slot, colors: {}, exclusive: true });
     },
     beginEdit() {
+      settle();
       if (!get().dragSnapshot) set({ dragSnapshot: get().identity });
     },
     setValueLive(key, value) {
+      settle();
       const id = get().identity;
       const v = clampValue(id, key, value);
       const values = { ...id.values };
@@ -296,14 +360,18 @@ export const useStore = create<AppState>()((set, get) => {
       get().setValue(key, 0);
     },
     undo() {
+      settle();
       const { past, identity, future } = get();
       if (!past.length) return;
       set({ identity: past[past.length - 1], past: past.slice(0, -1), future: [identity, ...future] });
+      glide(identity, past[past.length - 1]);
     },
     redo() {
+      settle();
       const { past, identity, future } = get();
       if (!future.length) return;
       set({ identity: future[0], future: future.slice(1), past: [...past, identity] });
+      glide(identity, future[0]);
     },
 
     newCharacter(kind = 'adult') {
@@ -340,13 +408,13 @@ export const useStore = create<AppState>()((set, get) => {
       saveOverrides(all);
     },
     setArchetype(aid) {
-      get().commit((id) => applyArchetype(id, aid));
+      commitGlide((id) => applyArchetype(id, aid));
     },
     setPresentation(which) {
-      get().commit((id) => applyPresentation(id, which));
+      commitGlide((id) => applyPresentation(id, which));
     },
     setAge(which) {
-      get().commit((id) => applyAge(id, which));
+      commitGlide((id) => applyAge(id, which));
     },
     setLook(slot, look) {
       get().commit((id) => {
@@ -385,7 +453,8 @@ export const useStore = create<AppState>()((set, get) => {
       if (get().ui.selectedEquip === uid) set({ ui: { ...get().ui, selectedEquip: null } });
     },
     randomize(ids) {
-      get().commit((id) => randomizeIdentity(id, ids));
+      const { randomAmount, locked } = get().ui;
+      commitGlide((id) => randomizeIdentity(id, ids, randomAmount, Math.random, locked));
     },
     makeChild() {
       const cur = get().identity;

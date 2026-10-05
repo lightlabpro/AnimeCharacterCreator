@@ -44,6 +44,7 @@ export function ControlSlider({ id, showHint = false }: { id: string; showHint?:
   const kind = useStore((s) => s.identity.bodyKind);
   const value = useStore((s) => s.identity.values[id] ?? 0);
   const fav = useStore((s) => s.favorites.includes(id));
+  const locked = useStore((s) => s.ui.locked.includes(id));
   const dragging = useRef(false);
   if (!ctl) return null;
   const [lo, hi] = controlRange(ctl, kind);
@@ -57,7 +58,25 @@ export function ControlSlider({ id, showHint = false }: { id: string; showHint?:
         <Icon name="star" size={12} stroke={fav ? 2.4 : 1.8} />
       </button>
       <div className="s-main" onDoubleClick={() => st().resetValue(id)}>
-        <span className="s-label">{ctl.label}</span>
+        <span className="s-label">
+          {ctl.label}
+          <span className="grow" />
+          {value !== 0 && (
+            <button className="s-btn" title="Reset to zero" onClick={() => st().resetValue(id)}>
+              <Icon name="reset" size={11} stroke={2} />
+            </button>
+          )}
+          <button
+            className={`s-btn${locked ? ' on' : ''}`}
+            title={locked ? 'Locked: Randomize leaves this slider alone. Click to unlock.' : 'Lock this slider so Randomize leaves it alone'}
+            onClick={() => {
+              const cur = st().ui.locked;
+              st().setUI({ locked: locked ? cur.filter((x) => x !== id) : [...cur, id] });
+            }}
+          >
+            <Icon name="lock" size={11} stroke={2} />
+          </button>
+        </span>
         <div className={`rng-wrap${lo < 0 ? ' bi' : ''}`}>
           <input
             className="rng"
@@ -74,6 +93,13 @@ export function ControlSlider({ id, showHint = false }: { id: string; showHint?:
             onPointerUp={() => {
               dragging.current = false;
               st().endEdit();
+            }}
+            onKeyDown={(e) => {
+              if (e.shiftKey && (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+                e.preventDefault();
+                const dir = e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 1;
+                st().setValue(id, value + dir * 10);
+              }
             }}
             onChange={(e) => {
               const v = Number(e.target.value);

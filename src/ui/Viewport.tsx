@@ -24,7 +24,9 @@ export function dragMapFor(kind: string) {
 
 export function Viewport() {
   const hostRef = useRef<HTMLDivElement>(null);
-  const identity = useStore((s) => s.identity);
+  const live = useStore((s) => s.identity);
+  const compareBase = useStore((s) => (s.ui.compare ? s.savedIdentity ?? s.past[0] ?? null : null));
+  const identity = compareBase ?? live;
   const packs = useStore((s) => s.packs);
   const perf = useStore((s) => s.perf);
   const ui = useStore((s) => s.ui);
@@ -140,5 +142,10 @@ export function Viewport() {
     engineRef.cameraPreset(req.name, saved);
   }, [ui.cameraRequest]);
 
-  return <div className="viewport-canvas" ref={hostRef} />;
+  return (
+    <>
+      <div className="viewport-canvas" ref={hostRef} />
+      {compareBase && <div className="compare-badge">Showing {useStore.getState().savedIdentity ? 'saved' : 'original'} version. Release the \ key to return.</div>}
+    </>
+  );
 }

@@ -228,6 +228,7 @@ function MorphsTab() {
   const node = useStore((s) => s.ui.morphNode);
   const search = useStore((s) => s.ui.morphSearch);
   const favorites = useStore((s) => s.favorites);
+  const randomAmount = useStore((s) => s.ui.randomAmount);
   const st = useStore.getState;
   const kind = id.bodyKind;
   const visible = useMemo(() => controlsFor(kind, 'morphs').filter((c) => isControlVisible(c, kind, id.looks)), [kind, id.looks]);
@@ -292,7 +293,18 @@ function MorphsTab() {
         <span className="pill">{list.length} sliders</span>
         <span className="grow" />
         <button className="btn small" onClick={bake} disabled={list.length === 0} title="Save the shown slider values as a reusable library preset"><Icon name="save" size={13} />Bake</button>
-        <button className="icon-btn" onClick={() => st().randomize(list.map((c) => c.id))} disabled={list.length === 0} title="Randomize the shown sliders"><Icon name="dice" /></button>
+        <input
+          className="rng rand-amt"
+          type="range"
+          min={10}
+          max={100}
+          step={5}
+          value={Math.round(randomAmount * 100)}
+          onChange={(e) => st().setUI({ randomAmount: Number(e.target.value) / 100 })}
+          title={`Randomize variation: ${Math.round(randomAmount * 100)}%. Locked sliders are skipped.`}
+          style={{ width: 54, ['--a' as string]: '0%', ['--b' as string]: `${((randomAmount * 100 - 10) / 90) * 100}%` }}
+        />
+        <button className="icon-btn" onClick={() => st().randomize(list.map((c) => c.id))} disabled={list.length === 0} title="Randomize the shown sliders. The slider beside this sets how far they may stray."><Icon name="dice" /></button>
         <button className="icon-btn" onClick={resetShown} disabled={list.length === 0} title="Set the shown sliders back to zero"><Icon name="reset" /></button>
       </div>
       <div className="morph-layout">

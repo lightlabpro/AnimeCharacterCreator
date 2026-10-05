@@ -233,10 +233,11 @@ function rename(id: Identity, suffix: string): Identity {
 }
 
 /** Random identity values inside each control's range. Performance is untouched because it is not part of identity. */
-export function randomizeIdentity(src: Identity, controlIds?: string[], amount = 0.55, rand: () => number = Math.random): Identity {
+export function randomizeIdentity(src: Identity, controlIds?: string[], amount = 0.55, rand: () => number = Math.random, locked: readonly string[] = []): Identity {
   const id = clone(src);
   const ids = controlIds ?? CONTROLS.filter((c) => c.tab === 'morphs' && isControlVisible(c, id.bodyKind, id.looks)).map((c) => c.id);
   for (const cid of ids) {
+    if (locked.includes(cid)) continue;
     const ctl = CONTROL_BY_ID[cid];
     if (!ctl || !isControlVisible(ctl, id.bodyKind, id.looks)) continue;
     const [lo, hi] = controlRange(ctl, id.bodyKind);
