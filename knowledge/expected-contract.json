@@ -1,0 +1,1718 @@
+{
+  "generated": "2026-10-05",
+  "note": "Names the app drives at runtime. A pack missing a name means that control does nothing on that pack.",
+  "pack_json_required": [
+    "id",
+    "display_name",
+    "library",
+    "slot"
+  ],
+  "libraries": [
+    "humanoid",
+    "robot",
+    "full_beast"
+  ],
+  "category_folders": {
+    "humanoid": [
+      "bodies",
+      "morphs",
+      "hair",
+      "facial_hair",
+      "elements",
+      "outfits",
+      "accessories",
+      "materials",
+      "motions",
+      "presets"
+    ],
+    "robot": [
+      "body",
+      "parts",
+      "materials",
+      "motions"
+    ],
+    "full_beast": [
+      "body",
+      "elements",
+      "accessories",
+      "materials",
+      "motions",
+      "presets"
+    ]
+  },
+  "identity_shape_keys": [
+    "ID-AgeCreases",
+    "ID-AgeJawSoft",
+    "ID-AgeOld",
+    "ID-AgeYoung",
+    "ID-AntennaLength",
+    "ID-AntennaLength_Neg",
+    "ID-BeastBulk",
+    "ID-BeastLean",
+    "ID-Belly",
+    "ID-Belly_Neg",
+    "ID-BodyBulk",
+    "ID-BodyLean",
+    "ID-BodySoft",
+    "ID-BroadShoulders",
+    "ID-BrowLong",
+    "ID-BrowRidge",
+    "ID-BrowRidge_Neg",
+    "ID-BrowShort",
+    "ID-BrowThick",
+    "ID-BrowThin",
+    "ID-CalfBulk",
+    "ID-CalfBulk_Neg",
+    "ID-ChassisBulk",
+    "ID-ChassisBulk_Neg",
+    "ID-CheekFull",
+    "ID-CheekHollow",
+    "ID-Cheekbone",
+    "ID-Cheekbone_Neg",
+    "ID-Chest",
+    "ID-ChestCore",
+    "ID-ChestCore_Neg",
+    "ID-Chest_Neg",
+    "ID-ChinCleft",
+    "ID-ChinLength",
+    "ID-ChinLength_Neg",
+    "ID-ChinWidth",
+    "ID-ChinWidth_Neg",
+    "ID-ClawLength",
+    "ID-CornerDown",
+    "ID-CornerUp",
+    "ID-Crest",
+    "ID-Crest_Neg",
+    "ID-DigitEmphasis",
+    "ID-EarElLift",
+    "ID-EarElLift_Neg",
+    "ID-EarElSize",
+    "ID-EarElSize_Neg",
+    "ID-EarElSpread",
+    "ID-EarElSpread_Neg",
+    "ID-EarFin",
+    "ID-EarFin_Neg",
+    "ID-EarLobe",
+    "ID-EarOut",
+    "ID-EarPoint",
+    "ID-EarSize",
+    "ID-EarSize_Neg",
+    "ID-EyeAlmond",
+    "ID-EyeDroop",
+    "ID-EyeForward",
+    "ID-EyeForward_Neg",
+    "ID-EyeHeight",
+    "ID-EyeHeight_Neg",
+    "ID-EyeNarrow",
+    "ID-EyeRound",
+    "ID-EyeSize",
+    "ID-EyeSize_Neg",
+    "ID-EyeSpacing",
+    "ID-EyeSpacing_Neg",
+    "ID-EyeTilt",
+    "ID-EyeTilt_Neg",
+    "ID-EyeUpturn",
+    "ID-FaceDiamond",
+    "ID-FaceHeart",
+    "ID-FaceLong",
+    "ID-FaceRound",
+    "ID-FaceSharp",
+    "ID-FaceSoft",
+    "ID-FaceSquare",
+    "ID-FangLength",
+    "ID-FootSize",
+    "ID-FootSize_Neg",
+    "ID-ForeArmBulk",
+    "ID-ForeArmBulk_Neg",
+    "ID-FrillFlare",
+    "ID-FrillSize",
+    "ID-FrillSize_Neg",
+    "ID-Glute",
+    "ID-Glute_Neg",
+    "ID-HandSize",
+    "ID-HandSize_Neg",
+    "ID-HornCurve",
+    "ID-HornCurve_Neg",
+    "ID-HornLength",
+    "ID-HornLength_Neg",
+    "ID-HornStyleSize",
+    "ID-HornStyleSize_Neg",
+    "ID-HornThickness",
+    "ID-HornThickness_Neg",
+    "ID-JawHeight",
+    "ID-JawHeight_Neg",
+    "ID-JawWidth",
+    "ID-JawWidth_Neg",
+    "ID-LashLong",
+    "ID-LashShort",
+    "ID-LidCrease",
+    "ID-LidHood",
+    "ID-LipLower",
+    "ID-LipLower_Neg",
+    "ID-LipThin",
+    "ID-LipUpper",
+    "ID-LipUpper_Neg",
+    "ID-ManeLength",
+    "ID-ManeLength_Neg",
+    "ID-ManeVolume",
+    "ID-ManeVolume_Neg",
+    "ID-MouthHeight",
+    "ID-MouthHeight_Neg",
+    "ID-MouthWidth",
+    "ID-MouthWidth_Neg",
+    "ID-MuscleAbs",
+    "ID-MuscleArms",
+    "ID-MuscleChest",
+    "ID-MuscleLegs",
+    "ID-MuzzleBridge",
+    "ID-MuzzleBridge_Neg",
+    "ID-MuzzleHeight",
+    "ID-MuzzleHeight_Neg",
+    "ID-MuzzleLength",
+    "ID-MuzzleLength_Neg",
+    "ID-MuzzleWidth",
+    "ID-MuzzleWidth_Neg",
+    "ID-NailLength",
+    "ID-NarrowWaist",
+    "ID-NarrowWaist_Neg",
+    "ID-NeckThickness",
+    "ID-NeckThickness_Neg",
+    "ID-NoseBridgeHigh",
+    "ID-NoseBridgeHigh_Neg",
+    "ID-NoseBridgeWide",
+    "ID-NoseBridgeWide_Neg",
+    "ID-NoseLarge",
+    "ID-NoseLong",
+    "ID-NoseLong_Neg",
+    "ID-NoseSmall",
+    "ID-NoseTipUp",
+    "ID-NoseTipUp_Neg",
+    "ID-NoseTipWide",
+    "ID-NoseTipWide_Neg",
+    "ID-NostrilFlare",
+    "ID-OpticSize",
+    "ID-OpticSize_Neg",
+    "ID-Philtrum",
+    "ID-SkullCrown",
+    "ID-SkullCrown_Neg",
+    "ID-SkullDepth",
+    "ID-SkullDepth_Neg",
+    "ID-SkullWidth",
+    "ID-SkullWidth_Neg",
+    "ID-SnoutLong",
+    "ID-SnoutShort",
+    "ID-TailThick",
+    "ID-TailThin",
+    "ID-TailTip",
+    "ID-TailTip_Neg",
+    "ID-ThighBulk",
+    "ID-ThighBulk_Neg",
+    "ID-UpperArmBulk",
+    "ID-UpperArmBulk_Neg",
+    "ID-WideHips"
+  ],
+  "performance_shape_keys": [
+    "PF-Blink",
+    "PF-Blink_L",
+    "PF-Blink_R",
+    "PF-BrowFurrow",
+    "PF-BrowFurrow_L",
+    "PF-BrowFurrow_R",
+    "PF-BrowInnerUp",
+    "PF-BrowInnerUp_L",
+    "PF-BrowInnerUp_R",
+    "PF-BrowLower",
+    "PF-BrowLower_L",
+    "PF-BrowLower_R",
+    "PF-BrowOuterUp",
+    "PF-BrowRaise",
+    "PF-BrowRaise_L",
+    "PF-BrowRaise_R",
+    "PF-BrowSad",
+    "PF-Cry",
+    "PF-Disgust",
+    "PF-EyeWide",
+    "PF-Frown",
+    "PF-FrownOpen",
+    "PF-Grimace",
+    "PF-JawOpen",
+    "PF-LidLowerUp",
+    "PF-LidUpperDown",
+    "PF-LipBite",
+    "PF-MouthSide_L",
+    "PF-MouthSide_R",
+    "PF-Pout",
+    "PF-Press",
+    "PF-SmileClosed",
+    "PF-SmileOpenJaw",
+    "PF-Smirk_L",
+    "PF-Smirk_R",
+    "PF-Snarl",
+    "PF-Squeeze",
+    "PF-Squeeze_L",
+    "PF-Squeeze_R",
+    "PF-Squint",
+    "PF-Squint_L",
+    "PF-Squint_R",
+    "PF-Surprise",
+    "PF-TongueL",
+    "PF-TongueRest",
+    "PF-TongueTh",
+    "PF-VisAA",
+    "PF-VisEE",
+    "PF-VisFV",
+    "PF-VisIH",
+    "PF-VisL",
+    "PF-VisMBP",
+    "PF-VisMid",
+    "PF-VisOH",
+    "PF-VisOO",
+    "PF-VisSZ",
+    "PF-VisSmall",
+    "PF-VisTH",
+    "PF-VisWide"
+  ],
+  "sockets": [
+    "SOC-Antenna",
+    "SOC-Back",
+    "SOC-Beard",
+    "SOC-Cape",
+    "SOC-Chest",
+    "SOC-Core",
+    "SOC-Crest",
+    "SOC-Eyewear",
+    "SOC-Foot_L",
+    "SOC-ForeArm_R",
+    "SOC-HairBack",
+    "SOC-HairExtra",
+    "SOC-HairFront",
+    "SOC-HairScalp",
+    "SOC-HairSide_L",
+    "SOC-HairSide_R",
+    "SOC-HeadTop",
+    "SOC-Moustache",
+    "SOC-Muzzle",
+    "SOC-Neck",
+    "SOC-OrganicForeArm_L",
+    "SOC-Shoulder_L",
+    "SOC-Sideburn_L",
+    "SOC-Sideburn_R",
+    "SOC-Tail",
+    "SOC-Waist",
+    "SOC-Weapon_L",
+    "SOC-Weapon_R",
+    "SOC-Wing_L",
+    "SOC-Wings"
+  ],
+  "sliders": [
+    {
+      "id": "face.round",
+      "label": "Round face",
+      "bipolar": false,
+      "shape_key": "ID-FaceRound",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "face.long",
+      "label": "Long face",
+      "bipolar": false,
+      "shape_key": "ID-FaceLong",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "face.square",
+      "label": "Square face",
+      "bipolar": false,
+      "shape_key": "ID-FaceSquare",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "face.heart",
+      "label": "Heart face",
+      "bipolar": false,
+      "shape_key": "ID-FaceHeart",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "face.diamond",
+      "label": "Diamond face",
+      "bipolar": false,
+      "shape_key": "ID-FaceDiamond",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "head.size",
+      "label": "Head size",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "head_scale",
+        "lo": 0.9,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "skull.width",
+      "label": "Skull width",
+      "bipolar": true,
+      "shape_key": "ID-SkullWidth",
+      "shape_key_negative": "ID-SkullWidth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "skull.depth",
+      "label": "Skull depth",
+      "bipolar": true,
+      "shape_key": "ID-SkullDepth",
+      "shape_key_negative": "ID-SkullDepth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "skull.crown",
+      "label": "Crown height",
+      "bipolar": true,
+      "shape_key": "ID-SkullCrown",
+      "shape_key_negative": "ID-SkullCrown_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "jaw.width",
+      "label": "Jaw width",
+      "bipolar": true,
+      "shape_key": "ID-JawWidth",
+      "shape_key_negative": "ID-JawWidth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "jaw.height",
+      "label": "Jaw angle height",
+      "bipolar": true,
+      "shape_key": "ID-JawHeight",
+      "shape_key_negative": "ID-JawHeight_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "chin.length",
+      "label": "Chin length",
+      "bipolar": true,
+      "shape_key": "ID-ChinLength",
+      "shape_key_negative": "ID-ChinLength_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "chin.width",
+      "label": "Chin width",
+      "bipolar": true,
+      "shape_key": "ID-ChinWidth",
+      "shape_key_negative": "ID-ChinWidth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "chin.cleft",
+      "label": "Chin cleft",
+      "bipolar": false,
+      "shape_key": "ID-ChinCleft",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "cheek.full",
+      "label": "Cheek fullness",
+      "bipolar": true,
+      "shape_key": "ID-CheekFull",
+      "shape_key_negative": "ID-CheekHollow",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "cheek.bone",
+      "label": "Cheekbones",
+      "bipolar": true,
+      "shape_key": "ID-Cheekbone",
+      "shape_key_negative": "ID-Cheekbone_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.ridge",
+      "label": "Brow ridge",
+      "bipolar": true,
+      "shape_key": "ID-BrowRidge",
+      "shape_key_negative": "ID-BrowRidge_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.height",
+      "label": "Brow height",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "brow_height",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.tilt",
+      "label": "Brow tilt",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "brow_tilt",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.spacing",
+      "label": "Brow spacing",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "brow_spacing",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.thickness",
+      "label": "Brow thickness",
+      "bipolar": true,
+      "shape_key": "ID-BrowThick",
+      "shape_key_negative": "ID-BrowThin",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.length",
+      "label": "Brow length",
+      "bipolar": true,
+      "shape_key": "ID-BrowLong",
+      "shape_key_negative": "ID-BrowShort",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.size",
+      "label": "Eye size",
+      "bipolar": true,
+      "shape_key": "ID-EyeSize",
+      "shape_key_negative": "ID-EyeSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.height",
+      "label": "Eye height",
+      "bipolar": true,
+      "shape_key": "ID-EyeHeight",
+      "shape_key_negative": "ID-EyeHeight_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.spacing",
+      "label": "Eye spacing",
+      "bipolar": true,
+      "shape_key": "ID-EyeSpacing",
+      "shape_key_negative": "ID-EyeSpacing_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.tilt",
+      "label": "Eye tilt",
+      "bipolar": true,
+      "shape_key": "ID-EyeTilt",
+      "shape_key_negative": "ID-EyeTilt_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.almond",
+      "label": "Almond shape",
+      "bipolar": false,
+      "shape_key": "ID-EyeAlmond",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.round",
+      "label": "Round shape",
+      "bipolar": false,
+      "shape_key": "ID-EyeRound",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.narrow",
+      "label": "Narrow shape",
+      "bipolar": false,
+      "shape_key": "ID-EyeNarrow",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.droop",
+      "label": "Outer corner",
+      "bipolar": true,
+      "shape_key": "ID-EyeUpturn",
+      "shape_key_negative": "ID-EyeDroop",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lid.crease",
+      "label": "Lid crease",
+      "bipolar": false,
+      "shape_key": "ID-LidCrease",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lid.hood",
+      "label": "Hooded lid",
+      "bipolar": false,
+      "shape_key": "ID-LidHood",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lash.length",
+      "label": "Lash length",
+      "bipolar": true,
+      "shape_key": "ID-LashLong",
+      "shape_key_negative": "ID-LashShort",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.bridgeHeight",
+      "label": "Bridge height",
+      "bipolar": true,
+      "shape_key": "ID-NoseBridgeHigh",
+      "shape_key_negative": "ID-NoseBridgeHigh_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.bridgeWidth",
+      "label": "Bridge width",
+      "bipolar": true,
+      "shape_key": "ID-NoseBridgeWide",
+      "shape_key_negative": "ID-NoseBridgeWide_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.tipUp",
+      "label": "Tip lift",
+      "bipolar": true,
+      "shape_key": "ID-NoseTipUp",
+      "shape_key_negative": "ID-NoseTipUp_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.tipWidth",
+      "label": "Tip width",
+      "bipolar": true,
+      "shape_key": "ID-NoseTipWide",
+      "shape_key_negative": "ID-NoseTipWide_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.size",
+      "label": "Nose size",
+      "bipolar": true,
+      "shape_key": "ID-NoseLarge",
+      "shape_key_negative": "ID-NoseSmall",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.length",
+      "label": "Nose length",
+      "bipolar": true,
+      "shape_key": "ID-NoseLong",
+      "shape_key_negative": "ID-NoseLong_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "nose.nostril",
+      "label": "Nostril flare",
+      "bipolar": false,
+      "shape_key": "ID-NostrilFlare",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "mouth.width",
+      "label": "Mouth width",
+      "bipolar": true,
+      "shape_key": "ID-MouthWidth",
+      "shape_key_negative": "ID-MouthWidth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "mouth.height",
+      "label": "Mouth height",
+      "bipolar": true,
+      "shape_key": "ID-MouthHeight",
+      "shape_key_negative": "ID-MouthHeight_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lip.upper",
+      "label": "Upper lip",
+      "bipolar": true,
+      "shape_key": "ID-LipUpper",
+      "shape_key_negative": "ID-LipUpper_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lip.lower",
+      "label": "Lower lip",
+      "bipolar": true,
+      "shape_key": "ID-LipLower",
+      "shape_key_negative": "ID-LipLower_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lip.thin",
+      "label": "Thin lips",
+      "bipolar": false,
+      "shape_key": "ID-LipThin",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "mouth.corner",
+      "label": "Mouth corners",
+      "bipolar": true,
+      "shape_key": "ID-CornerUp",
+      "shape_key_negative": "ID-CornerDown",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "mouth.philtrum",
+      "label": "Philtrum",
+      "bipolar": false,
+      "shape_key": "ID-Philtrum",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "ear.size",
+      "label": "Ear size",
+      "bipolar": true,
+      "shape_key": "ID-EarSize",
+      "shape_key_negative": "ID-EarSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "ear.point",
+      "label": "Ear point",
+      "bipolar": false,
+      "shape_key": "ID-EarPoint",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "ear.out",
+      "label": "Ear angle",
+      "bipolar": false,
+      "shape_key": "ID-EarOut",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "ear.lobe",
+      "label": "Ear lobe",
+      "bipolar": false,
+      "shape_key": "ID-EarLobe",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "ear.height",
+      "label": "Ear height",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "ear_height",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "body.height",
+      "label": "Height",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "height",
+        "lo": 0.9,
+        "hi": 1.1
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "body.bulk",
+      "label": "Bulk",
+      "bipolar": true,
+      "shape_key": "ID-BodyBulk",
+      "shape_key_negative": "ID-BodyLean",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "body.soft",
+      "label": "Softness",
+      "bipolar": false,
+      "shape_key": "ID-BodySoft",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "body.belly",
+      "label": "Belly",
+      "bipolar": true,
+      "shape_key": "ID-Belly",
+      "shape_key_negative": "ID-Belly_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "body.glute",
+      "label": "Seat",
+      "bipolar": true,
+      "shape_key": "ID-Glute",
+      "shape_key_negative": "ID-Glute_Neg",
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "muscle.chest",
+      "label": "Chest muscle",
+      "bipolar": false,
+      "shape_key": "ID-MuscleChest",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "muscle.abs",
+      "label": "Abdominal muscle",
+      "bipolar": false,
+      "shape_key": "ID-MuscleAbs",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "muscle.arms",
+      "label": "Arm muscle",
+      "bipolar": false,
+      "shape_key": "ID-MuscleArms",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "muscle.legs",
+      "label": "Leg muscle",
+      "bipolar": false,
+      "shape_key": "ID-MuscleLegs",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "body.shoulders",
+      "label": "Shoulders",
+      "bipolar": true,
+      "shape_key": "ID-BroadShoulders",
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "shoulder_width",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "body.chest",
+      "label": "Chest",
+      "bipolar": true,
+      "shape_key": "ID-Chest",
+      "shape_key_negative": "ID-Chest_Neg",
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "body.waist",
+      "label": "Waist",
+      "bipolar": true,
+      "shape_key": "ID-NarrowWaist",
+      "shape_key_negative": "ID-NarrowWaist_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "body.hips",
+      "label": "Hips",
+      "bipolar": true,
+      "shape_key": "ID-WideHips",
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "hip_width",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "face.softness",
+      "label": "Face softness",
+      "bipolar": true,
+      "shape_key": "ID-FaceSoft",
+      "shape_key_negative": "ID-FaceSharp",
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "torso.length",
+      "label": "Torso length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "torso_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "upperArm.length",
+      "label": "Upper arm length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "upper_arm_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "forearm.length",
+      "label": "Forearm length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "forearm_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "upperArm.bulk",
+      "label": "Upper arm bulk",
+      "bipolar": true,
+      "shape_key": "ID-UpperArmBulk",
+      "shape_key_negative": "ID-UpperArmBulk_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "forearm.bulk",
+      "label": "Forearm bulk",
+      "bipolar": true,
+      "shape_key": "ID-ForeArmBulk",
+      "shape_key_negative": "ID-ForeArmBulk_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "hand.size",
+      "label": "Hand size",
+      "bipolar": true,
+      "shape_key": "ID-HandSize",
+      "shape_key_negative": "ID-HandSize_Neg",
+      "bone_property": null,
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "hand.length",
+      "label": "Hand length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "hand_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "finger.length",
+      "label": "Finger length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "finger_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "nail.length",
+      "label": "Nail length",
+      "bipolar": false,
+      "shape_key": "ID-NailLength",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "thigh.length",
+      "label": "Thigh length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "thigh_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "shin.length",
+      "label": "Shin length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "shin_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "thigh.bulk",
+      "label": "Thigh bulk",
+      "bipolar": true,
+      "shape_key": "ID-ThighBulk",
+      "shape_key_negative": "ID-ThighBulk_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "calf.bulk",
+      "label": "Calf bulk",
+      "bipolar": true,
+      "shape_key": "ID-CalfBulk",
+      "shape_key_negative": "ID-CalfBulk_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "foot.size",
+      "label": "Foot size",
+      "bipolar": true,
+      "shape_key": "ID-FootSize",
+      "shape_key_negative": "ID-FootSize_Neg",
+      "bone_property": null,
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "foot.length",
+      "label": "Foot length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "foot_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "neck.length",
+      "label": "Neck length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "neck_length",
+        "lo": 0.85,
+        "hi": 1.15
+      },
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "neck.thickness",
+      "label": "Neck thickness",
+      "bipolar": true,
+      "shape_key": "ID-NeckThickness",
+      "shape_key_negative": "ID-NeckThickness_Neg",
+      "bone_property": null,
+      "bodies": "ALL_HUMANLIKE"
+    },
+    {
+      "id": "age.years",
+      "label": "Age",
+      "bipolar": true,
+      "shape_key": "ID-AgeOld",
+      "shape_key_negative": "ID-AgeYoung",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "age.creases",
+      "label": "Creases",
+      "bipolar": false,
+      "shape_key": "ID-AgeCreases",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "age.jawSoft",
+      "label": "Jaw softness",
+      "bipolar": false,
+      "shape_key": "ID-AgeJawSoft",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "age.stoop",
+      "label": "Stoop",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "stoop",
+        "lo": 0.0,
+        "hi": 1.0
+      },
+      "bodies": "ADULT"
+    },
+    {
+      "id": "age.wear",
+      "label": "Scale wear",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "age.posture",
+      "label": "Low posture",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "posture",
+        "lo": 0.0,
+        "hi": 1.0
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "muzzle.length",
+      "label": "Muzzle length",
+      "bipolar": true,
+      "shape_key": "ID-MuzzleLength",
+      "shape_key_negative": "ID-MuzzleLength_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "muzzle.width",
+      "label": "Muzzle width",
+      "bipolar": true,
+      "shape_key": "ID-MuzzleWidth",
+      "shape_key_negative": "ID-MuzzleWidth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "muzzle.height",
+      "label": "Muzzle height",
+      "bipolar": true,
+      "shape_key": "ID-MuzzleHeight",
+      "shape_key_negative": "ID-MuzzleHeight_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "muzzle.bridge",
+      "label": "Muzzle bridge",
+      "bipolar": true,
+      "shape_key": "ID-MuzzleBridge",
+      "shape_key_negative": "ID-MuzzleBridge_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "earEl.size",
+      "label": "Ear size",
+      "bipolar": true,
+      "shape_key": "ID-EarElSize",
+      "shape_key_negative": "ID-EarElSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "earEl.lift",
+      "label": "Ear lift",
+      "bipolar": true,
+      "shape_key": "ID-EarElLift",
+      "shape_key_negative": "ID-EarElLift_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "earEl.spread",
+      "label": "Ear spread",
+      "bipolar": true,
+      "shape_key": "ID-EarElSpread",
+      "shape_key_negative": "ID-EarElSpread_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.forward",
+      "label": "Eye placement",
+      "bipolar": true,
+      "shape_key": "ID-EyeForward",
+      "shape_key_negative": "ID-EyeForward_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "fang.length",
+      "label": "Fang length",
+      "bipolar": false,
+      "shape_key": "ID-FangLength",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "whisker.density",
+      "label": "Whisker density",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "mane.length",
+      "label": "Length",
+      "bipolar": true,
+      "shape_key": "ID-ManeLength",
+      "shape_key_negative": "ID-ManeLength_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "mane.volume",
+      "label": "Volume",
+      "bipolar": true,
+      "shape_key": "ID-ManeVolume",
+      "shape_key_negative": "ID-ManeVolume_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "horn.length",
+      "label": "Horn length",
+      "bipolar": true,
+      "shape_key": "ID-HornLength",
+      "shape_key_negative": "ID-HornLength_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "horn.thickness",
+      "label": "Horn thickness",
+      "bipolar": true,
+      "shape_key": "ID-HornThickness",
+      "shape_key_negative": "ID-HornThickness_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "horn.curve",
+      "label": "Horn curve",
+      "bipolar": true,
+      "shape_key": "ID-HornCurve",
+      "shape_key_negative": "ID-HornCurve_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "frill.size",
+      "label": "Frill size",
+      "bipolar": true,
+      "shape_key": "ID-FrillSize",
+      "shape_key_negative": "ID-FrillSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "frill.flare",
+      "label": "Frill flare",
+      "bipolar": false,
+      "shape_key": "ID-FrillFlare",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "digit.emphasis",
+      "label": "Digit emphasis",
+      "bipolar": false,
+      "shape_key": "ID-DigitEmphasis",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "claw.length",
+      "label": "Claw length",
+      "bipolar": false,
+      "shape_key": "ID-ClawLength",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "tail.length",
+      "label": "Tail length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "tail_length",
+        "lo": 0.6,
+        "hi": 1.5
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "tail.thickness",
+      "label": "Tail thickness",
+      "bipolar": true,
+      "shape_key": "ID-TailThick",
+      "shape_key_negative": "ID-TailThin",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "tail.tip",
+      "label": "Tail tip",
+      "bipolar": true,
+      "shape_key": "ID-TailTip",
+      "shape_key_negative": "ID-TailTip_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "wing.span",
+      "label": "Wing span",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "wing_span",
+        "lo": 0.6,
+        "hi": 1.4
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "wing.fold",
+      "label": "Wing fold",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "wing_fold",
+        "lo": 0.0,
+        "hi": 1.0
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "surface.coverage",
+      "label": "Coverage",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.bulk",
+      "label": "Chassis bulk",
+      "bipolar": true,
+      "shape_key": "ID-ChassisBulk",
+      "shape_key_negative": "ID-ChassisBulk_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.core",
+      "label": "Chest core",
+      "bipolar": true,
+      "shape_key": "ID-ChestCore",
+      "shape_key_negative": "ID-ChestCore_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.panelGap",
+      "label": "Panel gap",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.wear",
+      "label": "Paint wear",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.optic",
+      "label": "Optic size",
+      "bipolar": true,
+      "shape_key": "ID-OpticSize",
+      "shape_key_negative": "ID-OpticSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.antenna",
+      "label": "Antenna length",
+      "bipolar": true,
+      "shape_key": "ID-AntennaLength",
+      "shape_key_negative": "ID-AntennaLength_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.size",
+      "label": "Body size",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "body_size",
+        "lo": 0.6,
+        "hi": 1.4
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.neck",
+      "label": "Neck length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "neck_length",
+        "lo": 0.7,
+        "hi": 1.4
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.tail",
+      "label": "Tail length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "tail_length",
+        "lo": 0.7,
+        "hi": 1.4
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.wing",
+      "label": "Wing size",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "wing_size",
+        "lo": 0.7,
+        "hi": 1.4
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.wingFold",
+      "label": "Wing fold",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "wing_fold",
+        "lo": 0.0,
+        "hi": 1.0
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.leg",
+      "label": "Leg length",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "leg_length",
+        "lo": 0.8,
+        "hi": 1.25
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.bulk",
+      "label": "Bulk",
+      "bipolar": true,
+      "shape_key": "ID-BeastBulk",
+      "shape_key_negative": "ID-BeastLean",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.claw",
+      "label": "Claw length",
+      "bipolar": false,
+      "shape_key": "ID-ClawLength",
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.snout",
+      "label": "Snout length",
+      "bipolar": true,
+      "shape_key": "ID-SnoutLong",
+      "shape_key_negative": "ID-SnoutShort",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.jaw",
+      "label": "Jaw width",
+      "bipolar": true,
+      "shape_key": "ID-JawWidth",
+      "shape_key_negative": "ID-JawWidth_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.head",
+      "label": "Head size",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": {
+        "name": "head_scale",
+        "lo": 0.85,
+        "hi": 1.2
+      },
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.horn",
+      "label": "Horn size",
+      "bipolar": true,
+      "shape_key": "ID-HornStyleSize",
+      "shape_key_negative": "ID-HornStyleSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.crest",
+      "label": "Crest size",
+      "bipolar": true,
+      "shape_key": "ID-Crest",
+      "shape_key_negative": "ID-Crest_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.earFin",
+      "label": "Ear fin size",
+      "bipolar": true,
+      "shape_key": "ID-EarFin",
+      "shape_key_negative": "ID-EarFin_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "beast.eye",
+      "label": "Eye size",
+      "bipolar": true,
+      "shape_key": "ID-EyeSize",
+      "shape_key_negative": "ID-EyeSize_Neg",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "skin.blush",
+      "label": "Blush",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "skin.veins",
+      "label": "Veins",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "skin.bodyHair",
+      "label": "Body hair",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "skin.armHair",
+      "label": "Arm hair",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "ADULT"
+    },
+    {
+      "id": "eye.irisSize",
+      "label": "Iris size",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.pupilSize",
+      "label": "Pupil size",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "eye.catchlight",
+      "label": "Catchlight",
+      "bipolar": true,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "robot.emissive",
+      "label": "Glow strength",
+      "bipolar": false,
+      "shape_key": null,
+      "shape_key_negative": null,
+      "bone_property": null,
+      "bodies": "HUM"
+    }
+  ],
+  "counts": {
+    "sliders": 143,
+    "identity_shape_keys": 169,
+    "performance_shape_keys": 59,
+    "sockets": 30
+  }
+}

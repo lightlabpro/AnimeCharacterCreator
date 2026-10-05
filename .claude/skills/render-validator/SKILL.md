@@ -12,7 +12,8 @@ Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-gene
 
 ## Setup (once per character)
 1. Collect references: ideally one image per view (`front`, `three_quarter`, `side`, `back`, `face`). A view without a reference still gets the render-only gates. Good references: `docs/style_dataset/images/ref-01.png` and `docs/reference/mhs3/`.
-2. `python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png`
+2. `python3 <skill dir>/scripts/validate.py init   # in the repo: .claude/skills/render-validator/scripts/validate.py
+   # example: python3 .claude/skills/render-validator/scripts/validate.py init work/<tag> --ref front=ref.png --ref face=face_ref.png`
    Needs only numpy and Pillow (`pip install numpy pillow`). Run it outside Blender on the saved PNGs.
 
 ## The loop (never skip a step)
@@ -31,6 +32,7 @@ Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-gene
    ```
    Scores: 0 = broken, 1 = clearly wrong, 2 = acceptable, 3 = matches the reference. Every criterion needs a quoted visual-evidence sentence (20+ characters).
    Criteria (all required): `proportions_match_reference`, `silhouette_reads_like_reference`, `face_structure`, `eyes_lash_highlights`, `brows`, `hair_clumps_and_tones`, `shading_hard_warm_shadows`, `outlines_thin_and_coloured`, `colour_palette_match`, `no_artifacts_or_melted_parts`, `thumbnail_squint_test`.
+   **In the normal chat (no subagent tool):** the independent reviewer is Sammy, or a deliberately context-free pass where you look only at `sheet.png` and the criteria list without reading your own notes, and say so in the `evidence` text. Never mark a self-review as `independent` unless that was true. Save the workspace folder with the project files, because the chat sandbox may reset between turns.
    For a stronger check, ask the reviewer twice with reference and render swapped in the sheet and keep the lower score (position bias).
 6. **Gate:** `validate.py gate work/<tag> --review work/<tag>/review.json`
    - `ITERATE` lists every reason. It returns this when objective gates fail, when fewer than 3 iterations have been measured, when the review is self-authored, stale (wrong `render_hash`), missing criteria or evidence, or any score is below 2, or when you did not name what you fixed.
@@ -43,6 +45,9 @@ Why it is built this way (from `reports/AI 3D generation pipelines.md`): 3D-gene
 - On `REGRESSION`: fix it before anything else.
 - Fix the model, not the render: no post-processing the PNG, no moving the camera, no lighting tricks that the shipped shader would not reproduce.
 - Show the user the contact sheet and the verdict text, plus the number of iterations it took.
+
+## Shared memory
+After every real run, log the measured per-criterion values and the verdict with `python3 bridge/tools/log.py` (see the `creator-bridge` skill). The thresholds improve only when both Claudes feed it real numbers.
 
 ## Calibration (do this early, it matters more than the metric names)
 Thresholds in `validate.py` (`DEFAULTS`) are starting points. Toon statistics were checked on the MHS3 reference stills (tone bands 5-14, hard-edge ratio 0.18-0.57, shadow chroma 4-40), but the reference gates (`sil_iou` 0.80, `edge_f` 0.35, `palette` 0.55) are unvalidated. Render 10-20 characters you judge good and bad, run `measure` on them, and propose floors that separate the two. Pass overrides with `init --config thresholds.json`.
