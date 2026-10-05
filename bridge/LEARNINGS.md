@@ -105,3 +105,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: knowledge/body-profiles/amshani.json, README.md there; tests/py/test_body_audit.py Vroid case
 - status: confirmed
 - use: Measure MHS3-style references (separate head, hair and body meshes) for the real targets; panic3d is head-only and needs a GPU
+
+## 2026-10-05 [code] Mirai reference measured; mirror ceiling recalibrated
+- finding: mirai.blend (separate body/hair/clothes meshes, rig upperarm.L/lowerarm.L/upperleg.L/lowerleg.L with IK pole bones named elbow.L/knee.L) measures cleanly with --meshes mirai. IK pole bones named elbow/knee must not override explicit bones, so aliases are used only when no explicit bone exists. Mirror ceiling raised 1.2%->2% H: this good model measures 1.22%. Amshani (4%) still fails. Default mesh skip list now also skips shirt/skirt/jacket/shoes/ribbon/plane/light.
+- evidence: knowledge/body-profiles/mirai.json; check of amshani against mirai targets exits 12 with sensible directions
+- status: unverified: single reference band, thresholds not yet validated on more models
+- use: More references of different builds widen the band; MHS3 reference still needed

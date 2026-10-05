@@ -68,6 +68,11 @@ class Vroid(unittest.TestCase):
         J = ba.pick_joints({"mixamorig:LeftUpLeg": (0.1, 0, .5), "mixamorig:LeftLeg": (0.1, 0, .3), "mixamorig:LeftFoot": (0.1, 0, .05)})
         self.assertEqual((J["thigh_L"][2], J["shin_L"][2]), (.5, .3))
 
+class IkPoles(unittest.TestCase):
+    def test_explicit_bones_beat_ik_pole_aliases(self):
+        J = ba.pick_joints({"lowerarm.L": (.3, 0, .6), "elbow.L": (.3, 0.5, .6), "lowerleg.L": (.1, 0, .3), "knee.L": (.1, -0.5, .3), "upperleg.L": (.1, 0, .5), "foot.L": (.1, 0, .05), "footcontroller.L": (.1, 0, 0)})
+        self.assertEqual((J["forearm_L"][1], J["shin_L"][1]), (0, 0)); self.assertEqual(J["thigh_L"][2], .5); self.assertEqual(J["foot_L"][2], .05)
+
 class Measure(unittest.TestCase):
     def test_ratios_and_gltf_roundtrip(self):
         V, T, J = body(); prof = ba.measure(V, T, J, "ref")

@@ -27,7 +27,7 @@ One reference gives a +-6% band; more references widen it to their spread. Commi
 ```
 python3 .../body_audit.py check CHR_Body.glb --targets knowledge/body-targets.json
 ```
-Exit 0 pass, 12 fail, 13 unknown, 2 usage. Run it on the exported pack before `check_pack.py`. It measures: neck, shoulder, elbow, wrist, hip, knee and ankle heights; head-to-top; thigh/shin and upper-arm/forearm ratios; arm length; shoulder and hip joint widths; mesh width at shoulder, waist and hip; torso depth; foot length. Fixed ceilings (no reference needed): rig asymmetry 0.6% H, mesh mirror error 1.2% H (p95), centre offset 1% H.
+Exit 0 pass, 12 fail, 13 unknown, 2 usage. Run it on the exported pack before `check_pack.py`. It measures: neck, shoulder, elbow, wrist, hip, knee and ankle heights; head-to-top; thigh/shin and upper-arm/forearm ratios; arm length; shoulder and hip joint widths; mesh width at shoulder, waist and hip; torso depth; foot length. Fixed ceilings (no reference needed): rig asymmetry 0.6% H, mesh mirror error 2% H (p95; a good real model, Mirai, measures 1.2%, a merged hair-and-skirt mesh 4%), centre offset 1% H.
 
 ## Rules of thumb
 - Measure with shape keys at 0 and the rig in rest pose; the tool does this itself in Blender.

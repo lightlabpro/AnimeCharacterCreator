@@ -14,7 +14,7 @@ Metrics are only compared when BOTH sides have them; a missing metric is UNKNOWN
 import argparse, base64, json, math, os, re, struct, sys
 
 EXIT_PASS, EXIT_FAIL, EXIT_UNKNOWN, EXIT_USAGE = 0, 12, 13, 2
-SKIP_MESH = re.compile(r"hair|brow|lash|eye|teeth|tongue|cloth|cape|weapon|sword|shield|accessor|wet|outline|hat|helmet|glasses", re.I)
+SKIP_MESH = re.compile(r"hair|brow|lash|eye|teeth|tongue|cloth|cape|weapon|sword|shield|accessor|wet|outline|hat|helmet|glass|shirt|skirt|jacket|shoe|boot|sock|ribbon|ribbin|coat|dress|glove|plane|light|floor|ground|backdrop|camera", re.I)
 
 # ---------------------------------------------------------------- names
 JOINT_WORDS = {
@@ -48,7 +48,10 @@ def pick_joints(raw):
     except spine (several bones): pelvis = hips/pelvis else the lowest spine bone, 'chest' = the highest."""
     out, spines = {}, []
     leg_is_thigh = any(re.search(r"knee", n, re.I) for n in raw)
-    for name in sorted(raw):
+    # Alias names (elbow, knee, ankle, wrist) are the real joints on VRoid-style rigs but IK pole targets on others: use them only
+    # when no explicit bone (upperarm, lowerarm, upperleg, lowerleg, foot, hand) provides that joint.
+    is_alias = lambda n: bool(re.search(r"elbow|knee|ankle|wrist", n, re.I))
+    for name in sorted(raw, key=lambda n: (is_alias(n), n)):
         j, side = canon(name, leg_is_thigh)
         if not j or "twist" in name.lower() or "roll" in name.lower(): continue
         p = tuple(float(v) for v in raw[name])
@@ -143,7 +146,7 @@ def measure(V, T, raw_joints, name="model"):
             "joints_found": sorted(J), "notes": notes}
 
 # ---------------------------------------------------------------- targets and check
-ABS_CEILING = {"rig_asymmetry": 0.006, "mirror_p95": 0.012, "centre_offset": 0.01}   # properties, not reference-dependent
+ABS_CEILING = {"rig_asymmetry": 0.006, "mirror_p95": 0.02, "centre_offset": 0.01}   # properties, not reference-dependent
 ONE_SIDED = set(ABS_CEILING)
 MIN_MARGIN = 0.012      # never tighter than this in H (or ratio units): measurement noise from pose and mesh differences
 
