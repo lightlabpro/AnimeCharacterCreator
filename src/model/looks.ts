@@ -221,7 +221,7 @@ const acc = (a: Partial<AccessoryDef> & Pick<AccessoryDef, 'id' | 'label' | 'slo
 });
 
 export const ACCESSORIES: AccessoryDef[] = [
-  acc({ id: 'ranger_outfit', label: 'Layered ranger outfit', category: 'Outfit', slot: 'outfit', socket: 'SOC-Chest', type: 'deform', followsShape: true, colors: { cloth: '#6f8a5a', leather: '#7a4b2c', trim: '#c9a35a', pants: '#4a4f5c' } }),
+  acc({ id: 'ranger_outfit', label: 'Layered ranger outfit', category: 'Outfit', slot: 'outfit', socket: 'SOC-Chest', type: 'deform', followsShape: true, colors: { cloth: '#2f9bb0', leather: '#8a4a22', trim: '#c8372d', pants: '#aab4c4' } }),
   acc({ id: 'traveler_outfit', label: 'Traveler tunic', category: 'Outfit', slot: 'outfit', socket: 'SOC-Chest', type: 'deform', followsShape: true, colors: { cloth: '#b0564a', leather: '#5b3a24', trim: '#e2c27a', pants: '#3e4a5e' } }),
   acc({ id: 'painted_armor', label: 'Painted plate armor', slot: 'armor', socket: 'SOC-Chest', type: 'deform', followsShape: true, colors: { metal: '#5f8fa6', fur: '#d9cbb0', strap: '#6b4428' } }),
   acc({ id: 'goggles', label: 'Field goggles', slot: 'headgear', socket: 'SOC-HeadTop', type: 'rigid', colors: { frame: '#6b4a2c', lens: '#f09a3a' }, exclusive: false }),
