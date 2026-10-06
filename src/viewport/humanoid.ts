@@ -280,8 +280,8 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   if (browRidge > 0.05) surf.add(ridgeC, ridgeR);
 
   const eyeSize = n('eye.size');
-  const ew = 0.092 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
-  const eh = ew * ((child ? 1.0 : 0.84) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
+  const ew = 0.079 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
+  const eh = ew * ((child ? 1.0 : 0.68) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
   const forward = n('eye.forward');
   const ex = 0.152 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
   const ey = -0.17 * h + 0.05 * h * n('eye.height');
@@ -402,7 +402,7 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
     surf.hit(0, noseY, np, nn);
     const noseLen = 0.07 * h * noseSize * (1 + 0.3 * n('nose.length'));
     const bridge = 1 + 0.5 * n('nose.bridgeHeight');
-    reg.ellipsoid(headG, plainHead, np.clone().add(V(0, 0.01 * h * n('nose.tipUp'), 0.01 * h)), V(0.035 * h * noseSize * (1 + 0.35 * n('nose.tipWidth') + 0.2 * pos('nose.nostril')), 0.04 * h * noseSize, noseLen * bridge * 1.5), { region: 'nose', name: 'CHR_Nose' });
+    reg.ellipsoid(headG, plainHead, np.clone().add(V(0, 0.01 * h * n('nose.tipUp'), 0.01 * h)), V(0.035 * h * noseSize * (1 + 0.35 * n('nose.tipWidth') + 0.2 * pos('nose.nostril')), 0.04 * h * noseSize, noseLen * bridge * 1.0), { region: 'nose', name: 'CHR_Nose' });
     const bp = new THREE.Vector3();
     const bn = new THREE.Vector3();
     surf.hit(0, (noseY + ey) / 2, bp, bn);

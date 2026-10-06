@@ -1,9 +1,9 @@
-"""Does the placeholder read as an anime character?  TypeSafe judges it from word buckets measured against the anime references.
+"""Does the placeholder read as an anime character?  TypeSafe judges it from word buckets measured against the target style.
 
    python tools/placeholders/anime_look.py /tmp/claude-0/placeholder-adult-X.json [--json]
 
 The numbers stay in code: each metric is compared with the Hina / Amshani envelope and sent to TypeSafe only as words
-("much smaller than the anime references", "within them", ...). Questions are phrased so yes = good; the Choice (which feature looks
+("much smaller than the target style", "within them", ...). Questions are phrased so yes = good; the Choice (which feature looks
 least anime) is asked in two option orders and a disagreement is reported as uncertain. Hair is judged by hair_judge elsewhere.
 """
 import argparse, json, os, sys
@@ -21,15 +21,19 @@ FEATURES = {
     "anatomy.eye_height_width": ("eyes", "how tall each eye is for its width"),
     "anatomy.mouth_norm": ("mouth", "how low the mouth sits on the head"),
     "face.nose_protrusion_over_head_height": ("nose", "how far the nose sticks out"),
-    "face.jaw_width_over_temple_width": ("jaw", "jaw width against the temple width (anime tapers to a point)"),
+    "face.jaw_width_over_temple_width": ("jaw", "jaw width against the temple width (the target tapers to a point)"),
     "anatomy.temple_width_norm": ("skull", "head width against head height"),
     "anatomy.neck_head_width": ("neck", "neck width against head width (anime necks are slim)"),
     "anatomy.height_heads": ("body", "body height in heads"),
+    "anatomy.shoulder_width_heads": ("body", "shoulder width in heads"),
+    "anatomy.legs_fraction": ("body", "leg length against height"),
     "anatomy.forehead_slope": ("skull", "how far the forehead leans back"),
 }
 
 
-def envelope():
+def envelope(style=None):
+    if style:
+        return {k: tuple(v) for k, v in json.load(open(os.path.join(ROOT, "styles", style + ".json")))["ranges"].items()}
     env = {}
     for fn in os.listdir(os.path.join(ROOT, "profiles")):
         for k, v in json.load(open(os.path.join(ROOT, "profiles", fn)))["metrics"].items():
@@ -43,9 +47,9 @@ def envelope():
 def bucket(v, lo, hi):
     span = max(hi - lo, 0.12 * max(abs(lo), abs(hi), 1e-6))
     if lo - 0.5 * span <= v <= hi + 0.5 * span:
-        return "within the anime references"
+        return "within the target style"
     d = (lo - v if v < lo else v - hi) / span
-    return ("slightly " if d < 1.5 else "much ") + ("below" if v < lo else "above") + " the anime references"
+    return ("slightly " if d < 1.5 else "much ") + ("below" if v < lo else "above") + " the target style"
 
 
 ADULT_ONLY = {"anatomy.eye_gap_eye_widths", "anatomy.eye_height_width", "anatomy.height_heads"}  # the references are adults
@@ -63,7 +67,7 @@ def questions(order, feats):
     opts = {"none": "Every feature reads as anime.", **{f: f"The {f} does not read as anime." for f in feats}}
     items = list(opts.items())
     return {
-        "reads_anime": {"type": "noul", "instructions": "Do the `measurements` show a character that reads as an anime character, with every feature within the anime references?"},
+        "reads_anime": {"type": "noul", "instructions": "Do the `measurements` show a character that reads as an anime character, with every feature within the target style?"},
         "face_anime": {"type": "noul", "instructions": "Do the eyes, mouth, nose and jaw measurements all read as an anime face?"},
         "quality": {"type": "score", "instructions": "How anime does this character read, from the `measurements`?",
                     "criteria": ["Not anime: most features are far from the references", "Barely anime: several features are far from them",
@@ -72,11 +76,11 @@ def questions(order, feats):
     }
 
 
-def judge_it(path, transport=judge.http_transport):
+def judge_it(path, transport=judge.http_transport, style=None):
     rep, fm, _ = measure.run(path, quiet=True)
     m = {(k if k.startswith("face.") else "anatomy." + k): v for k, v in rep.metrics.items()}
     m.update({f"face.{k}": v for k, v in fm.items()})
-    env = envelope()
+    env = envelope(style)
     st = state({k: float(v) for k, v in m.items()}, env, rep.kind)
     feats = sorted({r["feature"] for r in st["measurements"]})
     ans = [transport({"model": judge.MODEL, "state": st, "questions": questions(o, feats)})["answers"] for o in (0, 1)]
@@ -87,9 +91,9 @@ def judge_it(path, transport=judge.http_transport):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("json"); ap.add_argument("--json", action="store_true", dest="as_json")
+    ap = argparse.ArgumentParser(); ap.add_argument("json"); ap.add_argument("--json", action="store_true", dest="as_json"); ap.add_argument("--style", default=None)
     a = ap.parse_args()
-    r = judge_it(a.json)
+    r = judge_it(a.json, style=a.style)
     if a.as_json:
         print(json.dumps(r))
     else:

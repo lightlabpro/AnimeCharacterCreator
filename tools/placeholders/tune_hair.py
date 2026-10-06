@@ -12,6 +12,8 @@ VARIANTS = {
     "C chunkier": dict(widthScale=2.0, minThickRatio=0.55, taperScale=0.55, countScale=0.7, fringeLen=0.55),
     "D bold":     dict(widthScale=2.4, minThickRatio=0.6, taperScale=0.5, countScale=0.6, fringeLen=0.5),
     "E round":    dict(widthScale=1.9, minThickRatio=0.7, taperScale=0.7, countScale=0.7, fringeLen=0.55),
+    "G soft":     dict(widthScale=1.5, minThickRatio=0.55, taperScale=0.8, countScale=0.85, fringeLen=0.5),
+    "H softer":   dict(widthScale=1.3, minThickRatio=0.5, taperScale=0.9, countScale=0.95, fringeLen=0.45),
     "F heavy":    dict(widthScale=2.2, minThickRatio=0.7, taperScale=0.45, countScale=0.55, fringeLen=0.5),
 }
 
