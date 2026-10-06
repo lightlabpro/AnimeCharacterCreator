@@ -264,6 +264,7 @@ Phase 15 gate: the quadruped dragon reads as a four-legged winged creature at de
 Phase 16 gate: the body-kind dropdown switches adult humanoid, child humanoid, robot, and quadruped dragon. A mixed humanoid JSON round-trips, including a human part on a beast preset. The humanoid panel has no full-beast assets, and the full-beast panel has no humanoid assets. docs/qa/ contains sheets for a feminine creature, a masculine creature, a mixed human-and-beast humanoid, a child counterpart, the robot, and the quadruped dragon. Expression preview never wipes identity.
 
 WORKING RULES
+Run the validators (docs/VALIDATORS.md, blender/scripts/run_validators.py) at every phase gate and paste the summary into docs/PHASE_LOG.md. A FAIL blocks the gate. Add LM-* markers before Phase 2 so the anatomy checks can measure the body.
 Prefer a Python script you can re-run over one-off manual clicks for drivers, constraints, materials, and the panel.
 When you sculpt a shape key, set the key to 1, sculpt, then return the slider to 0 and confirm the Basis is unchanged.
 Name objects as specified. Do not invent a second naming scheme.
