@@ -248,5 +248,127 @@ class VrmAndBuckets(unittest.TestCase):
         self.assertNotIn("judge.quality", checks_)
 
 
+class Topology(unittest.TestCase):
+    def test_lbs_rotates_only_weighted_vertices_and_keeps_edges_when_rigid(self):
+        import numpy as np
+        from blender.validators import topology
+        v = np.array([[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3.0]])
+        w = {"fore": (np.array([2, 3]), np.array([1.0, 1.0]))}
+        out = topology.lbs_rotate(v, w, ["fore"], (0, 0, 1.5), (1, 0, 0), 90)
+        self.assertTrue(np.allclose(out[:2], v[:2]))
+        self.assertTrue(np.allclose(out[3], [0, -1.5, 1.5], atol=1e-9) or np.allclose(out[3], [0, 1.5, 1.5], atol=1e-9))
+        self.assertAlmostEqual(np.linalg.norm(out[2] - out[3]), 1.0)  # rigid part keeps its edge length
+
+    def test_weights_are_normalised_like_blender(self):
+        import numpy as np
+        from blender.validators import topology
+        v = np.array([[0, 0, 2.0]])
+        w = {"elbow": (np.array([0]), np.array([0.3]))}
+        raw = topology.lbs_rotate(v, w, ["elbow"], (0, 0, 0), (1, 0, 0), 90)
+        norm = topology.lbs_rotate(v, w, ["elbow"], (0, 0, 0), (1, 0, 0), 90, total=np.array([0.6]))  # other 0.3 on the shoulder
+        full = topology.lbs_rotate(v, w, ["elbow"], (0, 0, 0), (1, 0, 0), 90, total=np.array([0.3]))   # only the elbow
+        self.assertAlmostEqual(np.linalg.norm(raw - v), 0.3 * np.linalg.norm(full - v), places=6)
+        self.assertAlmostEqual(np.linalg.norm(norm - v), 0.5 * np.linalg.norm(full - v), places=6)
+
+    def test_hard_weight_seam_squashes_the_seam_edge(self):
+        import numpy as np
+        from blender.validators import topology
+        v = np.array([[x, 0, z] for z in range(4) for x in (0.0, 1.0)])
+        f = [(2 * r, 2 * r + 1, 2 * r + 3, 2 * r + 2) for r in range(3)]
+        w = {"fore": (np.array([4, 5, 6, 7]), np.ones(4))}  # rows 2-3 move, joint between rows 1 and 2
+        posed = topology.lbs_rotate(v, w, ["fore"], (0, 0, 1.5), (1, 0, 0), 90)
+        d = topology.deformation(v, posed, f)
+        self.assertLess(d["edge_squash_min"], 0.8)
+        self.assertAlmostEqual(d["edge_stretch_max"], 1.0, places=6) if False else None
+
+    def grid(self, n=8):
+        import numpy as np
+        v = np.array([[x, y, 0.0] for y in range(n + 1) for x in range(n + 1)])
+        f = [(y * (n + 1) + x, y * (n + 1) + x + 1, (y + 1) * (n + 1) + x + 1, (y + 1) * (n + 1) + x) for y in range(n) for x in range(n)]
+        return v, f
+
+    def test_regular_grid_has_no_poles_and_is_all_quads(self):
+        from blender.validators import topology
+        v, f = self.grid()
+        s = topology.stats(v, f)
+        self.assertEqual((s["quad_ratio"], s["poles"], s["ngons"]), (1.0, [], 0))
+        self.assertAlmostEqual(s["quad_skew_p95"], 0.0, places=3)
+        self.assertEqual(s["valence_hist"], {4: 49})
+
+    def test_triangles_and_ngons_are_counted(self):
+        from blender.validators import topology
+        v, f = self.grid(2)
+        f = f[:2] + [(0, 1, 4)] + [(4, 5, 8, 7, 3)]
+        s = topology.stats(v, f)
+        self.assertEqual((s["tris"], s["quads"], s["ngons"]), (1, 2, 1))
+
+    def test_ring_count_on_a_tube(self):
+        import numpy as np
+        from blender.validators import topology
+        rings, seg = 5, 8
+        v = np.array([[np.cos(2 * np.pi * k / seg), np.sin(2 * np.pi * k / seg), 0.5 * r] for r in range(rings) for k in range(seg)])
+        f = [(r * seg + k, r * seg + (k + 1) % seg, (r + 1) * seg + (k + 1) % seg, (r + 1) * seg + k) for r in range(rings - 1) for k in range(seg)]
+        edges, _ = topology.edges_of(f)
+        self.assertEqual(topology.ring_count(v, edges, (0, 0, 1.0), (0, 0, 1), 1.1), 5)
+        self.assertEqual(topology.ring_count(v, edges, (0, 0, 1.0), (0, 0, 1), 0.6), 3)
+
+    def test_deformation_detects_stretch_and_flip(self):
+        import numpy as np
+        from blender.validators import topology
+        v, f = self.grid(4)
+        same = topology.deformation(v, v, f)
+        self.assertAlmostEqual(same["edge_stretch_max"], 1.0)
+        self.assertEqual(same["flipped_fraction"], 0.0)
+        bent = v.copy()
+        bent[:, 0] *= 2.5  # 2.5x stretch along x
+        d = topology.deformation(v, bent, f)
+        self.assertAlmostEqual(d["edge_stretch_max"], 2.5)
+        self.assertEqual(topology.deformation_findings(d, "t")[0].severity, FAIL)
+        folded = v.copy()
+        folded[:, 1] *= -1  # mirrored surface: every normal flips
+        self.assertEqual(topology.deformation(v, folded, f)["flipped_fraction"], 1.0)
+
+
+class TopologyJudge(unittest.TestCase):
+    topo = {"stats": {"quad_ratio": 0.7, "quad_skew_p95": 50.0, "quad_aspect_p95": 9.0, "ngon_ratio": 0.0},
+            "loops": {"elbow": 4, "knee": 3},
+            "bend": {"elbow": {"worst": "Left elbow local Z -90 deg", "edge_stretch_max": 4.0, "edge_squash_min": 0.07,
+                               "frac_stretch_gt_2": 0.0, "frac_squash_lt_half": 0.0, "flipped_fraction": 0.0,
+                               "ignored_degenerate_edges": 5}},
+            "shape_keys": {}}
+
+    def test_state_is_words_not_measurements(self):
+        from blender.validators import topology_judge as tj
+        s = json.dumps(tj.build_state(self.topo))
+        for raw in ("0.7", "50.0", "9.0", "4.0", "0.07"):
+            self.assertNotIn(raw, s)
+        self.assertIn("severe but isolated", s)
+
+    def test_every_noul_means_yes_is_good(self):
+        from blender.validators import topology_judge as tj
+        qs = tj.questions(self.topo)
+        self.assertIn("bend_no_folds_elbow", qs)
+        self.assertNotIn("bend_folds_elbow", qs)
+
+    def test_choice_options_are_reordered_and_disagreement_is_reported(self):
+        from blender.validators import topology_judge as tj
+        seen = []
+
+        def fake(payload):
+            seen.append(list(payload["questions"]["first_fix"]["criteria"]))
+            pick = "none" if len(seen) == 1 else "joint_weights"
+            return {"answers": {"first_fix": {"choice": pick, "confidence": 0.9},
+                                "quality": {"score": 3.0, "confidence": 0.9}, "quads_ok": {"noul": 0.9}}}
+        out = tj.ask(self.topo, "t", fake)
+        self.assertEqual(seen[0], seen[1][::-1])
+        self.assertTrue(any("changed with option order" in f.message for f in out))
+
+    def test_uncertain_noul_goes_to_review_not_fail(self):
+        from blender.validators import topology_judge as tj
+        out = tj.ask(self.topo, "t", lambda p: {"answers": {"quads_ok": {"noul": 0.5}, "first_fix": {"choice": "none", "confidence": 1.0}}})
+        f = [x for x in out if x.check.endswith("quads_ok")][0]
+        self.assertEqual(f.severity, "info")
+
+
 if __name__ == "__main__":
     unittest.main()

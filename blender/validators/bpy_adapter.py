@@ -75,6 +75,45 @@ def mesh_arrays(body_name: str):
     return verts, faces
 
 
+def joint_weights(armature_name: str, body_name: str, bone: str):
+    """Everything lbs_rotate needs for one joint: weights per group, the moving bones, and head/axes in world space."""
+    import numpy as np
+    arm, body = bpy.data.objects[armature_name], bpy.data.objects[body_name]
+    b = arm.data.bones[bone]
+    moving = [bone] + [c.name for c in b.children_recursive]
+    names = {g.index: g.name for g in body.vertex_groups}
+    acc = {}
+    for v in body.data.vertices:
+        for g in v.groups:
+            n = names.get(g.group)
+            if n in moving and g.weight > 0:
+                acc.setdefault(n, ([], []))
+                acc[n][0].append(v.index)
+                acc[n][1].append(g.weight)
+    weights = {n: (np.array(i), np.array(w)) for n, (i, w) in acc.items()}
+    deform = {x.name for x in arm.data.bones if x.use_deform}
+    total = np.zeros(len(body.data.vertices))
+    for v in body.data.vertices:
+        total[v.index] = sum(g.weight for g in v.groups if names.get(g.group) in deform)
+    mw = arm.matrix_world
+    head = tuple(mw @ b.head_local)
+    axes = [tuple((mw.to_3x3() @ b.matrix_local.to_3x3().col[k]).normalized()) for k in range(3)]
+    return weights, moving, head, axes, total
+
+
+def shape_key_verts(body_name: str, key: str, value: float = 1.0):
+    """Body vertices with one shape key at `value` (restored afterwards)."""
+    kb = bpy.data.objects[body_name].data.shape_keys.key_blocks[key]
+    old = kb.value
+    try:
+        kb.value = value
+        bpy.context.view_layer.update()
+        return mesh_arrays(body_name)[0]
+    finally:
+        kb.value = old
+        bpy.context.view_layer.update()
+
+
 def load_markers(scene, path: str) -> dict:
     """Landmarks for a reference model: {"Crown": [x, y, z], ..., "_meta": {"forward": "+Y"}} in Blender world units.
 

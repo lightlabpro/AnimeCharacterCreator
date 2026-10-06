@@ -46,6 +46,17 @@ def _find_bone(bones: Dict[str, Tuple[Vec, Vec]], role: str, side: str) -> Optio
     return None
 
 
+def find_bone_name(names, role: str, side: str) -> Optional[str]:
+    """Name of the bone playing `role` (shoulder, elbow, wrist, hip, knee, ankle) on `side` (L or R)."""
+    sre = _side_re(side)
+    for pat in _BONE_PATTERNS[role]:
+        for name in names:
+            low = name.lower()
+            if re.search(pat, low) and re.search(sre, low):
+                return name
+    return None
+
+
 def _dist(a: Vec, b: Vec) -> float:
     return math.dist(a, b)
 

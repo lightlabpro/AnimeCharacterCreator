@@ -31,6 +31,18 @@ Set `TYPESAFE_API_KEY` in the environment on your PC. Without it the judge and v
 
 Place empties named `LM-<Name>` (`Crown, Chin, Floor, Nipple, Navel, Pubis, EyeInner_L/R, EyeOuter_L, EyeTop_L, EyeBottom_L, Mouth, HandTip_L, HeelBack_L, ToeTip_L`). Limb joints are read from `DEF-` bones named like `upperarm.L`, `forearm.L`, `hand.L`, `thigh.L`, `shin.L`, `foot.L`. `bpy_adapter.place_basic_markers()` makes Crown, Chin and Floor. The rest are judgement calls, so they are placed by hand. A missing landmark is reported as SKIP, never guessed.
 
+## Topology
+
+`topology.py` + `blender/scripts/analyze_topology.py` check a mesh three ways and write a profile to `blender/references/topology/`:
+
+- **Static:** quad/triangle/n-gon ratios, valence histogram and pole map, quad skew, aspect and planarity.
+- **Loops:** edge loops circling the shoulder, elbow and knee against the manual's 3-5 / 2-4 / 4-6.
+- **Deformation:** each joint is bent (shoulder 60, elbow 90, knee 90, hip 60 degrees, about local X and Z, both signs, worst kept) with linear blend skinning computed in numpy, normalised like Blender's armature modifier, and every shape key is applied at 1. Judged by the share of edges stretched past 2x or squashed under 0.5x, and the share of flipped faces; one isolated stretched edge is reported but does not fail. (Posing through the depsgraph did not update in headless `bpy`, so it is not used.)
+
+`topology_judge.py` then asks TypeSafe, following its agent skill: word buckets instead of numbers, narrow questions all phrased so yes = good, one request, a "none" outcome and a second request with the choice options reversed, low confidence routed to a human. Measured on Amshani, TypeSafe and the numeric checks agree: shoulder/elbow/knee bend cleanly, the hip has a few flipped faces, the surface has too many triangles (77% quads), and the knee has 3 loops instead of 4-6. Hina has no armature, so only the static check applies (92% quads, sheared quads, many poles).
+
+Thresholds for skew, aspect, planarity and the deformation shares are practical heuristics, not from the manual; the manual only fixes quads-throughout and the loop counts.
+
 ## What the reference repos taught
 
 Studied with real data: both `XxAlonexX/blender-character` models were opened in headless Blender 5.2.2 (`pip install bpy`), and the code of `ShuhongChen/panic3d-anime-reconstruction`, `meshy-dev/meshy-3d-agent`, `VAST-AI-Research/TripoSG`, `TripoSR` and `tripo-3d-for-blender` was read.
