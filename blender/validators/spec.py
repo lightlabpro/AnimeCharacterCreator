@@ -41,10 +41,11 @@ class Metric:
     fix_low: str
     fix_high: str
     ref_tol: float  # allowed gap to a reference model's value, in the metric's own units
+    pose_dependent: bool = False  # only comparable between models in the same pose (e.g. both A-pose)
 
 
-def _m(key, label, denom, bands, source, fix_low, fix_high, ref_tol):
-    return Metric(key, label, denom, bands, source, fix_low, fix_high, ref_tol)
+def _m(key, label, denom, bands, source, fix_low, fix_high, ref_tol, pose_dependent=False):
+    return Metric(key, label, denom, bands, source, fix_low, fix_high, ref_tol, pose_dependent)
 
 
 METRICS: Dict[str, Metric] = {m.key: m for m in [
@@ -80,12 +81,12 @@ METRICS: Dict[str, Metric] = {m.key: m for m in [
        {"adult": Band(1.2, 1.8, 0.2), "child": Band(0.9, 1.5, 0.2)},
        "manual s2 (about 1.5); feminine presets run wider (s3)",
        "Hips too narrow: raise hip_width / ID-WideHips.", "Hips too wide: lower hip_width / ID-WideHips.", 0.2),
-    _m("wrist_to_crotch_heads", "Hanging wrist vs crotch", "head height, signed (+ = wrist higher)",
+    _m("wrist_to_crotch_heads", "Hanging wrist vs crotch", "head height, signed (+ = wrist higher); arm length hung straight down from the shoulder, so pose does not matter",
        {"adult": Band(-0.3, 0.3, 0.2), "child": Band(-0.4, 0.4, 0.25)},
        "manual s2: hanging wrists reach the crotch line",
        "Arms too long: lower upper_arm_length / forearm_length.",
        "Arms too short: raise upper_arm_length / forearm_length.", 0.25),
-    _m("elbow_to_navel_heads", "Elbow vs navel/waist", "head height, signed (+ = elbow higher)",
+    _m("elbow_to_navel_heads", "Hanging elbow vs navel/waist", "head height, signed (+ = elbow higher); upper-arm length hung straight down",
        {"adult": Band(-0.35, 0.35, 0.2), "child": Band(-0.45, 0.45, 0.25)},
        "manual s2: elbows at the waist and navel",
        "Upper arm too long.", "Upper arm too short.", 0.25),
@@ -105,7 +106,7 @@ METRICS: Dict[str, Metric] = {m.key: m for m in [
        {"adult": Band(15.0, 50.0, 10.0), "child": Band(15.0, 50.0, 10.0)},
        "build prompt MESH RULES: relaxed A-pose",
        "Arms too close to the body: rotate the arms out toward A-pose.",
-       "Arms too raised: lower them toward A-pose.", 12.0),
+       "Arms too raised: lower them toward A-pose.", 12.0, pose_dependent=True),
     # Head and face, normalised by skull height H (chin = 0, crown = 1).
     _m("eye_line_norm", "Eye line", "skull height H, chin = 0",
        {"adult": Band(0.34, 0.52, 0.04), "child": Band(0.28, 0.45, 0.04)},
@@ -155,3 +156,22 @@ TRI_BUDGET = {"adult": (18_000, 28_000), "child": (14_000, 22_000), "robot": (20
 
 def band_for(metric: Metric, kind: str) -> Optional[Band]:
     return metric.bands.get(kind)
+
+
+def bucket(key: str, value: float, kind: str) -> str:
+    """Named bucket for a metric. Jev reads words better than numbers (docs: 'Jev is not a calculator'), so
+    the judge and vetting steps send these labels; the numeric grade stays in the deterministic checks."""
+    m = METRICS.get(key)
+    band = m.bands.get(kind) if m else None
+    if band is None:
+        return "unknown"
+    width = max(band.hi - band.lo, band.slack, 1e-9)
+    if value < band.lo - band.slack:
+        return "far too low"
+    if value < band.lo:
+        return "slightly low"
+    if value <= band.hi:
+        return "in range"
+    if value <= band.hi + band.slack:
+        return "slightly high"
+    return "far too high"

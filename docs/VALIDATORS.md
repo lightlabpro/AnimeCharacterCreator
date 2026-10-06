@@ -14,7 +14,8 @@ Checks that run **inside Blender 5.2** (Text Editor or `blender -b file.blend -P
 | `silhouette.py` | numpy | Front/side silhouette overlap plus where (head, shoulders, hips...) the shapes differ. |
 | `sweep.py` + `bpy_adapter.sweep` | Blender | Every key/length at 0, 0.5, 1. |
 | `packs.py` | nothing | `library/` against the importer's rules, `manifest.json`, glTF presence, no trademarked names. |
-| `gltf.py` | nothing | Reads `.gltf`/`.glb` into the same snapshot Blender produces. |
+| `gltf.py` | nothing | Reads `.gltf`/`.glb`/VRM into the same snapshot Blender produces. VRM humanoid bone maps (0.x and 1.0) give exact joints with no name guessing. |
+| `geometry.py` | numpy | PAniC-3D-style Chamfer and F1 between two meshes of the same character, mirror symmetry, and Meshy-style mesh health (non-manifold, degenerate, loose, floating fragments). |
 
 ## How TypeSafe is used
 
@@ -30,8 +31,23 @@ Set `TYPESAFE_API_KEY` in the environment on your PC. Without it the judge and v
 
 Place empties named `LM-<Name>` (`Crown, Chin, Floor, Nipple, Navel, Pubis, EyeInner_L/R, EyeOuter_L, EyeTop_L, EyeBottom_L, Mouth, HandTip_L, HeelBack_L, ToeTip_L`). Limb joints are read from `DEF-` bones named like `upperarm.L`, `forearm.L`, `hand.L`, `thigh.L`, `shin.L`, `foot.L`. `bpy_adapter.place_basic_markers()` makes Crown, Chin and Floor. The rest are judgement calls, so they are placed by hand. A missing landmark is reported as SKIP, never guessed.
 
+## What the reference repos taught
+
+Studied with real data: both `XxAlonexX/blender-character` models were opened in headless Blender 5.2.2 (`pip install bpy`), and the code of `ShuhongChen/panic3d-anime-reconstruction`, `meshy-dev/meshy-3d-agent`, `VAST-AI-Research/TripoSG`, `TripoSR` and `tripo-3d-for-blender` was read.
+
+- **Real rigs name bones differently.** Amshani uses `Left arm / Left elbow / Left wrist / Left Leg / Left knee`; Hina has no armature, only `DEF-` vertex groups. Bone patterns now cover Rigify, Mixamo/VRM and the plain names, and VRM maps are read directly.
+- **References are in arbitrary poses.** Amshani is a T-pose. Arm checks now hang the measured limb lengths straight down from the shoulder, so they do not depend on pose; the A-pose angle only gates the new build and is skipped in reference comparison.
+- **Meshes can include hair.** Amshani's single mesh has hair to z = 23.3, so a crown read from the mesh is the hair top, not the skull. `LM-Crown` and `LM-Chin` must be placed (a sidecar JSON works: `bpy_adapter.load_markers`); the validators report them missing instead of guessing.
+- **Chamfer/F1 needs the same character.** PAniC-3D compares a reconstruction with its own ground-truth head. Use `geometry.fidelity_findings` for a retopo versus its generated source, never against an unrelated reference.
+- **Hair and accessories are many shells.** Amshani's hair is 49 closed clumps in one mesh, so the floating-fragment check is skipped when `multi_part=True`.
+- **Found by the new checks on the real files:** Hina's body has 30 non-manifold edges and Chamfer asymmetry 0.020; Amshani's has 43 non-manifold edges and its thigh/shin proportion sits outside the manual's band, which is why references go through vetting instead of being trusted.
+
+## TypeSafe usage rules (from docs.typesafe.ai)
+
+The model is pinned to `jev-1.13.0`. Jev is weak at numbers, so it only ever sees named buckets ("slightly low", "far too high"); thresholds stay in code. Score answers below 0.4 confidence become a "needs a human or Claude look" note instead of a verdict. Limits: 32k tokens of state plus the longest question, 64k per request.
+
 ## Limits
 
 - The 2D images in `docs/reference/mhs3/` and `docs/style_dataset/` are in-game screenshots with backgrounds, not orthographic sheets. They inform the rubric and bands; silhouette overlap needs clean front/side images with a plain or transparent background.
-- `bpy_adapter.py` has not been run against a real Blender 5.2 here (no Blender in the cloud container). The pure checks, glTF reader, vetting and judge are unit-tested (`npm run test:validators`) and the TypeSafe calls were confirmed live.
+- `bpy_adapter.py` snapshot, mesh extraction and the geometry checks were run against real Blender 5.2.2 (the `bpy` module) on Hina and Amshani. The slider sweep (`bpy_adapter.sweep`) and `place_basic_markers` were not exercised yet. The pure checks, glTF/VRM reader, vetting and judge are unit-tested (`npm run test:validators`) and the TypeSafe calls were confirmed live.
 - Face-metric bands come from the manual and the Hina/Amshani measurements; where they disagree the band covers both (see `spec.py` sources). Tighten them once vetted reference profiles from your own models exist.

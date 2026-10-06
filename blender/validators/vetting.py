@@ -14,7 +14,7 @@ from typing import Callable, Dict, List
 
 from . import judge
 from .model import FAIL
-from .spec import METRICS
+from .spec import METRICS, bucket
 
 KEEP = 0.5
 FRAMINGS = (
@@ -31,15 +31,17 @@ def _questions(kind: str, profile: dict, framing: str) -> dict:
         band = m.bands.get(kind) if m else None
         if not m or band is None:
             continue
+        # State carries the word reading; the number stays in code (Jev is weak at numeric comparison).
         qs[key] = {"type": "noul",
-                   "instructions": f"{framing} Metric: {m.label} (per {m.denominator}) = {v}. Target: {band.text()}."}
+                   "instructions": f"{framing} Look at `readings.{key}`: the {m.label} reads '{bucket(key, v, kind)}' "
+                                   f"against its target range."}
     return qs
 
 
 def vet_profile(profile: dict, transport: Callable[[dict], dict] = judge.http_transport, passes: int = 3) -> dict:
     kind = profile["kind"]
-    state = {"model": profile.get("name"), "body_kind": kind, "source": profile.get("source"),
-             "all_metrics": profile["metrics"]}
+    state = {"model": profile.get("name"), "body_kind": kind,
+             "readings": {k: bucket(k, x, kind) for k, x in profile["metrics"].items() if k in METRICS}}
     scores: Dict[str, List[float]] = {}
     for framing in FRAMINGS[:passes]:
         qs = _questions(kind, profile, framing)

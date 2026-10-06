@@ -23,12 +23,14 @@ def _v(p) -> Vec:
     return (float(p[0]), float(p[1]), float(p[2]))
 
 
-def snapshot(kind: str, with_verts: bool = True) -> SceneInfo:
+def snapshot(kind: str, with_verts: bool = True, body_name: Optional[str] = None,
+             armature_name: Optional[str] = None) -> SceneInfo:
     """Read the active scene into a SceneInfo using the evaluated (shape-key-applied) body mesh."""
     if bpy is None:
         raise RuntimeError("bpy_adapter.snapshot must run inside Blender")
     info = SceneInfo(kind=kind, source=bpy.data.filepath or "<unsaved>")
-    arm_name, body_name = BODY_OBJECTS[kind]
+    default_arm, default_body = BODY_OBJECTS[kind]
+    arm_name, body_name = armature_name or default_arm, body_name or default_body
     for ob in bpy.context.scene.objects:
         info.objects.add(ob.name)
         info.custom_props[ob.name] = {k: ob[k] for k in ob.keys() if isinstance(ob[k], (str, int, float))}
@@ -60,8 +62,25 @@ def snapshot(kind: str, with_verts: bool = True) -> SceneInfo:
     return info
 
 
-def _drivers_muted() -> None:
-    pass
+def mesh_arrays(body_name: str):
+    """Evaluated world-space (verts Nx3, faces) of an object, for the geometry/hygiene checks."""
+    import numpy as np
+    ob = bpy.data.objects[body_name]
+    ev = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    me = ev.to_mesh()
+    mw = ev.matrix_world
+    verts = np.array([tuple(mw @ v.co) for v in me.vertices], dtype=np.float64)
+    faces = [tuple(p.vertices) for p in me.polygons]
+    ev.to_mesh_clear()
+    return verts, faces
+
+
+def load_markers(scene, path: str) -> None:
+    """Landmarks placed by hand for a reference model: {"Crown": [x, y, z], ...} in Blender world units."""
+    import json
+    with open(path, "r", encoding="utf-8") as fh:
+        for k, v in json.load(fh).items():
+            scene.markers[k if k.startswith("LM-") else f"LM-{k}"] = (float(v[0]), float(v[1]), float(v[2]))
 
 
 def sweep(kind: str, controls: List[Tuple[str, str]], values=(0.0, 0.5, 1.0)) -> Dict[str, Dict[float, Dict[str, float]]]:

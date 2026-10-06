@@ -24,12 +24,14 @@ def _side_re(side: str) -> str:
 
 
 # Bone-name patterns per limb landmark. First match wins; order is specific to generic.
+# Covers Rigify (upper_arm/forearm/thigh/shin), Mixamo/VRM (UpperArm/LowerArm/UpperLeg), and the plain
+# "Left arm / Left elbow / Left wrist / Left Leg / Left knee / Left ankle" naming found on Amshani.
 _BONE_PATTERNS = {
-    "shoulder": [r"upper.?arm", r"arm(?!.*fore)"],
-    "elbow": [r"fore.?arm", r"lower.?arm"],
-    "wrist": [r"hand(?!.*(thumb|index|middle|ring|pinky|finger))"],
-    "hip": [r"thigh", r"upper.?leg"],
-    "knee": [r"shin", r"calf", r"lower.?leg"],
+    "shoulder": [r"upper.?arm", r"^(?:left|right)[ ._-]?arm$", r"^arm[._-]"],
+    "elbow": [r"fore.?arm", r"lower.?arm", r"elbow"],
+    "wrist": [r"^(?:left|right)?[ ._-]?hand(?![a-z])", r"wrist", r"^hand[._-]"],
+    "hip": [r"thigh", r"upper.?leg", r"^(?:left|right)[ ._-]?leg$"],
+    "knee": [r"shin", r"calf", r"lower.?leg", r"knee"],
     "ankle": [r"foot(?!.*toe)", r"ankle"],
 }
 
@@ -63,11 +65,13 @@ def landmarks(scene: SceneInfo) -> Tuple[Dict[str, Vec], List[str]]:
             if ht:
                 lm[key] = ht[0]
                 notes.append(f"{key} taken from bone head")
-    if "HandTip_L" not in lm:
-        h = _find_bone(scene.bones, "wrist", "L")
-        if h and h[1] != h[0]:
-            lm["HandTip_L"] = h[1]
-            notes.append("HandTip_L taken from the hand bone tail (add LM-HandTip_L for the true fingertip)")
+    if "HandTip_L" not in lm and "wrist_L" in lm:
+        tips = [(n, ht) for n, ht in scene.bones.items()
+                if re.search(r"middle|f_middle", n.lower()) and re.search(_side_re("l"), n.lower())]
+        if tips:
+            far = max(tips, key=lambda t: max(_dist(lm["wrist_L"], t[1][0]), _dist(lm["wrist_L"], t[1][1])))
+            lm["HandTip_L"] = max(far[1], key=lambda p: _dist(lm["wrist_L"], p))
+            notes.append(f"HandTip_L taken from the farthest middle-finger bone ({far[0]})")
     if "Floor" not in lm and scene.body_verts:
         lm["Floor"] = (0.0, 0.0, min(v[2] for v in scene.body_verts))
         notes.append("Floor taken from the lowest body vertex")
@@ -125,10 +129,14 @@ def metrics(scene: SceneInfo) -> Tuple[Dict[str, float], List[str], List[str]]:
             out["shoulder_width_heads"] = abs(lm["shoulder_L"][0] - lm["shoulder_R"][0]) / head_h
         if need("hip_L", "hip_R"):
             out["hip_width_heads"] = abs(lm["hip_L"][0] - lm["hip_R"][0]) / head_h
-        if "Pubis" in lm and "wrist_L" in lm:
-            out["wrist_to_crotch_heads"] = (lm["wrist_L"][2] - lm["Pubis"][2]) / head_h
-        if "Navel" in lm and "elbow_L" in lm:
-            out["elbow_to_navel_heads"] = (lm["elbow_L"][2] - lm["Navel"][2]) / head_h
+        # Pose-independent: hang the measured limb lengths straight down from the shoulder joint.
+        if "shoulder_L" in lm and "elbow_L" in lm:
+            upper = _dist(lm["shoulder_L"], lm["elbow_L"])
+            if "Navel" in lm:
+                out["elbow_to_navel_heads"] = (lm["shoulder_L"][2] - upper - lm["Navel"][2]) / head_h
+            if "Pubis" in lm and "wrist_L" in lm:
+                arm = upper + _dist(lm["elbow_L"], lm["wrist_L"])
+                out["wrist_to_crotch_heads"] = (lm["shoulder_L"][2] - arm - lm["Pubis"][2]) / head_h
         if "hip_L" in lm and "knee_L" in lm and "ankle_L" in lm:
             shin = _dist(lm["knee_L"], lm["ankle_L"])
             if shin > 0:

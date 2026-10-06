@@ -20,10 +20,11 @@ import urllib.request
 from typing import Callable, Dict, List, Optional
 
 from .model import FAIL, INFO, PASS, SKIP, WARN, Finding, Report
-from .spec import METRICS
+from .spec import METRICS, bucket
 
 URL = "https://api.typesafe.ai/v1/systemone"
-MODEL = "jev-latest"
+MODEL = "jev-1.13.0"  # pinned: an alias can move and change answers without a change on our side
+MIN_CONFIDENCE = 0.4  # below this a score/choice answer is routed to a human or Claude, not acted on
 
 AREAS = {
     "proportion": "Overall height in heads, leg length, torso lines, widths: the silhouette reads wrong.",
@@ -48,21 +49,18 @@ def http_transport(payload: dict, timeout: float = 30.0) -> dict:
 
 
 def build_state(report: Report) -> dict:
+    """Words, not numbers: each metric becomes a named bucket. Only failing/warning checks are listed."""
     rows = []
     for key, v in report.metrics.items():
         m = METRICS.get(key)
-        band = m.bands.get(report.kind) if m else None
-        rows.append({"metric": key, "label": m.label if m else key, "value": round(v, 3),
-                     "target": band.text() if band else "n/a", "per": m.denominator if m else ""})
-    problems = [{"check": f.check, "severity": f.severity, "message": f.message,
-                 "value": None if f.value is None else round(f.value, 3), "target": f.expected}
-                for f in report.findings if f.severity in (FAIL, WARN)]
+        if m and m.bands.get(report.kind):
+            rows.append({"measure": m.label, "reading": bucket(key, v, report.kind)})
+    problems = [{"check": f.check, "severity": f.severity, "message": f.message}
+                for f in report.findings if f.severity in (FAIL, WARN) and not f.check.startswith("judge.")]
     return {
         "body_kind": report.kind,
-        "style": "anime, Monster Hunter Stories 3 base: clean planes, believable skeleton underneath, simplified not broken",
-        "adult_target_heads": "7-7.5" if report.kind == "adult" else None,
-        "child_target_heads": "5-5.5" if report.kind == "child" else None,
-        "metrics": rows,
+        "style": "anime, clean planes, believable skeleton underneath, simplified not broken",
+        "readings": rows,
         "problems": problems,
     }
 
@@ -71,9 +69,8 @@ def questions(kind: str) -> dict:
     return {
         "plausible": {
             "type": "noul",
-            "instructions": (f"These are measurements of a stylised anime {kind} 3D character. Taken together, "
-                             "would this body read as anatomically believable at front, three-quarter and side views, "
-                             "with a skeleton that stays correct under the stylisation?"),
+            "instructions": (f"`readings` describes how each proportion of a stylised anime {kind} 3D character compares with its target range. "
+                             "Taken together, would this body read as anatomically believable from the front, three-quarter and side views?"),
             "criteria": {"true": "Proportions and landmarks are coherent; deviations are small and mutually consistent.",
                          "false": "At least one deviation is large, or several deviations combine into a broken-looking figure."},
         },
@@ -112,9 +109,13 @@ def ask(report: Report, transport: Transport = http_transport, model: str = MODE
                            "See the first-fix area below." if sev != PASS else ""))
     if q:
         s = q.get("score", 0.0)
+        conf = q.get("confidence", 0)
         sev = PASS if s >= 2.5 else WARN
-        out.append(Finding("judge.quality", sev, f"TypeSafe quality score (confidence {q.get('confidence', 0):.2f})",
-                           s, ">= 2.5 of 4"))
+        if conf < MIN_CONFIDENCE:
+            out.append(Finding("judge.review", INFO, f"TypeSafe quality score {s:.1f} has low confidence ({conf:.2f}); "
+                               "needs a human or Claude look, not an automatic decision"))
+        else:
+            out.append(Finding("judge.quality", sev, f"TypeSafe quality score (confidence {conf:.2f})", s, ">= 2.5 of 4"))
     if f and f.get("choice") not in (None, "none"):
         out.append(Finding("judge.first_fix", INFO, f"TypeSafe says fix first: {f['choice']} "
                            f"({AREAS.get(f['choice'], '')}) confidence {f.get('confidence', 0):.2f}"))

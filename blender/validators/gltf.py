@@ -81,6 +81,30 @@ def _to_blender(p) -> Vec:
     return (p[0], -p[2], p[1])
 
 
+# VRM is glTF plus a humanoid bone map (what VRoid exports, and what the PAniC-3D / VRoid dataset is made of).
+# It names the joints exactly, so no bone-name guessing is needed. VRM 0.x and 1.0 keep the map in different places.
+_VRM_ROLES = {"UpperArm": "shoulder", "LowerArm": "elbow", "Hand": "wrist", "UpperLeg": "hip",
+              "LowerLeg": "knee", "Foot": "ankle"}
+
+
+def _apply_vrm_humanoid(doc: dict, nodes: list, pos: Dict[int, Vec], info: SceneInfo) -> None:
+    ext = doc.get("extensions") or {}
+    bones = {}
+    v0 = (ext.get("VRM") or {}).get("humanoid", {}).get("humanBones")
+    if isinstance(v0, list):  # 0.x: [{"bone": "leftUpperArm", "node": 12}, ...]
+        bones = {b["bone"]: b["node"] for b in v0 if "bone" in b and "node" in b}
+    v1 = (ext.get("VRMC_vrm") or {}).get("humanoid", {}).get("humanBones")
+    if isinstance(v1, dict):  # 1.0: {"leftUpperArm": {"node": 12}, ...}
+        bones = {k: v["node"] for k, v in v1.items() if isinstance(v, dict) and "node" in v}
+    for side, tag in (("left", "L"), ("right", "R")):
+        for vrm, role in _VRM_ROLES.items():
+            n = bones.get(f"{side}{vrm}")
+            if n is not None and n < len(nodes):
+                info.markers[f"LM-{role}_{tag}"] = pos[n]
+    if bones:
+        info.custom_props["__vrm__"] = {"humanoid_bones": len(bones)}
+
+
 def scene_from_gltf(path: str, kind: str) -> SceneInfo:
     doc, bufs = load(path)
     nodes = doc.get("nodes", [])
@@ -98,6 +122,7 @@ def scene_from_gltf(path: str, kind: str) -> SceneInfo:
 
     pos = {i: _to_blender(w(i)[12:15]) for i in range(len(nodes))}
     info = SceneInfo(kind=kind, source=path)
+    _apply_vrm_humanoid(doc, nodes, pos, info)
     joints = {j for s in doc.get("skins", []) for j in s.get("joints", [])}
     for i, n in enumerate(nodes):
         name = n.get("name", f"node{i}")

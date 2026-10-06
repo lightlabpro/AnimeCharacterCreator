@@ -15,7 +15,10 @@ def adult(height_heads=7.25, head=0.235):
     m["LM-EyeOuter_L"] = (0.06, -0.1, h - head * 0.55); m["LM-Mouth"] = (0, -0.1, h - head * 0.84)
     m["LM-shoulder_L"] = (0.235, 0, h * 0.8); m["LM-shoulder_R"] = (-0.235, 0, h * 0.8)
     m["LM-hip_L"] = (0.176, 0, h * 0.52); m["LM-hip_R"] = (-0.176, 0, h * 0.52)
-    m["LM-wrist_L"] = (0.525, 0, h * 0.5); m["LM-elbow_L"] = (0.28, 0, h * 0.61)
+    import math
+    sx, sz = 0.235, h * 0.8
+    m["LM-elbow_L"] = (sx + 0.30 * math.sin(math.radians(30)), 0, sz - 0.30 * math.cos(math.radians(30)))
+    m["LM-wrist_L"] = (sx + 0.57 * math.sin(math.radians(30)), 0, sz - 0.57 * math.cos(math.radians(30)))
     m["LM-knee_L"] = (0.1, 0, h * 0.27); m["LM-ankle_L"] = (0.1, 0, h * 0.04)
     return s
 
@@ -165,6 +168,84 @@ class EndToEnd(unittest.TestCase):
             r = runner.evaluate(adult(7.3), "t", profiles_dir=d, use_judge=True, transport=t)
             self.assertTrue(any(f.check.startswith("reference.") and f.severity == PASS for f in r.findings))
             self.assertTrue(any(f.check == "judge.plausible" and f.severity == PASS for f in r.findings))
+
+
+class Geometry(unittest.TestCase):
+    def cube(self, off=0.0):
+        import numpy as np
+        v = np.array([[x, y, z] for x in (0, 1) for y in (0, 1) for z in (0, 1)], float) + off
+        f = [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]
+        return v, f
+
+    def test_closed_cube_is_healthy(self):
+        from blender.validators import geometry
+        v, f = self.cube()
+        h = geometry.hygiene(v, f)
+        self.assertEqual((h["boundary_edges"], h["nonmanifold_edges"], h["components"]), (0, 0, 1))
+
+    def test_three_faces_on_one_edge_is_nonmanifold_and_floater_found(self):
+        import numpy as np
+        from blender.validators import geometry
+        v = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, -1, 0], [5, 5, 5], [6, 5, 5], [5, 6, 5]], float)
+        f = [(0, 1, 2), (0, 1, 3), (0, 1, 4)] + [(5, 6, 7)] * 0
+        h = geometry.hygiene(v, f + [(5, 6, 7)], min_component_frac=0.5)
+        self.assertEqual(h["nonmanifold_edges"], 1)
+        self.assertEqual(h["floaters"], 1)
+        multi = {x.check for x in geometry.hygiene_findings(h, "hair", multi_part=True)}
+        self.assertNotIn("hygiene.hair.floaters", multi)
+
+    def test_f1_perfect_and_shifted(self):
+        import numpy as np
+        from blender.validators import geometry
+        rng = np.random.default_rng(1)
+        p = rng.random((800, 3)) * [0.4, 0.2, 1.0]
+        self.assertGreater(geometry.chamfer_f1(geometry.normalise(p), geometry.normalise(p))["f1@0.01"], 0.99)
+        shifted = p + [0.0, 0.0, 0.0]
+        shifted[:, 0] *= 1.5
+        self.assertLess(geometry.chamfer_f1(geometry.normalise(p), geometry.normalise(shifted))["f1@0.01"], 0.9)
+
+    def test_mirror_symmetry_detects_asymmetry(self):
+        import numpy as np
+        from blender.validators import geometry
+        rng = np.random.default_rng(2)
+        half = rng.random((600, 3)) * [0.3, 0.2, 1.0]
+        sym = np.vstack([half, half * [-1, 1, 1]])
+        self.assertLess(geometry.mirror_symmetry(sym), 0.01)
+        lopsided = np.vstack([sym, sym[:200] + [0.4, 0, 0]])
+        self.assertGreater(geometry.mirror_symmetry(lopsided), 0.01)
+
+
+class VrmAndBuckets(unittest.TestCase):
+    def test_vrm0_humanoid_map_gives_exact_landmarks(self):
+        doc = {"asset": {"version": "2.0"}, "scene": 0, "scenes": [{"nodes": [0]}],
+               "nodes": [{"name": "Hips", "children": [1, 2]}, {"name": "x", "translation": [0.1, 1.3, 0]},
+                         {"name": "y", "translation": [0.1, 0.9, 0]}],
+               "extensions": {"VRM": {"humanoid": {"humanBones": [{"bone": "leftUpperArm", "node": 1},
+                                                                    {"bone": "leftUpperLeg", "node": 2}]}}}}
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "a.vrm.gltf")
+            with open(path, "w") as fh:
+                json.dump(doc, fh)
+            s = gltf.scene_from_gltf(path, "adult")
+        self.assertAlmostEqual(s.markers["LM-shoulder_L"][2], 1.3)
+        self.assertAlmostEqual(s.markers["LM-hip_L"][2], 0.9)
+
+    def test_buckets_use_words(self):
+        from blender.validators.spec import bucket
+        self.assertEqual(bucket("height_heads", 7.2, "adult"), "in range")
+        self.assertEqual(bucket("height_heads", 8.6, "adult"), "far too high")
+        self.assertEqual(bucket("height_heads", 7.6, "adult"), "slightly high")
+        st = judge.build_state(Report(kind="adult", metrics={"height_heads": 8.6}))
+        self.assertEqual(st["readings"][0]["reading"], "far too high")
+        self.assertNotIn("8.6", json.dumps(st))
+
+    def test_low_confidence_score_is_routed_not_decided(self):
+        r = Report(kind="adult", metrics={"height_heads": 7.2})
+        t = lambda p: {"answers": {"plausible": {"noul": 0.9}, "quality": {"score": 1.0, "confidence": 0.1},
+                                   "first_fix": {"choice": "none", "confidence": 0.9}}}
+        checks_ = {f.check: f.severity for f in judge.ask(r, t)}
+        self.assertEqual(checks_["judge.review"], "info")
+        self.assertNotIn("judge.quality", checks_)
 
 
 if __name__ == "__main__":

@@ -57,6 +57,8 @@ def compare(candidate: Dict[str, float], profiles: List[dict]) -> List[Finding]:
         refs = [(p["name"], p["metrics"][key]) for p in profiles if key in p["metrics"]]
         if not m or not refs:
             continue
+        if m.pose_dependent:  # references are in arbitrary poses (Amshani is a T-pose); pose metrics only gate the build
+            continue
         lo, hi = min(r[1] for r in refs), max(r[1] for r in refs)
         mid = median(r[1] for r in refs)
         if lo - m.ref_tol <= v <= hi + m.ref_tol:
