@@ -136,10 +136,17 @@ def metrics(scene: SceneInfo) -> Tuple[Dict[str, float], List[str], List[str]]:
         if "Pubis" in lm:
             out["legs_fraction"] = (lm["Pubis"][2] - lm["Floor"][2]) / height
 
-        if need("shoulder_L", "shoulder_R"):
-            out["shoulder_width_heads"] = abs(lm["shoulder_L"][0] - lm["shoulder_R"][0]) / head_h
-        if need("hip_L", "hip_R"):
-            out["hip_width_heads"] = abs(lm["hip_L"][0] - lm["hip_R"][0]) / head_h
+        # Outer points (acromion, greater trochanter) when marked; otherwise joint centres, which checks.anatomy reports but does not grade.
+        sl, sr = lm.get("ShoulderOuter_L", lm.get("shoulder_L")), lm.get("ShoulderOuter_R", lm.get("shoulder_R"))
+        hl, hr = lm.get("HipOuter_L", lm.get("hip_L")), lm.get("HipOuter_R", lm.get("hip_R"))
+        if sl and sr:
+            out["shoulder_width_heads"] = abs(sl[0] - sr[0]) / head_h
+        else:
+            missing += [n for n in ("shoulder_L", "shoulder_R") if n not in lm]
+        if hl and hr:
+            out["hip_width_heads"] = abs(hl[0] - hr[0]) / head_h
+        else:
+            missing += [n for n in ("hip_L", "hip_R") if n not in lm]
         # Pose-independent: hang the measured limb lengths straight down from the shoulder joint.
         if "shoulder_L" in lm and "elbow_L" in lm:
             upper = _dist(lm["shoulder_L"], lm["elbow_L"])
@@ -191,7 +198,7 @@ def metrics(scene: SceneInfo) -> Tuple[Dict[str, float], List[str], List[str]]:
                 temple = _x_extent(verts, chin_z + 0.6 * head_h, tol, depth_cut)
                 if temple:
                     out["temple_width_norm"] = temple / head_h
-                    neck = _x_extent(verts, chin_z - 0.12 * head_h, tol)
+                    neck = _x_extent(verts, chin_z - 0.12 * head_h, 0.05 * head_h)  # wide slab: neck meshes can be sparse
                     if neck:
                         out["neck_head_width"] = neck / temple
             eye_z = chin_z + out.get("eye_line_norm", 0.45) * head_h
@@ -220,8 +227,13 @@ def joint_based(scene: SceneInfo) -> set:
     """Width metrics measured between joint centres (from bones) rather than between acromion / trochanter markers.
     Joint centres sit well inside the outer widths the spec bands describe, so these are reported but not graded."""
     keys = set()
-    if "LM-shoulder_L" not in scene.markers or "LM-shoulder_R" not in scene.markers:
+    if not ({"LM-shoulder_L", "LM-shoulder_R"} <= set(scene.markers) or {"LM-ShoulderOuter_L", "LM-ShoulderOuter_R"} <= set(scene.markers)):
         keys.add("shoulder_width_heads")
-    if "LM-hip_L" not in scene.markers or "LM-hip_R" not in scene.markers:
+    if not ({"LM-hip_L", "LM-hip_R"} <= set(scene.markers) or {"LM-HipOuter_L", "LM-HipOuter_R"} <= set(scene.markers)):
+        keys.add("hip_width_heads")
+    # joint centres passed as shoulder_L / hip_L come from bones; only explicit outer markers count as measured
+    if "LM-ShoulderOuter_L" not in scene.markers:
+        keys.add("shoulder_width_heads")
+    if "LM-HipOuter_L" not in scene.markers:
         keys.add("hip_width_heads")
     return keys

@@ -115,20 +115,20 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
     waistD: u * (child ? 0.44 : 0.44) * (1 + 0.25 * n('body.belly') + 0.15 * bulk + 0.06 * soft),
     hipW: u * (child ? 0.6 : 0.7) * hipF * (1 + 0.1 * bulk + 0.08 * n('body.hips')),
     hipD: u * (child ? 0.44 : 0.5) * (1 + 0.1 * bulk + 0.12 * n('body.glute')),
-    torsoLen: u * (child ? 1.6 : 2.35) * boneF('torso.length', 0.85, 1.15),
+    torsoLen: u * (child ? 1.6 : 2.2) * boneF('torso.length', 0.85, 1.15),
     waistY: 0,
-    upperLen: u * (child ? 1.05 : 1.42) * boneF('upperArm.length', 0.85, 1.15),
-    foreLen: u * (child ? 0.95 : 1.25) * boneF('forearm.length', 0.85, 1.15),
-    thighLen: u * (child ? 1.15 : 1.8) * boneF('thigh.length', 0.85, 1.15),
-    shinLen: u * (child ? 1.1 : 1.75) * boneF('shin.length', 0.85, 1.15),
+    upperLen: u * (child ? 1.05 : 1.3) * boneF('upperArm.length', 0.85, 1.15),
+    foreLen: u * (child ? 0.95 : 1.1) * boneF('forearm.length', 0.85, 1.15),
+    thighLen: u * (child ? 1.15 : 1.95) * boneF('thigh.length', 0.85, 1.15),
+    shinLen: u * (child ? 1.1 : 1.9) * boneF('shin.length', 0.85, 1.15),
     neckLen: u * (child ? 0.26 : 0.36) * boneF('neck.length', 0.85, 1.15),
-    neckR: u * (child ? 0.19 : 0.2) * (1 + 0.28 * n('neck.thickness') + 0.08 * bulk),
+    neckR: u * (child ? 0.15 : 0.175) * (1 + 0.28 * n('neck.thickness') + 0.08 * bulk),
     armR: u * (child ? 0.16 : 0.19) * (1 + 0.22 * n('upperArm.bulk') + 0.15 * bulk + 0.12 * pos('muscle.arms') + 0.05 * soft),
     foreR: u * (child ? 0.14 : 0.16) * (1 + 0.22 * n('forearm.bulk') + 0.12 * bulk + 0.1 * pos('muscle.arms')),
     thighR: u * (child ? 0.26 : 0.3) * (1 + 0.22 * n('thigh.bulk') + 0.15 * bulk + 0.1 * pos('muscle.legs') + 0.08 * soft),
     calfR: u * (child ? 0.18 : 0.2) * (1 + 0.22 * n('calf.bulk') + 0.1 * bulk + 0.1 * pos('muscle.legs')),
-    shoulderHalf: u * (child ? 0.72 : 0.96) * shoulderF * (1 + 0.06 * bulk),
-    footLen: u * (child ? 0.62 : 0.78) * boneF('foot.length', 0.85, 1.15) * (1 + 0.15 * n('foot.size')),
+    shoulderHalf: u * (child ? 0.72 : 0.88) * shoulderF * (1 + 0.06 * bulk),
+    footLen: u * (child ? 0.62 : 0.95) * boneF('foot.length', 0.85, 1.15) * (1 + 0.15 * n('foot.size')),
     handLen: u * (child ? 0.5 : 0.62) * boneF('hand.length', 0.85, 1.15) * (1 + 0.15 * n('hand.size')),
     metaLen: legDigi ? u * (child ? 0.45 : 0.62) : 0,
   };
@@ -280,14 +280,14 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   if (browRidge > 0.05) surf.add(ridgeC, ridgeR);
 
   const eyeSize = n('eye.size');
-  const ew = 0.1 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
-  const eh = ew * (1.1 + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
+  const ew = 0.084 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
+  const eh = ew * ((child ? 0.95 : 0.74) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
   const forward = n('eye.forward');
   const ex = 0.168 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
-  const ey = -0.06 * h + 0.05 * h * n('eye.height');
+  const ey = -0.14 * h + 0.05 * h * n('eye.height');
   const eye = { x: ex, y: ey, w: ew, h: eh };
-  const noseY = -0.2 * h - 0.02 * h * n('nose.length');
-  const mouthY = -0.335 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
+  const noseY = -0.245 * h - 0.02 * h * n('nose.length');
+  const mouthY = -0.35 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
   const mouthW = 0.085 * h * (1 + 0.25 * n('mouth.width'));
   const browBase = n('brow.height');
   const browY = ey + eh * 1.45 + browBase * 0.35 * eh;

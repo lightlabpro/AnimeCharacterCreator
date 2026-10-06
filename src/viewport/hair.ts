@@ -34,7 +34,25 @@ interface ClumpSpec {
 const SEG = 7;
 const RING = 6;
 
-function buildClump(c: ClumpSpec, head: HairHead): THREE.BufferGeometry | null {
+/**
+ * Global hair look, measured with the validators in blender/validators/hair.py (tools/placeholders). Placeholders must read as thick,
+ * chunky, tapered clumps (the library target: thickness/width >= 0.45, clump width about 0.25 to 0.55 of the head height, 20+ clumps),
+ * not needle-thin spikes. The export tool overrides these to compare variants.
+ */
+type HairTuning = { widthScale: number; minThickRatio: number; taperScale: number; countScale: number; fringeLen: number };
+// Held on globalThis so every copy of this module (Vite serves hot-updated modules under a timestamped URL) sees the same values.
+export const hairTuning: HairTuning = ((globalThis as unknown as { __hairTuning?: HairTuning }).__hairTuning ??= { widthScale: 1.9, minThickRatio: 0.7, taperScale: 0.7, countScale: 0.7, fringeLen: 0.55 });
+export function setHairTuning(t: Partial<HairTuning>) {
+  Object.assign(hairTuning, t);
+  pieceCache.clear();
+}
+
+function buildClump(c0: ClumpSpec, head: HairHead): THREE.BufferGeometry | null {
+  // Chunkier clumps: wider, never thinner than minThickRatio of their width, and a gentler taper. Tiny accents (ahoge, wisps) keep their size.
+  const big = Math.min(1, c0.width / (head.u * 0.07));
+  const widthK = 1 + (hairTuning.widthScale - 1) * big;
+  const c: ClumpSpec = { ...c0, width: c0.width * widthK, taper: c0.taper * (1 + (hairTuning.taperScale - 1) * big) };
+  c.thick = Math.max(c0.thick * widthK, c.width * hairTuning.minThickRatio * big);
   const pts: THREE.Vector3[] = [c.root.clone()];
   let dir = c.dir.clone().normalize();
   const step = c.len / SEG;
@@ -126,7 +144,7 @@ function cap(head: HairHead, m: ShapeMods, rand: () => number, o: { len: number;
   const minEl = o.minEl ?? -0.15;
   for (let r = 0; r < rings; r += 1) {
     const el = minEl + ((r + 0.5) / rings) * (Math.PI / 2 - minEl);
-    const count = Math.max(3, Math.round((o.count ?? 14) * Math.cos(el)));
+    const count = Math.max(3, Math.round((o.count ?? 14) * Math.cos(el) * hairTuning.countScale));
     for (let i = 0; i < count; i += 1) {
       const az = (i / count) * Math.PI * 2 + r * 0.37 + rand() * 0.1;
       const front = Math.cos(az) > 0.35 && el < 1.0;
@@ -240,7 +258,7 @@ function fringe(head: HairHead, m: ShapeMods, rand: () => number, o: { len: numb
     out.push({
       root,
       dir,
-      len: o.len * u * bias * (0.9 + rand() * 0.2) * (1 + m.len * 0.35),
+      len: o.len * u * bias * (0.9 + rand() * 0.2) * (1 + m.len * 0.35) * hairTuning.fringeLen,
       width: u * (o.wisp ? 0.05 : 0.09) * (1 + m.wid * 0.35),
       thick: u * (o.thick ?? 0.028) * (1 + m.vol * 0.5),
       gravity: 0.07,
@@ -383,7 +401,7 @@ function builderFor(slot: 'front' | 'back' | 'sides' | 'extra', id: string): Bui
 export function hairGeometry(slot: 'front' | 'back' | 'sides' | 'extra', piece: HairPiece, head: HairHead, headKey: string): THREE.BufferGeometry | null {
   const b = builderFor(slot, piece.id);
   if (!b) return null;
-  const key = `${slot}:${piece.id}:${piece.volume}:${piece.width}:${piece.length}:${headKey}`;
+  const key = `${slot}:${piece.id}:${piece.volume}:${piece.width}:${piece.length}:${headKey}:${Object.values(hairTuning).join(',')}`;
   if (pieceCache.has(key)) return pieceCache.get(key)!;
   const m: ShapeMods = { vol: piece.volume / 100, wid: piece.width / 100, len: piece.length / 100 };
   const rand = seeded(hashString(key));

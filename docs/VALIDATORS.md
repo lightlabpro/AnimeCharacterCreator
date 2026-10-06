@@ -134,3 +134,7 @@ The model is pinned to `jev-1.13.0`. Jev is weak at numbers, so it only ever see
 - The 2D images in `docs/reference/mhs3/` and `docs/style_dataset/` are in-game screenshots with backgrounds, not orthographic sheets. They inform the rubric and bands; silhouette overlap needs clean front/side images with a plain or transparent background.
 - `bpy_adapter.py` snapshot, mesh extraction and the geometry checks were run against real Blender 5.2.2 (the `bpy` module) on Hina and Amshani. The slider sweep (`bpy_adapter.sweep`) and `place_basic_markers` were not exercised yet. The pure checks, glTF/VRM reader, vetting and judge are unit-tested (`npm run test:validators`) and the TypeSafe calls were confirmed live.
 - Face-metric bands come from the manual and the Hina/Amshani measurements; where they disagree the band covers both (see `spec.py` sources). Tighten them once vetted reference profiles from your own models exist.
+
+## Placeholder bodies
+
+`tools/placeholders/export.mjs` exports the app's procedural placeholder bodies (adult, child, robot, beast) from the dev server as JSON; `tools/placeholders/measure.py` runs the anatomy, face, hair and region validators on them (`--typesafe` adds the per-region TypeSafe judge) and `tune_hair.py` ranks hair variants. The placeholders are measured and tuned only until the Blender library replaces them. The flat painted-disc eyes are deliberate and still fail the eyeball-roundness check.
