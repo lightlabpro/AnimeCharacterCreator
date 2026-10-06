@@ -5,7 +5,7 @@ Source for the generator limits: Meshy agent skills 0.6.0 (Meshy CLI 0.4.0), `sk
 | What is wanted | Route | Notes |
 | --- | --- | --- |
 | A character that matches a reference sheet | hand-model (stages 0-7) | the default for this project's asset library |
-| A fast blockout or silhouette study | concept sheet, then image-to-3D as a **reference only** (optional, see [meshy](meshy.md)) | retopologise by hand; topology is not deformation-ready |
+| A fast blockout or silhouette study | concept sheet, `prepare_reference.py`, then image-to-3D as a **reference only** (optional: [meshy](meshy.md) cloud, or [tripo](tripo.md): TripoSG/TripoSR on a local GPU, or the Tripo API) | retopologise by hand; topology is not deformation-ready |
 | A low-poly or game-ready variant of a model that exists | derive from the existing model: decimate or retopo the existing mesh, keep the original | never rebuild; Meshy's smart topology covers 100-15000 triangles, remesh 100-300000 |
 | A lower-poly LOD chain | one derivation per level, from the existing model | each level is a separate output of the same source |
 | A different format or size | export or scale the existing asset, one step | Meshy resize works in metres, e.g. 0.15 is 15 cm |

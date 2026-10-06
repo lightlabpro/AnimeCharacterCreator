@@ -323,3 +323,31 @@ class BodyAuditCase(BlenderCase):
         self.assertEqual(body.data.shape_keys.key_blocks["ID-FaceRound"].value, 1.0)      # restored afterwards
         self.assertEqual(arm.data.pose_position, "POSE")
         self.assertGreater(h0, 1.0)
+
+
+@unittest.skipUnless(HAVE_BPY, "needs bpy")
+class DecimateCase(BlenderCase):
+    def setUp(self):
+        super().setUp()
+        self.dec = load(SK / "ai-3d-pipeline/scripts/decimate_to_budget.py", "decimate_to_budget")
+
+    def test_reaches_budget_and_keeps_shape(self):
+        o = self.fx.ellipsoid("Gen", (0, 0, 1), (0.3, 0.2, 0.9), segments=96, rings=64)
+        before_bbox = [tuple(v) for v in o.bound_box]
+        b, a = self.dec.decimate(o, 2000)
+        self.assertGreater(b, 8000); self.assertLess(abs(a - 2000), 2000 * 0.15)
+        h = max(v[2] for v in o.bound_box) - min(v[2] for v in o.bound_box); self.assertAlmostEqual(h, 1.8, delta=0.05)
+
+    def test_refuses_shape_keys_and_unreachable_budget(self):
+        o = self.fx.ellipsoid("Gen", (0, 0, 1), (0.3, 0.2, 0.9)); o.shape_key_add(name="Basis"); o.shape_key_add(name="ID-X")
+        with self.assertRaises(ValueError): self.dec.decimate(o, 100)
+        bpy.data.objects.remove(o); o2 = self.fx.ellipsoid("Gen2", (0, 0, 1), (0.3, 0.2, 0.9), segments=8, rings=6)
+        with self.assertRaises(ValueError): self.dec.decimate(o2, 100000)
+
+    def test_protected_group_keeps_more_triangles(self):
+        def run(protect):
+            self.fx.reset(); o = self.fx.ellipsoid("Gen", (0, 0, 1), (0.3, 0.2, 0.9), segments=96, rings=64)
+            vg = o.vertex_groups.new(name="Face"); vg.add([v.index for v in o.data.vertices if v.co.z > 1.5], 1.0, "REPLACE")
+            self.dec.decimate(o, 3000, protect="Face" if protect else None)
+            return sum(1 for p in o.data.polygons if min(o.data.vertices[i].co.z for i in p.vertices) > 1.5)
+        self.assertGreater(run(True), run(False))

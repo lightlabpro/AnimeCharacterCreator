@@ -15,14 +15,15 @@ Provenance and confidence: the staged structure is well sourced for open systems
 | Pick the shortest route for a request, reuse what exists | [routes](references/routes.md) |
 | Limits and preconditions before texturing, UV, rigging, export | [preconditions](references/preconditions.md) |
 | Decide whether to use Meshy for a blockout, and how to spend safely | [meshy](references/meshy.md) |
+| Use TripoSG, TripoSR or the Tripo cloud/Blender add-on for a blockout, prepare the input, reduce the result | [tripo](references/tripo.md) |
 
 ## Stages and gates
 | Stage | Output | Gate before moving on | Skill / tool |
 | --- | --- | --- | --- |
-| 0 References | front/side/three-quarter sheet, reference head | views agree on proportions | `anthropic-skills:anime-character-modeling` |
+| 0 References | front/side/three-quarter sheet, reference head | views agree on proportions; any image sent to a generator passes `scripts/prepare_reference.py` (exit 0) | `anthropic-skills:anime-character-modeling` |
 | 1 Blockout | whole-body volumes (7-7.5 heads adult) | silhouette overlay on the sheet | `render-validator` |
 | 2 Head form | skull, jaw, nose, sockets, ears | `head-shape-audit` prints HEAD_SHAPE_OK | `head-shape-audit` |
-| 3 Topology | quads around eyes, mouth, joints; hair and clothes as separate shells | `mesh_stats.py` passes (tri budget, no non-manifold, no zero-area) and loops are visible in a wire render | `render-validator` |
+| 3 Topology | quads around eyes, mouth, joints; hair and clothes as separate shells; a generated mesh is first brought to budget with `scripts/decimate_to_budget.py` (before any shape keys) | `mesh_stats.py` passes (tri budget, no non-manifold, no zero-area) and loops are visible in a wire render | `render-validator` |
 | 4 UV and texture | face UV island, iris island, shade masks | no stretching, seams away from the face | `anime-character-modeling` |
 | 5 Toon shading | hard ramp, warm shadow tint, outlines | `render-validator` PASS on every required view | `render-validator` |
 | 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys, `SOC-` sockets | names in `knowledge/expected-contract.json`; `check_pack.py`; pose test | `library-pack-check` |

@@ -123,3 +123,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/py/test_anatomy.py (19), knowledge/anatomy-calibration.md
 - status: unverified: thresholds calibrated on three real models only
 - use: Run on every body export; send BRIDGE-ENTRY with numbers when a result looks unfair
+
+## 2026-10-06 [code] Tripo repos: input prep and budget reduction
+- finding: TripoSR and TripoSG both spend their effort on input prep: isolate the subject, crop, pad to square, scale to 85% of the canvas, flat grey or white background, trust alpha only when it has real opaque and transparent areas. TripoSG applies the face budget by merging close vertices then quadric collapse AFTER generation, not as a generation setting. Blender cannot apply Decimate to a mesh with shape keys. Blender's Decimate vertex group collapses high-weight vertices, so protecting needs the group inverted. The Tripo add-on imports models facing +Y (ours is -Y) and ships a localhost:9876 JSON server with execute_code that a local agent could drive. Nothing was run on a GPU.
+- evidence: references/tripo.md in ai-3d-pipeline; tests/py/test_prepare_reference.py (12), tests/blender DecimateCase (3)
+- status: unverified: read from source, no generator run (no GPU here)
+- use: Run prepare_reference.py before any generator; decimate before shape keys

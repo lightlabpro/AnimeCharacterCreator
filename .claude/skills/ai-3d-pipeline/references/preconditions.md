@@ -13,6 +13,12 @@ For this project add: relaxed A-pose with palms inward and fingers slightly curl
 
 Known rigger weak spots to test by posing once: hands and fingers, neck, hair, skirts and capes, face (no tool in the sources produces a facial rig).
 
+## Before sending an image to a generator
+Run `scripts/prepare_reference.py`: exit 0 means one isolated, uncut, large-enough subject on a flat background. 12: fix the image (margin, size). 13: the background is busy, remove it first. Never send an image whose status is unknown and call a bad result the generator's fault. Fix the seed and write it down with the asset.
+
+## Before decimating a generated mesh
+Merge close vertices first, then collapse to the budget (`scripts/decimate_to_budget.py`). The mesh must have **no shape keys** (Blender cannot decimate them): reduce the base mesh, then add `ID-`/`PF-` keys. Protect the face and hands with a vertex group. Decimation is not retopology: edge flow around eyes, mouth and joints is still hand work.
+
 ## Tri-state results
 Every precondition is **pass, fail or unknown**.
 - Pass: measured and within the limit.
