@@ -44,7 +44,7 @@ export function newCharacter(kind: BodyKind = 'adult', style: StylePreset = 'sto
     style: kind === 'robot' ? 'legends' : style,
     values: {},
     looks: defaultLooks(kind),
-    hair: { front: hair('swept'), back: hair('shortLayered'), sides: hair('short'), extras: [hair('ahoge')] },
+    hair: { front: hair('swept', '#8a5a30', '#c0915a'), back: { ...hair('shortLayered', '#8a5a30', '#c0915a'), length: -0.4 }, sides: { ...hair('short', '#8a5a30', '#c0915a'), length: -0.4 }, extras: [] },
     facialHair: { moustache: facial('none'), sideburns: facial('none'), beard: facial('none') },
     colors: { ...DEFAULT_COLORS },
     equipped: defaultOutfit(kind).map((e) => makeEquip(e)),

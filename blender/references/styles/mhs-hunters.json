@@ -1,19 +1,55 @@
 {
   "name": "mhs-hunters",
-  "source": "user-supplied key art (two hunters, front view); ranges estimated by eye from the image, not measured on a 3D model",
+  "source": "user-supplied key art (male hunter, front view), landmarks read off the image in pixels (head 117..275 of 98..1111 px tall); ranges are those readings +/- tolerance, not a 3D model",
   "ranges": {
-    "anatomy.eye_line_norm": [0.42, 0.52],
-    "anatomy.eye_gap_eye_widths": [1.0, 1.5],
-    "anatomy.eye_height_width": [0.45, 0.62],
-    "anatomy.mouth_norm": [0.16, 0.24],
-    "face.nose_protrusion_over_head_height": [0.03, 0.09],
-    "face.jaw_width_over_temple_width": [0.62, 0.8],
-    "anatomy.temple_width_norm": [0.7, 0.85],
-    "anatomy.neck_head_width": [0.38, 0.5],
-    "anatomy.height_heads": [7.2, 7.7],
-    "anatomy.shoulder_width_heads": [2.2, 2.7],
-    "anatomy.legs_fraction": [0.47, 0.52],
-    "anatomy.forehead_slope": [0.0, 0.06]
+    "anatomy.eye_line_norm": [
+      0.48,
+      0.58
+    ],
+    "anatomy.eye_gap_eye_widths": [
+      1.2,
+      1.7
+    ],
+    "anatomy.eye_height_width": [
+      0.42,
+      0.58
+    ],
+    "anatomy.mouth_norm": [
+      0.17,
+      0.25
+    ],
+    "face.nose_protrusion_over_head_height": [
+      0.03,
+      0.09
+    ],
+    "face.jaw_width_over_temple_width": [
+      0.62,
+      0.8
+    ],
+    "anatomy.temple_width_norm": [
+      0.6,
+      0.85
+    ],
+    "anatomy.neck_head_width": [
+      0.38,
+      0.5
+    ],
+    "anatomy.height_heads": [
+      6.1,
+      6.7
+    ],
+    "anatomy.shoulder_width_heads": [
+      1.8,
+      2.3
+    ],
+    "anatomy.legs_fraction": [
+      0.43,
+      0.49
+    ],
+    "anatomy.forehead_slope": [
+      0.0,
+      0.06
+    ]
   },
-  "notes": "Semi-realistic anime: small almond eyes at mid-head, small nose and mouth, defined jaw, short layered side-swept hair with a fringe above the brows and a few small tufts, broad armoured shoulders, teal tunic, red sash, brown leather, grey plate knee guards, dark boots."
+  "notes": "About 6.3 heads tall with a large head; small narrow eyes about 1.5 eye-widths apart, level with the middle of the head; tiny nose and mouth; short swept hair with a fringe over the brows; chunky armoured torso; short-looking legs under knee guards."
 }

@@ -99,7 +99,7 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   const heightF = boneF('body.height', 0.9, 1.1);
   const baseH = child ? 1.22 : 1.72;
   const u = (baseH * heightF) / (child ? 5.3 : 7.35);
-  const headScale = boneF('head.size', 0.9, 1.15) * (child ? 1.0 : 1.0);
+  const headScale = boneF('head.size', 0.9, 1.15) * (child ? 1.0 : 1.18);
   const h = u * headScale;
 
   const bulk = n('body.bulk');
@@ -280,14 +280,14 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   if (browRidge > 0.05) surf.add(ridgeC, ridgeR);
 
   const eyeSize = n('eye.size');
-  const ew = 0.079 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
-  const eh = ew * ((child ? 1.0 : 0.68) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
+  const ew = 0.072 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
+  const eh = ew * ((child ? 1.0 : 0.62) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
   const forward = n('eye.forward');
-  const ex = 0.152 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
-  const ey = -0.17 * h + 0.05 * h * n('eye.height');
+  const ex = 0.17 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
+  const ey = -0.05 * h + 0.05 * h * n('eye.height');
   const eye = { x: ex, y: ey, w: ew, h: eh };
-  const noseY = -0.32 * h - 0.02 * h * n('nose.length');
-  const mouthY = -0.43 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
+  const noseY = -0.25 * h - 0.02 * h * n('nose.length');
+  const mouthY = -0.36 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
   const mouthW = 0.085 * h * (1 + 0.25 * n('mouth.width'));
   const browBase = n('brow.height');
   const browY = ey + eh * 1.45 + browBase * 0.35 * eh;
