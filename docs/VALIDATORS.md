@@ -138,3 +138,5 @@ The model is pinned to `jev-1.13.0`. Jev is weak at numbers, so it only ever see
 ## Placeholder bodies
 
 `tools/placeholders/export.mjs` exports the app's procedural placeholder bodies (adult, child, robot, beast) from the dev server as JSON; `tools/placeholders/measure.py` runs the anatomy, face, hair and region validators on them (`--typesafe` adds the per-region TypeSafe judge) and `tune_hair.py` ranks hair variants. The placeholders are measured and tuned only until the Blender library replaces them. The flat painted-disc eyes are deliberate and still fail the eyeball-roundness check.
+
+`tools/placeholders/anime_look.py` asks TypeSafe whether a placeholder reads as anime. It buckets each face and body ratio against the Hina/Amshani envelope as words and runs a yes/no, a score and a least-anime choice in two option orders. The adult eye gap and eye shape bands in `spec.py` were widened to include the Amshani reference (anime eyes sit closer and taller than the realistic bands assumed).

@@ -109,20 +109,20 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   const legDigi = L.legs === 'digitigrade';
 
   const dims = {
-    chestW: u * (child ? 0.62 : 0.78) * (1 + 0.12 * bulk + 0.05 * pos('muscle.chest') + 0.06 * n('body.shoulders')),
+    chestW: u * (child ? 0.58 : 0.78) * (1 + 0.12 * bulk + 0.05 * pos('muscle.chest') + 0.06 * n('body.shoulders')),
     chestD: u * (child ? 0.44 : 0.5) * (1 + 0.12 * bulk + 0.1 * pos('muscle.chest')),
-    waistW: u * (child ? 0.56 : 0.6) * (1 - 0.14 * n('body.waist') + 0.2 * bulk + 0.1 * n('body.belly') + 0.05 * soft),
-    waistD: u * (child ? 0.44 : 0.44) * (1 + 0.25 * n('body.belly') + 0.15 * bulk + 0.06 * soft),
+    waistW: u * (child ? 0.48 : 0.6) * (1 - 0.14 * n('body.waist') + 0.2 * bulk + 0.1 * n('body.belly') + 0.05 * soft),
+    waistD: u * (child ? 0.38 : 0.44) * (1 + 0.25 * n('body.belly') + 0.15 * bulk + 0.06 * soft),
     hipW: u * (child ? 0.6 : 0.7) * hipF * (1 + 0.1 * bulk + 0.08 * n('body.hips')),
     hipD: u * (child ? 0.44 : 0.5) * (1 + 0.1 * bulk + 0.12 * n('body.glute')),
     torsoLen: u * (child ? 1.6 : 2.2) * boneF('torso.length', 0.85, 1.15),
     waistY: 0,
-    upperLen: u * (child ? 1.05 : 1.3) * boneF('upperArm.length', 0.85, 1.15),
-    foreLen: u * (child ? 0.95 : 1.1) * boneF('forearm.length', 0.85, 1.15),
+    upperLen: u * (child ? 0.85 : 1.3) * boneF('upperArm.length', 0.85, 1.15),
+    foreLen: u * (child ? 0.78 : 1.1) * boneF('forearm.length', 0.85, 1.15),
     thighLen: u * (child ? 1.15 : 1.95) * boneF('thigh.length', 0.85, 1.15),
     shinLen: u * (child ? 1.1 : 1.9) * boneF('shin.length', 0.85, 1.15),
     neckLen: u * (child ? 0.26 : 0.36) * boneF('neck.length', 0.85, 1.15),
-    neckR: u * (child ? 0.15 : 0.175) * (1 + 0.28 * n('neck.thickness') + 0.08 * bulk),
+    neckR: u * (child ? 0.1 : 0.165) * (1 + 0.28 * n('neck.thickness') + 0.08 * bulk),
     armR: u * (child ? 0.16 : 0.19) * (1 + 0.22 * n('upperArm.bulk') + 0.15 * bulk + 0.12 * pos('muscle.arms') + 0.05 * soft),
     foreR: u * (child ? 0.14 : 0.16) * (1 + 0.22 * n('forearm.bulk') + 0.12 * bulk + 0.1 * pos('muscle.arms')),
     thighR: u * (child ? 0.26 : 0.3) * (1 + 0.22 * n('thigh.bulk') + 0.15 * bulk + 0.1 * pos('muscle.legs') + 0.08 * soft),
@@ -280,14 +280,14 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
   if (browRidge > 0.05) surf.add(ridgeC, ridgeR);
 
   const eyeSize = n('eye.size');
-  const ew = 0.084 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
-  const eh = ew * ((child ? 0.95 : 0.74) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
+  const ew = 0.092 * h * (1 + 0.2 * eyeSize + 0.05 * young) * (child ? 1.12 : 1);
+  const eh = ew * ((child ? 1.0 : 0.84) + 0.3 * pos('eye.round') - 0.38 * pos('eye.narrow') - 0.08 * pos('eye.almond') - 0.05 * old);
   const forward = n('eye.forward');
-  const ex = 0.168 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
-  const ey = -0.14 * h + 0.05 * h * n('eye.height');
+  const ex = 0.152 * h * (1 + 0.12 * n('eye.spacing')) * (1 - 0.18 * forward);
+  const ey = -0.17 * h + 0.05 * h * n('eye.height');
   const eye = { x: ex, y: ey, w: ew, h: eh };
-  const noseY = -0.245 * h - 0.02 * h * n('nose.length');
-  const mouthY = -0.35 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
+  const noseY = -0.32 * h - 0.02 * h * n('nose.length');
+  const mouthY = -0.43 * h + 0.035 * h * n('mouth.height') - 0.02 * h * pos('face.long');
   const mouthW = 0.085 * h * (1 + 0.25 * n('mouth.width'));
   const browBase = n('brow.height');
   const browY = ey + eh * 1.45 + browBase * 0.35 * eh;
@@ -402,7 +402,7 @@ export function buildHumanoid(ctx: BuildCtx): { root: THREE.Group; head: THREE.O
     surf.hit(0, noseY, np, nn);
     const noseLen = 0.07 * h * noseSize * (1 + 0.3 * n('nose.length'));
     const bridge = 1 + 0.5 * n('nose.bridgeHeight');
-    reg.ellipsoid(headG, plainHead, np.clone().add(V(0, 0.01 * h * n('nose.tipUp'), -0.01 * h)), V(0.035 * h * noseSize * (1 + 0.35 * n('nose.tipWidth') + 0.2 * pos('nose.nostril')), 0.04 * h * noseSize, noseLen * bridge * 0.6), { region: 'nose', name: 'CHR_Nose' });
+    reg.ellipsoid(headG, plainHead, np.clone().add(V(0, 0.01 * h * n('nose.tipUp'), 0.01 * h)), V(0.035 * h * noseSize * (1 + 0.35 * n('nose.tipWidth') + 0.2 * pos('nose.nostril')), 0.04 * h * noseSize, noseLen * bridge * 1.5), { region: 'nose', name: 'CHR_Nose' });
     const bp = new THREE.Vector3();
     const bn = new THREE.Vector3();
     surf.hit(0, (noseY + ey) / 2, bp, bn);
