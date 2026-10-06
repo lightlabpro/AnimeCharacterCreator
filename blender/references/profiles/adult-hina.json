@@ -1,0 +1,73 @@
+{
+  "name": "hina",
+  "kind": "adult",
+  "source": "Hina.blend (landmarks estimated)",
+  "metrics": {
+    "height_heads": 6.72095,
+    "chin_line": 0.14879,
+    "nipple_line": 0.25835,
+    "eye_line_norm": 0.39248,
+    "mouth_norm": 0.13445,
+    "temple_width_norm": 0.77593,
+    "neck_head_width": 0.49011,
+    "forehead_slope": 0.0334
+  },
+  "ungraded": [],
+  "missing": [
+    "Navel",
+    "Pubis",
+    "shoulder_L",
+    "shoulder_R",
+    "hip_L",
+    "hip_R"
+  ],
+  "unreliable_metrics": [
+    "eye_gap_eye_widths",
+    "eye_height_width"
+  ],
+  "landmarks_estimated": true,
+  "pose": "unknown",
+  "vetted": {
+    "height_heads": {
+      "score": 0.587,
+      "passes": 3,
+      "kept": true
+    },
+    "chin_line": {
+      "score": 0.88,
+      "passes": 3,
+      "kept": true
+    },
+    "nipple_line": {
+      "score": 0.893,
+      "passes": 3,
+      "kept": true
+    },
+    "eye_line_norm": {
+      "score": 0.9,
+      "passes": 3,
+      "kept": true
+    },
+    "mouth_norm": {
+      "score": 0.893,
+      "passes": 3,
+      "kept": true
+    },
+    "temple_width_norm": {
+      "score": 0.877,
+      "passes": 3,
+      "kept": true
+    },
+    "neck_head_width": {
+      "score": 0.597,
+      "passes": 3,
+      "kept": true
+    },
+    "forehead_slope": {
+      "score": 0.62,
+      "passes": 3,
+      "kept": true
+    }
+  },
+  "vetted_by": "typesafe:jev-1.13.0"
+}

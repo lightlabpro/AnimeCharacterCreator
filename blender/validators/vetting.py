@@ -29,7 +29,7 @@ def _questions(kind: str, profile: dict, framing: str) -> dict:
     for key, v in profile["metrics"].items():
         m = METRICS.get(key)
         band = m.bands.get(kind) if m else None
-        if not m or band is None:
+        if not m or band is None or m.pose_dependent:
             continue
         # State carries the word reading; the number stays in code (Jev is weak at numeric comparison).
         qs[key] = {"type": "noul",

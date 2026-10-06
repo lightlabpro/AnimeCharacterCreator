@@ -11,10 +11,15 @@ from .spec import BODY_OBJECTS, METRICS, TRI_BUDGET
 
 def anatomy(scene: SceneInfo, report: Report, relax: float = 1.0) -> Dict[str, float]:
     vals, missing, notes = measure.metrics(scene)
+    ungraded = measure.joint_based(scene)
     for key, v in vals.items():
         m = METRICS[key]
         band = m.bands.get(scene.kind)
         if band is None:
+            continue
+        if key in ungraded:
+            report.add(Finding(f"anatomy.{key}", INFO, f"{m.label} measured between joint centres, not graded; place "
+                               f"LM-{'shoulder' if 'shoulder' in key else 'hip'}_L/R at the outer points to grade it", v))
             continue
         if relax != 1.0:
             from .spec import Band

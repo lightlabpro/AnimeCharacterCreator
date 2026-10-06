@@ -95,5 +95,13 @@ class SceneInfo:
     body_verts: Optional[Sequence[Vec]] = None
     quad_ratio: Dict[str, float] = field(default_factory=dict)
 
+    def flip_forward(self) -> None:
+        """Reference models that face +Y: mirror Y so every check can assume the library's -Y forward."""
+        f = lambda v: (v[0], -v[1], v[2])
+        self.markers = {k: f(v) for k, v in self.markers.items()}
+        self.bones = {k: (f(h), f(t)) for k, (h, t) in self.bones.items()}
+        if self.body_verts is not None:
+            self.body_verts = [f(v) for v in self.body_verts]
+
     def socket_names(self) -> Set[str]:
         return {n for n in self.objects | set(self.bones) if n.startswith("SOC-")}

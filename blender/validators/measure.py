@@ -203,3 +203,14 @@ def per_side_asymmetry(scene: SceneInfo) -> Optional[float]:
     gaps = [abs(lm[f"{r}_L"][2] - lm[f"{r}_R"][2]) for r in ("shoulder", "elbow", "wrist", "hip", "knee", "ankle")
             if f"{r}_L" in lm and f"{r}_R" in lm]
     return max(gaps) / head_h if gaps else None
+
+
+def joint_based(scene: SceneInfo) -> set:
+    """Width metrics measured between joint centres (from bones) rather than between acromion / trochanter markers.
+    Joint centres sit well inside the outer widths the spec bands describe, so these are reported but not graded."""
+    keys = set()
+    if "LM-shoulder_L" not in scene.markers or "LM-shoulder_R" not in scene.markers:
+        keys.add("shoulder_width_heads")
+    if "LM-hip_L" not in scene.markers or "LM-hip_R" not in scene.markers:
+        keys.add("hip_width_heads")
+    return keys

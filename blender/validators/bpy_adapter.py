@@ -75,12 +75,23 @@ def mesh_arrays(body_name: str):
     return verts, faces
 
 
-def load_markers(scene, path: str) -> None:
-    """Landmarks placed by hand for a reference model: {"Crown": [x, y, z], ...} in Blender world units."""
+def load_markers(scene, path: str) -> dict:
+    """Landmarks for a reference model: {"Crown": [x, y, z], ..., "_meta": {"forward": "+Y"}} in Blender world units.
+
+    Keys starting with "_" are metadata. When _meta.forward is "+Y" the scene is mirrored so it faces -Y like the
+    library. Markers already placed as LM-* empties in the file are kept; the sidecar fills the rest.
+    """
     import json
     with open(path, "r", encoding="utf-8") as fh:
-        for k, v in json.load(fh).items():
-            scene.markers[k if k.startswith("LM-") else f"LM-{k}"] = (float(v[0]), float(v[1]), float(v[2]))
+        data = json.load(fh)
+    meta = data.get("_meta", {})
+    for k, v in data.items():
+        if k.startswith("_"):
+            continue
+        scene.markers.setdefault(k if k.startswith("LM-") else f"LM-{k}", (float(v[0]), float(v[1]), float(v[2])))
+    if meta.get("forward") == "+Y":
+        scene.flip_forward()
+    return meta
 
 
 def sweep(kind: str, controls: List[Tuple[str, str]], values=(0.0, 0.5, 1.0)) -> Dict[str, Dict[float, Dict[str, float]]]:

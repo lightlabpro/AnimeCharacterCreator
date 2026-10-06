@@ -20,8 +20,10 @@ from .spec import METRICS
 
 def profile_from_scene(scene: SceneInfo, name: str, source: str = "") -> dict:
     vals, missing, _ = measure.metrics(scene)
+    ungraded = sorted(measure.joint_based(scene) & set(vals))
     return {"name": name, "kind": scene.kind, "source": source or scene.source,
-            "metrics": {k: round(v, 5) for k, v in vals.items()}, "missing": missing}
+            "metrics": {k: round(v, 5) for k, v in vals.items() if k not in ungraded},
+            "ungraded": ungraded, "missing": missing}
 
 
 def save_profile(profile: dict, directory: str) -> str:

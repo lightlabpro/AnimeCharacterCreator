@@ -1,0 +1,117 @@
+{
+  "name": "amshani",
+  "kind": "adult",
+  "source": "Amshani.blend (landmarks estimated)",
+  "metrics": {
+    "height_heads": 7.63136,
+    "chin_line": 0.13104,
+    "pubis_line": 0.45472,
+    "legs_fraction": 0.54528,
+    "wrist_to_crotch_heads": 0.34548,
+    "thigh_shin_ratio": 0.57653,
+    "hand_length_heads": 0.80432,
+    "foot_vs_forearm": 1.69263,
+    "arm_angle_deg": 87.53112,
+    "eye_line_norm": 0.38066,
+    "eye_gap_eye_widths": 0.658,
+    "eye_height_width": 0.73023,
+    "mouth_norm": 0.14458,
+    "temple_width_norm": 0.87498,
+    "neck_head_width": 0.70226,
+    "forehead_slope": 0.0
+  },
+  "ungraded": [
+    "hip_width_heads",
+    "shoulder_width_heads"
+  ],
+  "missing": [
+    "Nipple",
+    "Navel"
+  ],
+  "unreliable_metrics": [],
+  "landmarks_estimated": true,
+  "pose": "T",
+  "vetted": {
+    "height_heads": {
+      "score": 0.6,
+      "passes": 3,
+      "kept": true
+    },
+    "chin_line": {
+      "score": 0.83,
+      "passes": 3,
+      "kept": true
+    },
+    "pubis_line": {
+      "score": 0.543,
+      "passes": 3,
+      "kept": true
+    },
+    "legs_fraction": {
+      "score": 0.5,
+      "passes": 3,
+      "kept": true
+    },
+    "wrist_to_crotch_heads": {
+      "score": 0.543,
+      "passes": 3,
+      "kept": true
+    },
+    "thigh_shin_ratio": {
+      "score": 0.19,
+      "passes": 3,
+      "kept": false
+    },
+    "hand_length_heads": {
+      "score": 0.813,
+      "passes": 3,
+      "kept": true
+    },
+    "foot_vs_forearm": {
+      "score": 0.163,
+      "passes": 3,
+      "kept": false
+    },
+    "arm_angle_deg": {
+      "score": null,
+      "passes": 0,
+      "kept": false
+    },
+    "eye_line_norm": {
+      "score": 0.797,
+      "passes": 3,
+      "kept": true
+    },
+    "eye_gap_eye_widths": {
+      "score": 0.213,
+      "passes": 3,
+      "kept": false
+    },
+    "eye_height_width": {
+      "score": 0.203,
+      "passes": 3,
+      "kept": false
+    },
+    "mouth_norm": {
+      "score": 0.85,
+      "passes": 3,
+      "kept": true
+    },
+    "temple_width_norm": {
+      "score": 0.827,
+      "passes": 3,
+      "kept": true
+    },
+    "neck_head_width": {
+      "score": 0.163,
+      "passes": 3,
+      "kept": false
+    },
+    "forehead_slope": {
+      "score": 0.83,
+      "passes": 3,
+      "kept": true
+    }
+  },
+  "vetted_by": "typesafe:jev-1.13.0"
+}

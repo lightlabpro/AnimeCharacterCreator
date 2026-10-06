@@ -42,6 +42,21 @@ Studied with real data: both `XxAlonexX/blender-character` models were opened in
 - **Hair and accessories are many shells.** Amshani's hair is 49 closed clumps in one mesh, so the floating-fragment check is skipped when `multi_part=True`.
 - **Found by the new checks on the real files:** Hina's body has 30 non-manifold edges and Chamfer asymmetry 0.020; Amshani's has 43 non-manifold edges and its thigh/shin proportion sits outside the manual's band, which is why references go through vetting instead of being trusted.
 
+## Reference markers and profiles (Hina, Amshani)
+
+`blender/references/landmarks/{hina,amshani}.json` hold landmarks measured from the models' own geometry by `blender/scripts/estimate_reference_markers.py`; `_meta.methods` says how each was measured. `blender/scripts/make_reference_profile.py` turns them into `blender/references/profiles/adult-*.json`, which TypeSafe vetted (`vetted` field). Only kept metrics enter the reference envelope.
+
+| | Hina | Amshani |
+| --- | --- | --- |
+| Faces | +Y (flipped to -Y on load) | -Y |
+| Height | 6.72 heads, skull top to floor | 7.63 heads |
+| Eye line | 0.39 H | 0.38 H |
+| Measured from | mesh, vertex groups, eyeball and teeth objects | skin-material head shell, bones, Blink/viseme shape keys |
+| Not measurable | Pubis (thighs touch), Navel, all joints (no armature) | Navel, Nipple (clothed) |
+| Dropped by vetting | none | thigh/shin, foot/forearm, eye gap, eye proportions, neck width |
+
+Caveats: these are estimates on low-poly meshes (crotch height is good to about 0.2 head); Hina's eye metrics come from eyeballs, so eye gap and eye proportions are excluded for her; bone-derived shoulder and hip widths are joint-centre distances, so they are shown but not graded unless `LM-shoulder_L/R` / `LM-hip_L/R` are placed at the outer points. Hina is 6.7 heads, the same as the MHS3 male figure in the manual, which is below the 7.0-7.5 adult band; decide whether the build target should be 6.7-7.5.
+
 ## TypeSafe usage rules (from docs.typesafe.ai)
 
 The model is pinned to `jev-1.13.0`. Jev is weak at numbers, so it only ever sees named buckets ("slightly low", "far too high"); thresholds stay in code. Score answers below 0.4 confidence become a "needs a human or Claude look" note instead of a verdict. Limits: 32k tokens of state plus the longest question, 64k per request.

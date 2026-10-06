@@ -1,0 +1,90 @@
+{
+  "Floor": [
+    0,
+    0,
+    -0.03639528155326843
+  ],
+  "Crown": [
+    0,
+    0,
+    21.578857421875
+  ],
+  "Chin": [
+    0,
+    0,
+    18.74643325805664
+  ],
+  "EyeInner_L": [
+    0.22203437983989716,
+    -0.4785637989230649,
+    19.824619512907496
+  ],
+  "EyeOuter_L": [
+    0.8969104290008545,
+    -0.4785637989230649,
+    19.824619512907496
+  ],
+  "EyeTop_L": [
+    0.6108847364237171,
+    -0.4785637989230649,
+    20.087265014648438
+  ],
+  "EyeBottom_L": [
+    0.6108847364237171,
+    -0.4785637989230649,
+    19.594451904296875
+  ],
+  "EyeInner_R": [
+    -0.22203616797924042,
+    -0.47860249888678497,
+    19.824640833270486
+  ],
+  "EyeOuter_R": [
+    -0.8969122171401978,
+    -0.47860249888678497,
+    19.824640833270486
+  ],
+  "EyeTop_R": [
+    -0.6108866526662368,
+    -0.47860249888678497,
+    20.087265014648438
+  ],
+  "EyeBottom_R": [
+    -0.6108866526662368,
+    -0.47860249888678497,
+    19.594451904296875
+  ],
+  "Mouth": [
+    0,
+    -0.7276417362619434,
+    19.15595245361328
+  ],
+  "Pubis": [
+    0,
+    0,
+    11.749995231628418
+  ],
+  "HeelBack_L": [
+    1.1830074273877673,
+    1.9138935804367065,
+    -0.03639528155326843
+  ],
+  "ToeTip_L": [
+    1.1830074273877673,
+    -1.2243192195892334,
+    -0.03639528155326843
+  ],
+  "_meta": {
+    "estimated": true,
+    "methods": {
+      "Crown/Chin": "top and bottom of the skin-material head shell (the hair, a different material, reaches 23.3)",
+      "Eye*": "extent of the vertices the Blink shape keys move (lid and lash region, open state)",
+      "Mouth": "median z of the vertices the PP and OH viseme keys move",
+      "Pubis": "lowest skin vertex on the midline between 30% and 60% of height, where the legs join",
+      "HeelBack_L/ToeTip_L": "y extremes of the left foot vertices below 4% of height"
+    },
+    "forward": "-Y",
+    "pose": "T",
+    "skipped": "Navel, Nipple: the torso is covered by clothing in this model, so they are not measurable"
+  }
+}

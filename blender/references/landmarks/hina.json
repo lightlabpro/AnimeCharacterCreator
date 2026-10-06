@@ -1,0 +1,98 @@
+{
+  "Floor": [
+    0,
+    0,
+    -0.016067884862422943
+  ],
+  "Crown": [
+    0,
+    0,
+    1.608595609664917
+  ],
+  "Chin": [
+    0,
+    0,
+    1.3668642330169685
+  ],
+  "Mouth": [
+    0,
+    0,
+    1.3993642330169678
+  ],
+  "EyeTop_L": [
+    -0.05119722381685719,
+    0.057017900106130226,
+    1.4784375429153442
+  ],
+  "EyeBottom_L": [
+    -0.05119722381685719,
+    0.057017900106130226,
+    1.4501078128814697
+  ],
+  "EyeTop_R": [
+    0.03953412692271062,
+    0.0460257814613296,
+    1.4733686447143555
+  ],
+  "EyeBottom_R": [
+    0.03953412692271062,
+    0.0460257814613296,
+    1.445038914680481
+  ],
+  "EyeInner_L": [
+    -0.033936213701963425,
+    0.057017900106130226,
+    1.464272677898407
+  ],
+  "EyeOuter_L": [
+    -0.06653166562318802,
+    0.057017900106130226,
+    1.464272677898407
+  ],
+  "EyeInner_R": [
+    0.024225251749157906,
+    0.0460257814613296,
+    1.4592037796974182
+  ],
+  "EyeOuter_R": [
+    0.05444740504026413,
+    0.0460257814613296,
+    1.4592037796974182
+  ],
+  "Nipple": [
+    0,
+    0,
+    1.1888716993508515
+  ],
+  "HeelBack_L": [
+    -0.030972727063682773,
+    -0.048822980374097824,
+    -0.016067884862422943
+  ],
+  "ToeTip_L": [
+    -0.030972727063682773,
+    0.02438066154718399,
+    -0.016067884862422943
+  ],
+  "_meta": {
+    "estimated": true,
+    "methods": {
+      "Crown": "highest body vertex; hair is a separate object so this is the skull top",
+      "Chin": "lowest z where the central front surface is still within 15% of head width of the mouth-level front",
+      "Mouth": "mean z of the upper and lower teeth objects",
+      "Eye*": "bounding box of the eyeball objects; corners are the eyeball extents, so eye width is slightly overstated",
+      "Nipple": "centroid z of the DEF-breast vertex groups",
+      "HeelBack_L/ToeTip_L": "y extremes of the left foot vertices below 4% of height",
+      "unreliable_metrics": "eye gap and eye height/width need the eye OPENING; Hina only has eyeball objects"
+    },
+    "forward": "+Y",
+    "not_measurable": {
+      "Pubis": "Hina's thighs touch down to the knees, so there is no leg gap to find the crotch from"
+    },
+    "unreliable_metrics": [
+      "eye_gap_eye_widths",
+      "eye_height_width"
+    ],
+    "skipped": "Navel, shoulder/elbow/wrist/hip/knee/ankle, HandTip: Hina has no armature, so joints cannot be measured"
+  }
+}
