@@ -1,0 +1,22 @@
+{
+  "name": "hina",
+  "summary": {
+    "clump_count": 62.0,
+    "median_verts": 121.0,
+    "median_thick_over_width": 0.6298497167777513,
+    "median_width_over_head": 0.47231582137247524,
+    "median_length_over_head": 1.228244181559762,
+    "tip_over_root_median": 0.6101567728033113,
+    "pointed_fraction": 0.6129032258064516,
+    "tube_fraction": 0.7580645161290323
+  },
+  "fit": {
+    "inside_skull_fraction": 0.12223738062755798,
+    "cranium_coverage": 1.0,
+    "ear_covered_fraction": 0.23076923076923078,
+    "ear_clear_required": 0.0
+  },
+  "length_bucket": "waist or longer",
+  "verts": 7247,
+  "clumps": 62
+}

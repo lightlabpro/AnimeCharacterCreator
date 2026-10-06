@@ -370,5 +370,121 @@ class TopologyJudge(unittest.TestCase):
         self.assertEqual(f.severity, "info")
 
 
+class Hair(unittest.TestCase):
+    def tube(self, cx, cy, z0, length=1.0, r=0.2, taper=0.3, seg=8, rings=6):
+        import numpy as np
+        v, f = [], []
+        for k in range(rings):
+            rr = r * (1 - (1 - taper) * k / (rings - 1))
+            for j in range(seg):
+                a = 2 * np.pi * j / seg
+                v.append([cx + rr * np.cos(a), cy + rr * np.sin(a), z0 - length * k / (rings - 1)])
+        for k in range(rings - 1):
+            for j in range(seg):
+                f.append((k * seg + j, k * seg + (j + 1) % seg, (k + 1) * seg + (j + 1) % seg, (k + 1) * seg + j))
+        return np.array(v), f
+
+    def mesh(self, n=25, **kw):
+        import numpy as np
+        vs, fs, off = [], [], 0
+        for i in range(n):
+            v, f = self.tube(i * 0.5, 0, 0, **kw)
+            vs.append(v)
+            fs += [tuple(x + off for x in q) for q in f]
+            off += len(v)
+        return np.vstack(vs), fs
+
+    def test_counts_clumps_and_measures_chunky_tapered_tubes(self):
+        from blender.validators import hair
+        v, f = self.mesh(25)
+        c = hair.clump_stats(v, f)
+        s = hair.summarise(c, head_h=1.0)
+        self.assertEqual(s["clump_count"], 25)
+        self.assertAlmostEqual(s["median_thick_over_width"], 1.0, delta=0.1)   # round tube = chunky
+        self.assertLess(s["tip_over_root_median"], 0.5)                          # tapered
+        self.assertEqual(s["tube_fraction"], 1.0)
+        self.assertTrue(all(x.severity == "pass" for x in hair.findings(s, "t")), [x.line() for x in hair.findings(s, "t")])
+
+    def test_flat_ribbons_are_flagged(self):
+        import numpy as np
+        from blender.validators import hair
+        v, f = self.mesh(25)
+        v[:, 1] *= 0.1  # flatten every clump into a ribbon
+        s = hair.summarise(hair.clump_stats(v, f), 1.0)
+        sev = {x.check: x.severity for x in hair.findings(s, "t")}
+        self.assertNotEqual(sev["hair.t.thick_over_width"], "pass")
+
+    def test_few_clumps_flagged(self):
+        from blender.validators import hair
+        s = hair.summarise(hair.clump_stats(*self.mesh(4)), 1.0)
+        self.assertNotEqual({x.check: x.severity for x in hair.findings(s, "t")}["hair.t.clumps"], "pass")
+
+    def test_uv_islands_one_per_clump_and_vertical(self):
+        from blender.validators import hair
+        faces = [(0, 1, 2, 3), (2, 3, 4, 5), (10, 11, 12, 13)]
+        uv = [[(0, 0), (0.1, 0), (0.1, 0.5), (0, 0.5)], [(0.1, 0.5), (0, 0.5), (0.1, 1), (0, 1)],
+              [(0.5, 0), (0.6, 0), (0.6, 1), (0.5, 1)]]
+        isl = hair.uv_islands(faces, uv)
+        self.assertEqual(len(isl), 2)
+        self.assertTrue(all(h >= 1.2 * w for w, h in isl))
+
+    def test_contract_requires_socket_shader_controls_and_colours(self):
+        from blender.validators import hair
+        bad = {x.check: x.severity for x in hair.contract_findings("H", {"parent": "CHR_Body"})}
+        self.assertEqual(bad["hair.H.socket"], "fail")
+        good = {x.check: x.severity for x in hair.contract_findings("H", {"parent": "SOC-HairFront", "materials": ["NG_ToonHair"],
+                "shape_keys": ["ID-HairVolume", "ID-HairWidth"], "props": ["root_color", "tip_color", "highlight_strength"]})}
+        self.assertTrue(all(v == "pass" for v in good.values()), good)
+
+    def test_hair_inside_the_head_is_detected_with_inward_normals(self):
+        import numpy as np
+        from blender.validators import hair
+        # a sphere "head" with inward-facing normals, hair points just outside and well inside
+        u, vv = np.meshgrid(np.linspace(0.2, np.pi - 0.2, 14), np.linspace(0, 2 * np.pi, 16, endpoint=False))
+        body = np.stack([np.sin(u) * np.cos(vv), np.sin(u) * np.sin(vv), np.cos(u)], -1).reshape(-1, 3) * [0.5, 0.5, 0.5] + [0, 0, 1.0]
+        faces = []
+        for i in range(13):
+            for j in range(16):
+                a, b = i * 16 + j, i * 16 + (j + 1) % 16
+                faces.append((a, (i + 1) * 16 + j, (i + 1) * 16 + (j + 1) % 16, b))  # reversed winding = inward normals
+        outside = body[::5] * 1.0 + (body[::5] - [0, 0, 1.0]) * 0.1
+        inside = body[::5] - (body[::5] - [0, 0, 1.0]) * 0.4
+        self.assertLess(hair.head_fit(outside, body, faces, 0.55, 1.45)["inside_skull_fraction"], 0.05)
+        self.assertGreater(hair.head_fit(inside, body, faces, 0.55, 1.45)["inside_skull_fraction"], 0.8)
+
+
+class HairJudge(unittest.TestCase):
+    topo = {"summary": {"clump_count": 62.0, "median_thick_over_width": 0.63, "median_width_over_head": 0.47,
+                        "tip_over_root_median": 0.61, "tube_fraction": 0.76},
+            "fit": {"inside_skull_fraction": 0.12, "cranium_coverage": 1.0, "ear_covered_fraction": 0.5, "ear_clear_required": 0.0},
+            "length_bucket": "shoulder length"}
+
+    def test_state_is_words_and_omits_ears_unless_required(self):
+        from blender.validators import hair_judge as hj
+        st = hj.build_state(self.topo, "bob")
+        s = json.dumps(st)
+        for raw in ("62.0", "0.63", "0.47", "0.61", "0.12"):
+            self.assertNotIn(raw, s)
+        self.assertNotIn("ears_covered", st["hair"])
+        t2 = json.loads(json.dumps(self.topo)); t2["fit"]["ear_clear_required"] = 1.0
+        self.assertEqual(hj.build_state(t2)["hair"]["ears_covered"], "a lot")
+        self.assertIn("ears_clear", hj.questions(hj.build_state(t2)))
+
+    def test_choice_has_none_and_is_reordered(self):
+        from blender.validators import hair_judge as hj
+        st = hj.build_state(self.topo)
+        a, b = hj.questions(st, 0)["first_fix"]["criteria"], hj.questions(st, 1)["first_fix"]["criteria"]
+        self.assertIn("none", a)
+        self.assertEqual(list(a), list(b)[::-1])
+
+    def test_uncertain_answers_become_review_not_warn(self):
+        from blender.validators import hair_judge as hj
+        out = hj.ask(self.topo, "t", None, None, lambda p: {"answers": {"chunky": {"noul": 0.5},
+                     "quality": {"score": 1.0, "confidence": 0.1}, "first_fix": {"choice": "none", "confidence": 1.0}}})
+        sev = {f.check: f.severity for f in out}
+        self.assertEqual(sev["hairjudge.t.chunky"], "info")
+        self.assertEqual(sev["hairjudge.t.quality"], "info")
+
+
 if __name__ == "__main__":
     unittest.main()

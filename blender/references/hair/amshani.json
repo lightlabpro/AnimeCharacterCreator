@@ -1,0 +1,22 @@
+{
+  "name": "amshani",
+  "summary": {
+    "clump_count": 16.0,
+    "median_verts": 130.5,
+    "median_thick_over_width": 0.42882954643136884,
+    "median_width_over_head": 0.4458614867824373,
+    "median_length_over_head": 0.6581292055733882,
+    "tip_over_root_median": 0.6377485915452548,
+    "pointed_fraction": 0.8125,
+    "tube_fraction": 0.625
+  },
+  "fit": {
+    "inside_skull_fraction": 0.0,
+    "cranium_coverage": 0.98359375,
+    "ear_covered_fraction": 1.0,
+    "ear_clear_required": 0.0
+  },
+  "length_bucket": "waist or longer",
+  "verts": 3293,
+  "clumps": 16
+}

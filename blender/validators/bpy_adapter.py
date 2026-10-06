@@ -203,3 +203,29 @@ def place_basic_markers() -> List[str]:
         bpy.context.scene.collection.objects.link(e)
         made.append(name)
     return made
+
+
+def hair_arrays(name: str):
+    """(verts, faces, uv_per_face) of a hair object, in world space."""
+    import numpy as np
+    ob = bpy.data.objects[name]
+    ev = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
+    me = ev.to_mesh()
+    mw = ev.matrix_world
+    verts = np.array([tuple(mw @ v.co) for v in me.vertices], dtype=np.float64)
+    faces = [tuple(p.vertices) for p in me.polygons]
+    uv = []
+    layer = me.uv_layers.active
+    if layer is not None:
+        for p in me.polygons:
+            uv.append([tuple(layer.data[i].uv) for i in range(p.loop_start, p.loop_start + p.loop_total)])
+    ev.to_mesh_clear()
+    return verts, faces, uv
+
+
+def hair_object_info(name: str) -> dict:
+    ob = bpy.data.objects[name]
+    return {"parent": ob.parent.name if ob.parent else "",
+            "materials": [m.name for m in ob.data.materials if m],
+            "shape_keys": [k.name for k in ob.data.shape_keys.key_blocks] if ob.data.shape_keys else [],
+            "props": list(ob.keys()) + list(ob.data.keys())}

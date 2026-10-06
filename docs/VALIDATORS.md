@@ -31,6 +31,12 @@ Set `TYPESAFE_API_KEY` in the environment on your PC. Without it the judge and v
 
 Place empties named `LM-<Name>` (`Crown, Chin, Floor, Nipple, Navel, Pubis, EyeInner_L/R, EyeOuter_L, EyeTop_L, EyeBottom_L, Mouth, HandTip_L, HeelBack_L, ToeTip_L`). Limb joints are read from `DEF-` bones named like `upperarm.L`, `forearm.L`, `hand.L`, `thigh.L`, `shin.L`, `foot.L`. `bpy_adapter.place_basic_markers()` makes Crown, Chin and Floor. The rest are judgement calls, so they are placed by hand. A missing landmark is reported as SKIP, never guessed.
 
+## Hair
+
+`hair.py`, `hair_judge.py`, `blender/scripts/analyze_hair.py` and the repo skill `.claude/skills/hair-validators/SKILL.md`. Clump statistics (count, vertices, thickness / width, width / head, taper, tube-like sides), UV islands, fit against the head (signed distance, cranium coverage, ear coverage when creature ears are equipped), length bucket and the build-prompt contract (hair socket, `NG_ToonHair`, volume and width controls, root / tip colour, highlight strength).
+
+The measurement code was checked against the numbers the modeling skill recorded for Hina and reproduces them: 62 clumps, median 121 vertices, thickness / width 0.63 (skill: 0.64). Amshani's hair, isolated from its body mesh by material and head weight, has 16 clumps and thickness / width 0.43, so it reads weaker. TypeSafe agrees: it scored Hina's hair 3.3 and Amshani's 1.5 out of 4, with "too few clumps" as the first fix. Bands for taper, UV orientation and buried roots are calibrated on those two models and labelled as such in `hair.py`.
+
 ## Topology
 
 `topology.py` + `blender/scripts/analyze_topology.py` check a mesh three ways and write a profile to `blender/references/topology/`:
