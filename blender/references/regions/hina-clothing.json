@@ -1,0 +1,108 @@
+{
+  "name": "hina",
+  "regions": {
+    "clothing": [
+      {
+        "check": "clothing.fit.penetration",
+        "severity": "pass",
+        "message": "clothes: share of garment vertices pushed inside the body",
+        "value": 0.010776545166402536,
+        "expected": "<= 0.03",
+        "fix": "Offset the garment outward or add a push-out corrective (do not Boolean it into the body).",
+        "source": "heuristic"
+      },
+      {
+        "check": "clothing.fit.gap",
+        "severity": "info",
+        "message": "clothes: garment sits 1.39% of body height off the skin (median); 5-95% range 0.15..3.62%",
+        "value": 0.013890104436578099,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "clothing.fit.on_body",
+        "severity": "info",
+        "message": "clothes: 99% of the garment lies on the body (the rest hangs free)",
+        "value": 0.988718270134754,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "clothing.coverage.overall",
+        "severity": "info",
+        "message": "clothes: covers 55% of the body in zone 'overall'",
+        "value": 0.5500541125541125,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "clothing.coverage.legs",
+        "severity": "info",
+        "message": "clothes: covers 25% of the body in zone 'legs'",
+        "value": 0.2543507362784471,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "clothing.coverage.torso",
+        "severity": "info",
+        "message": "clothes: covers 76% of the body in zone 'torso'",
+        "value": 0.7558922558922558,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "clothing.coverage.head_neck",
+        "severity": "info",
+        "message": "clothes: covers 43% of the body in zone 'head_neck'",
+        "value": 0.42538593481989706,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "clothing.skinning.unweighted",
+        "severity": "pass",
+        "message": "clothes: garment vertices with no bone weights",
+        "value": 0.0,
+        "expected": "<= 0.02",
+        "fix": "Weight every vertex of a deforming garment.",
+        "source": "heuristic"
+      },
+      {
+        "check": "clothing.skinning.match",
+        "severity": "pass",
+        "message": "clothes: garment moves with the same main bone as the body beneath it",
+        "value": 0.7455343152616735,
+        "expected": ">= 0.70",
+        "fix": "Transfer weights from the body to the garment.",
+        "source": "heuristic (Hina's clothes score ~0.9)"
+      }
+    ],
+    "accessory": [
+      {
+        "check": "accessory.socket.parent",
+        "severity": "fail",
+        "message": "bow: parented to SOC-Waist (no parent)",
+        "value": null,
+        "expected": "",
+        "fix": "Parent the accessory to its socket; do not parent it to the body.",
+        "source": ""
+      },
+      {
+        "check": "accessory.scale.centre_height_over_body",
+        "severity": "pass",
+        "message": "bow: belt height as a fraction of body height (waist to hips)",
+        "value": 0.5417747876198606,
+        "expected": "0.45..0.65 (warn within 0.07)",
+        "fix": "Place the belt at the waist.",
+        "source": "heuristic"
+      }
+    ]
+  }
+}

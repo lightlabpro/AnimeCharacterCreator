@@ -49,6 +49,7 @@ def snapshot(kind: str, with_verts: bool = True, body_name: Optional[str] = None
         mw = arm.matrix_world
         for b in arm.data.bones:
             info.bones[b.name] = (_v(mw @ b.head_local), _v(mw @ b.tail_local))
+            info.bone_parents[b.name] = b.parent.name if b.parent else None
             if b.use_deform:
                 info.deform_bones.add(b.name)
     body = bpy.data.objects.get(body_name)
@@ -229,3 +230,28 @@ def hair_object_info(name: str) -> dict:
             "materials": [m.name for m in ob.data.materials if m],
             "shape_keys": [k.name for k in ob.data.shape_keys.key_blocks] if ob.data.shape_keys else [],
             "props": list(ob.keys()) + list(ob.data.keys())}
+
+
+def collect_parts(aliases) -> dict:
+    """Role -> (verts, faces) for the first object whose name matches one of the aliases (case-insensitive)."""
+    import numpy as np
+    low = {o.name.lower(): o.name for o in bpy.data.objects if o.type == "MESH"}
+    out = {}
+    for role, names in aliases.items():
+        for n in names:
+            if n.lower() in low:
+                v, f = mesh_arrays(low[n.lower()])
+                out[role] = (v, f)
+                break
+    return out
+
+
+def dominant_bones(name: str):
+    """Main bone (highest weight vertex group) per vertex of an object; None when a vertex has no weights."""
+    ob = bpy.data.objects[name]
+    names = {g.index: g.name for g in ob.vertex_groups}
+    out = []
+    for v in ob.data.vertices:
+        best = max(v.groups, key=lambda g: g.weight, default=None)
+        out.append(names.get(best.group) if best is not None and best.weight > 0 else None)
+    return out

@@ -133,6 +133,7 @@ def scene_from_gltf(path: str, kind: str) -> SceneInfo:
             kids = [pos[c] for c in n.get("children", []) if c in joints]
             tail = tuple(sum(k[a] for k in kids) / len(kids) for a in range(3)) if kids else pos[i]
             info.bones[name] = (pos[i], tail)
+            info.bone_parents[name] = nodes[parent[i]].get('name') if i in parent else None
             info.deform_bones.add(name)
         extras = n.get("extras") or {}
         if "socket_name" in extras:

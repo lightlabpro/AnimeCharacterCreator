@@ -1,0 +1,699 @@
+{
+  "name": "amshani",
+  "regions": {
+    "body": [
+      {
+        "check": "anatomy.height_heads",
+        "severity": "warn",
+        "message": "Height in heads (per crown-to-chin head height)",
+        "value": 7.631361495761634,
+        "expected": "7..7.5 (warn within 0.3)",
+        "fix": "Body too tall for the head: lower leg_length / torso_length or raise head_scale.",
+        "source": "manual s2 (adult 7-7.5), s5 (child 5-5.5); MHS3 male 6.7 / female 7.3 incl. hair"
+      },
+      {
+        "check": "anatomy.chin_line",
+        "severity": "pass",
+        "message": "Chin line (per total height from crown)",
+        "value": 0.13103821651685457,
+        "expected": "0.115..0.15 (warn within 0.02)",
+        "fix": "Head too large (check head_scale).",
+        "source": "manual s2 table: head line 1 (1/8 = 0.125, 1/7 = 0.143)"
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'Nipple' not found; add an empty named LM-Nipple or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'Navel' not found; add an empty named LM-Navel or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "shoulder_L taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "elbow_L taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "wrist_L taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "hip_L taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "knee_L taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "ankle_L taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "shoulder_R taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "elbow_R taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "wrist_R taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "hip_R taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "knee_R taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "ankle_R taken from bone head",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.note",
+        "severity": "info",
+        "message": "HandTip_L taken from the farthest middle-finger bone (Middle Finger_L.002_end)",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.symmetry",
+        "severity": "pass",
+        "message": "left/right joint height difference",
+        "value": 6.733979526008649e-07,
+        "expected": "<= 0.05 head",
+        "fix": "Mirror the rig or fix the offset joint.",
+        "source": ""
+      },
+      {
+        "check": "tongue.performance.tongue",
+        "severity": "info",
+        "message": "amshani: tongue covers 0 of 1 standard expression shapes",
+        "value": 0.0,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      },
+      {
+        "check": "body.rig.duplicates",
+        "severity": "warn",
+        "message": "amshani: VRM bones claimed twice (humanoid bones must be unique): leftEye = Left eye, LeftEye; rightEye = Right eye, RightEye",
+        "value": null,
+        "expected": "",
+        "fix": "Keep one bone per humanoid role.",
+        "source": ""
+      },
+      {
+        "check": "body.rig.hierarchy",
+        "severity": "pass",
+        "message": "amshani: bone hierarchy follows the VRM humanoid tree",
+        "value": null,
+        "expected": "",
+        "fix": "Re-parent so hips > spine > chest > neck > head and the arm and leg chains match.",
+        "source": ""
+      }
+    ],
+    "hips": [
+      {
+        "check": "anatomy.pubis_line",
+        "severity": "warn",
+        "message": "Pubis line (per total height from crown)",
+        "value": 0.45471881939588354,
+        "expected": "0.47..0.54 (warn within 0.03)",
+        "fix": "Crotch too high: lengthen leg_length.",
+        "source": "manual s2 table: head line 4, the body midpoint"
+      },
+      {
+        "check": "anatomy.hip_width_heads",
+        "severity": "info",
+        "message": "Hip width measured between joint centres, not graded; place LM-hip_L/R at the outer points to grade it",
+        "value": 0.8181230412537054,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "hips.rig.required",
+        "severity": "pass",
+        "message": "amshani: 1/1 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      }
+    ],
+    "legs": [
+      {
+        "check": "anatomy.legs_fraction",
+        "severity": "warn",
+        "message": "Pubis height / total height (per total height)",
+        "value": 0.5452811806041165,
+        "expected": "0.46..0.52 (warn within 0.03)",
+        "fix": "Legs too long: lower leg_length or lengthen torso_length.",
+        "source": "manual s2 (pubis is the midpoint), s5 (child midpoint above hips); MHS3 legs ~48%"
+      },
+      {
+        "check": "anatomy.thigh_shin_ratio",
+        "severity": "fail",
+        "message": "Thigh / lower leg (per lower-leg length)",
+        "value": 0.5765304410443747,
+        "expected": "0.85..1.15 (warn within 0.15)",
+        "fix": "Thigh too short: raise thigh_length or lower shin_length.",
+        "source": "manual s2: the thigh roughly equals the lower leg"
+      },
+      {
+        "check": "legs.rig.required",
+        "severity": "pass",
+        "message": "amshani: 4/4 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      }
+    ],
+    "shoulders": [
+      {
+        "check": "anatomy.shoulder_width_heads",
+        "severity": "info",
+        "message": "Shoulder width measured between joint centres, not graded; place LM-shoulder_L/R at the outer points to grade it",
+        "value": 1.0555183783769224,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "shoulders.rig.optional",
+        "severity": "info",
+        "message": "amshani: 2/2 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "arms": [
+      {
+        "check": "anatomy.wrist_to_crotch_heads",
+        "severity": "warn",
+        "message": "Hanging wrist vs crotch (per head height, signed (+ = wrist higher); arm length hung straight down from the shoulder, so pose does not matter)",
+        "value": 0.3454778606304583,
+        "expected": "-0.3..0.3 (warn within 0.2)",
+        "fix": "Arms too short: raise upper_arm_length / forearm_length.",
+        "source": "manual s2: hanging wrists reach the crotch line"
+      },
+      {
+        "check": "anatomy.arm_angle_deg",
+        "severity": "fail",
+        "message": "A-pose arm angle (per degrees from straight down)",
+        "value": 87.53112126887463,
+        "expected": "15..50 (warn within 10)",
+        "fix": "Arms too raised: lower them toward A-pose.",
+        "source": "build prompt MESH RULES: relaxed A-pose"
+      },
+      {
+        "check": "arms.rig.required",
+        "severity": "pass",
+        "message": "amshani: 4/4 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      }
+    ],
+    "hands": [
+      {
+        "check": "anatomy.hand_length_heads",
+        "severity": "pass",
+        "message": "Hand length (per head height)",
+        "value": 0.8043242062910586,
+        "expected": "0.6..0.85 (warn within 0.1)",
+        "fix": "Hands too big: lower hand_length / ID-HandSize.",
+        "source": "manual s2: hand about as long as the face (chin to hairline, ~3/4 head)"
+      },
+      {
+        "check": "hands.rig.required",
+        "severity": "pass",
+        "message": "amshani: 2/2 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      },
+      {
+        "check": "hands.rig.optional",
+        "severity": "info",
+        "message": "amshani: 30/30 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "feet": [
+      {
+        "check": "anatomy.foot_vs_forearm",
+        "severity": "fail",
+        "message": "Foot / forearm (per forearm length)",
+        "value": 1.6926281419322449,
+        "expected": "0.85..1.2 (warn within 0.15)",
+        "fix": "Feet too long: lower foot_length / ID-FootSize.",
+        "source": "manual s2: foot about as long as the forearm"
+      },
+      {
+        "check": "feet.rig.required",
+        "severity": "pass",
+        "message": "amshani: 2/2 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      },
+      {
+        "check": "feet.rig.optional",
+        "severity": "info",
+        "message": "amshani: 2/2 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "eyes": [
+      {
+        "check": "anatomy.eye_line_norm",
+        "severity": "pass",
+        "message": "Eye line (per skull height H, chin = 0)",
+        "value": 0.38066223583506126,
+        "expected": "0.34..0.52 (warn within 0.04)",
+        "fix": "Eyes too high: lower ID-EyeHeight.",
+        "source": "skill (Hina/Amshani eye line ~0.37); manual s8 (realistic midpoint 0.5); manual s5 (child: low eyes)"
+      },
+      {
+        "check": "anatomy.eye_gap_eye_widths",
+        "severity": "fail",
+        "message": "Gap between eyes (per single eye width)",
+        "value": 0.6580031260101098,
+        "expected": "0.95..1.45 (warn within 0.15)",
+        "fix": "Eyes too close: raise ID-EyeSpacing.",
+        "source": "manual s8 (one eye-width apart) and skill (MHS3 ~1.25 widths); band covers both"
+      },
+      {
+        "check": "anatomy.eye_height_width",
+        "severity": "fail",
+        "message": "Eye height / width (per eye width)",
+        "value": 0.7302275891465619,
+        "expected": "0.5..0.65 (warn within 0.07)",
+        "fix": "Eyes too tall: lower ID-EyeSize.",
+        "source": "skill (Hina/Amshani ~0.56, MHS3 ~0.62); child eyes are rounder (manual s5)"
+      },
+      {
+        "check": "eyes.eyeball.parts",
+        "severity": "skip",
+        "message": "amshani: no separate eyeball objects (CHR_Eye_L / CHR_Eye_R)",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "eyes.performance.eyes",
+        "severity": "info",
+        "message": "amshani: eyes covers 2 of 14 standard expression shapes",
+        "value": 0.14285714285714285,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      },
+      {
+        "check": "eyes.rig.optional",
+        "severity": "info",
+        "message": "amshani: 2/2 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "mouth": [
+      {
+        "check": "anatomy.mouth_norm",
+        "severity": "pass",
+        "message": "Mouth height (per skull height H, chin = 0)",
+        "value": 0.1445825808111213,
+        "expected": "0.1..0.25 (warn within 0.05)",
+        "fix": "Mouth too high: lower ID-MouthHeight.",
+        "source": "skill (MHS3: mouth close to the chin); manual s8 (mouth close under the nose)"
+      },
+      {
+        "check": "mouth.placement.mouth_fraction_nose_to_chin",
+        "severity": "info",
+        "message": "amshani: mouth height between chin (0) and nose tip (1)",
+        "value": 0.5145431669762147,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.teeth.parts",
+        "severity": "skip",
+        "message": "amshani: no teeth upper object",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.teeth.parts",
+        "severity": "skip",
+        "message": "amshani: no teeth lower object",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.tongue.parts",
+        "severity": "skip",
+        "message": "amshani: no tongue object",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.performance.mouth",
+        "severity": "info",
+        "message": "amshani: mouth covers 1 of 23 standard expression shapes",
+        "value": 0.043478260869565216,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      },
+      {
+        "check": "mouth.performance.visemes",
+        "severity": "pass",
+        "message": "amshani: visemes (Oculus 15) covers 13 of 15 standard expression shapes",
+        "value": 0.8666666666666667,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      },
+      {
+        "check": "mouth.performance.visemes",
+        "severity": "pass",
+        "message": "amshani: visemes (VRM aa ih ou ee oh) covers 5 of 5 standard expression shapes",
+        "value": 1.0,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      },
+      {
+        "check": "mouth.rig.optional",
+        "severity": "info",
+        "message": "amshani: 0/1 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "skull": [
+      {
+        "check": "anatomy.temple_width_norm",
+        "severity": "pass",
+        "message": "Head width at the temples (per skull height H)",
+        "value": 0.8749820286921399,
+        "expected": "0.76..0.95 (warn within 0.06)",
+        "fix": "Head too wide: lower ID-FaceRound.",
+        "source": "skill (measured on Hina/Amshani: ~0.80 H, pass >= 0.76 H); child cranium is large (manual s5)"
+      },
+      {
+        "check": "anatomy.forehead_slope",
+        "severity": "pass",
+        "message": "Forehead lean (per skull height H (front-surface offset, eye line to 0.8 H))",
+        "value": 0.0,
+        "expected": "0..0.03 (warn within 0.03)",
+        "fix": "Forehead recedes: pull the brow plane forward (ID-BrowRidge) or flatten the face plane.",
+        "source": "skill: forehead vertical within 0.03 H; a receding forehead reads amateur"
+      },
+      {
+        "check": "skull.rig.required",
+        "severity": "pass",
+        "message": "amshani: 1/1 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      }
+    ],
+    "neck": [
+      {
+        "check": "anatomy.neck_head_width",
+        "severity": "fail",
+        "message": "Neck width / head width (per head width at the temples)",
+        "value": 0.7022558621337524,
+        "expected": "0.3..0.45 (warn within 0.05)",
+        "fix": "Neck too thick: lower ID-NeckThickness.",
+        "source": "skill (refs 0.37-0.41, pass <= 0.45); manual s5 (thin child neck)"
+      },
+      {
+        "check": "neck.rig.optional",
+        "severity": "info",
+        "message": "amshani: 1/1 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "brows": [
+      {
+        "check": "brows.shape.parts",
+        "severity": "skip",
+        "message": "amshani: no separate brow object (CHR_Brows)",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "brows.performance.brows",
+        "severity": "info",
+        "message": "amshani: brows covers 0 of 5 standard expression shapes",
+        "value": 0.0,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      }
+    ],
+    "nose": [
+      {
+        "check": "nose.position.nose_tip_fraction",
+        "severity": "pass",
+        "message": "amshani: nose tip height between chin (0) and eye line (1)",
+        "value": 0.7381665534935757,
+        "expected": "0.40..0.85",
+        "fix": "Move the nose tip toward the middle of the eye-to-chin distance.",
+        "source": "manual s8 (halfway) widened to the anime references (0.74-0.77)"
+      },
+      {
+        "check": "nose.protrusion.nose_protrusion_over_head_height",
+        "severity": "info",
+        "message": "amshani: nose protrusion past the cheek plane (head heights; Stories keeps the nose small)",
+        "value": 0.11887772637091791,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "nose.performance.nose",
+        "severity": "info",
+        "message": "amshani: nose covers 0 of 2 standard expression shapes",
+        "value": 0.0,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      }
+    ],
+    "ears": [
+      {
+        "check": "ears.size.ear_height_over_head_height",
+        "severity": "info",
+        "message": "amshani: ear height relative to head height",
+        "value": 0.0,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "ears.placement.ear_centre_vs_eye_line",
+        "severity": "info",
+        "message": "amshani: ear centre vs the eye line (head heights, + = above)",
+        "value": -0.10160545087931024,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "jaw": [
+      {
+        "check": "jaw.width.jaw_width_over_temple_width",
+        "severity": "info",
+        "message": "amshani: jaw width relative to temple width",
+        "value": 1.1021280342867448,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "jaw.performance.jaw",
+        "severity": "info",
+        "message": "amshani: jaw covers 0 of 4 standard expression shapes",
+        "value": 0.0,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      }
+    ],
+    "cheeks": [
+      {
+        "check": "cheeks.performance.cheeks",
+        "severity": "info",
+        "message": "amshani: cheeks covers 0 of 3 standard expression shapes",
+        "value": 0.0,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      }
+    ],
+    "face": [
+      {
+        "check": "face.performance.emotions",
+        "severity": "info",
+        "message": "amshani: emotions (VRM) covers 1 of 6 standard expression shapes",
+        "value": 0.16666666666666666,
+        "expected": ">= 0.80",
+        "fix": "Add the missing shapes or map existing ones (see the unmapped list).",
+        "source": ""
+      },
+      {
+        "check": "face.performance.unmapped",
+        "severity": "info",
+        "message": "amshani: 11 shape keys could not be matched to a standard shape: A, CH, O, vrc.v_ch, vrc.v_dd, vrc.v_ff, vrc.v_kk, vrc.v_nn",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "waist": [
+      {
+        "check": "waist.rig.required",
+        "severity": "pass",
+        "message": "amshani: 1/1 required VRM humanoid bones",
+        "value": null,
+        "expected": "",
+        "fix": "Add or rename the bones to the VRM humanoid set (see docs/VALIDATORS.md).",
+        "source": ""
+      }
+    ],
+    "chest": [
+      {
+        "check": "chest.rig.optional",
+        "severity": "info",
+        "message": "amshani: 1/2 optional VRM humanoid bones present",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ]
+  },
+  "face_metrics": {
+    "nose_tip_fraction": 0.7381665534935757,
+    "nose_protrusion_over_head_height": 0.11887772637091791,
+    "mouth_fraction_nose_to_chin": 0.5145431669762147,
+    "ear_height_over_head_height": 0.0,
+    "ear_centre_vs_eye_line": -0.10160545087931024,
+    "jaw_width_over_temple_width": 1.1021280342867448
+  }
+}

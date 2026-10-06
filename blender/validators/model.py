@@ -85,6 +85,7 @@ class SceneInfo:
     # DEF-/SOC- bones: name -> (head, tail)
     bones: Dict[str, Tuple[Vec, Vec]] = field(default_factory=dict)
     deform_bones: Set[str] = field(default_factory=set)
+    bone_parents: Dict[str, Optional[str]] = field(default_factory=dict)
     # Validator-owned landmark markers (empties named LM-*) and any bone-derived ones.
     markers: Dict[str, Vec] = field(default_factory=dict)
     shape_keys: Dict[str, List[str]] = field(default_factory=dict)  # object -> key names
@@ -94,6 +95,8 @@ class SceneInfo:
     custom_props: Dict[str, Dict[str, object]] = field(default_factory=dict)
     body_verts: Optional[Sequence[Vec]] = None
     quad_ratio: Dict[str, float] = field(default_factory=dict)
+    # separate part objects by role (eye_L, eye_R, brows, lashes, teeth_upper, teeth_lower, tongue, clothing:<name>, accessory:<name>): (verts, faces)
+    parts: Dict[str, tuple] = field(default_factory=dict)
 
     def flip_forward(self) -> None:
         """Reference models that face +Y: mirror Y so every check can assume the library's -Y forward."""
@@ -102,6 +105,7 @@ class SceneInfo:
         self.bones = {k: (f(h), f(t)) for k, (h, t) in self.bones.items()}
         if self.body_verts is not None:
             self.body_verts = [f(v) for v in self.body_verts]
+        self.parts = {k: ([(x, -y, z) for x, y, z in (v.tolist() if hasattr(v, 'tolist') else v)], fc) for k, (v, fc) in self.parts.items()}
 
     def socket_names(self) -> Set[str]:
         return {n for n in self.objects | set(self.bones) if n.startswith("SOC-")}

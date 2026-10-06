@@ -31,6 +31,44 @@ Set `TYPESAFE_API_KEY` in the environment on your PC. Without it the judge and v
 
 Place empties named `LM-<Name>` (`Crown, Chin, Floor, Nipple, Navel, Pubis, EyeInner_L/R, EyeOuter_L, EyeTop_L, EyeBottom_L, Mouth, HandTip_L, HeelBack_L, ToeTip_L`). Limb joints are read from `DEF-` bones named like `upperarm.L`, `forearm.L`, `hand.L`, `thigh.L`, `shin.L`, `foot.L`. `bpy_adapter.place_basic_markers()` makes Crown, Chin and Floor. The rest are judgement calls, so they are placed by hand. A missing landmark is reported as SKIP, never guessed.
 
+## Regions and features
+
+The report is organised per region and per feature using the app's own region ids (`src/model/types.ts`): skull, face, eyes, brows, nose, mouth, jaw, cheeks, ears, hair, facial hair, neck, shoulders, chest, waist, hips, arms, hands, legs, feet, whole body, plus the library's element and accessory regions (muzzle, tail, wings, horns, mane, frill, surface, archetype, clothing, accessory) and the quadruped. `regions.py` holds the registry; every finding is named `<region>.<feature>.<metric>`, so `regions.region_table(report)` gives one row per region and `analyze_regions.py` prints it.
+
+| Layer | Module | Checks |
+| --- | --- | --- |
+| Face features | `face.py` | eyeballs (roundness, size, height symmetry, head yaw), eyebrows (vertices per side to bend, symmetry, length, gap to eye), nose (tip height, protrusion against the face plane), mouth (teeth, tongue), ears, jaw |
+| Rig | `rig.py` | required and optional bones per region against the VRM humanoid spec, duplicate humanoid bones, parent/child order |
+| Expressions | `expression_map.py` | per-region coverage of the ARKit 52, VRM presets and Oculus 15 visemes |
+| Body | `anatomy` metrics, `topology.py` | proportions per region, loops at joints, bends |
+| Hair | `hair.py` | clumps, UVs, fit, contract |
+| Clothing | `clothing.py` | penetration, gap, coverage, skinning agreement, accessory manifest contract |
+| Accessories | `accessory.py` | socket parent and placement/scale per slot (eyewear, bandana, shoes, belt, cape, weapons) |
+| Humanoid beasts | `beast.py`, `archetype.py` | mouth-corner reach, plantigrade vs digitigrade heel, tail root and taper, horn symmetry and base, element recipes, archetype distinctness |
+| Quadruped | `quadruped.py` | forelimb weight share, elbows and knees at belly level, wrist consistency, wing roots, shoulder height |
+
+### Resources the validators draw on
+
+Read for this work: the VRM 1.0 humanoid and expression specifications, the 52 ARKit blendshape names (as listed in the Perfect Sync article by hinzka), the FACS action-unit table (Wikipedia), and the Khronos glTF-Validator (`node blender/scripts/validate_gltf.js`). Not reachable from the build environment: Apple's ARKit documentation and VRChat's avatar performance ranks, so no VRChat polygon or material budgets are used. Oculus' 15 visemes come from the `vrc.v_*` naming on the reference model, not from a fetched page.
+
+### TypeSafe in the region validators
+
+1. **Name mapping:** shape-key and bone names the rules cannot place are matched to the standards by a two-step Choice (region, then name), each asked in two option orders; only agreement above 0.5 confidence is accepted. On Amshani it matched `O` to `oh` (0.61) and declined the rest.
+2. **Archetype distinctness:** a Choice over the 13 archetypes from the manual's sheet, two option orders, top-to-second ratio for close calls. All 12 element recipes in the project docs read as their own archetype, but only once absent traits (no horns, no wings) are stated; the first attempt without them read dinosaur and lizard as dragon.
+3. **Region judge:** one small request per region (target look from the manual and skill, checks as words, measured-only checks as within / below / above the reference models), with a score, two yes = good questions and a first-fix Choice.
+
+### Measured on the references
+
+- Hina's eyes are flat discs about 0.01 deep, not spheres (roundness 0.28), so they fail the build prompt's "spheres or slight ovals" rule; her eyes are also offset in a way that implies a head turned about 7 degrees, so symmetry is measured on height and size only.
+- Nose protrusion against the face plane is 0.109 (Hina) and 0.119 (Amshani) of head height; the nose tip sits at 0.77 and 0.74 of eye-to-chin, higher than the manual's realistic 0.5, so that band was widened to the anime range.
+- Amshani's rig has all required VRM bones and 30 of 30 finger bones, but two bones for each eye (duplicates).
+- Hina's garment lies on the body (99%), 1.1% of its vertices are pushed inside, it sits 1.4% of body height off the skin and is fully weighted; its main bones match the body beneath it 75% of the time.
+- Region judge, Hina: brows, nose, ears, mouth and chest read good; eyes, body and neck read weak. Amshani: rig-related regions, eyes and brows read weak.
+
+### Limits
+
+No real humanoid-beast or quadruped model is in the references, so those validators are tested on synthetic geometry only. Bands labelled heuristic or calibrated come from the manual, the skill or Hina and Amshani and are not published figures.
+
 ## Hair
 
 `hair.py`, `hair_judge.py`, `blender/scripts/analyze_hair.py` and the repo skill `.claude/skills/hair-validators/SKILL.md`. Clump statistics (count, vertices, thickness / width, width / head, taper, tube-like sides), UV islands, fit against the head (signed distance, cranium coverage, ear coverage when creature ears are equipped), length bucket and the build-prompt contract (hair socket, `NG_ToonHair`, volume and width controls, root / tip colour, highlight strength).

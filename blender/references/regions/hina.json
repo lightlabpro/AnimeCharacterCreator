@@ -1,0 +1,361 @@
+{
+  "name": "hina",
+  "regions": {
+    "body": [
+      {
+        "check": "anatomy.height_heads",
+        "severity": "warn",
+        "message": "Height in heads (per crown-to-chin head height)",
+        "value": 6.720945857572552,
+        "expected": "7..7.5 (warn within 0.3)",
+        "fix": "Body too short for the head: raise torso_length / leg_length or lower head_scale.",
+        "source": "manual s2 (adult 7-7.5), s5 (child 5-5.5); MHS3 male 6.7 / female 7.3 incl. hair"
+      },
+      {
+        "check": "anatomy.chin_line",
+        "severity": "pass",
+        "message": "Chin line (per total height from crown)",
+        "value": 0.14878858142761123,
+        "expected": "0.115..0.15 (warn within 0.02)",
+        "fix": "Head too large (check head_scale).",
+        "source": "manual s2 table: head line 1 (1/8 = 0.125, 1/7 = 0.143)"
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'Navel' not found; add an empty named LM-Navel or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'Pubis' not found; add an empty named LM-Pubis or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'shoulder_L' not found; add an empty named LM-shoulder_L or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'shoulder_R' not found; add an empty named LM-shoulder_R or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'hip_L' not found; add an empty named LM-hip_L or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "anatomy.landmark",
+        "severity": "skip",
+        "message": "landmark 'hip_R' not found; add an empty named LM-hip_R or name the DEF- bones so the validator can find them",
+        "value": null,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "chest": [
+      {
+        "check": "anatomy.nipple_line",
+        "severity": "pass",
+        "message": "Nipple line (per total height from crown)",
+        "value": 0.2583451353021106,
+        "expected": "0.24..0.3 (warn within 0.035)",
+        "fix": "Chest sits too low: shorten neck_length / torso_length.",
+        "source": "manual s2 table: head line 2"
+      }
+    ],
+    "eyes": [
+      {
+        "check": "anatomy.eye_line_norm",
+        "severity": "pass",
+        "message": "Eye line (per skull height H, chin = 0)",
+        "value": 0.39247695974162355,
+        "expected": "0.34..0.52 (warn within 0.04)",
+        "fix": "Eyes too high: lower ID-EyeHeight.",
+        "source": "skill (Hina/Amshani eye line ~0.37); manual s8 (realistic midpoint 0.5); manual s5 (child: low eyes)"
+      },
+      {
+        "check": "anatomy.eye_gap_eye_widths",
+        "severity": "fail",
+        "message": "Gap between eyes (per single eye width)",
+        "value": 1.8225767813249145,
+        "expected": "0.95..1.45 (warn within 0.15)",
+        "fix": "Eyes too far apart: lower ID-EyeSpacing.",
+        "source": "manual s8 (one eye-width apart) and skill (MHS3 ~1.25 widths); band covers both"
+      },
+      {
+        "check": "anatomy.eye_height_width",
+        "severity": "fail",
+        "message": "Eye height / width (per eye width)",
+        "value": 0.8691313776639971,
+        "expected": "0.5..0.65 (warn within 0.07)",
+        "fix": "Eyes too tall: lower ID-EyeSize.",
+        "source": "skill (Hina/Amshani ~0.56, MHS3 ~0.62); child eyes are rounder (manual s5)"
+      },
+      {
+        "check": "eyes.eyeball.eyeball_roundness",
+        "severity": "fail",
+        "message": "hina: eyeball is a sphere or slight oval (shortest / longest side)",
+        "value": 0.28160244369836607,
+        "expected": ">= 0.70",
+        "fix": "Eyeballs should be near-spherical so the iris shader stays round.",
+        "source": "build prompt: eyes are spheres or slight ovals"
+      },
+      {
+        "check": "eyes.eyeball.eyeball_over_head_height",
+        "severity": "info",
+        "message": "hina: eyeball size relative to head height",
+        "value": 0.12993266758211697,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "eyes.symmetry.eye_pair_asymmetry_x",
+        "severity": "fail",
+        "message": "hina: left/right eye offset from a mirror (head heights)",
+        "value": 0.09255543382243953,
+        "expected": "<= 0.02",
+        "fix": "Mirror the eye positions.",
+        "source": "heuristic"
+      },
+      {
+        "check": "eyes.symmetry.eye_pair_asymmetry_z",
+        "severity": "warn",
+        "message": "hina: left/right eye offset from a mirror (head heights)",
+        "value": 0.020969136366484127,
+        "expected": "<= 0.02",
+        "fix": "Mirror the eye positions.",
+        "source": "heuristic"
+      },
+      {
+        "check": "eyes.symmetry.eye_pair_asymmetry_y",
+        "severity": "warn",
+        "message": "hina: left/right eye offset from a mirror (head heights)",
+        "value": 0.04552818816384607,
+        "expected": "<= 0.02",
+        "fix": "Mirror the eye positions.",
+        "source": "heuristic"
+      }
+    ],
+    "mouth": [
+      {
+        "check": "anatomy.mouth_norm",
+        "severity": "pass",
+        "message": "Mouth height (per skull height H, chin = 0)",
+        "value": 0.1344467584252891,
+        "expected": "0.1..0.25 (warn within 0.05)",
+        "fix": "Mouth too high: lower ID-MouthHeight.",
+        "source": "skill (MHS3: mouth close to the chin); manual s8 (mouth close under the nose)"
+      },
+      {
+        "check": "mouth.placement.mouth_fraction_nose_to_chin",
+        "severity": "info",
+        "message": "hina: mouth height between chin (0) and nose tip (1)",
+        "value": 0.4478489956267322,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.teeth.teeth_gap_over_head_height",
+        "severity": "info",
+        "message": "hina: gap between upper and lower teeth",
+        "value": -0.0014833884948703994,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.teeth.teeth_width_over_head_width",
+        "severity": "info",
+        "message": "hina: teeth width relative to head width",
+        "value": 0.24698053506571832,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "mouth.teeth.tongue_inside_teeth_depth",
+        "severity": "info",
+        "message": "hina: tongue depth behind the lower teeth",
+        "value": 0.01734123314637909,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "skull": [
+      {
+        "check": "anatomy.temple_width_norm",
+        "severity": "pass",
+        "message": "Head width at the temples (per skull height H)",
+        "value": 0.7759306307474423,
+        "expected": "0.76..0.95 (warn within 0.06)",
+        "fix": "Head too wide: lower ID-FaceRound.",
+        "source": "skill (measured on Hina/Amshani: ~0.80 H, pass >= 0.76 H); child cranium is large (manual s5)"
+      },
+      {
+        "check": "anatomy.forehead_slope",
+        "severity": "warn",
+        "message": "Forehead lean (per skull height H (front-surface offset, eye line to 0.8 H))",
+        "value": 0.03340185399693516,
+        "expected": "0..0.03 (warn within 0.03)",
+        "fix": "Forehead recedes: pull the brow plane forward (ID-BrowRidge) or flatten the face plane.",
+        "source": "skill: forehead vertical within 0.03 H; a receding forehead reads amateur"
+      }
+    ],
+    "neck": [
+      {
+        "check": "anatomy.neck_head_width",
+        "severity": "warn",
+        "message": "Neck width / head width (per head width at the temples)",
+        "value": 0.4901075429158547,
+        "expected": "0.3..0.45 (warn within 0.05)",
+        "fix": "Neck too thick: lower ID-NeckThickness.",
+        "source": "skill (refs 0.37-0.41, pass <= 0.45); manual s5 (thin child neck)"
+      }
+    ],
+    "brows": [
+      {
+        "check": "brows.bendability.brow_verts_per_side",
+        "severity": "pass",
+        "message": "hina: vertices per eyebrow (needs enough geometry to bend)",
+        "value": 7.0,
+        "expected": ">= 6",
+        "fix": "Add loops along the brow so it can bend for expressions.",
+        "source": "build prompt: brows need enough geometry to bend; Hina has 7 per side"
+      },
+      {
+        "check": "brows.shape.brow_asymmetry",
+        "severity": "pass",
+        "message": "hina: left/right brow height difference (head heights)",
+        "value": 0.01827154760997336,
+        "expected": "<= 0.02",
+        "fix": "Mirror the brows.",
+        "source": "heuristic"
+      },
+      {
+        "check": "brows.placement.brow_length_over_head_width",
+        "severity": "info",
+        "message": "hina: brow length relative to head width",
+        "value": 0.24016851689396257,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "brows.placement.brow_thickness_over_length",
+        "severity": "info",
+        "message": "hina: brow thickness relative to length (skill: thin brows)",
+        "value": 0.1603423653476191,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "brows.placement.brow_gap_over_head_height",
+        "severity": "info",
+        "message": "hina: gap between brow and eye (head heights; a small gap reads more mature, manual s4)",
+        "value": 0.07229736535549759,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "nose": [
+      {
+        "check": "nose.position.nose_tip_fraction",
+        "severity": "pass",
+        "message": "hina: nose tip height between chin (0) and eye line (1)",
+        "value": 0.7648998299652299,
+        "expected": "0.40..0.85",
+        "fix": "Move the nose tip toward the middle of the eye-to-chin distance.",
+        "source": "manual s8 (halfway) widened to the anime references (0.74-0.77)"
+      },
+      {
+        "check": "nose.protrusion.nose_protrusion_over_head_height",
+        "severity": "info",
+        "message": "hina: nose protrusion past the cheek plane (head heights; Stories keeps the nose small)",
+        "value": 0.10907760573582165,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "ears": [
+      {
+        "check": "ears.size.ear_height_over_head_height",
+        "severity": "info",
+        "message": "hina: ear height relative to head height",
+        "value": 0.16846075798311605,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      },
+      {
+        "check": "ears.placement.ear_centre_vs_eye_line",
+        "severity": "info",
+        "message": "hina: ear centre vs the eye line (head heights, + = above)",
+        "value": 0.047165714973407435,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ],
+    "jaw": [
+      {
+        "check": "jaw.width.jaw_width_over_temple_width",
+        "severity": "info",
+        "message": "hina: jaw width relative to temple width",
+        "value": 0.706051684593678,
+        "expected": "",
+        "fix": "",
+        "source": ""
+      }
+    ]
+  },
+  "face_metrics": {
+    "eyeball_over_head_height": 0.12993266758211697,
+    "eyeball_roundness": 0.28160244369836607,
+    "eye_pair_asymmetry_x": 0.09255543382243953,
+    "eye_pair_asymmetry_z": 0.020969136366484127,
+    "eye_pair_asymmetry_y": 0.04552818816384607,
+    "brow_verts_per_side": 7.0,
+    "brow_asymmetry": 0.01827154760997336,
+    "brow_length_over_head_width": 0.24016851689396257,
+    "brow_thickness_over_length": 0.1603423653476191,
+    "brow_gap_over_head_height": 0.07229736535549759,
+    "nose_tip_fraction": 0.7648998299652299,
+    "nose_protrusion_over_head_height": 0.10907760573582165,
+    "mouth_fraction_nose_to_chin": 0.4478489956267322,
+    "ear_height_over_head_height": 0.16846075798311605,
+    "ear_centre_vs_eye_line": 0.047165714973407435,
+    "jaw_width_over_temple_width": 0.706051684593678,
+    "teeth_gap_over_head_height": -0.0014833884948703994,
+    "teeth_width_over_head_width": 0.24698053506571832,
+    "tongue_inside_teeth_depth": 0.01734123314637909
+  }
+}
