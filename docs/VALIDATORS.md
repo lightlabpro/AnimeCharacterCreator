@@ -31,6 +31,14 @@ Set `TYPESAFE_API_KEY` in the environment on your PC. Without it the judge and v
 
 Place empties named `LM-<Name>` (`Crown, Chin, Floor, Nipple, Navel, Pubis, EyeInner_L/R, EyeOuter_L, EyeTop_L, EyeBottom_L, Mouth, HandTip_L, HeelBack_L, ToeTip_L`). Limb joints are read from `DEF-` bones named like `upperarm.L`, `forearm.L`, `hand.L`, `thigh.L`, `shin.L`, `foot.L`. `bpy_adapter.place_basic_markers()` makes Crown, Chin and Floor. The rest are judgement calls, so they are placed by hand. A missing landmark is reported as SKIP, never guessed.
 
+## Placeholders and the app contract
+
+The creator's built-in bodies (the procedural meshes in `src/viewport/`) are placeholders that the Blender library replaces. The validators never check them; they check the Blender assets that will replace them. What the library must supply is whatever the app's controls are wired to, so `app_contract.py` reads `src/model/controls.ts` and `performance.ts` and compares a model with it, per body kind and per region (`<region>.app.morph`, `.bone`, `.shader`, and `face.app.performance`). `python -m blender.validators app-contract --write docs/APP_CONTRACT.md` regenerates the readable list in [APP_CONTRACT.md](APP_CONTRACT.md).
+
+What it found: the app drives 169 shape-key names, and the build prompt names 67 of them. A library built exactly to the prompt would drive 67 of the adult's 151 app shape keys: skull, muzzle, horns, tail, mane and frill would have none, and brows only one of six. 56 of the missing names are the `_Neg` direction of a slider (the app drives `<key>` for positive values and `<key>_Neg` for negative ones and ignores negative values when the `_Neg` key is absent, see `src/viewport/gltfPacks.ts`); 46 are not named in the prompt at all. The prompt also lists `ID-LashDefault`, which no control uses. Decide which side changes: add the app's keys to the build prompt and `ASSET_CONTRACT.md`, or trim the app's controls. Until then, validate libraries against the app's list.
+
+When a model has `ID-` keys the app does not use, `suggest_renames` asks TypeSafe whether each is a differently-named app control (a Choice among the missing keys of one region, asked in two option orders); `ID-BrowThickness` is matched to `ID-BrowThick`, `ID-SkullWide` to `ID-SkullWidth`, and unrelated names are left unmatched.
+
 ## Regions and features
 
 The report is organised per region and per feature using the app's own region ids (`src/model/types.ts`): skull, face, eyes, brows, nose, mouth, jaw, cheeks, ears, hair, facial hair, neck, shoulders, chest, waist, hips, arms, hands, legs, feet, whole body, plus the library's element and accessory regions (muzzle, tail, wings, horns, mane, frill, surface, archetype, clothing, accessory) and the quadruped. `regions.py` holds the registry; every finding is named `<region>.<feature>.<metric>`, so `regions.region_table(report)` gives one row per region and `analyze_regions.py` prints it.

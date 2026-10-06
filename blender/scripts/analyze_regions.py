@@ -13,7 +13,7 @@ import bpy
 import numpy as np
 
 sys.path.insert(0, __file__.rsplit("/blender/", 1)[0])
-from blender.validators import bpy_adapter, checks, expression_map, face, judge, measure, regions, rig  # noqa: E402
+from blender.validators import app_contract, bpy_adapter, checks, expression_map, face, judge, measure, regions, rig  # noqa: E402
 from blender.validators.model import Report  # noqa: E402
 
 
@@ -32,6 +32,9 @@ def run(name, kind, body, arm, landmarks, out_dir, use_ts="0"):
     keys = scene.shape_keys.get(body, [])
     if keys:
         report.add(*expression_map.findings(expression_map.map_keys(keys, transport), name))
+    if kind in ("adult", "child", "robot", "dragon"):
+        arm_props = list(scene.custom_props.get(arm if arm != "-" else "", {}))
+        report.add(*app_contract.findings(keys, arm_props, kind, name))
     if scene.bones:
         mapping = rig.map_bones(list(scene.bones), transport)
         report.add(*rig.findings(mapping, scene.bone_parents, name))

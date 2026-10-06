@@ -16,6 +16,9 @@ Everything is in `blender/validators/` and `blender/scripts/`; see docs/VALIDATO
 6. Quadruped: `quadruped.metrics(verts, faces, landmarks)` with `LM-FootFront_L/R`, `LM-FootHind_L/R`, `LM-Belly`, `LM-WingRoot_L`.
 7. Packs: `python -m blender.validators pack library/` and `node blender/scripts/validate_gltf.js <pack>.gltf` (Khronos glTF-Validator).
 
+## The app is the consumer
+The app's built-in bodies are placeholders that this library replaces. A model must provide every shape key, bone property, shader parameter and `PF-` key the app's controls are wired to (`app_contract.py`, regenerated list in docs/APP_CONTRACT.md); the build prompt names only part of them. A bidirectional slider drives `<key>` and `<key>_Neg`. Check `<region>.app.*` findings before accepting a model.
+
 ## Standards used (each page was fetched and read)
 - VRM 1.0 humanoid spec: 55 bones, 15 required, parent/child tree (`standards.VRM_HUMANOID`, `rig.py`).
 - VRM preset expressions, the 52 ARKit blendshapes (from the Perfect Sync article), Oculus 15 visemes, FACS action units by region (`standards.py`, `expression_map.py`).

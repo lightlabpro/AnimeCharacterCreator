@@ -297,5 +297,54 @@ class RegionsAndJudge(unittest.TestCase):
         self.assertEqual(sev["quality"], "info")
 
 
+class AppContract(unittest.TestCase):
+    def test_scanner_keeps_morphs_before_a_nested_brace(self):
+        from blender.validators import app_contract as ac
+        line = "  c('x', 'L', 'h', P, { bi: true, region: 'eyes', morph: 'ID-A', morphNeg: 'ID-A_Neg', pathFor: { adult: PRES }, needsLook: { slot: 's', not: ['none'] } }),"
+        o = ac._options_object(line)
+        self.assertIn("ID-A_Neg", o)
+        self.assertTrue(o.startswith("{") and o.endswith("}"))
+
+    def test_reads_the_real_app_source(self):
+        from blender.validators import app_contract as ac
+        cs = ac.parse_controls()
+        self.assertGreater(len(cs), 100)
+        morphs = {c.morph for c in cs if c.morph} | {c.morph_neg for c in cs if c.morph_neg}
+        for key in ("ID-FaceRound", "ID-NarrowWaist_Neg", "ID-SkullWidth", "ID-MuzzleLength_Neg", "ID-EarElSize"):  # one before a nested brace, one after
+            self.assertIn(key, morphs)
+        req = ac.required("adult", cs)
+        self.assertEqual(req["morph"]["ID-SkullWidth"], "skull")
+        self.assertNotIn("ID-SnoutLong", req["morph"])              # beast-only
+        self.assertIn("ID-SnoutLong", ac.required("dragon", cs)["morph"])
+        self.assertIn("PF-Blink_L", ac.parse_pf_keys())
+
+    def test_gap_and_coverage_for_a_library_built_exactly_to_the_prompt(self):
+        from blender.validators import app_contract as ac, contract
+        gap = ac.contract_gap()
+        self.assertIn("ID-SkullWidth", gap["named_nowhere_in_prompt"])
+        self.assertIn("ID-Chest_Neg", gap["neg_counterparts"])
+        keys = set(contract.ADULT_BODY_KEYS) | set(contract.ADULT_FACE_KEYS) | set(contract.PERFORMANCE_KEYS)
+        cov = ac.coverage(keys, set(), "adult")
+        self.assertEqual(cov["skull"]["morph"][0], 0)            # the prompt names no skull keys
+        self.assertEqual(cov["muzzle"]["morph"][0], 0)
+        f = {x.check: x for x in ac.findings(keys, set(), "adult", "t")}
+        self.assertEqual(f["skull.app.morph"].severity, FAIL)
+        full = {k for k in ac.required("adult")["morph"]} | set(ac.parse_pf_keys())
+        self.assertTrue(all(x.severity == PASS for x in ac.findings(full, {"head_scale"}, "adult", "t") if x.check.endswith(".morph")))
+
+    def test_rename_suggestions_come_only_from_agreeing_typesafe_answers(self):
+        from blender.validators import app_contract as ac
+
+        def fake(payload):
+            ans = {}
+            for qid, q in payload["questions"].items():
+                crit = list(q["criteria"])
+                pick = "ID-BrowThick" if "ID-BrowThick" in crit else "brows" if "brows" in crit else crit[0]
+                ans[qid] = {"type": "choice", "choice": pick, "confidence": 0.9, "probabilities": {c: 0.0 for c in crit}}
+            return {"answers": ans}
+        out = ac.suggest_renames(["ID-BrowThickness"], {"ID-BrowThick": "brows", "ID-NoseLarge": "nose"}, fake)
+        self.assertEqual(out["ID-BrowThickness"][0], "ID-BrowThick")
+
+
 if __name__ == "__main__":
     unittest.main()
