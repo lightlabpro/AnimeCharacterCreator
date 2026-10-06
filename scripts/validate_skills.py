@@ -8,7 +8,7 @@ Checks, per skill in .claude/skills/<name>/:
   - every script a skill names exists, and every .py compiles
   - no symlinks, no stray bytecode
   - the zip in bridge/skill-packages/ matches the source (no drift between what the chat installs and what Code uses)
-And repo-wide: knowledge/expected-contract.json is current.
+And repo-wide: knowledge/expected-contract.json is current, and knowledge/skill-graph.json matches the skills (every skill has an edge, every claimed dependency is really in the consumer's code, the character-gate receives every validator).
 Run: python3 scripts/validate_skills.py
 """
 import pathlib, py_compile, re, subprocess, sys, tempfile, zipfile
@@ -77,11 +77,42 @@ def check_package(folder):
     for name in set(packed) & set(expected):
         need(packed[name] == expected[name], f"{folder.name}: zip is stale for {name}. Run python3 bridge/tools/package_skills.py")
 
+def check_graph(graph, skills_root, skill_names=None):
+    """knowledge/skill-graph.json against the skills on disk. Returns a list of problems (also appended to `errors` by main)."""
+    problems = []
+    names = set(skill_names or [p.name for p in pathlib.Path(skills_root).iterdir() if p.is_dir()])
+    edges = graph.get("edges", []); orch = graph.get("orchestrator")
+    if orch not in names: problems.append(f"skill graph: orchestrator {orch!r} is not a skill")
+    for v in graph.get("validators", []):
+        if v not in names: problems.append(f"skill graph: validator {v!r} is not a skill")
+        elif not any(e["from"] == v and e["to"] == orch and e.get("kind") == "code" for e in edges):
+            problems.append(f"skill graph: validator {v!r} has no code edge into the orchestrator {orch!r}, so the gate cannot see its result")
+    touched = set()
+    for e in edges:
+        a, b = e.get("from"), e.get("to"); touched |= {a, b}
+        for n in (a, b):
+            if n not in names: problems.append(f"skill graph: edge {a}->{b} names {n!r}, which is not a skill")
+        f = pathlib.Path(skills_root) / e.get("consumer_file", "")
+        if not f.is_file(): problems.append(f"skill graph: edge {a}->{b}: consumer file {e.get('consumer_file')} does not exist"); continue
+        if e.get("via", "\0") not in f.read_text(encoding="utf-8", errors="replace"):
+            problems.append(f"skill graph: edge {a}->{b} claims {e.get('consumer_file')} uses {e.get('via')!r} but it does not")
+        if e.get("kind") == "code" and f.suffix != ".py": problems.append(f"skill graph: edge {a}->{b} is kind code but {f.name} is not a script")
+        entry = pathlib.Path(skills_root) / b / "SKILL.md"
+        if entry.exists() and "`" + a + "`" not in entry.read_text(encoding="utf-8"):
+            problems.append(f"skill graph: {b}/SKILL.md does not name the `{a}` skill it depends on ({e.get('artifact')})")
+    for n in sorted(names - touched): problems.append(f"skill graph: skill {n!r} has no edge, so nothing checks it against the others")
+    return problems
+
 def main():
     folders = sorted(p for p in SKILLS.iterdir() if p.is_dir())
     need(folders, "no skills found")
     for f in folders:
         check_skill(f); check_package(f)
+    graph_path = ROOT / "knowledge" / "skill-graph.json"
+    need(graph_path.exists(), "knowledge/skill-graph.json is missing")
+    if graph_path.exists():
+        import json
+        errors.extend(check_graph(json.loads(graph_path.read_text(encoding="utf-8")), SKILLS, [f.name for f in folders]))
     r = subprocess.run([sys.executable, str(ROOT / "bridge" / "tools" / "export_contract.py"), "--check"], capture_output=True, text=True)
     need(r.returncode == 0, (r.stdout + r.stderr).strip() or "contract check failed")
     if errors:

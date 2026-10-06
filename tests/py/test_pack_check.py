@@ -25,6 +25,18 @@ def to_glb(folder, with_image=False):
     (folder / "body_test.glb").write_bytes(b"glTF" + struct.pack("<II", 2, 12 + len(body)) + body)
     (folder / "body_test.gltf").unlink(); (folder / "body_test.bin").unlink()
 
+class SkinnedNodeTransform(unittest.TestCase):
+    def test_a_rotated_skinned_mesh_node_does_not_change_the_measured_height(self):
+        """Spec: a skinned mesh node's own transform is ignored. Sketchfab and FBX-converted files carry a root rotation; the pack checker used to
+        apply it and report a 1.72 m body as lying down (found by the character-gate height cross-check on a real model)."""
+        with tempfile.TemporaryDirectory() as t:
+            tmp, folder = lib(t)
+            g = json.load(open(folder / "body_test.gltf")); n = next(n for n in g["nodes"] if "mesh" in n and "skin" in n)
+            n["matrix"] = [1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1]           # 90 degrees about X
+            json.dump(g, open(folder / "body_test.gltf", "w"))
+            code, out = check(tmp); self.assertNotIn("origin_not_at_feet", out); self.assertNotIn(" height ", out.replace("INFO", "").split("fail")[0] if "FAIL" in out else "")
+            self.assertIn("height 1.7", out)
+
 class CleanPack(unittest.TestCase):
     def test_a_clean_pack_passes(self):
         with tempfile.TemporaryDirectory() as t:

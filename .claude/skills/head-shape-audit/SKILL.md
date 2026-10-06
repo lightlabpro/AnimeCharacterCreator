@@ -48,3 +48,6 @@ This route needs the `render-validator` skill installed as well, because the scr
 ## Honesty
 - The targets come from one reference head and a screenshot. One head is a style target, not a law. Say so when a stylised character should differ on purpose, and log the deviation.
 - A pass means the proportions match the reference. It does not mean the face looks good: the `render-validator` review still decides that.
+
+## Works with other skills
+The `head_audit.json` it writes is read by `render-validator` (`validate.py --head-audit`) and by `character-gate` (`run_gate.py --head-audit`), which also checks that the head height here agrees with the neck-to-top height from `body-proportion-audit`. Run the gate after this audit so the result is cross-checked.

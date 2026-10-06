@@ -79,8 +79,9 @@ class Poses(Base):
             self.assertTrue(all(r[1] == "ok" for r in pick(good, p)), pick(good, p)); self.assertTrue(all(r[1] == "fail" for r in pick(bad, p)), pick(bad, p))
 
     def test_joints_without_mesh_over_them_are_unknown(self):
-        rows = ps.run_poses(load(fx.build(), self.tmp))[1]
-        self.assertTrue(any(r[0].startswith("hip_flex") and r[1] == "unknown" for r in rows))
+        m = fx.build(); keep = (m["V"][m["T"]][:, :, 2] > .65).all(1); m["T"] = m["T"][keep]        # torso triangles only: nothing crosses the hips or knees
+        st, rows = ps.run_poses(load(m, self.tmp))
+        self.assertTrue(any(r[0].startswith("hip_flex") and r[1] == "unknown" for r in rows)); self.assertNotEqual(st, "pass")
 
     def test_pose_direction_bends_the_right_way(self):
         m = load(fx.build(), self.tmp); k = m["key"]; p = m["jpos"][k["forearm_L"]]; d = m["jpos"][k["hand_L"]]

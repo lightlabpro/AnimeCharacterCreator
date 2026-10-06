@@ -23,6 +23,7 @@ EXIT_FAIL, EXIT_UNKNOWN, EXIT_USAGE = 12, 13, 2
 DEFAULTS = {
     "require_mesh": False,
     "require_head": False,          # init --require-head: UNKNOWN until --head-audit is supplied
+    "require_gate": False,          # init --require-gate: UNKNOWN until --gate-report (character-gate run_gate.py) is supplied
     "micro_change_px": 1.0,         # a failing view that moved less than this since last iteration was only tweaked          # init --require-mesh: measure reports UNKNOWN until mesh stats are supplied
     "mesh": {                       # mesh health gates. A key missing from the stats file is UNKNOWN, not a pass
         "tri_budget": [18000, 28000],   # nude base body, from docs/CLAUDE_BUILD_PROMPT.md
@@ -293,6 +294,7 @@ def cmd_init(a):
             else: cfg[k] = v
     cfg["require_mesh"] = bool(a.require_mesh)
     cfg["require_head"] = bool(a.require_head)
+    cfg["require_gate"] = bool(a.require_gate)
     cfg["reviews_required"] = a.reviews
     cfg["require_manifest"] = bool(a.require_manifest)
     cfg["required_views"] = list(a.require_view) if a.require_view else list(refs)
@@ -438,9 +440,10 @@ def cmd_measure(a):
         failing += [f"mesh:{k}" for k, c in mesh_checks.items() if c["ok"] is False]
     elif cfg.get("require_mesh"):
         unknown.append("mesh:not supplied")
-    manifest_sig = None
+    manifest_sig, manifest_raw = None, None
     if a.manifest:
-        with open(a.manifest) as fh: manifest_sig = camera_signature(json.load(fh))
+        with open(a.manifest) as fh: manifest_raw = json.load(fh)
+        manifest_sig = camera_signature(manifest_raw)
         prev_sig = next((i["camera_signature"] for i in reversed(its) if i.get("camera_signature")), None)
         if prev_sig:
             changes = camera_changes(prev_sig, manifest_sig)
@@ -455,9 +458,17 @@ def cmd_measure(a):
         elif status == "unknown": unknown.append("head:audit could not measure " + ", ".join(head.get("unknown", [])[:4]))
     elif cfg.get("require_head"):
         unknown.append("head:audit not supplied")
+    gate = None
+    if a.gate_report:
+        with open(a.gate_report) as fh: gate = json.load(fh)
+        gf, gu = check_gate_report(gate, stats if a.mesh_stats else None, manifest_raw)
+        failing += gf; unknown += gu
+    elif cfg.get("require_gate"):
+        unknown.append("gate:report not supplied (run character-gate/scripts/run_gate.py on the exported mesh)")
     rec = {"n": n, "render_hash": h, "views": per_view, "failing": failing, "unknown": unknown, "margin_score": round(score, 4),
            "time": time.time(), "renders": views, "stage": a.stage, "mesh": mesh_checks, "orphan_names": orphans,
-           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None, "head_audit": head, "camera_signature": manifest_sig}
+           "mesh_stats_hash": sha([a.mesh_stats]) if a.mesh_stats else None, "head_audit": head, "camera_signature": manifest_sig,
+           "gate_report": {"status": gate.get("status"), "subject_sha": gate.get("subject_sha")} if gate else None}
     its.append(rec); save_state(a.workspace, st)
     sheet = build_sheet(tiles)
     sheet_path = os.path.join(idir, "sheet.png"); sheet.save(sheet_path)
@@ -548,6 +559,24 @@ def review_problems(rev, last, cfg, n_iters, tag=""):
         why.append(f"{tag}list defects_fixed_since_last: every iteration must be tied to a named defect.")
     return why
 
+def check_gate_report(gate, stats, manifest):
+    """The structural gate and the renders must be about the same mesh. Returns (failing, unknown) lists.
+    A failed or unknown gate blocks a render pass; the gate's height and triangle count must agree with mesh_stats.json and r_manifest.json."""
+    failing, unknown = [], []
+    if gate.get("schema") != "creator-gate/1": return [], ["gate:report is not a creator-gate/1 file"]
+    st = gate.get("status")
+    names = [c["name"] for c in gate.get("checks", []) + gate.get("cross_checks", []) if c.get("status") == "fail"]
+    if st == "fail": failing.append("gate:structure (" + ", ".join(names[:4]) + "). The character-gate failed, so no render can pass.")
+    elif st != "pass": unknown.append("gate:report is " + str(st) + " (" + ", ".join(c["name"] for c in gate.get("checks", []) + gate.get("cross_checks", []) if c.get("status") == "unknown")[:80] + ")")
+    facts = gate.get("facts", {})
+    if stats is not None and facts.get("tris") and stats.get("tris"):
+        d = abs(stats["tris"] - facts["tris"]) / facts["tris"]
+        if d > 0.01: failing.append(f"gate:mesh_stats is for a different mesh (gate {facts['tris']} triangles, mesh_stats {stats['tris']})")
+    if manifest is not None and facts.get("height") and manifest.get("character_height"):
+        d = abs(manifest["character_height"] - facts["height"]) / facts["height"]
+        if d > 0.05: failing.append(f"gate:renders show a different model (manifest height {manifest['character_height']:.3f}, gate mesh {facts['height']:.3f})")
+    return failing, unknown
+
 def cmd_gate(a):
     st = load_state(a.workspace); cfg = st["config"]; its = st["iterations"]
     if not its: print("ITERATE: nothing measured yet. Run measure first."); sys.exit(EXIT_FAIL)
@@ -607,8 +636,8 @@ def cmd_report(a):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = p.add_subparsers(dest="cmd", required=True)
-    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--require-manifest", action="store_true", help="UNKNOWN until --manifest is supplied"); i.add_argument("--reviews", type=int, default=1, help="independent reviews the gate requires (2 is recommended for a final pass)"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
-    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--manifest", help="r_manifest.json written by blender_render_views.py; cameras must not change between iterations"); m.add_argument("--head-audit", help="head_audit.json written by head-shape-audit/scripts/head_audit.py"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
+    i = sp.add_parser("init"); i.add_argument("workspace"); i.add_argument("--ref", action="append", help="view=reference.png (repeatable)"); i.add_argument("--config"); i.add_argument("--require-mesh", action="store_true", help="UNKNOWN until --mesh-stats is supplied"); i.add_argument("--require-head", action="store_true", help="UNKNOWN until --head-audit is supplied"); i.add_argument("--require-gate", action="store_true", help="UNKNOWN until --gate-report (character-gate) is supplied"); i.add_argument("--require-manifest", action="store_true", help="UNKNOWN until --manifest is supplied"); i.add_argument("--reviews", type=int, default=1, help="independent reviews the gate requires (2 is recommended for a final pass)"); i.add_argument("--require-view", action="append", help="view that must be measured (default: every reference)")
+    m = sp.add_parser("measure"); m.add_argument("workspace"); m.add_argument("--view", action="append", help="view=render.png (repeatable)"); m.add_argument("--stage", help="pipeline stage tag for lineage, e.g. blockout, head, shading"); m.add_argument("--mesh-stats", help="JSON from mesh_stats.py"); m.add_argument("--manifest", help="r_manifest.json written by blender_render_views.py; cameras must not change between iterations"); m.add_argument("--head-audit", help="head_audit.json written by head-shape-audit/scripts/head_audit.py"); m.add_argument("--gate-report", help="gate_report.json written by character-gate/scripts/run_gate.py; a failed gate blocks the render pass"); m.add_argument("--contract", help="knowledge/expected-contract.json, to flag names the app does not read")
     r = sp.add_parser("report"); r.add_argument("workspace")
     g = sp.add_parser("gate"); g.add_argument("workspace"); g.add_argument("--review", required=True, action="append", help="review JSON, repeat for several reviewers (each needs a distinct reviewer_id)")
     a = p.parse_args()

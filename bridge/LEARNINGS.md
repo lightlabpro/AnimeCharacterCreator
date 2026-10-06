@@ -129,3 +129,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: references/tripo.md in ai-3d-pipeline; tests/py/test_prepare_reference.py (12), tests/blender DecimateCase (3)
 - status: unverified: read from source, no generator run (no GPU here)
 - use: Run prepare_reference.py before any generator; decimate before shape keys
+
+## 2026-10-06 [code] skills validate each other (character-gate)
+- finding: character-gate runs every validator on one file and cross-checks them: glTF accessor bounds vs loader height, triangle counts, shape-key names, SOC- nodes vs skeleton joints, DEF- prefix vs anatomy match, head audit vs body audit head height, render manifest vs mesh. On real Navia the height cross-check exposed a real bug: check_pack.world_bounds applied the mesh node transform to skinned meshes (glTF spec says ignore it; joints place the mesh), so a rotated root made the pack check read 0.75 m instead of 1.80 m. The render-validator now takes --gate-report and cannot pass a render over a failed or unknown gate, nor over a gate for a different mesh. knowledge/skill-graph.json is checked by validate_skills.py.
+- evidence: tests/py/test_gate.py (20), test_skill_graph.py (6), test_pack_check SkinnedNodeTransform (fails without the fix)
+- status: confirmed
+- use: Run run_gate.py after every export and give gate_report.json to the render validator

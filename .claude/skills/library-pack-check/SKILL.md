@@ -55,3 +55,6 @@ How the mesh deforms, edge-loop quality, shading, and whether the art is good. T
 
 ## Proven end to end
 `node scripts/e2e_pack.cjs` (repo root, dev server running) imports a generated pack through the real Import button, applies it, and checks that "Round face" = 100 drives `ID-FaceRound` to 1, `PF-Blink` is driven by performance, and a hat attaches to the body pack's own `SOC-HeadTop`. If a pack passes this checker but a control still does nothing in the app, tell Code: it is an app bug. `node scripts/perf_pack.cjs --all-keys-body` style runs (`perf_pack.cjs`) measure slider-drag cost with a heavy pack and plot GPU resource counts to catch leaks.
+
+## Works with other skills
+Runs inside `character-gate` (which also cross-checks its glTF facts against the loader used by `body-proportion-audit`, whose `skin_io.py` reuses `check_pack.read_gltf`: keep both installed). A pack that passes here can still fail the gate: this check cannot see skeletons, weights or deformation.

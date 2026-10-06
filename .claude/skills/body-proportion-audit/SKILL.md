@@ -48,3 +48,8 @@ Thresholds are calibrated on only three real models, so treat borderline results
 - unweighted / weight_sum: select all, Weights > Normalize All, Limit Total 4.
 - cross_side / finger_bleed: Weight Paint with Mirror, or Transfer Weights from a clean body, then re-run.
 - High folds or stretch at a joint: widen the weight blend over the joint (smoother gradient across 2-3 edge loops), add a joint edge loop, or add a corrective shape key. Pure 0/1 weights across a joint always fail.
+
+## Works with other skills
+- `character-gate` runs `anatomy_rules.py`, `pose_stress.py` and the proportion check on every export and cross-checks them against `library-pack-check` (heights, triangle counts, shape keys, sockets, `DEF-` prefix). Run the gate, not the pieces, before calling a body done.
+- `skin_io.py` uses `library-pack-check` (`check_pack.read_gltf`), so both skills must be installed.
+- The head is `head-shape-audit`'s job; the gate checks the two agree on head height.

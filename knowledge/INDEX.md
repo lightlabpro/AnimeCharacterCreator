@@ -14,6 +14,8 @@ Read in this order. Both Claudes use the same files.
 | `../bridge/LEARNINGS.md` | Append-only measurements and decisions | Both |
 | `head-targets.json` | Reference head profile (fractions of head height) used by the head audit and the app's tests | Code, replaced by exact numbers when the chat measures the reference mesh |
 | `../.claude/skills/head-shape-audit/` | Measures a head mesh against the reference and lists fixes | Code builds it, chat runs it |
+| `../.claude/skills/character-gate/` | One gate over every validator, with cross-checks between them; writes gate_report.json | Code builds it, chat runs it on every export |
+| `skill-graph.json` | Which skill feeds which (machine-checked by validate_skills.py) | Code |
 | `../.claude/skills/ai-3d-pipeline/` | Staged character pipeline with a gate per stage | Both |
 | `validator-calibration.json` | Where the validator's floors came from: data, ranges, findings and caveats | Code, re-run with calibrate.py when new data arrives |
 | `../.claude/skills/ai-3d-pipeline/references/tripo.md` | What TripoSG, TripoSR and the Tripo Blender add-on teach: input preparation, seed and face budget, orientation (+Y vs our -Y), the add-on's localhost server | Both |

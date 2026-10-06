@@ -1,0 +1,21 @@
+{
+  "note": "How the skills talk to each other. scripts/validate_skills.py enforces it: every skill is a node with at least one edge, every edge's consumer file really contains the `via` string, the consumer's SKILL.md names the producer, and the orchestrator receives every validator. Add an edge here when you add a dependency, never a hidden one.",
+  "orchestrator": "character-gate",
+  "validators": ["library-pack-check", "head-shape-audit", "body-proportion-audit", "render-validator"],
+  "edges": [
+    {"from": "library-pack-check", "to": "character-gate", "artifact": "pack check result (check_pack.check)", "kind": "code", "consumer_file": "character-gate/scripts/run_gate.py", "via": "check_pack.py"},
+    {"from": "body-proportion-audit", "to": "character-gate", "artifact": "anatomy, pose, slider and proportion results", "kind": "code", "consumer_file": "character-gate/scripts/run_gate.py", "via": "anatomy_rules.py"},
+    {"from": "head-shape-audit", "to": "character-gate", "artifact": "head_audit.json", "kind": "code", "consumer_file": "character-gate/scripts/run_gate.py", "via": "--head-audit"},
+    {"from": "render-validator", "to": "character-gate", "artifact": "mesh_stats.json", "kind": "code", "consumer_file": "character-gate/scripts/run_gate.py", "via": "--mesh-stats"},
+    {"from": "render-validator", "to": "character-gate", "artifact": "r_manifest.json", "kind": "code", "consumer_file": "character-gate/scripts/run_gate.py", "via": "--manifest"},
+    {"from": "character-gate", "to": "render-validator", "artifact": "gate_report.json", "kind": "code", "consumer_file": "render-validator/scripts/validate.py", "via": "--gate-report"},
+    {"from": "head-shape-audit", "to": "render-validator", "artifact": "head_audit.json", "kind": "code", "consumer_file": "render-validator/scripts/validate.py", "via": "--head-audit"},
+    {"from": "library-pack-check", "to": "body-proportion-audit", "artifact": "glTF reader (read_gltf)", "kind": "code", "consumer_file": "body-proportion-audit/scripts/skin_io.py", "via": "check_pack"},
+    {"from": "character-gate", "to": "ai-3d-pipeline", "artifact": "stage 6 and 7 gate", "kind": "doc", "consumer_file": "ai-3d-pipeline/SKILL.md", "via": "run_gate.py"},
+    {"from": "head-shape-audit", "to": "ai-3d-pipeline", "artifact": "stage 2 gate", "kind": "doc", "consumer_file": "ai-3d-pipeline/SKILL.md", "via": "head-shape-audit"},
+    {"from": "render-validator", "to": "ai-3d-pipeline", "artifact": "stage 3 and 5 gates", "kind": "doc", "consumer_file": "ai-3d-pipeline/SKILL.md", "via": "render-validator"},
+    {"from": "body-proportion-audit", "to": "ai-3d-pipeline", "artifact": "stage 1 and 6 gates", "kind": "doc", "consumer_file": "ai-3d-pipeline/SKILL.md", "via": "body-proportion-audit"},
+    {"from": "creator-bridge", "to": "ai-3d-pipeline", "artifact": "lessons log (log.py)", "kind": "doc", "consumer_file": "ai-3d-pipeline/SKILL.md", "via": "creator-bridge"},
+    {"from": "character-gate", "to": "creator-bridge", "artifact": "gate failures logged as lessons", "kind": "doc", "consumer_file": "creator-bridge/SKILL.md", "via": "character-gate"}
+  ]
+}

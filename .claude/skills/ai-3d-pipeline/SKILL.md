@@ -21,13 +21,13 @@ Provenance and confidence: the staged structure is well sourced for open systems
 | Stage | Output | Gate before moving on | Skill / tool |
 | --- | --- | --- | --- |
 | 0 References | front/side/three-quarter sheet, reference head | views agree on proportions; any image sent to a generator passes `scripts/prepare_reference.py` (exit 0) | `anthropic-skills:anime-character-modeling` |
-| 1 Blockout | whole-body volumes (7-7.5 heads adult) | silhouette overlay on the sheet | `render-validator` |
+| 1 Blockout | whole-body volumes (7-7.5 heads adult) | silhouette overlay on the sheet; `body-proportion-audit` measures the blockout against the reference bands | `render-validator`, `body-proportion-audit` |
 | 2 Head form | skull, jaw, nose, sockets, ears | `head-shape-audit` prints HEAD_SHAPE_OK | `head-shape-audit` |
 | 3 Topology | quads around eyes, mouth, joints; hair and clothes as separate shells; a generated mesh is first brought to budget with `scripts/decimate_to_budget.py` (before any shape keys) | `mesh_stats.py` passes (tri budget, no non-manifold, no zero-area) and loops are visible in a wire render | `render-validator` |
 | 4 UV and texture | face UV island, iris island, shade masks | no stretching, seams away from the face | `anime-character-modeling` |
 | 5 Toon shading | hard ramp, warm shadow tint, outlines | `render-validator` PASS on every required view | `render-validator` |
-| 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys, `SOC-` sockets | names in `knowledge/expected-contract.json`; `check_pack.py`; pose test | `library-pack-check` |
-| 7 Export | glTF separate files, `pack.json`, `manifest.json` | `check_pack.py` prints PACK_CHECK_OK, then the creator imports it and a slider moves it | `library-pack-check` |
+| 6 Rig and shape keys | `DEF-` bones, `ID-` and `PF-` keys, `SOC-` sockets | `character-gate` (`<character-gate>/scripts/run_gate.py`): pack check, `body-proportion-audit` anatomy and pose stress, and the cross-checks all pass | `character-gate`, `body-proportion-audit`, `library-pack-check` |
+| 7 Export | glTF separate files, `pack.json`, `manifest.json` | `<character-gate>/scripts/run_gate.py` on the exported pack exits 0 and writes `gate_report.json` (the render gate needs it), then the creator imports it and a slider moves it | `character-gate`, `library-pack-check` |
 
 ## Rules (each one is something Meshy's skills enforce, adapted)
 1. **Shortest route.** Do only the stages the request needs. A request for a prop does not need a rig. A flat-colour model does not need a PBR pass.

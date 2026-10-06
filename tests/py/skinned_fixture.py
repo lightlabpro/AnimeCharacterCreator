@@ -34,27 +34,28 @@ def tube(path, radius, ring=8):
             T += [[a0, a1, b1], [a0, b1, b0]]
     return np.array(V), np.array(T)
 
-def build(smooth=True, blend=.05, fingers=5, drop_weights=0, cross_side=False, five_influences=False, finger_bleed=False, shin_under_thigh=True):
+def build(smooth=True, blend=.05, fingers=5, drop_weights=0, cross_side=False, five_influences=False, finger_bleed=False, shin_under_thigh=True, bad_targets=True):
     """Returns dict V, T, J(N,4), W(N,4), names, parents, jpos(bind), plus a morph target dict for slider tests."""
     skel = skeleton(fingers)
     names = list(skel); idx = {n: i for i, n in enumerate(names)}
     parents = [idx[skel[n][0]] if skel[n][0] else -1 for n in names]; jpos = np.array([skel[n][1] for n in names], float)
     parts = []   # (verts, tris, chain of (bone, z/s boundary))
-    def limb(path, r, chain, ring=8):
-        V, T = tube(path, r, ring); parts.append((V, T, chain, np.array(path)))
+    def limb(path, r, chain, ring=8, bl=None):
+        V, T = tube(path, r, ring); parts.append((V, T, chain, np.array(path), bl))
     # chain: list of bones along the path; joint k sits at the path vertex index chain[k][1] where the next bone starts
     for s, x in (("L", 1), ("R", -1)):
-        limb([(x * .20, 0, .78 - .0125 * i * 0 - i * .15 / 6) for i in range(7)] + [(x * .21, 0, .63 - i * .15 / 6) for i in range(1, 7)] + [(x * .22, 0, .48 - i * .04 / 2) for i in range(1, 3)],
-             .035, [(f"DEF-upper_arm.{s}", 6), (f"DEF-forearm.{s}", 12), (f"DEF-hand.{s}", 14)])
-        limb([(x * .09, 0, .53 - i * .23 / 8) for i in range(9)] + [(x * .09, 0, .30 - i * .23 / 8) for i in range(1, 9)], .05, [(f"DEF-thigh.{s}", 8), (f"DEF-shin.{s}", 16)])
+        limb([(x * .14, 0, .78), (x * .17, 0, .78)] + [(x * .20, 0, .78 - i * .15 / 6) for i in range(7)] + [(x * .21, 0, .63 - i * .15 / 6) for i in range(1, 7)] + [(x * .22, 0, .48 - i * .04 / 2) for i in range(1, 3)],
+             .035, [("DEF-chest", 2), (f"DEF-upper_arm.{s}", 8), (f"DEF-forearm.{s}", 14), (f"DEF-hand.{s}", 16)])
+        limb([(x * .09, 0, .60), (x * .09, 0, .565)] + [(x * .09, 0, .53 - i * .23 / 8) for i in range(9)] + [(x * .09, 0, .30 - i * .23 / 8) for i in range(1, 9)], .05, [("DEF-hips", 2), (f"DEF-thigh.{s}", 10), (f"DEF-shin.{s}", 18)])
         limb([(x * .09, -.01 * i, .07 - i * .0125 * 2) for i in range(3)], .035, [(f"DEF-foot.{s}", 2)])
         for k, f in enumerate(("thumb", "index", "middle", "ring", "little")[:fingers]):
             fx = x * (.22 + .012 * (k - 2)); path = [(fx, 0, .48 - .02 - i * .02) for i in range(4)]
             limb(path, .006, [(f"DEF-{f}.{seg + 1:02d}.{s}", seg + 1) for seg in range(3)], ring=4)
     limb([(0, 0, .53 + i * .29 / 8) for i in range(9)], .12, [("DEF-hips", 2), ("DEF-spine", 4), ("DEF-chest", 8)])
-    limb([(0, 0, .82 + i * .18 / 6) for i in range(7)], .08, [("DEF-neck", 1), ("DEF-head", 6)])
+    limb([(0, 0, .76), (0, 0, .79)] + [(0, 0, .82 + i * .18 / 6) for i in range(7)], .08, [("DEF-chest", 2), ("DEF-neck", 3), ("DEF-head", 8)], bl=.2)
     Vs, Ts, Js, Ws, off = [], [], [], [], 0
-    for V, T, chain, path in parts:
+    for V, T, chain, path, bl in parts:
+        blend_ = bl or blend
         ring = len(V) // len(path); n = len(V); J = np.zeros((n, 4), int); W = np.zeros((n, 4))
         for vi in range(n):
             ri = vi // ring; b = 0
@@ -63,11 +64,11 @@ def build(smooth=True, blend=.05, fingers=5, drop_weights=0, cross_side=False, f
             bone = chain[b][0]; J[vi, 0] = idx[bone]; W[vi, 0] = 1.0
             if smooth and b > 0:
                 jr = chain[b - 1][1]; seg = np.linalg.norm(path[min(jr + 1, len(path) - 1)] - path[jr]) or 1
-                dist = (ri - jr) * seg; t = np.clip(.5 + dist / (2 * blend), 0, 1)
+                dist = (ri - jr) * seg; t = np.clip(.5 + dist / (2 * blend_), 0, 1)
                 if t < 1: J[vi, 1] = idx[chain[b - 1][0]]; W[vi, 1] = 1 - t; W[vi, 0] = t
             if smooth and b < len(chain) - 1:
                 jr = chain[b][1]; seg = np.linalg.norm(path[min(jr + 1, len(path) - 1)] - path[jr]) or 1
-                dist = (ri - jr) * seg; t = np.clip(.5 - dist / (2 * blend), 0, 1)       # t = share of the current bone
+                dist = (ri - jr) * seg; t = np.clip(.5 - dist / (2 * blend_), 0, 1)       # t = share of the current bone
                 if t < 1: J[vi, 1] = idx[chain[b + 1][0]]; W[vi, 1] = 1 - t; W[vi, 0] = t
         Vs.append(V); Ts.append(T + off); Js.append(J); Ws.append(W); off += n
     V = np.concatenate(Vs); T = np.concatenate(Ts); J = np.concatenate(Js); W = np.concatenate(Ws)
@@ -83,13 +84,20 @@ def build(smooth=True, blend=.05, fingers=5, drop_weights=0, cross_side=False, f
         sel = np.where((np.abs(V[:, 0]) < .1) & (V[:, 2] > .6) & (V[:, 2] < .7))[0][:5]; J[sel, 0] = idx["DEF-index.01.L"]; W[sel] = 0; W[sel, 0] = 1
     morph = {}
     for nm, f in (("ID-BodyBulk", lambda P: P * [1.1, 1.1, 1]), ("ID-Inverted", lambda P: P * [1, 1, -1] + [0, 0, 1]), ("ID-Spike", None)):
+        if not bad_targets and nm != "ID-BodyBulk": continue
         if f is None:
             D = np.zeros_like(V); D[100] = [0, 0, .5]            # one vertex pulled out far: a spike
         else: D = f(V) - V
         morph[nm] = D
     return dict(J1=J1, W1=W1, V=V, T=T, J=J, W=W, names=names, parents=parents, jpos=jpos, targets=morph)
 
-def write_glb(m, path, with_targets=False):
+def default_sockets(m):
+    """Sockets where the skeleton says they belong: name -> (world xyz, parent bone)."""
+    j = {n: m['jpos'][i] for i, n in enumerate(m['names'])}
+    return {'SOC-HeadTop': (j['DEF-head'] + [0, 0, .12], 'DEF-head'), 'SOC-Hand_L': (j['DEF-hand.L'], 'DEF-hand.L'), 'SOC-Hand_R': (j['DEF-hand.R'], 'DEF-hand.R'),
+            'SOC-Foot_L': (j['DEF-foot.L'], 'DEF-foot.L'), 'SOC-Chest': (j['DEF-chest'], 'DEF-chest'), 'SOC-Neck': (j['DEF-neck'], 'DEF-neck')}
+
+def write_glb(m, path, with_targets=False, sockets=None):
     """Writes the model as Y-up glTF with skin, IBM, hierarchy, JOINTS_0/WEIGHTS_0 and optional morph targets."""
     names, parents, jpos = m["names"], m["parents"], m["jpos"]
     yup = lambda P: np.stack([P[:, 0], P[:, 2], -P[:, 1]], 1).astype(np.float32)
@@ -122,6 +130,9 @@ def write_glb(m, path, with_targets=False):
         if i + 1 in kids: node["children"] = kids[i + 1]
         nodes.append(node)
     nodes[0]["children"] = []                                                              # mesh node is a sibling
+    for sn, (w, bone) in (sockets or {}).items():
+        pn = nodes[names.index(bone) + 1]; local = yup(np.array(w, float)[None])[0] - yup(jpos[names.index(bone)][None])[0]
+        nodes.append({"name": sn, "translation": local.tolist()}); pn.setdefault("children", []).append(len(nodes) - 1)
     skin = {"joints": list(range(1, len(names) + 1)), "inverseBindMatrices": add(ibm.reshape(-1, 16), 5126, "MAT4")}
     buf = b"".join(blobs); roots = [1 + i for i, p in enumerate(parents) if p < 0]
     g = {"asset": {"version": "2.0"}, "scene": 0, "scenes": [{"nodes": [0] + roots}], "nodes": nodes, "skins": [skin],

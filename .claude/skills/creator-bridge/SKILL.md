@@ -41,3 +41,6 @@ Code commits it verbatim into `LEARNINGS.md` or `inbox-for-code.md`.
 - Mark every number you did not measure as `unverified`.
 - Never tell the other side a thing works because you expect it to. Run it.
 - A measurement from one character is one data point. Say how many you measured.
+
+## Gate results
+When `character-gate` fails, log the measured cause (the check name and numbers from `gate_report.json`), not the fix you tried first, with `python3 bridge/tools/log.py`, so the other side can avoid it. A gate that keeps failing the same way is a lesson worth a `BRIDGE-ENTRY`.

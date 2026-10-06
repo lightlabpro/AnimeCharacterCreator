@@ -77,3 +77,6 @@ Calibrate.py says `NOT USEFUL` when your good and bad groups overlap on a metric
 
 ## Limits
 Silhouette and edge metrics need a reference drawn from a similar camera and pose. Against concept art in a very different pose, rely on palette and the independent review. The metrics detect gross shape, colour and toon-style defects. They cannot see a wrong eye shape or a stiff hairstyle, which is why the independent review is required.
+
+## Works with other skills
+`character-gate` writes `gate_report.json` for the exported mesh. `validate.py init --require-gate` and `measure --gate-report gate_report.json` make a render unable to pass while that gate failed or is unknown, and fail when the gate's height or triangle count disagrees with `mesh_stats.json` or `r_manifest.json` (the renders belong to another mesh). `head-shape-audit` feeds `--head-audit` the same way.

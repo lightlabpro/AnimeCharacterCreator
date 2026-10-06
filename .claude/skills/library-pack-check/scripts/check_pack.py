@@ -75,7 +75,9 @@ def trs(n):
     return [[R[0][0] * s[0], R[0][1] * s[1], R[0][2] * s[2], t[0]], [R[1][0] * s[0], R[1][1] * s[1], R[1][2] * s[2], t[1]], [R[2][0] * s[0], R[2][1] * s[1], R[2][2] * s[2], t[2]], [0, 0, 0, 1]]
 
 def world_bounds(g, mesh_index_filter=None):
-    """Axis-aligned bounds of all mesh POSITION accessors through node transforms. None if min/max are missing."""
+    """Axis-aligned bounds of all mesh POSITION accessors through node transforms. None if min/max are missing.
+    A skinned mesh node's own transform is IGNORED (glTF spec: the joints place it, and at the bind pose skin matrices are identity), so a file with
+    an export root rotation (Sketchfab, FBX-converted) is not misread as rotated or mis-sized."""
     nodes = g.get("nodes", []); parent = {}
     for i, n in enumerate(nodes):
         for c in n.get("children", []): parent[c] = i
@@ -86,7 +88,7 @@ def world_bounds(g, mesh_index_filter=None):
     lo, hi = [math.inf] * 3, [-math.inf] * 3; found = False
     for i, n in enumerate(nodes):
         if "mesh" not in n: continue
-        W = world(i)
+        W = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]] if "skin" in n else world(i)
         for prim in g["meshes"][n["mesh"]].get("primitives", []):
             acc = g["accessors"][prim["attributes"]["POSITION"]] if "POSITION" in prim.get("attributes", {}) else None
             if not acc or "min" not in acc or "max" not in acc: return None
