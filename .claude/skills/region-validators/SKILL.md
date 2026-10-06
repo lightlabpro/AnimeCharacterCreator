@@ -17,7 +17,7 @@ Everything is in `blender/validators/` and `blender/scripts/`; see docs/VALIDATO
 7. Packs: `python -m blender.validators pack library/` and `node blender/scripts/validate_gltf.js <pack>.gltf` (Khronos glTF-Validator).
 
 ## The app is the consumer
-The app's built-in bodies are placeholders that this library replaces. A model must provide every shape key, bone property, shader parameter and `PF-` key the app's controls are wired to (`app_contract.py`, regenerated list in docs/APP_CONTRACT.md); the build prompt names only part of them. A bidirectional slider drives `<key>` and `<key>_Neg`. Check `<region>.app.*` findings before accepting a model.
+The app's built-in bodies are placeholders that this library replaces. A model must provide every shape key, bone property, shader parameter and `PF-` key the app's controls are wired to (`app_contract.py`, tables in docs/ASSET_CONTRACT.md and the prompt's APP CONTROL KEYS section, both regenerated with `python -m blender.validators app-contract --update <file>`); the build prompt names only part of them. A bidirectional slider drives `<key>` and `<key>_Neg`. Check `<region>.app.*` findings before accepting a model.
 
 ## Standards used (each page was fetched and read)
 - VRM 1.0 humanoid spec: 55 bones, 15 required, parent/child tree (`standards.VRM_HUMANOID`, `rig.py`).

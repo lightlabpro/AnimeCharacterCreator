@@ -80,7 +80,7 @@ ID-Chest, ID-Belly, ID-Glute, ID-ThighBulk, ID-CalfBulk, ID-UpperArmBulk, ID-For
 ID-MuscleChest, ID-MuscleAbs, ID-MuscleArms, ID-MuscleLegs,
 ID-NeckThickness, ID-HandSize, ID-FootSize, ID-NailLength
 Muscle keys add definition and separation. Bulk keys add volume. They must be usable together.
-Nail length moves nail geometry on fingers and toes.
+Nail length moves nail geometry on fingers and toes. The APP CONTROL KEYS section lists the full key set, including the opposite key of every bidirectional slider.
 
 Length and size are bone controls, exposed as armature custom properties from 0.85 to 1.15 unless noted, default 1:
 head_scale 0.9 to 1.15
@@ -103,7 +103,7 @@ ID-NoseBridgeHigh, ID-NoseBridgeWide, ID-NoseTipUp, ID-NoseTipWide, ID-NoseSmall
 ID-EyeSize, ID-EyeHeight, ID-EyeSpacing, ID-EyeTilt, ID-EyeAlmond, ID-EyeRound, ID-EyeNarrow, ID-EyeDroop, ID-EyeUpturn
 ID-LidCrease, ID-LidHood
 ID-MouthWidth, ID-MouthHeight, ID-LipUpper, ID-LipLower, ID-LipThin, ID-CornerUp, ID-CornerDown, ID-Philtrum
-Placement bones, separate from emotion: brow height, brow tilt, brow spacing, eye height already covered by shape keys if that is cleaner, ear position. Pick one method per feature and document it in ASSET_CONTRACT.md. Do not leave two competing controls for the same idea.
+Placement bones, separate from emotion: brow height, brow tilt, brow spacing, eye height already covered by shape keys if that is cleaner, ear position. Pick one method per feature and document it in ASSET_CONTRACT.md. Do not leave two competing controls for the same idea. Skull, brow, eye, nose, mouth and ear keys beyond this list are in APP CONTROL KEYS.
 
 Eyebrows are a mesh, CHR_Brows, with enough geometry to bend. Eyelashes are a mesh, CHR_Lashes, that deforms with the lids. Include three lash length variants as shape keys: ID-LashShort, ID-LashDefault, ID-LashLong. Eyes are spheres or slight ovals with a shader iris. Iris size and pupil size are shader parameters. Eye color, sclera tint, and catchlight strength are shader parameters.
 
@@ -215,20 +215,20 @@ CHILD SPECIES
 Do not start until the adult Phase 9 gate has passed.
 This is a stylized child for a general-audience character creator. Ship a default shirt and shoes already equipped. Do not create adult sexual anatomy, adult body-shape keys, facial hair, or muscle-definition keys on this species. Sliders are limited to child proportions, face, hair, skin, eyes, short nails, and expression.
 Mesh: CHR_Body_Child on CHR_Armature_Child in character_child.blend. Poly budget 14k to 22k triangles. Same human socket names as the adult. Relaxed A-pose.
-Identity face and length controls use the adult names that still make sense: face shape, jaw, cheeks, ears, nose, eyes, lids, mouth, neck_length, limb lengths, head_scale. Ranges are narrower than the adult so the result stays a child. Omit ID-Chest, ID-WideHips, ID-Glute, ID-MuscleChest, ID-MuscleAbs, ID-MuscleArms, ID-MuscleLegs, beard, moustache, and sideburns.
+Identity face and length controls use the adult names that still make sense: face shape, jaw, cheeks, ears, nose, eyes, lids, mouth, neck_length, limb lengths, head_scale. Ranges are narrower than the adult so the result stays a child. Omit ID-Chest, ID-WideHips, ID-Glute, ID-MuscleChest, ID-MuscleAbs, ID-MuscleArms, ID-MuscleLegs, beard, moustache, and sideburns. The child list in APP CONTROL KEYS is exact.
 Author the full adult performance set on the child face: blinks with midpoints, brow keys, visemes including PF-VisSmall and PF-VisMid, emotions at jaw 0 and jaw 0.6, blink action, talking action, and the same pose-library names. Do not reuse the adult face by scale. When a child muzzle is equipped, those same viseme names still move it, including the small and mid openings.
 Child hair, authored for the child head, with the same slot and shape controls: crop, bob, straight long, curls, puff, twin tails, twin braids, ponytail, half-up, and blunt, parted, and wispy fronts. Each has root color, tip color, volume, and width. If an adult hair id has a child version, child counterpart equips it. Otherwise it equips the nearest child style. One default outfit. Build child-scale versions of the creature elements, with the same look ids and shape slider names. A child-counterpart operator copies an adult humanoid's element looks, colors, and clamped shape values onto the child and drops presentation, facial hair, and muscle keys. Ship a child counterpart preset for each archetype. The child sheet shows the default outfit.
 
 ROBOT SPECIES
 Do not start until the child gates have passed.
 Mesh: CHR_Body_Robot on CHR_Armature_Robot. Poly budget 20k to 35k triangles. Modeled panel gaps and hinges at neck, shoulders, elbows, wrists, hips, knees, and ankles. Default pose matches the adult A-pose so hand props line up.
-Identity: ID-ChassisBulk, ID-ChestCore, ID-OpticStyle, head_scale, torso_length, limb lengths, paint_color, emissive_color, paint_wear, panel_gap. No skin, hair, nails, veins, or body hair.
+Identity: ID-ChassisBulk, ID-ChestCore, ID-OpticStyle, head_scale, torso_length, limb lengths, paint_color, emissive_color, paint_wear, panel_gap. The robot list in APP CONTROL KEYS adds the keys the creator drives, such as ID-OpticSize and ID-AntennaLength. No skin, hair, nails, veins, or body hair.
 Face performance uses the adult performance names. Blink and squeeze drive shutter lids. Brow keys drive brow panels or light bars. Visemes and emotions drive a segmented mouth, including small, mid, and wide, and they must be tested at partial values. Jaw bone still exists. Reuse the talking action and pose-library names. Add SOC-Antenna and SOC-Core. Human sockets that match a real robot part stay the same names: head, neck, chest, back, arms, hands, waist, feet. One extra panel-kit accessory. The human wearable robot-armor exemplar stays on the adult and is not the robot body.
 
 DRAGON SPECIES
 Do not start until the robot gate has passed.
 Mesh: CHR_Body_Dragon on CHR_Armature_Dragon in a grounded quadruped pose, head raised, wings readable. Poly budget 30k to 45k triangles including wings and tail. Four legs, two wings, one tail. Original design. No copied monster silhouette.
-Identity: body_size 0.6 to 1.4, neck_length, tail_length, wing_size, leg_length, ID-SnoutLong, ID-SnoutShort, ID-JawWidth, ID-HornStyle, ID-Crest, ID-EarFin. Shader: scale_color, belly_color, membrane_color, horn_color, eye color, slit pupil. Claws are the nail equivalent, with ID-ClawLength.
+Identity: body_size 0.6 to 1.4, neck_length, tail_length, wing_size, leg_length, ID-SnoutLong, ID-SnoutShort, ID-JawWidth, ID-HornStyle, ID-Crest, ID-EarFin. The creator drives the horn shape key ID-HornStyleSize and the other dragon keys in APP CONTROL KEYS, each with its opposite key. Shader: scale_color, belly_color, membrane_color, horn_color, eye color, slit pupil. Claws are the nail equivalent, with ID-ClawLength.
 Sockets: SOC-Crest, SOC-Neck, SOC-Back, SOC-Wing_L, SOC-Wing_R, SOC-Tail, SOC-Shoulder_L, SOC-Shoulder_R.
 Performance names stay aligned with the adult where the idea exists: PF-Blink_L/R with midpoints, PF-EyeWide, PF-Squint, lid keys, PF-BrowRaise, PF-BrowInnerUp, PF-BrowLower, PF-BrowFurrow, PF-BrowSad on brow ridges. Mouth: jaw bone, PF-VisMBP, PF-VisSmall, PF-VisMid, PF-VisWide as a roar, plus at least four speech-like muzzle shapes so dialogue is not a binary jaw, and PF-SmileClosed, PF-Snarl, PF-Surprise tested with the jaw shut and open. Tongue and fangs follow the jaw. Author blink, talking, and the pose library on this face.
 One collar, one back harness, and one wing ornament. No rider, mount controls, or gameplay.
@@ -244,12 +244,84 @@ Randomize stays inside the documented ranges for the active species and never ch
 JSON stores species and identity only: property values, feature ids, accessory ids, colors, damage. It does not store the current viseme.
 Equip and unequip accessories by collection instance or append, parent to the socket, and drive deform keys. Unequip restores hidden body groups.
 
+APP CONTROL KEYS
+The creator app is the consumer of this library. Its built-in bodies are placeholders that your meshes replace, and its sliders are wired to the shape keys, bone properties and shader parameters listed here. Author every one of them: a name that is missing leaves a dead slider. Where this list differs from the key lists above, this list wins. The full table with a description for each key is docs/ASSET_CONTRACT.md.
+Slider rule: a slider runs from -100 to 100. A positive value drives the key at weight value/100. A negative value drives that slider's opposite key at weight -value/100, and does nothing when the opposite key does not exist. The opposite key is written <Key>_Neg unless this list names a different one (for example ID-CheekHollow is the opposite of ID-CheekFull). Every key runs 0 to 1 from the Basis and rests at 0. Child sliders use narrower ranges. A control whose element look is none is hidden by the app, but its keys must still exist.
+[generated from src/model/controls.ts and performance.ts by: python -m blender.validators app-contract --update docs/CLAUDE_BUILD_PROMPT.md. Edit those files, not this block.]
+
+ADULT HUMANOID KEYS
+skull: ID-SkullCrown, ID-SkullCrown_Neg, ID-SkullDepth, ID-SkullDepth_Neg, ID-SkullWidth, ID-SkullWidth_Neg
+face: ID-AgeCreases, ID-AgeOld, ID-AgeYoung, ID-FaceHeart, ID-FaceLong, ID-FaceRound, ID-FaceSharp, ID-FaceSoft
+eyes: ID-EyeAlmond, ID-EyeDroop, ID-EyeForward, ID-EyeForward_Neg, ID-EyeHeight, ID-EyeHeight_Neg, ID-EyeNarrow, ID-EyeRound, ID-EyeSize, ID-EyeSize_Neg, ID-EyeSpacing, ID-EyeSpacing_Neg, ID-EyeTilt, ID-EyeTilt_Neg, ID-EyeUpturn, ID-LashLong, ID-LashShort, ID-LidCrease, ID-LidHood
+brows: ID-BrowLong, ID-BrowRidge, ID-BrowRidge_Neg, ID-BrowShort, ID-BrowThick, ID-BrowThin
+nose: ID-NoseBridgeHigh, ID-NoseBridgeHigh_Neg, ID-NoseBridgeWide, ID-NoseBridgeWide_Neg, ID-NoseLarge, ID-NoseLong, ID-NoseLong_Neg, ID-NoseSmall, ID-NoseTipUp, ID-NoseTipUp_Neg, ID-NoseTipWide, ID-NoseTipWide_Neg, ID-NostrilFlare
+mouth: ID-CornerDown, ID-CornerUp, ID-FangLength, ID-LipLower, ID-LipLower_Neg, ID-LipThin, ID-LipUpper, ID-LipUpper_Neg, ID-MouthHeight, ID-MouthHeight_Neg, ID-MouthWidth, ID-MouthWidth_Neg, ID-Philtrum
+jaw: ID-AgeJawSoft, ID-ChinCleft, ID-ChinLength, ID-ChinLength_Neg, ID-ChinWidth, ID-ChinWidth_Neg, ID-FaceSquare, ID-JawHeight, ID-JawHeight_Neg, ID-JawWidth, ID-JawWidth_Neg
+cheeks: ID-CheekFull, ID-CheekHollow, ID-Cheekbone, ID-Cheekbone_Neg, ID-FaceDiamond
+ears: ID-EarElLift, ID-EarElLift_Neg, ID-EarElSize, ID-EarElSize_Neg, ID-EarElSpread, ID-EarElSpread_Neg, ID-EarLobe, ID-EarOut, ID-EarPoint, ID-EarSize, ID-EarSize_Neg
+neck: ID-NeckThickness, ID-NeckThickness_Neg
+shoulders: ID-BroadShoulders
+chest: ID-Chest, ID-Chest_Neg, ID-MuscleChest
+waist: ID-Belly, ID-Belly_Neg, ID-MuscleAbs, ID-NarrowWaist, ID-NarrowWaist_Neg
+hips: ID-Glute, ID-Glute_Neg, ID-WideHips
+arms: ID-ForeArmBulk, ID-ForeArmBulk_Neg, ID-MuscleArms, ID-UpperArmBulk, ID-UpperArmBulk_Neg
+hands: ID-ClawLength, ID-DigitEmphasis, ID-HandSize, ID-HandSize_Neg, ID-NailLength
+legs: ID-CalfBulk, ID-CalfBulk_Neg, ID-MuscleLegs, ID-ThighBulk, ID-ThighBulk_Neg
+feet: ID-FootSize, ID-FootSize_Neg
+body: ID-BodyBulk, ID-BodyLean, ID-BodySoft
+muzzle: ID-MuzzleBridge, ID-MuzzleBridge_Neg, ID-MuzzleHeight, ID-MuzzleHeight_Neg, ID-MuzzleLength, ID-MuzzleLength_Neg, ID-MuzzleWidth, ID-MuzzleWidth_Neg
+tail: ID-TailThick, ID-TailThin, ID-TailTip, ID-TailTip_Neg
+horns: ID-HornCurve, ID-HornCurve_Neg, ID-HornLength, ID-HornLength_Neg, ID-HornThickness, ID-HornThickness_Neg
+mane: ID-ManeLength, ID-ManeLength_Neg, ID-ManeVolume, ID-ManeVolume_Neg
+frill: ID-FrillFlare, ID-FrillSize, ID-FrillSize_Neg
+Bone length properties (default 1): brow_height 0.85 to 1.15, brow_spacing 0.85 to 1.15, brow_tilt 0.85 to 1.15, ear_height 0.85 to 1.15, finger_length 0.85 to 1.15, foot_length 0.85 to 1.15, forearm_length 0.85 to 1.15, hand_length 0.85 to 1.15, head_scale 0.9 to 1.15, height 0.9 to 1.1, hip_width 0.85 to 1.15, neck_length 0.85 to 1.15, shin_length 0.85 to 1.15, shoulder_width 0.85 to 1.15, stoop 0 to 1, tail_length 0.6 to 1.5, thigh_length 0.85 to 1.15, torso_length 0.85 to 1.15, upper_arm_length 0.85 to 1.15, wing_fold 0 to 1, wing_span 0.6 to 1.4.
+Shader parameters: arm_hair_opacity, blush_strength, body_hair_opacity, catchlight, iris_size, pupil_size, surface_coverage, vein_strength, whisker_density.
+
+CHILD HUMANOID KEYS
+Same as the adult list except. Omit: ID-AgeCreases, ID-AgeJawSoft, ID-AgeOld, ID-AgeYoung, ID-Chest, ID-Chest_Neg, ID-ChinCleft, ID-FaceSharp, ID-FaceSoft, ID-Glute, ID-Glute_Neg, ID-MuscleAbs, ID-MuscleArms, ID-MuscleChest, ID-MuscleLegs, ID-WideHips.
+Bone properties and shader parameters: the adult ones that apply: brow_height, brow_spacing, brow_tilt, ear_height, finger_length, foot_length, forearm_length, hand_length, head_scale, height, hip_width, neck_length, shin_length, shoulder_width, tail_length, thigh_length, torso_length, upper_arm_length, wing_fold, wing_span; shader blush_strength, catchlight, iris_size, pupil_size, surface_coverage, whisker_density.
+
+ROBOT KEYS
+skull: ID-AntennaLength, ID-AntennaLength_Neg
+eyes: ID-OpticSize, ID-OpticSize_Neg
+neck: ID-NeckThickness, ID-NeckThickness_Neg
+shoulders: ID-BroadShoulders
+chest: ID-ChestCore, ID-ChestCore_Neg
+hands: ID-HandSize, ID-HandSize_Neg
+feet: ID-FootSize, ID-FootSize_Neg
+body: ID-ChassisBulk, ID-ChassisBulk_Neg
+Bone length properties (default 1): foot_length 0.85 to 1.15, forearm_length 0.85 to 1.15, hand_length 0.85 to 1.15, head_scale 0.9 to 1.15, height 0.9 to 1.1, neck_length 0.85 to 1.15, shin_length 0.85 to 1.15, shoulder_width 0.85 to 1.15, thigh_length 0.85 to 1.15, torso_length 0.85 to 1.15, upper_arm_length 0.85 to 1.15.
+Shader parameters: emissive_strength, paint_wear, panel_gap.
+
+QUADRUPED DRAGON KEYS
+face: ID-AgeOld, ID-AgeYoung
+eyes: ID-EyeSize, ID-EyeSize_Neg
+jaw: ID-JawWidth, ID-JawWidth_Neg
+ears: ID-EarFin, ID-EarFin_Neg
+feet: ID-ClawLength
+body: ID-BeastBulk, ID-BeastLean
+muzzle: ID-SnoutLong, ID-SnoutShort
+horns: ID-HornStyleSize, ID-HornStyleSize_Neg
+mane: ID-Crest, ID-Crest_Neg
+Bone length properties (default 1): body_size 0.6 to 1.4, head_scale 0.85 to 1.2, leg_length 0.8 to 1.25, neck_length 0.7 to 1.4, posture 0 to 1, tail_length 0.7 to 1.4, wing_fold 0 to 1, wing_size 0.7 to 1.4.
+Shader parameters: catchlight, iris_size, pupil_size, scale_wear.
+
+PERFORMANCE KEYS (adult and child face; robot and dragon use the names that fit the part)
+Eyes: PF-Blink_L, PF-Blink_R, PF-EyeWide_L, PF-EyeWide_R, PF-Squint_L, PF-Squint_R, PF-LidUpperDown_L, PF-LidUpperDown_R, PF-LidLowerUp_L, PF-LidLowerUp_R, PF-Squeeze_L, PF-Squeeze_R
+Brows: PF-BrowRaise_L, PF-BrowRaise_R, PF-BrowInnerUp_L, PF-BrowInnerUp_R, PF-BrowOuterUp_L, PF-BrowOuterUp_R, PF-BrowLower_L, PF-BrowLower_R, PF-BrowFurrow_L, PF-BrowFurrow_R, PF-BrowSad_L, PF-BrowSad_R
+Jaw: PF-JawOpen
+Visemes: PF-VisMBP, PF-VisSmall, PF-VisMid, PF-VisAA, PF-VisEE, PF-VisIH, PF-VisOH, PF-VisOO, PF-VisFV, PF-VisL, PF-VisTH, PF-VisSZ, PF-VisWide
+Emotions: PF-SmileClosed, PF-SmileOpenJaw, PF-Smirk_L, PF-Smirk_R, PF-Frown, PF-FrownOpen, PF-Pout, PF-Press, PF-LipBite, PF-Grimace, PF-Snarl, PF-Disgust, PF-Surprise, PF-Cry, PF-MouthSide_L, PF-MouthSide_R
+Tongue: PF-TongueL, PF-TongueTh, PF-TongueRest
+
+[end of generated block]
+
 PHASE GATES
 Finish in this order. After each phase, save, and render or screenshot front, three-quarter, and side. Write a short note in docs/PHASE_LOG.md.
 Phase 1 gate: addon enables with an empty panel, shader node groups exist on a test sphere, sockets exist on a placeholder armature.
 Phase 2 gate: base body in proportion, UVs, zones for skin, lips, and nails, transforms applied.
-Phase 3 gate: every identity body key and length control works at 0, 0.5, and 1 without broken joints.
-Phase 4 gate: identity face keys, eyes, lashes, and brows read clearly at the neutral and at each extreme.
+Phase 3 gate: every identity body key and length control works at 0, 0.5, and 1 without broken joints, every opposite (_Neg) key moves the body the other way, and the app-contract check lists no missing body key.
+Phase 4 gate: identity face keys, eyes, lashes, and brows read clearly at the neutral and at each extreme, every opposite (_Neg) key works, and the app-contract check lists no missing face, skull, brow, nose or ear key.
 Phase 5 gate: blink action, talking action, and all pose-library entries. Midpoint visemes and brow keys look intentional. Smile with jaw open uses the corrective and does not collapse the cheeks.
 Phase 6 gate: every adult front, back, and extra hair style in the list equips, mixes with another slot, recolors root and tip, and moves volume. At least one style is shown over creature-ear space without swallowing the ears. Facial hair pieces mix, and length and bulk move. A contact sheet of the hair list is saved to docs/qa/hair/.
 Phase 7 gate: one accessory of each type equips, parents to the right socket, and body sliders still deform clothing and armor. Cape damage moves from clean to torn. Shoes hide toenails. The organic idle plays.
@@ -259,11 +331,12 @@ Phase 10 gate: on the adult, every creature element can change look and can hit 
 Phase 11 gate: presets exist for Human, Lion, Fish, Dog, Dragon, Bird, Frog, Serpent, Rabbit, Dinosaur, Rhino, and Lizard. Rabbit, dinosaur, rhino, and lizard are visually distinct from each other and from the tiger. Feminine and masculine presentations apply on top of each archetype, the sliders still move after the preset, and each archetype has a clothed child counterpart. Young adult, adult, and old apply on top of a human preset and on top of a mixed human-beast preset. The three ages stay visually distinct, and mixing an element does not reset age.
 Phase 12 gate: child body reads as a child at neutral and at length extremes, default outfit is on, adult presentation sliders do not exist. Each archetype has a clothed child counterpart.
 Phase 13 gate: child blink, talking, and pose library work on a human face and on a muzzle. Midpoint mouth and brow keys look intentional. Child counterpart copies element looks and does not copy adult presentation.
-Phase 14 gate: robot reads as segmented metal in front, three-quarter, and side. Blink shutters, brow panels, and mouth shapes hit 0.25, 0.5, 0.75, and 1. Paint color, emissive, and wear work. The talking action plays.
-Phase 15 gate: the quadruped dragon reads as a four-legged winged creature at default size and at size extremes. Wings, tail, and neck length work. Muzzle speech shapes include in-betweens. Collar, harness, and wing ornament attach to the correct sockets. Young adult, adult, and old are distinct on this body, and no humanoid element is available.
+Phase 14 gate: robot reads as segmented metal in front, three-quarter, and side. Blink shutters, brow panels, and mouth shapes hit 0.25, 0.5, 0.75, and 1. Paint color, emissive, and wear work. The talking action plays. The app-contract check lists no missing robot key.
+Phase 15 gate: the quadruped dragon reads as a four-legged winged creature at default size and at size extremes. Wings, tail, and neck length work. Muzzle speech shapes include in-betweens. Collar, harness, and wing ornament attach to the correct sockets. Young adult, adult, and old are distinct on this body, no humanoid element is available, and the app-contract check lists no missing dragon key.
 Phase 16 gate: the body-kind dropdown switches adult humanoid, child humanoid, robot, and quadruped dragon. A mixed humanoid JSON round-trips, including a human part on a beast preset. The humanoid panel has no full-beast assets, and the full-beast panel has no humanoid assets. docs/qa/ contains sheets for a feminine creature, a masculine creature, a mixed human-and-beast humanoid, a child counterpart, the robot, and the quadruped dragon. Expression preview never wipes identity.
 
 WORKING RULES
+The creator app's controls are the source of truth for key names. When the app changes, regenerate the key lists with python -m blender.validators app-contract --update on this prompt and on docs/ASSET_CONTRACT.md. Do not leave a gate while the <region>.app.* findings show a missing key.
 Run the validators (docs/VALIDATORS.md, blender/scripts/run_validators.py) at every phase gate and paste the summary into docs/PHASE_LOG.md. A FAIL blocks the gate. Add LM-* markers before Phase 2 so the anatomy checks can measure the body.
 Prefer a Python script you can re-run over one-off manual clicks for drivers, constraints, materials, and the panel.
 When you sculpt a shape key, set the key to 1, sculpt, then return the slider to 0 and confirm the Basis is unchanged.

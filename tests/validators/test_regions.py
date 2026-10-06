@@ -346,5 +346,58 @@ class AppContract(unittest.TestCase):
         self.assertEqual(out["ID-BrowThickness"][0], "ID-BrowThick")
 
 
+class DocsInSync(unittest.TestCase):
+    """The prompt and the asset contract must name every key the app drives, and regenerating them must change nothing."""
+    ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
+
+    def read(self, name):
+        return open(os.path.join(self.ROOT, "docs", name), encoding="utf-8").read()
+
+    def test_every_app_key_is_in_the_prompt_and_the_contract(self):
+        from blender.validators import app_contract as ac
+        prompt, contract = self.read("CLAUDE_BUILD_PROMPT.md"), self.read("ASSET_CONTRACT.md")
+        for kind in ("adult", "child", "robot", "dragon"):
+            req = ac.required(kind)
+            for what in ("morph", "bone", "shader"):
+                for name in req[what]:
+                    self.assertIn(name, contract, f"{name} ({kind} {what}) missing from ASSET_CONTRACT.md")
+                    if kind != "child":  # the child block lists only its differences from the adult
+                        self.assertIn(name, prompt, f"{name} ({kind} {what}) missing from the build prompt")
+        for key in ac.parse_pf_keys():
+            self.assertIn(key, prompt)
+            self.assertIn(key, contract)
+
+    def test_child_block_names_exactly_the_differences(self):
+        from blender.validators import app_contract as ac
+        prompt = self.read("CLAUDE_BUILD_PROMPT.md")
+        adult, child = set(ac.required("adult")["morph"]), set(ac.required("child")["morph"])
+        line = [l for l in prompt.splitlines() if l.startswith("Same as the adult list except.")][0]
+        for k in adult - child:
+            self.assertIn(k, line)
+        for k in child & adult:
+            self.assertNotIn(f" {k},", line)
+        self.assertFalse(child & set(__import__("blender.validators.contract", fromlist=["x"]).CHILD_FORBIDDEN))
+        # the app wires ID-WideHips to a child control; the prompt forbids it on the child, so it is reported, not silently added
+        self.assertIn(("ID-WideHips", "body.hips"), ac.child_conflicts())
+        self.assertIn("ID-WideHips", self.read("ASSET_CONTRACT.md").split("Conflicts to resolve in the app")[1].split("###")[0])
+
+    def test_regenerating_is_a_no_op(self):
+        import shutil, tempfile
+        from blender.validators import app_contract as ac
+        with tempfile.TemporaryDirectory() as d:
+            for name in ("CLAUDE_BUILD_PROMPT.md", "ASSET_CONTRACT.md"):
+                shutil.copy(os.path.join(self.ROOT, "docs", name), os.path.join(d, name))
+            self.assertFalse(ac.update_prompt(os.path.join(d, "CLAUDE_BUILD_PROMPT.md")), "the prompt's generated block is stale: run app-contract --update")
+            self.assertFalse(ac.update_markdown(os.path.join(d, "ASSET_CONTRACT.md")), "ASSET_CONTRACT.md is stale: run app-contract --update")
+
+    def test_contract_check_requires_the_app_keys(self):
+        from blender.validators import contract
+        adult = contract.required_keys("adult")
+        for k in ("ID-SkullWidth", "ID-SkullWidth_Neg", "ID-BrowThick", "PF-TongueRest", "PF-BrowRaise_L"):
+            self.assertIn(k, adult)
+        self.assertNotIn("ID-MuscleChest", contract.required_keys("child"))
+        self.assertIn("ID-HornStyleSize", contract.required_keys("dragon"))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -61,8 +61,18 @@ REQUIRED_OBJECTS: Dict[str, Tuple[str, ...]] = {
 
 
 def required_keys(kind: str):
+    """Every shape key a model of this body kind must carry: the build prompt's lists united with every key the creator app
+    drives (src/model/controls.ts and performance.ts, see app_contract.py), so a model that would leave an app slider dead fails."""
+    from . import app_contract  # lazy: app_contract imports this module
     if kind in ("adult", "child"):
         # The child prompt only fixes face + performance keys; its body sliders are "child proportions".
         body = () if kind == "child" else ADULT_BODY_KEYS
-        return set(body) | set(ADULT_FACE_KEYS) | set(PERFORMANCE_KEYS)
-    return set(ROBOT_KEYS if kind == "robot" else DRAGON_KEYS)
+        keys = set(body) | set(ADULT_FACE_KEYS) | set(PERFORMANCE_KEYS)
+    else:
+        keys = set(ROBOT_KEYS if kind == "robot" else DRAGON_KEYS)
+    keys |= set(app_contract.required(kind)["morph"])
+    if kind in ("adult", "child"):
+        keys |= set(app_contract.parse_pf_keys())
+    if kind == "child":
+        keys -= set(CHILD_FORBIDDEN)
+    return keys
