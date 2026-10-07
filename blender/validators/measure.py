@@ -33,7 +33,18 @@ _BONE_PATTERNS = {
     "hip": [r"thigh", r"upper.?leg", r"^(?:left|right)[ ._-]?leg$"],
     "knee": [r"shin", r"calf", r"lower.?leg", r"knee"],
     "ankle": [r"foot(?!.*toe)", r"ankle"],
+    # centre-line and extremity bones used by the per-region deformation tests (deform_regions.MOTIONS)
+    "neck": [r"neck(?![a-z])", r"^neck"],
+    "spine": [r"^spine$", r"^spine[._-]?0?1$", r"abdomen", r"^spine[._-]00?1"],
+    "chest": [r"upper.?chest", r"^chest", r"^spine[._-]?0?2$"],
+    "jaw": [r"jaw"],
+    "toe": [r"toe(?!.*(?:nail|end))"],
+    "index_01": [r"index.*(?:proximal|0?1)(?![a-z0-9])"],
+    "index_02": [r"index.*(?:intermediate|0?2)(?![a-z0-9])"],
+    "tail_01": [r"tail.*0?1(?![a-z0-9])", r"^tail$"],
+    "wing_01": [r"wing.*(?:0?1|upper|arm)(?![a-z0-9])", r"^wing"],
 }
+CENTRE_ROLES = ("neck", "spine", "chest", "jaw", "tail_01")
 
 
 def _find_bone(bones: Dict[str, Tuple[Vec, Vec]], role: str, side: str) -> Optional[Tuple[Vec, Vec]]:
@@ -48,11 +59,11 @@ def _find_bone(bones: Dict[str, Tuple[Vec, Vec]], role: str, side: str) -> Optio
 
 def find_bone_name(names, role: str, side: str) -> Optional[str]:
     """Name of the bone playing `role` (shoulder, elbow, wrist, hip, knee, ankle) on `side` (L or R)."""
-    sre = _side_re(side)
+    sre = _side_re(side) if side and role not in CENTRE_ROLES else None
     for pat in _BONE_PATTERNS[role]:
         for name in names:
             low = name.lower()
-            if re.search(pat, low) and re.search(sre, low):
+            if re.search(pat, low) and (sre is None or re.search(sre, low)):
                 return name
     return None
 

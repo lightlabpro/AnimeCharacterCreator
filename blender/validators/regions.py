@@ -92,6 +92,8 @@ def region_of_check(check: str) -> str:
         return "body"
     if parts[0] in ("hair",):
         return "hair"
+    if parts[0] == "deform" and len(parts) > 1 and parts[1] in REGIONS:
+        return parts[1]
     if parts[0] in ("topology", "deform"):
         return "body"
     if parts[0] == "hygiene":

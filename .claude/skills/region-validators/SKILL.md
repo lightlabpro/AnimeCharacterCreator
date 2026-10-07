@@ -10,7 +10,7 @@ Everything is in `blender/validators/` and `blender/scripts/`; see docs/VALIDATO
 ## Run
 1. Landmarks first: `LM-Crown`, `LM-Chin`, `LM-Floor`, eye corners, `LM-Mouth` (see docs/VALIDATORS.md). A missing landmark is SKIP, never guessed.
 2. Body, face, rig, expressions: `blender -b file.blend -P blender/scripts/analyze_regions.py -- <name> <kind> <body> <armature|-> <landmarks.json> docs/qa/regions [typesafe]`
-3. Hair: `analyze_hair.py` (see the hair-validators skill). Topology and bends: `analyze_topology.py`.
+3. Hair: `analyze_hair.py` (see the hair-validators skill). Topology and bends: `analyze_topology.py` bends every joint to its own range of motion and judges the weight-blend zone against that region's bands (`deform_regions.py`); shape keys are judged by their region. `TYPESAFE_JUDGE=1` adds the per-region TypeSafe verdicts (`deform_judge.py`). `python tools/topology/eval_deform.py` re-checks the bands on clean and defective synthetic limbs.
 4. Clothing and accessories: `analyze_clothing.py -- <name> <body> <landmarks.json> <out> garment:<obj> accessory:<slot>:<obj>`; the manifest goes through `clothing.contract_findings`.
 5. Humanoid beasts: `beast.py` functions on the muzzle, feet, tail, horns and wings; `beast.recipe_findings(archetype, looks)`; `archetype.classify(looks, archetype)` for distinctness.
 6. Quadruped: `quadruped.metrics(verts, faces, landmarks)` with `LM-FootFront_L/R`, `LM-FootHind_L/R`, `LM-Belly`, `LM-WingRoot_L`.

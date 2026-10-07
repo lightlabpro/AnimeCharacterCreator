@@ -2,8 +2,9 @@
 
     blender -b model.blend -P analyze_topology.py -- <name> <body_object> <armature_object|-> <out_dir>
 Writes <out_dir>/<name>.json (a topology profile that new work is compared with) and prints the findings.
-Bend tests rotate each joint about its local X and Z by +/-BEND degrees and keep the worst result; the rig must have
-an armature modifier on the body. Shape keys are applied at 1.
+Each region is bent to the end of its own range of motion (deform_regions.MOTIONS: elbow 145, knee 140, neck 45, finger 90, ...)
+and judged on its weight-blend zone against that region's bands; the rig must have an armature modifier on the body.
+Shape keys are applied at 1 and judged by the region the key belongs to (lids, lips, brows ...).
 """
 import json
 import os
@@ -13,14 +14,18 @@ import bpy
 import numpy as np
 
 sys.path.insert(0, __file__.rsplit("/blender/", 1)[0])
-from blender.validators import bpy_adapter, measure, topology  # noqa: E402
+from blender.validators import bpy_adapter, deform_regions, measure, topology  # noqa: E402
 from blender.validators.model import Finding, Report  # noqa: E402
 
-BEND = {"shoulder": 60, "elbow": 90, "knee": 90, "hip": 60}
-ROLE_BONE = {"shoulder": "shoulder", "elbow": "elbow", "knee": "knee", "hip": "hip"}
 
 
 def run(name, body, arm, out_dir):
+    # the rest pose must have every shape key at 0 (the library contract), whatever state the file was saved in
+    me0 = bpy.data.objects[body].data
+    saved = {kb.name: kb.value for kb in me0.shape_keys.key_blocks} if me0.shape_keys else {}
+    for kb in (me0.shape_keys.key_blocks if me0.shape_keys else []):
+        kb.value = 0.0
+    bpy.context.view_layer.update()
     v, faces = bpy_adapter.mesh_arrays(body)
     edges, _ = topology.edges_of(faces)
     report = Report(kind="topology", tag=name)
@@ -33,50 +38,40 @@ def run(name, body, arm, out_dir):
         names = [b.name for b in armature.pose.bones]
         mw = armature.matrix_world
         loops = {}
-        for role in ("shoulder", "elbow", "knee"):
-            bn = measure.find_bone_name(names, ROLE_BONE[role], "L")
+        out["regions"] = {}
+        for m in deform_regions.MOTIONS:
+            bn = measure.find_bone_name(names, m.role, "L")
             if not bn:
                 continue
             pb = armature.pose.bones[bn]
-            # axis along the limb: from this joint toward the next bone down the chain
-            child = pb.children[0] if pb.children else None
-            head = np.array(tuple(mw @ pb.head))
-            tail = np.array(tuple(mw @ (child.head if child else pb.tail)))
-            loops[role] = topology.ring_count(v, edges, head, tail - head, 0.03 * height)
-        report.add(*topology.loop_findings(loops, name))
-        out["loops"] = loops
-        for role, deg in BEND.items():
-            bn = measure.find_bone_name(names, ROLE_BONE[role], "L")
-            if not bn:
-                continue
-            worst = None
+            distal = np.array(tuple(mw @ (pb.children[0].head if pb.children else pb.tail)))
             weights, moving, head, axes, total = bpy_adapter.joint_weights(arm, body, bn)
-            for axis in (0, 2):
-                for sign in (1, -1):
-                    posed = topology.lbs_rotate(v, weights, moving, head, axes[axis], sign * deg, total)
-                    d = topology.deformation(v, posed, faces, edges)
-                    d.pop("worst_locations")
-                    score = max(d["edge_stretch_max"], 1 / max(d["edge_squash_min"], 1e-6)) + 100 * d["flipped_fraction"]
-                    if worst is None or score > worst[0]:
-                        worst = (score, d, f"{bn} local {'XYZ'[axis]} {sign * deg:+d} deg")
-            report.add(*topology.deformation_findings(worst[1], f"{role}[{worst[2]}]"))
-            out["bend"][role] = {"worst": worst[2], **worst[1]}
+            joint = deform_regions.Joint(weights, moving, head, axes, total, distal)
+            fs = deform_regions.run_motion(m, v, faces, joint, edges)
+            report.add(*fs)
+            loops.update({m.label: int(f.value) for f in fs if f.check.endswith(".loops")})
+            out["regions"].setdefault(m.region, {})[m.label] = {f.check.rsplit(".", 1)[-1]: [f.severity, f.value] for f in fs if f.value is not None}
     me = bpy.data.objects[body].data
     if me.shape_keys:
         for kb in me.shape_keys.key_blocks[1:]:
-            d = topology.deformation(v, bpy_adapter.shape_key_verts(body, kb.name), faces, edges)
-            d.pop("worst_locations")
-            out["shape_keys"][kb.name] = d
-        bad = {k: d for k, d in out["shape_keys"].items()
-               if d["flipped_fraction"] > 0.002 or d["frac_stretch_gt_2"] + d["frac_squash_lt_half"] > 0.01}
-        report.add(Finding("deform.shape_keys", "warn" if bad else "pass",
-                           f"{len(out['shape_keys']) - len(bad)}/{len(out['shape_keys'])} shape keys apply cleanly (no folds, <1% extreme edges)"
-                           + (f"; check: {', '.join(sorted(bad, key=lambda k: -(bad[k]['frac_stretch_gt_2'] + bad[k]['frac_squash_lt_half']))[:4])}" if bad else "")))
-    degenerate = next((d.get("ignored_degenerate_edges", 0) for d in out["bend"].values()), 0)
+            posed = bpy_adapter.shape_key_verts(body, kb.name)
+            fs = deform_regions.run_key(kb.name, v, posed, faces)
+            report.add(*fs)
+            out["shape_keys"][kb.name] = {"region": deform_regions.key_region(kb.name),
+                                          **{f.check.rsplit(".", 1)[-1]: [f.severity, f.value] for f in fs if f.value is not None}}
+    degenerate = 0
     if degenerate:
         report.add(Finding("hygiene.coincident", "warn" if degenerate > 0.005 * len(edges) else "info",
                            f"{degenerate} edges are shorter than 0.1% of the height (coincident vertices); excluded from deformation ratios",
                            float(degenerate), "0", "Merge by distance."))
+    if arm != "-":
+        out["loops"] = loops
+    if os.environ.get("TYPESAFE_JUDGE"):
+        from blender.validators import deform_judge
+        for region, fs in deform_judge.judge_all(report.findings).items():
+            report.add(*fs)
+    for kname, val in saved.items():
+        me0.shape_keys.key_blocks[kname].value = val
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, f"{name}.json"), "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=2)

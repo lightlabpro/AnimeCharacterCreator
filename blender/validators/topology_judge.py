@@ -53,6 +53,13 @@ def _aspect(x: float) -> str:
     return "even" if x <= 4 else "some long thin quads" if x <= 8 else "many long thin quads"
 
 
+def _loop_target(joint: str) -> str:
+    from .deform_regions import LOOPS
+    if joint in LOOPS:
+        return "%d to %d" % LOOPS[joint]
+    return "2 to 4" if joint == "elbow" else "3 to 5" if joint == "shoulder" else "4 to 6"
+
+
 def build_state(topo: dict) -> dict:
     s = topo["stats"]
     state: dict = {
@@ -62,8 +69,7 @@ def build_state(topo: dict) -> dict:
             "quad_proportions": _aspect(s["quad_aspect_p95"]),
             "ngons": "none" if s["ngon_ratio"] == 0 else "a few",
         },
-        "joint_loops": {j: {"count": n, "manual_target": "2 to 4" if j == "elbow" else "3 to 5" if j == "shoulder" else "4 to 6"}
-                        for j, n in topo.get("loops", {}).items()},
+        "joint_loops": {j: {"count": n, "target": _loop_target(j)} for j, n in topo.get("loops", {}).items()},
         "bends": {},
         "shape_keys": {},
         "notes": {"coincident_edges_ignored": "many" if topo.get("bend") and next(iter(topo["bend"].values())).get("ignored_degenerate_edges", 0) > 1000 else "few"},
@@ -98,7 +104,7 @@ def questions(topo: dict, order: int = 0) -> dict:
         "Are the quads in `surface` well shaped for deformation (not sheared, not long and thin)?"}
     if topo.get("loops"):
         qs["loops_ok"] = {"type": "noul", "instructions":
-            "Does every joint in `joint_loops` have a number of edge loops inside its manual target range?"}
+            "Does every joint in `joint_loops` have a number of edge loops inside its target range?"}
     if topo.get("shape_keys"):
         qs["keys_ok"] = {"type": "noul", "instructions":
             "Do the shape keys in `shape_keys` apply cleanly, with no key folding and no key over-stretching its region?"}
