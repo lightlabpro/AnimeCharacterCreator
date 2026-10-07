@@ -36,6 +36,9 @@ The audit slices the real triangles with a plane at each height and takes the ex
 ## Procedure (images, no Blender)
 This route needs the `render-validator` skill installed as well, because the script lives there: `python3 <render-validator>/scripts/head_profile.py measure --front f.png --side s.png --front-chin-y <row> --side-chin-y <row> --out cand.json` then `compare --ref knowledge/head-targets.json --cand cand.json`. Read the chin row off the image. Accuracy is about ±0.03H, so treat results within tolerance 0.04 as a pass.
 
+## Dataset bands (second opinion, measured)
+`knowledge/head-targets-dataset.json` holds p10-p90 bands measured from 18 real anime-style models (TexVerse/Sketchfab, CC BY, VRoid excluded, landmarks checked by eye; method and caveats in `knowledge/dataset-study.md`). Set `DATASET_BANDS` at the top of the script to that path and the audit prints both verdicts. The bands disagree with the screenshot targets above on the cranium: every measured model is wider than 0.58H at 0.25H (band 0.66-0.80, median 0.71) and the width:depth band is 0.77-0.93 (median 0.81), not 0.72. Report both; do not pick one silently. Sammy decides which target governs the MHS3 style.
+
 ## Fix recipes (what to do in Blender)
 - **Cranium too wide, skull too shallow:** scale X in with proportional editing (large falloff), then push the back of the skull out in Y. The head is deeper than it is wide.
 - **Forehead recedes:** pull the brow and forehead forward at 0.2-0.3H. Keep the forehead near vertical from the eye line up to about 0.8H.

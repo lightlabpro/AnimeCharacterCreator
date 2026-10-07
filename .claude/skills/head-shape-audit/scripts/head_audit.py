@@ -18,6 +18,7 @@ import json, sys
 HEAD_OBJECTS = ["CHR_Body", "CHR_Head"]       # meshes that carry the skull, jaw and nose (not hair, not eyes, not ears)
 TOL = 0.04                                      # allowed difference, in head heights
 BAND = 0.006                                    # half thickness of each slice, in head heights
+DATASET_BANDS = ""                              # path to knowledge/head-targets-dataset.json for the second-opinion bands
 
 TARGETS = {  # fractions of H, 0 = top of skull, 1 = chin tip
     "width": {"0.1": 0.479, "0.15": 0.550, "0.2": 0.579, "0.25": 0.579, "0.3": 0.570, "0.75": 0.410, "0.8": 0.372, "0.85": 0.289, "0.9": 0.266, "0.95": 0.189},
@@ -155,6 +156,24 @@ def report(prof):
     print("\nBRIDGE-ENTRY\nside: chat\nkind: learning\ntopic: head audit\nfinding: " + finding + "\nevidence: " + json.dumps({k: prof[k] for k in ("width_to_depth", "skull_depth_0.3")}) + "\nstatus: confirmed\nuse: Code, none unless the targets need re-measuring")
     return status
 
+
+def band_report(prof, bands, margin=0.01):
+    """Second opinion: compare with measured dataset bands (knowledge/head-targets-dataset.json, p10-p90 over real
+    anime-style models). Returns {"outside": [...], "rows": [...]}. It never turns a screenshot-target FAIL into a pass:
+    the caller reports both and Sammy decides which target governs the style."""
+    rows, outside = [], []
+    def chk(name, got, b):
+        if not b or got is None: return
+        lo, hi = b["p10"] - margin, b["p90"] + margin
+        st = "in" if lo <= got <= hi else ("LOW" if got < lo else "HIGH")
+        rows.append(f"  {name:<22} band {b['p10']:.3f}-{b['p90']:.3f} (median {b['median']:.3f}, n={b['n']})  got {got:.3f}  {st}")
+        if st != "in": outside.append(f"{name} {st.lower()}")
+    for k, b in bands.get("width", {}).items(): chk(f"width@{k}", prof["width"].get(k), b)
+    for k, b in bands.get("behind_nose", {}).items(): chk(f"behind_nose@{k}", prof["behind_nose"].get(k), b)
+    chk("skull_depth@0.3", prof.get("skull_depth_0.3"), bands.get("skull_depth_0.3"))
+    chk("width:depth", prof.get("width_to_depth"), bands.get("width_to_depth"))
+    return {"outside": outside, "rows": rows}
+
 def collect_mesh(bpy, names):
     """Evaluated world-space vertices and faces of the named objects, as one mesh."""
     dg = bpy.context.evaluated_depsgraph_get()
@@ -180,8 +199,17 @@ def run_in_blender():
     prof = profile_from_mesh(verts, faces, tz, cz, -1)
     print(json.dumps(prof, indent=1)); status = report(prof)
     bad, _ = verdict(prof)
+    res = {"status": status, "ok": status == "pass", "bad": [FIX[k] for k in dict.fromkeys(bad)], "unknown": list(verdict.unknown), "profile": prof}
+    bands_path = DATASET_BANDS
+    if bands_path:
+        import os
+        if os.path.exists(bands_path):
+            br = band_report(prof, json.load(open(bands_path))["head"])
+            print("\nDATASET BANDS (second opinion, p10-p90 of measured models)"); print("\n".join(br["rows"]))
+            print("outside the dataset band: " + (", ".join(br["outside"]) or "none"))
+            res["dataset_band"] = {"outside": br["outside"], "source": bands_path}
     out = bpy.path.abspath("//head_audit.json")
-    with open(out, "w") as f: json.dump({"status": status, "ok": status == "pass", "bad": [FIX[k] for k in dict.fromkeys(bad)], "unknown": list(verdict.unknown), "profile": prof}, f, indent=2)
+    with open(out, "w") as f: json.dump(res, f, indent=2)
     print("wrote", out, "for validate.py measure --head-audit")
     return status
 

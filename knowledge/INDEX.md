@@ -21,6 +21,7 @@ Read in this order. Both Claudes use the same files.
 | `../.claude/skills/ai-3d-pipeline/references/tripo.md` | What TripoSG, TripoSR and the Tripo Blender add-on teach: input preparation, seed and face budget, orientation (+Y vs our -Y), the add-on's localhost server | Both |
 | `meshy-agent-lessons.md` | What Meshy's agent repo does well (tri-state checks, route choice, skill validation) and where it was applied | Code |
 | `../.claude/skills/library-pack-check/` | Checks exported packs against the app contract; test-pack generator | Code builds it, chat runs it on every export |
+| `head-targets-dataset.json`, `dataset-study.md` | Head and body bands measured from 18 real anime-style models (TexVerse sample, TypeSafe-ranked), with method and caveats | Chat (measure_dataset.py, dataset_bands.py) |
 | `from-chat/` | Studies and measurements that live in the chat project (head ratios, hair clump stats, MHS3 video studies) | Chat |
 
 ## Quick facts

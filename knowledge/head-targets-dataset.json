@@ -1,0 +1,368 @@
+{
+ "note": "Measured dataset bands, fractions of head height H (0 = skull top, 1 = chin tip) for head rows; body rows are fractions of body height. p10-p90 over visually verified models.",
+ "source": "TexVerse 1K GLBs (Sketchfab; CC BY / CC BY-SA), 1,190 anime-style humanoid candidates ranked with TypeSafe jev-1.13.0, top 200 downloaded and measured with measure_dataset.py",
+ "selection": {
+  "downloaded": 200,
+  "vroid_excluded": 29,
+  "hair_not_separable": 83,
+  "errors": 6,
+  "auto_flagged_or_unrigged_noise": "rest",
+  "landmarks_checked_by_eye": 19,
+  "below_5.5_heads": 1,
+  "used": 18
+ },
+ "caveats": [
+  "n is small (18 heads, 6-10 bodies); treat as a band, not a law",
+  "skull top is the highest non-hair vertex: if a model's scalp lives in the hair material the head reads short and heads_tall high",
+  "generic Sketchfab anime models, not MHS3 specifically; MHS3 is chunkier (about 6.3-6.7 heads in the brief)",
+  "body bands use pose-independent metrics only (A and T poses mixed)"
+ ],
+ "head": {
+  "heads_tall": {
+   "n": 18,
+   "median": 7.172,
+   "p10": 6.305,
+   "p90": 8.551,
+   "p25": 6.673,
+   "p75": 7.571
+  },
+  "skull_depth_0.3": {
+   "n": 18,
+   "median": 0.849,
+   "p10": 0.768,
+   "p90": 0.889,
+   "p25": 0.81,
+   "p75": 0.871
+  },
+  "width_to_depth": {
+   "n": 18,
+   "median": 0.815,
+   "p10": 0.77,
+   "p90": 0.925,
+   "p25": 0.804,
+   "p75": 0.869
+  },
+  "width": {
+   "0.05": {
+    "n": 18,
+    "median": 0.385,
+    "p10": 0.327,
+    "p90": 0.456,
+    "p25": 0.363,
+    "p75": 0.395
+   },
+   "0.1": {
+    "n": 18,
+    "median": 0.523,
+    "p10": 0.476,
+    "p90": 0.61,
+    "p25": 0.501,
+    "p75": 0.534
+   },
+   "0.15": {
+    "n": 18,
+    "median": 0.613,
+    "p10": 0.571,
+    "p90": 0.702,
+    "p25": 0.595,
+    "p75": 0.623
+   },
+   "0.2": {
+    "n": 18,
+    "median": 0.669,
+    "p10": 0.626,
+    "p90": 0.766,
+    "p25": 0.651,
+    "p75": 0.681
+   },
+   "0.25": {
+    "n": 18,
+    "median": 0.706,
+    "p10": 0.659,
+    "p90": 0.804,
+    "p25": 0.687,
+    "p75": 0.714
+   },
+   "0.3": {
+    "n": 18,
+    "median": 0.725,
+    "p10": 0.684,
+    "p90": 0.83,
+    "p25": 0.712,
+    "p75": 0.747
+   },
+   "0.35": {
+    "n": 18,
+    "median": 0.735,
+    "p10": 0.695,
+    "p90": 0.846,
+    "p25": 0.722,
+    "p75": 0.77
+   },
+   "0.75": {
+    "n": 18,
+    "median": 0.671,
+    "p10": 0.577,
+    "p90": 0.781,
+    "p25": 0.62,
+    "p75": 0.74
+   },
+   "0.8": {
+    "n": 18,
+    "median": 0.561,
+    "p10": 0.53,
+    "p90": 0.718,
+    "p25": 0.545,
+    "p75": 0.627
+   },
+   "0.85": {
+    "n": 18,
+    "median": 0.506,
+    "p10": 0.47,
+    "p90": 0.714,
+    "p25": 0.488,
+    "p75": 0.549
+   },
+   "0.9": {
+    "n": 18,
+    "median": 0.437,
+    "p10": 0.392,
+    "p90": 0.715,
+    "p25": 0.412,
+    "p75": 0.483
+   },
+   "0.95": {
+    "n": 18,
+    "median": 0.353,
+    "p10": 0.288,
+    "p90": 0.847,
+    "p25": 0.327,
+    "p75": 0.4
+   }
+  },
+  "behind_nose": {
+   "0.1": {
+    "n": 18,
+    "median": 0.185,
+    "p10": 0.156,
+    "p90": 0.224,
+    "p25": 0.17,
+    "p75": 0.208
+   },
+   "0.2": {
+    "n": 18,
+    "median": 0.094,
+    "p10": 0.075,
+    "p90": 0.14,
+    "p25": 0.082,
+    "p75": 0.125
+   },
+   "0.3": {
+    "n": 18,
+    "median": 0.053,
+    "p10": 0.026,
+    "p90": 0.1,
+    "p25": 0.043,
+    "p75": 0.08
+   },
+   "0.4": {
+    "n": 18,
+    "median": 0.038,
+    "p10": 0.024,
+    "p90": 0.105,
+    "p25": 0.033,
+    "p75": 0.066
+   },
+   "0.6": {
+    "n": 18,
+    "median": 0.062,
+    "p10": 0.02,
+    "p90": 0.092,
+    "p25": 0.044,
+    "p75": 0.076
+   },
+   "0.8": {
+    "n": 18,
+    "median": 0.036,
+    "p10": 0.017,
+    "p90": 0.081,
+    "p25": 0.025,
+    "p75": 0.059
+   },
+   "0.9": {
+    "n": 18,
+    "median": 0.09,
+    "p10": 0.061,
+    "p90": 0.116,
+    "p25": 0.078,
+    "p75": 0.101
+   }
+  }
+ },
+ "body": {
+  "head_to_top": {
+   "n": 10,
+   "median": 0.167,
+   "p10": 0.136,
+   "p90": 0.176,
+   "p25": 0.153,
+   "p75": 0.172
+  },
+  "neck_z": {
+   "n": 10,
+   "median": 0.833,
+   "p10": 0.824,
+   "p90": 0.864,
+   "p25": 0.828,
+   "p75": 0.847
+  },
+  "shoulder_z": {
+   "n": 9,
+   "median": 0.804,
+   "p10": 0.799,
+   "p90": 0.812,
+   "p25": 0.801,
+   "p75": 0.808
+  },
+  "pelvis_z": {
+   "n": 10,
+   "median": 0.554,
+   "p10": 0.531,
+   "p90": 0.58,
+   "p25": 0.538,
+   "p75": 0.569
+  },
+  "hip_z": {
+   "n": 8,
+   "median": 0.541,
+   "p10": 0.524,
+   "p90": 0.58,
+   "p25": 0.536,
+   "p75": 0.556
+  },
+  "knee_z": {
+   "n": 9,
+   "median": 0.314,
+   "p10": 0.273,
+   "p90": 0.372,
+   "p25": 0.285,
+   "p75": 0.335
+  },
+  "ankle_z": {
+   "n": 9,
+   "median": 0.056,
+   "p10": 0.037,
+   "p90": 0.07,
+   "p25": 0.044,
+   "p75": 0.067
+  },
+  "thigh_over_shin": {
+   "n": 8,
+   "median": 0.981,
+   "p10": 0.819,
+   "p90": 1.126,
+   "p25": 0.888,
+   "p75": 1.082
+  },
+  "upper_over_fore": {
+   "n": 8,
+   "median": 0.989,
+   "p10": 0.877,
+   "p90": 1.164,
+   "p25": 0.931,
+   "p75": 1.051
+  },
+  "shoulder_width": {
+   "n": 9,
+   "median": 0.157,
+   "p10": 0.14,
+   "p90": 0.187,
+   "p25": 0.143,
+   "p75": 0.179
+  },
+  "hip_width": {
+   "n": 8,
+   "median": 0.104,
+   "p10": 0.096,
+   "p90": 0.111,
+   "p25": 0.102,
+   "p75": 0.106
+  },
+  "width_at_shoulder": {
+   "n": 8,
+   "median": 0.22,
+   "p10": 0.124,
+   "p90": 0.248,
+   "p25": 0.188,
+   "p75": 0.239
+  },
+  "width_at_waist": {
+   "n": 6,
+   "median": 0.146,
+   "p10": 0.116,
+   "p90": 0.175,
+   "p25": 0.134,
+   "p75": 0.164
+  },
+  "width_at_hip": {
+   "n": 7,
+   "median": 0.198,
+   "p10": 0.165,
+   "p90": 0.228,
+   "p25": 0.18,
+   "p75": 0.209
+  },
+  "waist_over_hip": {
+   "n": 6,
+   "median": 0.702,
+   "p10": 0.647,
+   "p90": 0.875,
+   "p25": 0.652,
+   "p75": 0.745
+  },
+  "depth_at_waist": {
+   "n": 6,
+   "median": 0.11,
+   "p10": 0.081,
+   "p90": 0.127,
+   "p25": 0.099,
+   "p75": 0.117
+  },
+  "foot_length": {
+   "n": 9,
+   "median": 0.146,
+   "p10": 0.113,
+   "p90": 0.153,
+   "p25": 0.123,
+   "p75": 0.151
+  },
+  "mirror_p95": {
+   "n": 10,
+   "median": 0.013,
+   "p10": 0.008,
+   "p90": 0.027,
+   "p25": 0.013,
+   "p75": 0.018
+  }
+ },
+ "models": [
+  "glbs__glbs_1k__000-000__04026b862b184a26ba0f101933eb6954_1024.glb",
+  "glbs__glbs_1k__000-006__208bf5d9c8ac4049b33f3cab5d40ccba_1024.glb",
+  "glbs__glbs_1k__000-008__2b9b59384bbc4072956e8dfc7a52d10e_1024.glb",
+  "glbs__glbs_1k__000-014__48e6db3752b14e238816118883752441_1024.glb",
+  "glbs__glbs_1k__000-014__49808a700ed94e778af4c131c953e82a_1024.glb",
+  "glbs__glbs_1k__000-018__5a2a226d483343638019a09a8ae76a92_1024.glb",
+  "glbs__glbs_1k__000-023__76a1aa04f7a544589c455b448bbc5efd_1024.glb",
+  "glbs__glbs_1k__000-028__90913426a8f8430caedc6efec6b1cc1d_1024.glb",
+  "glbs__glbs_1k__000-032__a2842bf62a3a4a639ed7d356ccb54d56_1024.glb",
+  "glbs__glbs_1k__000-041__d1530a17f2a74851a09f9c6013c3f3e9_1024.glb",
+  "glbs__glbs_1k__000-042__d60fb4427e6e4858bc82c4175b0fdbb5_1024.glb",
+  "glbs__glbs_1k__000-054__1c795fd9da4e40fa98c9f10c8c9444ed_1024.glb",
+  "glbs__glbs_1k__000-054__1ca6d15fe2f34bd199252bf73d896e13_1024.glb",
+  "glbs__glbs_1k__000-058__47a4e71d24fd48b8ab0ae46ae940650d_1024.glb",
+  "glbs__glbs_1k__000-060__55468f42958448e3a1e58fcab24e8cc0_1024.glb",
+  "glbs__glbs_1k__000-060__56fbd6d283954777a30ab75032795973_1024.glb",
+  "glbs__glbs_1k__000-079__1324cbd0c4c047078314a3c4029a838b_1024.glb",
+  "glbs__glbs_1k__000-085__ba5c9e77ce7c4442818add5febb04d69_1024.glb"
+ ]
+}
