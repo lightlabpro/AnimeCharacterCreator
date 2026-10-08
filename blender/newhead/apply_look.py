@@ -51,6 +51,7 @@ BROW_ARCH = 0.010         # brow arch (H)
 BROW_INNER = 0.0         # extra thickness at the brow's inner end (x)
 BROW_TAPER = 0.30        # where the brow starts to thin (0..1 along it)
 EYE_RIG = 1              # r1: animatable eyes/brows (face_rig.py): opening + eye white + iris + lid strips + shape keys
+VIEW_KEYS = 1            # v1: camera-angle view keys (VW-Yaw_L/R, VW-Side_L/R; view_keys.py) keep the anime eye shape off-front
 EYE_DECAL = 1            # q1: eyes painted into a texture decal on the skin (shape free of the mesh opening); 0 = old plate + strips
 # ears (g12, reference-match judge knobs; 0 = off)
 IRIS_RING_X = -0.15       # dark iris arcs only where px < this (x R)
@@ -433,6 +434,7 @@ def _strip(name, rows, mat, col, off_x):
 
 
 EYE_PAINT = {}       # knob overrides for eye_paint.py (the judge loop sets them here)
+EYE_VIEW = {}        # v1: knob overrides for view_keys.py (look_knobs.json "view")
 
 
 def _target_normals(Ph):
@@ -718,6 +720,8 @@ def load_knobs(eyes_json):
     for name, val in k.items():
         if name == "paint":
             EYE_PAINT.update(val)
+        elif name == "view":
+            EYE_VIEW.update(val)
         elif name in globals():
             globals()[name] = val
     return k
@@ -750,6 +754,11 @@ def run(npz, eyes_json, tag, off_x):
     else:
         painted_eyes(ob, col, LID, off_x, tag)
     face_strokes(ob, col, off_x, tag)
+    if EYE_RIG and VIEW_KEYS:
+        exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "view_keys.py")).read(), globals())
+        add_view_keys(ob, col, tag)
+        bpy.app.driver_namespace["view_weights"] = view_weights
+        bpy.app.driver_namespace["set_view"] = set_view
     return ob, int((sh < 0.5).sum())
 
 

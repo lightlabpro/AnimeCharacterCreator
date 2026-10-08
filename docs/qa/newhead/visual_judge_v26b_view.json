@@ -1,0 +1,79 @@
+{
+ "region": "view",
+ "subject": "v26 (after profile_eye_longer x3, far_eye_toward_nose, far_iris_narrower, far_eye_wider, near_eye_narrower x2): the same head at 12, 30, 50 and 70 degrees of camera yaw with the camera-angle view keys, board view_v26.png (ours on top, MHS3 frames below at similar angles; reference angles are estimated from the faces). profile_iris_narrower was tried and reverted (the measured reference iris share contradicts it).",
+ "features": [
+  {
+   "feature": "line_quality",
+   "p_same": 0.12,
+   "confidence": 0.76,
+   "verdict": "off"
+  },
+  {
+   "feature": "far_eye_position",
+   "p_same": 0.14,
+   "confidence": 0.72,
+   "verdict": "off"
+  },
+  {
+   "feature": "profile_eye",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "far_iris",
+   "p_same": 0.31,
+   "confidence": 0.38,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "far_eye_width",
+   "p_same": 0.53,
+   "confidence": 0.06,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "far_brow",
+   "p_same": 0.61,
+   "confidence": 0.22,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "near_eye_shape",
+   "p_same": 0.78,
+   "confidence": 0.56,
+   "verdict": "matches"
+  },
+  {
+   "feature": "near_iris",
+   "p_same": 0.82,
+   "confidence": 0.64,
+   "verdict": "matches"
+  },
+  {
+   "feature": "near_brow",
+   "p_same": 0.83,
+   "confidence": 0.66,
+   "verdict": "matches"
+  },
+  {
+   "feature": "far_eye_height",
+   "p_same": 0.87,
+   "confidence": 0.74,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.85,
+  "confidence": 0.7,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "near_eye_narrower",
+  "order_b": "near_eye_narrower",
+  "agree": true,
+  "tie_break": null,
+  "apply": "near_eye_narrower",
+  "setting": "look_knobs.json view.NEAR_C -0.05"
+ }
+}

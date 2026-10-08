@@ -1,0 +1,47 @@
+{
+ "region": "view",
+ "subject": "v15 (after profile_eye_longer): the same head at 12, 30, 50 and 70 degrees of camera yaw with the camera-angle view keys, board view_v15.png (ours on top, MHS3 frames below at similar angles; reference angles are estimated from the faces).",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style; the references are different characters, so compare how the eyes, irises and brows change with the head angle, not their exact shapes.",
+ "features": {
+  "far_eye_width": {
+   "reference": "MHS3-09 at about 30 degrees: the far eye (on the turned-away side) is 0.70 as wide as the near eye (measured); its width equals its height. MHS3-07 at about 50 degrees: the far eye is 0.34 as wide as the near eye (measured).",
+   "ours": "at 30 degrees the far eye is 0.62 as wide as the near eye and 1.0 times as wide as it is tall (measured); at 50 degrees it is 0.35 as wide as the near eye (measured)."
+  },
+  "far_eye_height": {
+   "reference": "the far eye is as tall as the near eye at about 30 degrees (1.0, measured) and nearly as tall at about 50 degrees (0.93, measured).",
+   "ours": "the far eye is as tall as the near eye at 30 degrees (0.99, measured) and 0.95 as tall at 50 degrees (measured)."
+  },
+  "far_eye_position": {
+   "reference": "at about 30 degrees the far eye sits fully on the face between the nose-bridge line and the face edge, close to the nose line: the gap to the nose line is 0.25 eye heights, the gap to the face edge 0.12 eye heights (measured). At about 50 degrees its outer edge touches the face silhouette.",
+   "ours": "at 30 degrees the far eye sits fully on the face between the nose-bridge line and the face edge, nearer the face edge: the gap to the nose line is 0.67 eye heights, the gap to the face edge 0.18 eye heights (measured). At 50 degrees its outer edge touches the face silhouette. Nothing of the eye is hidden behind the nose."
+  },
+  "far_iris": {
+   "reference": "the far iris stays a tall oval: 0.83 as wide as the near iris at about 30 degrees and about 0.36 at about 50 degrees (measured); at 30 degrees it fills 0.62 of the far eye's width.",
+   "ours": "the far iris is a tall oval: 0.91 as wide as the near iris at 30 degrees and 0.50 at 50 degrees (measured); at 30 degrees it fills 0.66 of the far eye's width."
+  },
+  "near_eye_shape": {
+   "reference": "at about 30 degrees the near eye keeps the same drawn almond outline as the front view, a little shorter: 1.47 times as wide as tall (the front-view MHS3 eye is about 1.72), with smooth even curves and no stretched or bulging outer half.",
+   "ours": "at 30 degrees the near eye keeps the front-view almond outline, a little shorter: 1.63 times as wide as tall (our front view is 1.74), with smooth curves; the outer half is not stretched (without the view keys it measured 2.27 at 35 degrees)."
+  },
+  "near_iris": {
+   "reference": "at about 30 degrees the near iris is a tall oval filling 0.52 of the near eye's width.",
+   "ours": "at 30 degrees the near iris is a tall oval filling 0.45 of the near eye's width."
+  },
+  "far_brow": {
+   "reference": "at about 30 degrees the far brow is a short stroke about as long as the far eye is wide, sitting just above it between the nose line and the face edge.",
+   "ours": "at 30 degrees the far brow is a short stroke a little longer than the far eye is wide, sitting just above it, its outer end at the face edge and its inner end at the nose line."
+  },
+  "near_brow": {
+   "reference": "at about 30 degrees the near brow keeps its front-view shape, a long gentle arch over the near eye.",
+   "ours": "at 30 degrees the near brow keeps its front-view shape, a long gentle arch over the near eye, about 1.4 times the near eye's width."
+  },
+  "profile_eye": {
+   "reference": "ref-04 at about 65-70 degrees: the near eye is a long thin almond about 2.0 times as wide as tall, the iris in its front part, set a little back from the brow-ridge silhouette; the far eye shows only as a tiny hint past the nose bridge. (Her eyes are narrower than this character's even from the front, so only the proportions relative to the front view compare.)",
+   "ours": "at 70 degrees the near eye is a rounded almond 1.34 times as wide as tall, the iris filling 0.42 of its width in the front half, set a little back from the brow-ridge silhouette; the far eye is not visible."
+  },
+  "line_quality": {
+   "reference": "lid lines, eye whites and brows are clean flat shapes with smooth edges at every angle.",
+   "ours": "lid lines and brows are clean at every angle; the lower edge of the eye white shows small notches at 30-70 degrees, and two tiny skin-shade dots sit on the cheek near the temple shadow at 20 and 50 degrees."
+  }
+ }
+}

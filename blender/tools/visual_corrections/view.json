@@ -1,0 +1,96 @@
+{
+ "region": "view",
+ "note": "v-series: camera-angle view keys (view_keys.py VW-Yaw_L/R at 35 degrees, VW-Side_L/R at 90). The keys slide the eyes, irises, brows and the skin around them along the face so the eye shapes read as drawn anime shapes from the side. All knobs are view_keys.py VIEW values set through look_knobs.json 'view'; a look pass (apply_look) rebuilds the keys, no head rebuild.",
+ "corrections": [
+  {
+   "id": "near_eye_narrower",
+   "description": "In the three-quarter view, make the near eye (the one facing the camera) narrower.",
+   "setting": "look_knobs.json view.NEAR_C -0.05"
+  },
+  {
+   "id": "near_eye_wider",
+   "description": "In the three-quarter view, make the near eye wider.",
+   "setting": "look_knobs.json view.NEAR_C +0.05"
+  },
+  {
+   "id": "far_eye_wider",
+   "description": "In the three-quarter view, make the far eye (the one on the turned-away side) wider, using more of the space between the nose line and the face edge.",
+   "setting": "look_knobs.json view.FAR_GAP_IN -0.05 and view.FAR_GAP_OUT -0.05"
+  },
+  {
+   "id": "far_eye_narrower",
+   "description": "In the three-quarter view, make the far eye narrower.",
+   "setting": "look_knobs.json view.FAR_GAP_IN +0.05 and view.FAR_GAP_OUT +0.05"
+  },
+  {
+   "id": "far_eye_toward_nose",
+   "description": "In the three-quarter view, move the far eye toward the nose line (away from the face edge).",
+   "setting": "look_knobs.json view.FAR_GAP_IN -0.05 and view.FAR_GAP_OUT +0.05"
+  },
+  {
+   "id": "far_eye_toward_edge",
+   "description": "In the three-quarter view, move the far eye toward the face edge (away from the nose line).",
+   "setting": "look_knobs.json view.FAR_GAP_IN +0.05 and view.FAR_GAP_OUT -0.05"
+  },
+  {
+   "id": "far_iris_wider",
+   "description": "Make the far eye's iris wider (rounder) in the three-quarter view.",
+   "setting": "look_knobs.json view.IRIS_FAR +0.08"
+  },
+  {
+   "id": "far_iris_narrower",
+   "description": "Make the far eye's iris narrower in the three-quarter view.",
+   "setting": "look_knobs.json view.IRIS_FAR -0.08"
+  },
+  {
+   "id": "near_iris_wider",
+   "description": "Make the near eye's iris wider in the three-quarter view.",
+   "setting": "look_knobs.json view.IRIS_NEAR +0.08"
+  },
+  {
+   "id": "near_iris_narrower",
+   "description": "Make the near eye's iris narrower in the three-quarter view.",
+   "setting": "look_knobs.json view.IRIS_NEAR -0.08"
+  },
+  {
+   "id": "far_brow_longer",
+   "description": "Make the far brow longer toward the face edge in the three-quarter view.",
+   "setting": "look_knobs.json view.BROW_GAP_OUT -0.04"
+  },
+  {
+   "id": "far_brow_shorter",
+   "description": "Make the far brow shorter in the three-quarter view.",
+   "setting": "look_knobs.json view.BROW_GAP_OUT +0.04"
+  },
+  {
+   "id": "profile_eye_longer",
+   "description": "In the near-profile view, make the eye longer front to back (a longer, thinner almond).",
+   "setting": "look_knobs.json view.SIDE_C +0.06"
+  },
+  {
+   "id": "profile_eye_shorter",
+   "description": "In the near-profile view, make the eye shorter front to back.",
+   "setting": "look_knobs.json view.SIDE_C -0.06"
+  },
+  {
+   "id": "profile_eye_back",
+   "description": "In the near-profile view, set the eye further back from the front of the face.",
+   "setting": "look_knobs.json view.SIDE_GAP +0.05"
+  },
+  {
+   "id": "profile_eye_forward",
+   "description": "In the near-profile view, move the eye closer to the front of the face.",
+   "setting": "look_knobs.json view.SIDE_GAP -0.05"
+  },
+  {
+   "id": "profile_iris_wider",
+   "description": "In the near-profile view, make the iris wider.",
+   "setting": "look_knobs.json view.IRIS_SIDE +0.08"
+  },
+  {
+   "id": "profile_iris_narrower",
+   "description": "In the near-profile view, make the iris narrower.",
+   "setting": "look_knobs.json view.IRIS_SIDE -0.08"
+  }
+ ]
+}

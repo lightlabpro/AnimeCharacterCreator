@@ -73,6 +73,10 @@ Files (repo `AnimeCharacterCreator-main`):
      check the face/full-head render, not only the close-up.
    - A pick that contradicts a measured number in the analysis (e.g. "wider" when ours already measures wider) is
      declined and reported, not applied; that feature goes to Sammy.
+   - Angle-dependent looks (v-series view keys): render a yaw sweep (0-90 degrees), pair each angle with a reference
+     at a similar estimated angle, and measure ratios that survive different characters (far eye / near eye width,
+     eye width / height against the front view, iris share of the eye). Check combinations too (expressions on top of
+     view keys). When two opposite picks alternate around a measured reference value, stop and exclude both.
    - Deterministic checks after a geometry step: dataset bands, topology (quads only), skin skew. A step that pushes
      a band out is reverted and excluded (face g11: chin_narrower took width@0.85 below the band).
    - Stop when `first_fix` is "none", when the two orders (and the tie-break) still disagree, when every feature is

@@ -11,5 +11,12 @@
  "EYE_DX": 0.012,
  "BROW_DARK": 1.33,
  "BROW_GREY": 0.25,
- "BROW_ARCH": 0.004
+ "BROW_ARCH": 0.004,
+ "view": {
+  "SIDE_C": 0.68,
+  "FAR_GAP_IN": 0.0,
+  "FAR_GAP_OUT": 0.12,
+  "IRIS_FAR": 0.77,
+  "NEAR_C": 0.85
+ }
 }

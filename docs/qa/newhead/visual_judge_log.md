@@ -162,3 +162,43 @@ contradiction) - applied as BROW_THICK 1.12 (s5). After s4 every other feature w
 - the stop condition, so the loop ends here.
 Boards: board_eyes_s5.png, board_expr_s5.png (all 7 expressions, front), board_expr34_s3.png, board_look_s5.png.
 Shape / placement entries in eyes_rig.json need a head rebuild (build_head), not just apply_look.
+
+## v-series - camera-angle view keys (anime cheat for off-front views)
+
+Sammy: away from the front the eyes looked warped, not anime; anime redraws the face parts per angle. Before
+(board_view_before.png): at 35 degrees the near eye stretched to 2.27x as wide as tall (front 1.74) and the far eye
+shrank to 0.33 of the near eye with most of it hidden behind the nose; at 50 degrees only a sliver showed.
+References at matching angles (docs/reference/mhs3 and docs/style_dataset): MHS3-09 ~30 deg (far eye 0.70 of the near,
+same height, iris 0.83), MHS3-07 ~50 deg (far eye 0.34, at the face edge), ref-04 ~65-70 deg (profile almond about
+2.1x, iris 0.42 of the eye, set back 0.5 eye heights). The head datasets (head-targets-dataset, eyes_dataset) hold
+front-view proportions and topology only, nothing per angle; the view keys do not change the basis mesh, so the
+dataset bands are unaffected.
+
+Build (`blender/newhead/view_keys.py`, run by apply_look when `VIEW_KEYS = 1`): shape keys `VW-Yaw_L/R` (camera 35
+degrees toward the character's left/right) and `VW-Side_L/R` (90 degrees) on the head and every eye part. For each
+key the eye, iris and brow outlines get a target screen position (near eye evenly compressed about the iris, far eye
+fitted between the nose bridge and the face edge, profile eye a narrow almond behind the brow ridge, irises kept
+round); each vertex slides ALONG the face surface to the point the camera sees there (so nothing leaves the face),
+keeping its layer offset. The skin around follows with a falloff that is made monotone per row (no folds), fades out
+toward the temple and ear, and is lit-mixed where it moves (no toon specks). Line strips step 1.5 mm toward the key's
+camera and the eye white / iris 3.5 mm away from it (invisible in that view) so the lids still cover them when an
+expression key is added on top. App drive: `view_weights(yaw)` in view_keys.py (inbox item for Claude Code).
+
+Judge (menu view.json, analyses visual_v14..v30_view.json, ours at 12/30/50/70 deg vs the references):
+- applied: profile_eye_longer x3 (SIDE_C 0.50 -> 0.68), far_eye_toward_nose (FAR_GAP 0.10/0.12 -> 0.05/0.17),
+  far_iris_narrower (IRIS_FAR 0.85 -> 0.77), far_eye_wider (-> 0.00/0.12), near_eye_narrower x2 (NEAR_C 0.95 -> 0.85).
+- far_eye_toward_nose picked twice; the double step moved the eye 0.06 eye heights only (our nose line is drawn on
+  one side of the nose, so the gap to it is partly the line's own offset) -> reverted to the single step, excluded
+  with its opposite.
+- declined (contradict a measured number): profile_eye_longer once ours reached 0.87 of the front proportion;
+  far_eye_wider at 0.74 (ref 0.70) -> far_eye_narrower applied back to 0.66, then both excluded (oscillation);
+  far_iris_wider/narrower oscillated -> excluded; profile_iris_narrower (applied, then the reference measured 0.42 vs
+  ours 0.37 -> reverted); profile_eye_shorter, profile_eye_forward (gap measured equal), near_eye_narrower at 1.51 vs
+  1.47.
+- final (v30): matches - near_eye_shape 0.74, near_brow, far_eye_height; needs a human - far_iris, far_eye_width
+  (0.73 vs 0.70), far_brow, near_iris; off - far_eye_position (nose-line gap 0.6 vs 0.25 eye heights, limited as
+  above), line_quality (small notches on the lower white edge at 30-70 deg, a few tiny cheek shade dots, ragged far
+  white with amazed/angry at 30 deg), profile_eye (ours 1.51x = 0.87 of front; TypeSafe keeps asking for changes the
+  measurements contradict).
+Boards: board_view_before.png, board_view_v30_sweep.png (0-90 deg), board_view_v30_refs.png, board_view_v30_mirror.png
+(-30/-60 deg), board_view_v30_expressions.png (expressions at 30/60 deg), board_expr_v30_front.png (front unchanged).
