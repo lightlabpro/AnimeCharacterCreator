@@ -1,0 +1,115 @@
+{
+ "region": "eyes",
+ "subject": "q18 (after brow_darker), eyes_q18.png; brow colour sampled",
+ "features": [
+  {
+   "feature": "brow_colour",
+   "p_same": 0.17,
+   "confidence": 0.66,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.34,
+   "confidence": 0.32,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.4,
+   "confidence": 0.2,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.42,
+   "confidence": 0.16,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.53,
+   "confidence": 0.06,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.55,
+   "confidence": 0.1,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.73,
+   "confidence": 0.46,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.95,
+   "confidence": 0.9,
+   "verdict": "matches"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.95,
+   "confidence": 0.9,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline_shape",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.95,
+  "confidence": 0.9,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "brow_less_orange",
+  "order_b": "brow_less_orange",
+  "agree": true,
+  "tie_break": null,
+  "apply": "brow_less_orange",
+  "setting": "apply_look.py BROW_GREY +0.25"
+ }
+}

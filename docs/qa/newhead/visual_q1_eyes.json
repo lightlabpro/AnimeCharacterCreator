@@ -1,0 +1,71 @@
+{
+ "region": "eyes",
+ "subject": "n53 with painted eye decal (q1): front and 3/4 eye close-ups (top) vs the MHS3 protagonist frame (bottom), eyes_q1.png. Measured on the near eye in the reference (101 px wide) and the front render.",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, male protagonist",
+ "features": {
+  "outline_shape": {
+   "reference": "a flat gentle upper arch peaking a little toward the inner side, a deep rounded U-shaped lower lid, a blunt rounded inner corner and a softly pointed outer corner sitting a little lower than the inner corner",
+   "ours": "a flat gentle upper arch peaking a little toward the inner side, a deep rounded U-shaped lower lid, a blunt rounded inner corner and a softly pointed outer corner sitting a little lower than the inner corner"
+  },
+  "height_to_width": {
+   "reference": "the eye including the lid line is 0.58 as tall as it is wide (measured)",
+   "ours": "the eye including the lid line is 0.60 as tall as it is wide (measured)"
+  },
+  "eye_size": {
+   "reference": "the eye width is 0.77 of the distance from the eye centre down to the bottom of the nose (measured on the near eye)",
+   "ours": "the eye width is 0.68 of the distance from the eye centre down to the bottom of the nose (measured, front view)"
+  },
+  "eye_spacing": {
+   "reference": "the gap between the eyes is a little more than one eye width (the frame is a 3/4 view, so it can only be estimated)",
+   "ours": "the gap between the inner corners is 1.24 eye widths (measured, front view)"
+  },
+  "iris_size": {
+   "reference": "a tall oval iris 0.45 of the eye width wide; its bottom is just above the lower lid and its top is cut by the upper lid line",
+   "ours": "a tall oval iris 0.45 of the eye width wide; its bottom is just above the lower lid and its top is cut by the upper lid line"
+  },
+  "iris_colour": {
+   "reference": "medium green, slightly darker at the top, with a light mint crescent filling the lower part of the iris",
+   "ours": "medium green, slightly darker at the top, with a light mint crescent filling the lower part of the iris"
+  },
+  "iris_pattern": {
+   "reference": "two thin dark concentric arcs on the nose side of the pupil and one on the outer side, plus a thin dark outline around the iris",
+   "ours": "two thin dark concentric arcs on the nose side of the pupil and one on the outer side, plus a thin dark outline around the iris; the arcs are a little fainter and thinner"
+  },
+  "pupil": {
+   "reference": "a dark vertical oval, about a quarter of the iris width, a little above the iris centre",
+   "ours": "a dark vertical oval, about a quarter of the iris width, a little above the iris centre"
+  },
+  "highlight": {
+   "reference": "one white horizontal oval at mid height on the iris edge, overlapping the white; it sits on the viewer's left side of the iris in BOTH eyes (one light direction)",
+   "ours": "one white horizontal oval at mid height on the iris edge, overlapping the white; it sits on the nose side of each iris, so it is on the viewer's right in the viewer's left eye and on the viewer's left in the viewer's right eye (mirrored)"
+  },
+  "sclera": {
+   "reference": "warm light grey, with a neutral grey band under the upper lid line about a quarter of the eye height",
+   "ours": "warm light grey, with a neutral grey band under the upper lid line about a quarter of the eye height"
+  },
+  "upper_lid_line": {
+   "reference": "a dark brown line of fairly even thickness, about 0.08 of the eye width, thinner at the inner corner, running into the outer corner",
+   "ours": "a dark brown line of fairly even thickness, about 0.08 of the eye width, thinner at the inner corner, running into the outer corner"
+  },
+  "lower_lid_line": {
+   "reference": "no dark line along the lower lid; the white meets the skin with only a faint warm-grey edge",
+   "ours": "no dark line along the lower lid; the white meets the skin with only a faint warm-grey edge"
+  },
+  "brow_shape": {
+   "reference": "a thick brush stroke with a blunt inner end, thickest in its inner third, tapering to a point, nearly straight with a slight rise outward",
+   "ours": "a brush stroke with a blunt diagonal inner end, thickest in its inner third, tapering to a point, gently arched; thinner overall than the reference"
+  },
+  "brow_position": {
+   "reference": "the inner end sits right above the inner corner of the eye, almost touching the lid line; the brow rises outward to about one eye height above the eye",
+   "ours": "the inner end sits a little above the inner corner of the eye with a small gap; the brow rises outward to about two thirds of an eye height above the eye"
+  },
+  "brow_colour": {
+   "reference": "dark brown with darker brush hatching",
+   "ours": "medium brown with fine darker diagonal hatching"
+  },
+  "flatness": {
+   "reference": "the eye reads as flat paint on the skin with no depth or socket",
+   "ours": "the eye reads as flat paint on the skin with no depth or socket"
+  }
+ }
+}

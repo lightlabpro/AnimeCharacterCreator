@@ -1,0 +1,122 @@
+{
+ "region": "eyes",
+ "subject": "q2 (after highlight_same_side), eyes_q2.png",
+ "features": [
+  {
+   "feature": "brow_position",
+   "p_same": 0.11,
+   "confidence": 0.78,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.14,
+   "confidence": 0.72,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.21,
+   "confidence": 0.58,
+   "verdict": "off"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.22,
+   "confidence": 0.56,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.33,
+   "confidence": 0.34,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.71,
+   "confidence": 0.42,
+   "verdict": "matches"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.8,
+   "confidence": 0.6,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline_shape",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "brow_higher",
+  "order_b": "brow_higher",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "eye_bigger",
+    "brow_higher"
+   ],
+   "order_a": "brow_higher",
+   "order_b": "brow_higher"
+  },
+  "apply": "brow_higher",
+  "setting": "apply_look.py brow zc offset +0.008"
+ }
+}

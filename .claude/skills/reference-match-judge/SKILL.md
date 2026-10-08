@@ -65,6 +65,12 @@ Files (repo `AnimeCharacterCreator-main`):
      was the forced jaw-underside shade, not the normal blend; ears e5: the helix-line band covered only 9 vertices
      per ear on the coarse grid). Re-measure the pixel change after every step (`>30` RGB difference fraction); under
      1% means the step did nothing.
+   - When the geometry itself limits a feature (no knob moves it), move the feature to a painted layer whose shape
+     is free (eyes q1: the eye and later the brow painted into a texture decal from curves traced off the reference),
+     and seed it from measurements of the reference so the first round already starts close.
+   - Measure a shape along its whole length, not at two points: stepping knobs until two sample points match can
+     still drift the overall shape (brow q2b-q20 became a folded wedge). Look at the full board after each step and
+     check the face/full-head render, not only the close-up.
    - A pick that contradicts a measured number in the analysis (e.g. "wider" when ours already measures wider) is
      declined and reported, not applied; that feature goes to Sammy.
    - Deterministic checks after a geometry step: dataset bands, topology (quads only), skin skew. A step that pushes

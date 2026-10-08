@@ -1,0 +1,115 @@
+{
+ "region": "eyes",
+ "subject": "n53 with painted eye decal (q1): front and 3/4 eye close-ups (top) vs the MHS3 protagonist frame (bottom), eyes_q1.png. Measured on the near eye in the reference (101 px wide) and the front render.",
+ "features": [
+  {
+   "feature": "highlight",
+   "p_same": 0.08,
+   "confidence": 0.84,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.09,
+   "confidence": 0.82,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.15,
+   "confidence": 0.7,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.19,
+   "confidence": 0.62,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.66,
+   "confidence": 0.32,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.78,
+   "confidence": 0.56,
+   "verdict": "matches"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.93,
+   "confidence": 0.86,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.95,
+   "confidence": 0.9,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline_shape",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.93,
+  "confidence": 0.86,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "highlight_same_side",
+  "order_b": "highlight_same_side",
+  "agree": true,
+  "tie_break": null,
+  "apply": "highlight_same_side",
+  "setting": "apply_look.py HL_SAME_SIDE 0 -> 1"
+ }
+}

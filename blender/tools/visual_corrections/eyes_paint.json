@@ -1,0 +1,211 @@
+{
+ "region": "eyes",
+ "note": "q-series: the eye is painted into a texture decal (eye_paint.py), so shape knobs act on the painted outline, not the mesh opening. One step per correction. q2: brow length/taper/straightness added after measuring the brows (ours 2x thicker mid-brow and 0.7x as long). q8: brow_inner_end_thicker added (the inner end measured 0.09 eye widths vs 0.23 in the reference; no entry could express it). q21: brow painted in the decal from the traced MHS3 brow; brow entries now act on eye_paint.py (the mesh brow folded over at the inner end in q20).",
+ "corrections": [
+  {
+   "id": "eye_bigger",
+   "description": "Make the whole eye bigger on the face.",
+   "setting": "apply_look.py EYE_W2 +0.006"
+  },
+  {
+   "id": "eye_smaller",
+   "description": "Make the whole eye smaller on the face.",
+   "setting": "apply_look.py EYE_W2 -0.006"
+  },
+  {
+   "id": "eye_higher",
+   "description": "Move the eyes up on the face.",
+   "setting": "apply_look.py EYE_DZ +0.006"
+  },
+  {
+   "id": "eye_lower",
+   "description": "Move the eyes down on the face.",
+   "setting": "apply_look.py EYE_DZ -0.006"
+  },
+  {
+   "id": "upper_lid_rounder",
+   "description": "Make the upper lid arch higher and rounder.",
+   "setting": "eye_paint.py EYE_TOP x1.10"
+  },
+  {
+   "id": "upper_lid_flatter",
+   "description": "Make the upper lid flatter and lower.",
+   "setting": "eye_paint.py EYE_TOP x0.90"
+  },
+  {
+   "id": "lower_lid_deeper",
+   "description": "Make the lower lid curve deeper (more white below the iris).",
+   "setting": "eye_paint.py EYE_LOW x1.08"
+  },
+  {
+   "id": "lower_lid_shallower",
+   "description": "Make the lower lid curve shallower.",
+   "setting": "eye_paint.py EYE_LOW x0.92"
+  },
+  {
+   "id": "outer_corner_higher",
+   "description": "Raise the outer corner of the eye (less droop).",
+   "setting": "eye_paint.py EYE_TILT +0.05"
+  },
+  {
+   "id": "outer_corner_lower",
+   "description": "Lower the outer corner of the eye (more droop).",
+   "setting": "eye_paint.py EYE_TILT -0.05"
+  },
+  {
+   "id": "lid_line_thicker",
+   "description": "Make the upper lid line thicker.",
+   "setting": "eye_paint.py LID_TH +0.03"
+  },
+  {
+   "id": "lid_line_thinner",
+   "description": "Make the upper lid line thinner.",
+   "setting": "eye_paint.py LID_TH -0.03"
+  },
+  {
+   "id": "lid_line_outer_heavier",
+   "description": "Make the upper lid line heavier toward the outer corner.",
+   "setting": "eye_paint.py LID_OUT +0.04"
+  },
+  {
+   "id": "band_bigger",
+   "description": "Make the grey shadow band under the upper lid taller.",
+   "setting": "eye_paint.py BAND +0.06"
+  },
+  {
+   "id": "band_smaller",
+   "description": "Make the grey shadow band under the upper lid shorter.",
+   "setting": "eye_paint.py BAND -0.06"
+  },
+  {
+   "id": "iris_bigger",
+   "description": "Make the iris bigger inside the eye.",
+   "setting": "eye_paint.py IRIS_RX, IRIS_RY x1.08"
+  },
+  {
+   "id": "iris_smaller",
+   "description": "Make the iris smaller inside the eye.",
+   "setting": "eye_paint.py IRIS_RX, IRIS_RY x0.93"
+  },
+  {
+   "id": "iris_toward_nose",
+   "description": "Move the iris toward the nose side of the eye.",
+   "setting": "eye_paint.py IRIS_X -0.05"
+  },
+  {
+   "id": "iris_toward_outer",
+   "description": "Move the iris toward the outer side of the eye.",
+   "setting": "eye_paint.py IRIS_X +0.05"
+  },
+  {
+   "id": "iris_higher",
+   "description": "Move the iris up (more of it hidden under the upper lid).",
+   "setting": "eye_paint.py IRIS_Z +0.05"
+  },
+  {
+   "id": "iris_lower",
+   "description": "Move the iris down.",
+   "setting": "eye_paint.py IRIS_Z -0.05"
+  },
+  {
+   "id": "pupil_bigger",
+   "description": "Make the pupil bigger.",
+   "setting": "eye_paint.py PUPIL_RX, PUPIL_RY x1.15"
+  },
+  {
+   "id": "pupil_smaller",
+   "description": "Make the pupil smaller.",
+   "setting": "eye_paint.py PUPIL_RX, PUPIL_RY x0.87"
+  },
+  {
+   "id": "highlight_bigger",
+   "description": "Make the white highlight bigger.",
+   "setting": "eye_paint.py HL_RX, HL_RY x1.2"
+  },
+  {
+   "id": "highlight_smaller",
+   "description": "Make the white highlight smaller.",
+   "setting": "eye_paint.py HL_RX, HL_RY x0.83"
+  },
+  {
+   "id": "highlight_same_side",
+   "description": "Put the highlight on the same side (the viewer's left) in both eyes instead of mirroring it.",
+   "setting": "apply_look.py HL_SAME_SIDE 0 -> 1"
+  },
+  {
+   "id": "rings_stronger",
+   "description": "Make the dark arcs inside the iris thicker and more visible.",
+   "setting": "eye_paint.py RINGS x1.4"
+  },
+  {
+   "id": "rings_weaker",
+   "description": "Make the dark arcs inside the iris thinner.",
+   "setting": "eye_paint.py RINGS x0.7"
+  },
+  {
+   "id": "eyes_further_apart",
+   "description": "Move the eyes further apart (wider gap between them).",
+   "setting": "apply_look.py EYE_DX +0.006"
+  },
+  {
+   "id": "eyes_closer",
+   "description": "Move the eyes closer together.",
+   "setting": "apply_look.py EYE_DX -0.006"
+  },
+  {
+   "id": "brow_lower",
+   "description": "Move the brows down, closer to the eyes.",
+   "setting": "eye_paint.py BROW_DZ -0.05"
+  },
+  {
+   "id": "brow_higher",
+   "description": "Move the brows up, further from the eyes.",
+   "setting": "eye_paint.py BROW_DZ +0.05"
+  },
+  {
+   "id": "brow_thicker",
+   "description": "Make the brows thicker.",
+   "setting": "eye_paint.py BROW_THICK x1.12"
+  },
+  {
+   "id": "brow_thinner",
+   "description": "Make the brows thinner.",
+   "setting": "eye_paint.py BROW_THICK x0.89"
+  },
+  {
+   "id": "brow_darker",
+   "description": "Make the brow colour darker brown.",
+   "setting": "eye_paint.py BROW_VAL x0.9"
+  },
+  {
+   "id": "brow_lighter",
+   "description": "Make the brow colour lighter.",
+   "setting": "eye_paint.py BROW_VAL x1.1"
+  },
+  {
+   "id": "brow_less_orange",
+   "description": "Make the brow colour less orange, a greyer brown.",
+   "setting": "eye_paint.py BROW_GREY +0.2"
+  },
+  {
+   "id": "brow_longer",
+   "description": "Make the brows longer.",
+   "setting": "eye_paint.py BROW_LEN x1.05"
+  },
+  {
+   "id": "brow_shorter",
+   "description": "Make the brows shorter.",
+   "setting": "eye_paint.py BROW_LEN x0.95"
+  },
+  {
+   "id": "brow_inner_end_thicker",
+   "description": "Make the inner end of the brows thicker.",
+   "setting": "eye_paint.py BROW_INNER +0.25"
+  },
+  {
+   "id": "brow_shadow_off",
+   "description": "Remove the mauve shadow under the inner end of the brows.",
+   "setting": "eye_paint.py BROW_SHADE 1 -> 0"
+  }
+ ]
+}

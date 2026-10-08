@@ -1,0 +1,122 @@
+{
+ "region": "eyes",
+ "subject": "q17 (after brow_inner_end_thicker x3), eyes_q17.png; measured on the front render",
+ "features": [
+  {
+   "feature": "brow_colour",
+   "p_same": 0.19,
+   "confidence": 0.62,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.36,
+   "confidence": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.38,
+   "confidence": 0.24,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.5,
+   "confidence": 0.0,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.51,
+   "confidence": 0.02,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.75,
+   "confidence": 0.5,
+   "verdict": "matches"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.94,
+   "confidence": 0.88,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.95,
+   "confidence": 0.9,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline_shape",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.95,
+  "confidence": 0.9,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "brow_darker",
+  "order_b": "brow_darker",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "brow_inner_end_thicker",
+    "brow_darker"
+   ],
+   "order_a": "brow_darker",
+   "order_b": "brow_darker"
+  },
+  "apply": "brow_darker",
+  "setting": "apply_look.py brow colour x0.75"
+ }
+}

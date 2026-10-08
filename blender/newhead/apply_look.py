@@ -38,7 +38,26 @@ OUTLINE_W = 0.0015       # outline width (m)
 OUTLINE_DARK = 1.5       # outline darkness factor (1 = current colour)
 CHIN_LIT = 1.0           # 0..1: lowers where the face plane / normal blend fade out, so the chin front is lit (g7)
 LIP_SHADOW = 1.0         # short shadow stroke under the lower lip: thickness factor
+EYE_W2 = 0.092           # painted eye half-width (H)
+EYE_DZ = 0.0             # painted eye vertical offset (H)
+EYE_DX = 0.0             # painted eye outward offset (H): + moves the eyes apart
+HL_SAME_SIDE = 1         # highlight on the viewer's left in both eyes (MHS3 light direction), not mirrored
+BROW_DZ = 0.0            # brow vertical offset (H)
+BROW_TH = 0.040          # brow thickness (H)
+BROW_DARK = 1.0          # brow colour divisor
+BROW_GREY = 0.0          # brow colour mixed toward grey (less orange)
+BROW_IN, BROW_OUT = 0.50, 0.62   # brow extent toward the nose / past the eye centre outward (x eye width)
+BROW_ARCH = 0.010         # brow arch (H)
+BROW_INNER = 0.0         # extra thickness at the brow's inner end (x)
+BROW_TAPER = 0.30        # where the brow starts to thin (0..1 along it)
+EYE_DECAL = 1            # q1: eyes painted into a texture decal on the skin (shape free of the mesh opening); 0 = old plate + strips
 # ears (g12, reference-match judge knobs; 0 = off)
+IRIS_RING_X = -0.15       # dark iris arcs only where px < this (x R)
+IRIS_RING_Y = -0.45      # ... and py > this (x R)
+IRIS_LOW = (0.05, -0.45, 0.55, 0.42)   # light lower iris area: centre x, y, radius x, y (x R)
+IRIS_Y = -0.02            # iris centre above the eye centre (x eye half-height)
+LID_OUTER = -0.002       # upper lid line thickness change at the outer end (negative = tapers)
+LID_WRAP = 0.28          # share of the lower lid the upper line wraps around the outer corner
 EAR_LIT = 2.0            # turns the ear normals toward the lit face direction (MHS3 ears read lit, not in shadow)
 EAR_LINE = 1.5           # painted dark line on the inner side of the helix: 1 = on, higher = thicker
 EAR_TINT = 0.0           # mauve tint in the concha shadow
@@ -132,7 +151,8 @@ def custom_normals(me, P, D, N):
     lo = 0.07 * CHIN_LIT
     w = 0.96 * smooth(0.04 - lo, 0.12 - lo, z)                                                  # whole head above the jaw (n41b: 0.8 front-only left a jagged edge)
     de = np.sqrt(((np.abs(x) - EYE_X) / (EYE_HW * 1.5)) ** 2 + ((z - EYE_Z) / (EYE_HH * 2.0)) ** 2)
-    w *= 0.55 + 0.45 * smooth(0.9, 1.15, de)                                          # only the lid itself keeps some form
+    if not EYE_DECAL:
+        w *= 0.55 + 0.45 * smooth(0.9, 1.15, de)                                      # only the lid itself keeps some form
     dm = np.sqrt((x / (MOUTH_HW * 1.6)) ** 2 + ((z - MOUTH_Z) / 0.05) ** 2)
     w *= 0.8 + 0.2 * smooth(0.6, 1.0, dm)
     # MHS3 face plane: the front of the face is turned toward the viewer (lit), the shadow stays on the far cheek
@@ -323,7 +343,7 @@ class _NB:
         return self.m("SQRT", self.m("ADD", self.m("MULTIPLY", a, a), self.m("MULTIPLY", b, b)))
 
 
-def mhs3_eye_material(tag, iris=(0.10, 0.33, 0.12, 1), R=1.02):   # TypeSafe iris_smaller
+def mhs3_eye_material(tag, iris=(0.10, 0.33, 0.12, 1), R=0.94):   # TypeSafe iris_smaller (r2, x5)
     """MHS3 painted iris (from the official frames): flat green, dark outline, two dark concentric arcs on the
     left, a big light-green area in the lower half, a darker top under the lid, a vertical oval pupil, one white
     highlight half outside the iris on the left and a small one low right; grey-blue sclera with a grey band under
@@ -340,19 +360,20 @@ def mhs3_eye_material(tag, iris=(0.10, 0.33, 0.12, 1), R=1.02):   # TypeSafe iri
     r = b.ell(px, py, 0.0, 0.0, R, R)
     dark = tuple(c * 0.28 for c in iris[:3]) + (1,)
     light = tuple(min(1.0, c * 1.4 + 0.12) for c in iris[:3]) + (1,)   # colours sampled from the MHS3 frame (linear)
-    sclera = (0.60, 0.62, 0.68, 1)
+    sclera = (0.60, 0.61, 0.63, 1)   # x1: TypeSafe sclera_greyer
     col = b.mix(b.m("MULTIPLY", b.m("GREATER_THAN", py, 0.30), 0.85), sclera, (0.42, 0.44, 0.51, 1))       # lid band
     ic = iris
     # light lower area
-    low = b.m("MULTIPLY", b.inside(b.ell(px, py, 0.10 * R, -0.55 * R, 0.46 * R, 0.30 * R), 1.0, 0.04), 1.0)
+    lx, ly, lrx, lry = IRIS_LOW
+    low = b.m("MULTIPLY", b.inside(b.ell(px, py, lx * R, ly * R, lrx * R, lry * R), 1.0, 0.04), 1.0)
     icol = b.mix(low, ic, light)
     # darker top under the lid
     icol = b.mix(b.m("MULTIPLY", b.m("GREATER_THAN", b.m("DIVIDE", py, R), 0.50), 0.55), icol, dark)
     # two thin dark concentric arcs on the left side
     for rr in (0.60, 0.80):
         ring = b.m("MULTIPLY", b.inside(r, rr + 0.035, 0.012), b.m("SUBTRACT", 1.0, b.inside(r, rr - 0.035, 0.012)))
-        left = b.m("LESS_THAN", px, 0.10 * R)
-        notlow = b.m("GREATER_THAN", py, -0.70 * R)
+        left = b.m("LESS_THAN", px, IRIS_RING_X * R)
+        notlow = b.m("GREATER_THAN", py, IRIS_RING_Y * R)
         icol = b.mix(b.m("MULTIPLY", b.m("MULTIPLY", ring, left), notlow), icol, dark)
     # dark outline
     rim = b.m("SUBTRACT", 1.0, b.inside(r, 0.92, 0.02))
@@ -410,6 +431,113 @@ def _strip(name, rows, mat, col, off_x):
     return _mesh(name, vs, fs, uvs, mat, col, off_x)
 
 
+EYE_PAINT = {}       # knob overrides for eye_paint.py (the judge loop sets them here)
+
+
+def _target_normals(Ph):
+    """The face normal the head uses (ellipsoid pushed toward the viewer on the face plane), head units in."""
+    x, y, z = Ph[:, 0], Ph[:, 1], Ph[:, 2]
+    c, r = np.array([0.0, -0.02, 0.47]), np.array([0.40, 0.46, 0.56])
+    pe = (Ph - c) / r ** 2
+    pe /= np.linalg.norm(pe, axis=1, keepdims=True)
+    lo = 0.07 * CHIN_LIT
+    face = smooth(0.0, -0.25, y) * smooth(0.05 - lo, 0.15 - lo, z) * (1 - smooth(0.62, 0.75, z))
+    pe = pe + np.array([0.0, -FACE_FORWARD, 0.0]) * face[:, None]
+    return pe / np.linalg.norm(pe, axis=1, keepdims=True)
+
+
+def _skin_plate(o, nav):
+    """Make the eye plate read as skin: lit shade mask, and the head's blended normal (the lid area keeps 45 % own form)."""
+    me = o.data
+    n = len(me.vertices)
+    V = np.zeros(n * 3); me.vertices.foreach_get("co", V); V = V.reshape(-1, 3)
+    a = me.attributes.get("shade") or me.attributes.new("shade", "FLOAT", "POINT")
+    a.data.foreach_set("value", np.ones(n, np.float32))
+    pe = _target_normals(head_coords(V))
+    nv = np.array(nav[:])
+    nn = 0.04 * nv[None] + 0.96 * pe
+    nn /= np.linalg.norm(nn, axis=1, keepdims=True)
+    me.normals_split_custom_set_from_vertices([tuple(v) for v in nn])
+
+
+def _eye_decal(ob, plate, cx, cz, side, tag, col, off_x):
+    """A grid laid on the skin over the eye (ray cast from the front onto head + plate), carrying the painted eye."""
+    import os
+    from mathutils.bvhtree import BVHTree
+    g = {}
+    exec(open(os.path.join(os.path.dirname(EYES_PATH), "..", "..", "..", "blender", "newhead", "eye_paint.py")).read(), g)
+    for k, v in EYE_PAINT.items():
+        g[k] = v
+    if HL_SAME_SIDE and side < 0:
+        g["HL_X"] = 2 * g["IRIS_X"] - g["HL_X"]
+    W2 = EYE_W2 * S                                       # metres
+    ch, zh = cx + side * EYE_DX * S, cz + (-g["MID"]) * W2 + EYE_DZ * S        # eye reference line
+    bm = bmesh.new(); bm.from_mesh(ob.data)
+    bm2 = bmesh.new(); bm2.from_mesh(plate.data)
+    tmp = bpy.data.meshes.new("tmp_decal"); bm2.to_mesh(tmp); bm2.free()
+    bm.from_mesh(tmp); bpy.data.meshes.remove(tmp)
+    tree = BVHTree.FromBMesh(bm); bm.free()
+    NX, NZ = 52, 36
+    verts, uvs, faces = [], [], []
+    for j in range(NZ + 1):
+        for i in range(NX + 1):
+            u, v = i / NX, j / NZ
+            X = g["X0"] + u * (g["X1"] - g["X0"]); Z = g["Z0"] + v * (g["Z1"] - g["Z0"])
+            x = ch + side * X * W2; z = zh + Z * W2
+            loc, nrm, _, _ = tree.ray_cast(Vector((x, -1.0, z)), Vector((0, 1, 0)))
+            if loc is not None:
+                nr = nrm if nrm.y < 0 else -nrm                      # always toward the viewer (plate faces may face back)
+                p = loc + nr * 0.0009 + Vector((0, -0.0003, 0))
+            else:
+                p = Vector((x, -0.10, z))
+            verts.append(p); uvs.append((u, v))
+    for j in range(NZ):
+        for i in range(NX):
+            a0 = j * (NX + 1) + i
+            q = (a0, a0 + 1, a0 + NX + 2, a0 + NX + 1)
+            faces.append(q if side > 0 else q[::-1])
+    name = "NewEyeDecal_%s_%s" % (tag, "LR"[side < 0])
+    img = bpy.data.images.get("IMG_" + name)
+    if img:
+        bpy.data.images.remove(img)
+    rx = int(355 * (g["X1"] - g["X0"])); rz = int(355 * (g["Z1"] - g["Z0"]))
+    px = g["paint"](rx, rz, 3)
+    img = bpy.data.images.new("IMG_" + name, rx, rz, alpha=True)
+    img.colorspace_settings.name = "sRGB"
+    img.pixels.foreach_set(px.ravel())
+    img.pack()
+    m = bpy.data.materials.get("MAT_" + name) or bpy.data.materials.new("MAT_" + name)
+    m.use_nodes = True
+    nt = m.node_tree; nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    tx = nt.nodes.new("ShaderNodeTexImage"); tx.image = img; tx.interpolation = "Linear"; tx.extension = "CLIP"
+    em = nt.nodes.new("ShaderNodeEmission")
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    mx = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(tx.outputs["Color"], em.inputs["Color"])
+    nt.links.new(tx.outputs["Alpha"], mx.inputs["Fac"])
+    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
+    nt.links.new(mx.outputs[0], out.inputs["Surface"])
+    try:
+        m.surface_render_method = "BLENDED"
+    except Exception:
+        m.blend_method = "BLEND"
+    try:
+        m.use_transparent_shadow = True
+    except Exception:
+        pass
+    o = _mesh(name, verts, faces, uvs, m, col, off_x)
+    o.visible_shadow = False
+    if os.path.isdir(os.path.dirname(EYES_PATH)):
+        img.filepath_raw = os.path.join(os.path.dirname(EYES_PATH), "eye_paint_%s.png" % tag)
+        img.file_format = "PNG"
+        try:
+            img.save()
+        except Exception:
+            pass
+    return o
+
+
 def painted_eyes(ob, col, LID, off_x, tag):
     """MHS3 eyes are flat colour on the face, not a ball in a socket: each lid opening is filled with a thin plate
     flush with the skin (just behind the lid edge, following the face's curve) carrying the NG_Eye iris, and the lid
@@ -418,7 +546,9 @@ def painted_eyes(ob, col, LID, off_x, tag):
     em = mhs3_eye_material(tag)
     lash_m = _emission("MAT_PaintLash_" + tag, (0.07, 0.03, 0.018, 1))
     low_m = _emission("MAT_PaintLowLid_" + tag, (0.21, 0.09, 0.05, 1))
-    brow_m = _emission("MAT_PaintBrow_" + tag, (0.18, 0.09, 0.035, 1), hatch=0.5)
+    bc = np.array([0.18, 0.09, 0.035]) / BROW_DARK
+    bc = bc * (1 - BROW_GREY) + bc.mean() * BROW_GREY                      # q18: less orange
+    brow_m = _emission("MAT_PaintBrow_" + tag, (float(bc[0]), float(bc[1]), float(bc[2]), 1), hatch=0.5)
     made = []
     for tagv, side in ((1, 1), (2, -1)):
         loop = _lid_loop(bm, LID, tagv)
@@ -445,8 +575,22 @@ def painted_eyes(ob, col, LID, off_x, tag):
         r0 = 4 * n
         for m in range(n):
             faces.append((r0 + m, r0 + (m + 1) % n, ctr))
-        uvs = [(0.5 + (q.x - cx) / (2 * hh * 0.80), 0.5 + (q.z - (cz + 0.14 * hh)) / (2 * hh)) for q in verts]   # tall oval iris, cut by the upper lid
-        made.append(_mesh("NewEyePlate_%s_%s" % (tag, "LR"[side < 0]), verts, faces, uvs, em, col, off_x))
+        if EYE_DECAL:
+            # an outer skirt tucked behind the lid rim, so no gap between the rim and the plate shows
+            base = len(verts)
+            for p in P:
+                verts.append(c + (p - c) * 1.25 - nav * 0.0030)
+            for m in range(n):
+                faces.append((base + m, base + (m + 1) % n, (m + 1) % n, m))
+        uvs = [(0.5 + (q.x - cx) / (2 * hh * 0.80), 0.5 + (q.z - (cz + IRIS_Y * hh)) / (2 * hh)) for q in verts]   # tall oval iris, cut by the upper lid
+        if EYE_DECAL:
+            # the plate becomes skin (closes the opening); the eye is painted on a decal above it
+            plate = _mesh("NewEyePlate_%s_%s" % (tag, "LR"[side < 0]), verts, faces, uvs, skin_material(tag), col, off_x)
+            _skin_plate(plate, nav)
+            made.append(plate)
+            made.append(_eye_decal(ob, plate, cx, cz, side, tag, col, off_x))
+        else:
+            made.append(_mesh("NewEyePlate_%s_%s" % (tag, "LR"[side < 0]), verts, faces, uvs, em, col, off_x))
         # split the lid loop at the corners
         ii = min(range(n), key=lambda i: (P[i].x - cx) * side)
         oo = max(range(n), key=lambda i: (P[i].x - cx) * side)
@@ -466,20 +610,22 @@ def painted_eyes(ob, col, LID, off_x, tag):
         rows = []
         for k, i in enumerate(up):
             t = k / max(len(up) - 1, 1)
-            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.0 * t * t - 0.004 * float(smooth(0.85, 1.0, np.array(t)))   # TypeSafe upper_lid_line_even (x3): even, tapered end
+            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.0 * t * t + LID_OUTER * float(smooth(0.85, 1.0, np.array(t)))   # TypeSafe upper_lid_line_even (x3, x2 re-aimed: LID_OUTER/LID_WRAP)
             rows.append(row(i, float(th), inset=0.006))
-        wrap = low[1:max(3, int(len(low) * 0.22))]
+        wrap = low[1:max(3, int(len(low) * LID_WRAP))]
         for k, i in enumerate(wrap):
             t = (k + 1) / (len(wrap) + 1)
-            rows.append(row(i, 0.007 * (1 - t) + 0.003 * t, inset=0.0025 * (1 - t)))
-        made.append(_strip("NewLidLine_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
+            th0 = 0.014 + LID_OUTER   # continue from the end thickness of the upper line
+            rows.append(row(i, th0 * (1 - t) + 0.003 * t, inset=0.006 * (1 - t) + 0.0005 * t))
+        if not EYE_DECAL:
+            made.append(_strip("NewLidLine_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
         # lower lid line: thin, lighter brown, from the wrap to near the inner corner
-        seg = low[max(3, int(len(low) * 0.22)) - 1: int(len(low) * 0.95)]   # TypeSafe lower_lid_line_full
+        seg = low[max(3, int(len(low) * LID_WRAP)) - 1: int(len(low) * 0.95)]   # TypeSafe lower_lid_line_full
         rows = []
         for k, i in enumerate(seg):
             t = k / max(len(seg) - 1, 1)
             rows.append(row(i, 0.0055 * (1 - 0.6 * t), inset=0.0005))
-        if len(rows) >= 2:
+        if len(rows) >= 2 and not EYE_DECAL:
             made.append(_strip("NewLowLid_%s_%s" % (tag, "LR"[side < 0]), rows, low_m, col, off_x))
         # brow: blunt and thick at the inner end, angling up to a peak at ~65%, tapering out (MHS3 male)
         tree = _bvh(ob)
@@ -488,9 +634,10 @@ def painted_eyes(ob, col, LID, off_x, tag):
         rows = []
         for k in range(14):
             t = k / 13
-            x = cx + side * (-0.50 + 1.12 * t) * w
-            zc = ztop + S * (0.000 + 0.046 * t - 0.016 * t * t + 0.010 * math.sin(math.pi * t))   # rising outward; TypeSafe brow_arch
-            th = S * (0.040 * (1 - float(smooth(0.30, 1.0, np.array(t)))) + 0.0015)   # thick for a third, then tapering
+            x = cx + side * (-BROW_IN + (BROW_IN + BROW_OUT) * t) * w
+            zc = ztop + S * (BROW_DZ + 0.046 * t - 0.016 * t * t + BROW_ARCH * math.sin(math.pi * t))   # rising outward; TypeSafe brow_arch
+            th = S * (BROW_TH * (1 - float(smooth(BROW_TAPER, 1.0, np.array(t)))) + 0.0015)
+            th *= 1 + BROW_INNER * (1 - float(smooth(0.0, 0.30, np.array(t))))   # heavier inner end (q8)   # thick for a third, then tapering
             lo, hi = zc - th * 0.45, zc + th * 0.55
             if k == 0:
                 lo = lo + th * 0.55                                       # inner end cut on a diagonal
@@ -499,7 +646,8 @@ def painted_eyes(ob, col, LID, off_x, tag):
                 loc, nrm, _, _ = tree.ray_cast(Vector((xx, -1.0, zz)), Vector((0, 1, 0)))
                 pair.append(loc + nrm * 0.0008 if loc is not None else Vector((xx, -0.12, zz)))
             rows.append(tuple(pair))
-        made.append(_strip("NewBrow_%s_%s" % (tag, "LR"[side < 0]), rows, brow_m, col, off_x))
+        if not (EYE_DECAL and EYE_PAINT.get("BROW", 1)):                 # q21: the brow is painted in the eye decal
+            made.append(_strip("NewBrow_%s_%s" % (tag, "LR"[side < 0]), rows, brow_m, col, off_x))
     bm.free()
     return made
 
@@ -558,8 +706,25 @@ def face_strokes(ob, col, off_x, tag):
     return made
 
 
+def load_knobs(eyes_json):
+    """Tuned values from blender/newhead/look_knobs.json override the defaults above (the judge loop writes them);
+    "paint" holds eye_paint.py overrides."""
+    import os
+    p = os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "look_knobs.json")
+    if not os.path.exists(p):
+        return {}
+    k = json.load(open(p))
+    for name, val in k.items():
+        if name == "paint":
+            EYE_PAINT.update(val)
+        elif name in globals():
+            globals()[name] = val
+    return k
+
+
 def run(npz, eyes_json, tag, off_x):
     global EYE_X, EYE_Z, EYE_HW, EYE_HH, MOUTH_Z, MOUTH_HW, NOSE_Z
+    load_knobs(eyes_json)
     ej = json.load(open(eyes_json))
     EYE_X, EYE_Z = ej.get("eye_x", EYE_X), ej.get("eye_z", EYE_Z)
     EYE_HW, EYE_HH = ej.get("eye_hw", EYE_HW), ej.get("eye_hh", EYE_HH)
@@ -581,5 +746,6 @@ def run(npz, eyes_json, tag, off_x):
 
 
 if "NPZ" in globals():
+    EYES_PATH = EYES
     _ob, _n = run(NPZ, EYES, TAG, OFF_X)
     print("look applied:", _ob.name, "forced-shadow verts", _n)

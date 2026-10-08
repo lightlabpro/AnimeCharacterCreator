@@ -1,0 +1,115 @@
+{
+ "region": "eyes",
+ "subject": "q19 (after brow_less_orange), eyes_q19.png; brow colour sampled",
+ "features": [
+  {
+   "feature": "brow_shape",
+   "p_same": 0.39,
+   "confidence": 0.22,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.41,
+   "confidence": 0.18,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.43,
+   "confidence": 0.14,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.44,
+   "confidence": 0.12,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.54,
+   "confidence": 0.08,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.58,
+   "confidence": 0.16,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.77,
+   "confidence": 0.54,
+   "verdict": "matches"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.94,
+   "confidence": 0.88,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.95,
+   "confidence": 0.9,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline_shape",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "brow_straighter",
+  "order_b": "brow_straighter",
+  "agree": true,
+  "tie_break": null,
+  "apply": "brow_straighter",
+  "setting": "apply_look.py BROW_ARCH -0.006"
+ }
+}

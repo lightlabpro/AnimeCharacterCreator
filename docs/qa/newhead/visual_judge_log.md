@@ -85,3 +85,54 @@ ear skew p95 32.8. Still off after the pass (TypeSafe): eyes outline_shape (head
 sclera; face_shadow (3/4 shadow edge is stepped); ears inner_line (no run over the top), rim_highlight, concha colour
 (warm brown, reference mauve), stand_off. Needs a human: chin width / jaw, ear lighting balance.
 Boards: eyes_r4.png, face_f8.png, face_g7/g9/g11/final.png, ear_e1/final.png, look_final.png.
+
+# Eyes again (q-series): painted eye decal, then the judge loop -> n53 + look_knobs.json
+
+Why: every earlier eye round left outline_shape "off", and the corner knobs had no effect because the shape came from
+the head mesh's eye opening. Now the eye is painted into an RGBA texture on a decal laid on the skin
+(blender/newhead/eye_paint.py); the old eye plate became skin (lit shade mask, face normals, a skirt tucked behind the
+lid rim) so the opening disappears. The outline curves, iris, pupil, highlight, sclera band and lid line were measured
+column by column from the MHS3 near eye (101 px wide) and colours sampled from it. Tuned values live in
+blender/newhead/look_knobs.json (apply_look.py reads them). Menu: blender/tools/visual_corrections/eyes_paint.json.
+
+| round | TypeSafe pick (agreed) | off | needs a human |
+|---|---|---|---|
+| q1 | highlight_same_side | highlight, brow_position, brow_shape, brow_colour, eye_size | iris_pattern, eye_spacing |
+| q2 | brow_higher | brow_position, brow_shape, brow_colour, eye_size | iris_pattern |
+| q2b | brow_longer | brow_shape, brow_colour, eye_size, brow_position | iris_pattern, eye_spacing |
+| q3 | brow_longer | brow_shape, brow_colour, eye_size | iris_pattern, brow_position, eye_spacing |
+| q4 | brow_longer | brow_shape, brow_colour, eye_size | iris_pattern, brow_position |
+| q5 | eye_bigger | brow_shape, brow_colour, eye_size, brow_position | iris_pattern, eye_spacing |
+| q6 | eye_bigger | brow_shape, brow_colour, eye_size, brow_position | iris_pattern |
+| q7 | brow_taper_sooner | brow_shape, brow_colour, brow_position, eye_size | iris_pattern |
+| q8 | brow_taper_sooner | brow_shape, brow_colour, brow_position, eye_size | iris_pattern |
+| q9 | brow_inner_end_thicker | brow_shape, brow_colour, eye_size | brow_position, iris_pattern, eye_spacing |
+| q10 | brow_inner_end_thicker | brow_shape, brow_colour, brow_position, eye_size | iris_pattern |
+| q11 | brow_longer | brow_colour, brow_shape, eye_size | brow_position, iris_pattern, eye_spacing |
+| q12 | brow_longer | brow_colour, brow_shape | eye_size, iris_pattern, brow_position |
+| q13 | eye_bigger | brow_colour | eye_size, brow_shape, brow_position, iris_pattern |
+| q14 | eyes_further_apart | brow_colour, brow_shape, brow_position | iris_pattern, eye_spacing, eye_size |
+| q15 | eyes_further_apart | brow_colour, brow_shape, brow_position | iris_pattern, eye_spacing, eye_size |
+| q16 | brow_inner_end_thicker | brow_colour, brow_shape, brow_position | iris_pattern, eye_size, height_to_width |
+| q17 | brow_darker | brow_colour | brow_position, brow_shape, iris_pattern, eye_size, height_to_width |
+| q18 | brow_less_orange | brow_colour | brow_shape, brow_position, iris_pattern, eye_size, height_to_width |
+| q19 | brow_straighter | - | brow_shape, brow_position, iris_pattern, brow_colour, eye_size, height_to_width |
+| q21 | brow_thicker | - | iris_pattern, brow_shape, eye_size, brow_position, height_to_width, brow_colour |
+
+Notes:
+- q1: outline_shape, height_to_width, iris size/colour, pupil, sclera, both lid lines and flatness all judged "matches"
+  on the first painted round.
+- q2 brow_higher was not applied: the q2 brow row had been eyeballed; measured, the brow-lid gap already matched
+  (0.15 vs 0.14 eye heights). brow_higher was excluded from then on, and the analyses use measure_eye numbers.
+- Brows q2b-q19 (mesh strip): longer x5, taper sooner x2, heavier inner end x3, darker, less orange, straighter.
+  Each step matched the measurement at two points, but by q20 the strip had become a tall wedge that folded over at
+  the inner end (a diamond hole in the face render). q21 replaced it: the brow is painted in the same decal from the
+  traced MHS3 brow edges (with the mauve shadow under the inner end and diagonal brush strokes).
+- Eyes: bigger x3 (EYE_W2 0.092 -> 0.110; width / eye-centre-to-nose-bottom 0.61 -> 0.71, reference 0.77), further
+  apart x2 (EYE_DX 0.012; gap 1.05 eye widths), highlight on the viewer's left in both eyes.
+- Stopped at q21: every feature "matches" or "needs a human". Its pick (brow_thicker) was not applied: mid-brow
+  thickness already measures the same as the reference (0.13); only the inner end is thinner (0.11 vs 0.25 eye widths
+  with shadow, front view vs the reference's 3/4).
+Needs a human: iris arcs (ours thinner/fainter), eye size (0.71 vs 0.77), brow inner end, brow colour.
+Boards: eyes_q0.png (before), eyes_q1.png, eyes_q15.png, eyes_q21.png, face_q20.png (brow fold), face_q21.png,
+eye_paint_cmp.png (painted eye + brow vs the reference crop), eye_paint_n53.png (the texture).
