@@ -7,7 +7,8 @@
   under the nose tip, the jaw underside and the neck right under the jaw (MHS3: the head shades the upper neck).
 - Normals: face normals blended toward a head ellipsoid (one clean shadow shape, no nose/cheek noise); the neck toward
   its cylinder; ears and the eye/mouth rims keep their own.
-- Eyes: UV sphere eyeballs, UVs projected from the front so the NG_Eye iris faces forward.
+- Eyes (n45): painted, MHS3-style: a thin plate flush with the skin fills each lid opening and carries the NG_Eye
+  iris (UVs projected from the front); lid lines and brows are flat painted strokes (emission), no eyeball depth.
 - Outline: inverted hull (Solidify, flipped, outline slot); weight fades to 0 around the eyes, nose and mouth.
 All positions in head units H (chin 0, skull top 1) mapped with S = 0.262 m, chin at z = 1.4826.
 """
@@ -52,7 +53,8 @@ def load(npz, tag, off_x):
     col.objects.link(ob)
     ob.location.x = off_x
     D = d["ear_dark"] if "ear_dark" in d.files else np.zeros(len(V))
-    return ob, col, V, D
+    LID = d["lid"] if "lid" in d.files else np.zeros(len(V), np.int8)
+    return ob, col, V, D, LID
 
 
 def head_coords(V):
@@ -192,146 +194,260 @@ def outline(ob, P, D):
     md.thickness_vertex_group = 0.0
 
 
-def eyes(col, eyes_json, off_x, tag):
-    ej = json.load(open(eyes_json))
-    R = ej["eye_r"]
-    src = bpy.data.materials.get("MAT_Eye")
-    m = bpy.data.materials.get("MAT_NewEye_" + tag)
-    if m is None:
-        m = src.copy(); m.name = "MAT_NewEye_" + tag
-    g = next(n for n in m.node_tree.nodes if n.type == "GROUP")
-    for k, v in (("iris_size", 0.66), ("pupil_size", 0.40), ("pupil_slit", 0.0), ("gaze_x", 0.0), ("gaze_y", 0.05),
-                 ("iris_color", (0.09, 0.40, 0.11, 1)), ("Lid Shadow", 0.75)):
-        g.inputs[k].default_value = v
-    out = []
-    for i, c in enumerate(ej["eyes"]):
-        me = bpy.data.meshes.new("NewEye_%s_%s" % (tag, "LR"[i]))
-        bm = bmesh.new()
-        bmesh.ops.create_uvsphere(bm, u_segments=40, v_segments=20, radius=R)
-        uv = bm.loops.layers.uv.new("UVMap")
-        for f in bm.faces:
-            f.smooth = True
-            for lp in f.loops:
-                p = lp.vert.co
-                lp[uv].uv = (0.5 + 0.5 * p.x / R, 0.5 + 0.5 * p.z / R)
-        bm.to_mesh(me); bm.free()
-        e = bpy.data.objects.new(me.name, me)
-        e.location = (c[0] + off_x, c[1], c[2])
-        me.materials.append(m)
-        col.objects.link(e)
-        out.append(e)
-    return out
-
-
 def _bvh(ob):
     from mathutils.bvhtree import BVHTree
     me = ob.data
     return BVHTree.FromPolygons([v.co.copy() for v in me.vertices], [tuple(p.vertices) for p in me.polygons])
 
 
-def _strip(name, rows, mat, col, off_x):
-    """rows: list of (inner, outer) world-space points (local to the head object); one quad strip."""
+def _emission(name, color, hatch=0.0):
+    """Flat painted colour (no lighting), as MHS3 draws the lid lines and brows. hatch > 0 adds darker brush strokes
+    along the strip (UV u)."""
+    m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree; nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial"); out.location = (500, 0)
+    em = nt.nodes.new("ShaderNodeEmission"); em.location = (300, 0)
+    em.inputs["Color"].default_value = color
+    if hatch > 0:
+        uv = nt.nodes.new("ShaderNodeUVMap"); uv.location = (-500, 0)
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ"); sep.location = (-320, 0)
+        nt.links.new(uv.outputs[0], sep.inputs[0])
+        mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"; mul.inputs[1].default_value = 34.0
+        add = nt.nodes.new("ShaderNodeMath"); add.operation = "MULTIPLY_ADD"; add.inputs[1].default_value = 7.0
+        nt.links.new(sep.outputs[1], add.inputs[0]); nt.links.new(sep.outputs[0], mul.inputs[0])
+        nt.links.new(mul.outputs[0], add.inputs[2])
+        fr = nt.nodes.new("ShaderNodeMath"); fr.operation = "FRACT"; nt.links.new(add.outputs[0], fr.inputs[0])
+        st = nt.nodes.new("ShaderNodeMath"); st.operation = "GREATER_THAN"; st.inputs[1].default_value = 0.72
+        nt.links.new(fr.outputs[0], st.inputs[0])
+        mx = nt.nodes.new("ShaderNodeMix"); mx.data_type = "RGBA"; mx.location = (100, 0)
+        f = nt.nodes.new("ShaderNodeMath"); f.operation = "MULTIPLY"; f.inputs[1].default_value = hatch
+        nt.links.new(st.outputs[0], f.inputs[0]); nt.links.new(f.outputs[0], mx.inputs["Factor"])
+        mx.inputs["A"].default_value = color
+        mx.inputs["B"].default_value = tuple(c * 0.55 for c in color[:3]) + (1,)
+        nt.links.new(mx.outputs["Result"], em.inputs["Color"])
+    nt.links.new(em.outputs[0], out.inputs["Surface"])
+    return m
+
+
+class _NB:
+    """Tiny expression helper for building math node trees."""
+    def __init__(self, nt):
+        self.nt = nt
+    def m(self, op, a, b=None, c=None):
+        n = self.nt.nodes.new("ShaderNodeMath"); n.operation = op
+        for k, v in enumerate((a, b, c)):
+            if v is None:
+                continue
+            if isinstance(v, (int, float)):
+                n.inputs[k].default_value = v
+            else:
+                self.nt.links.new(v, n.inputs[k])
+        return n.outputs[0]
+    def mix(self, f, a, b):
+        n = self.nt.nodes.new("ShaderNodeMix"); n.data_type = "RGBA"
+        for sock, v in ((n.inputs["Factor"], f), (n.inputs["A"], a), (n.inputs["B"], b)):
+            if isinstance(v, (int, float)) or (isinstance(v, tuple)):
+                sock.default_value = v
+            else:
+                self.nt.links.new(v, sock)
+        return n.outputs["Result"]
+    def inside(self, d, r=1.0, soft=0.02):        # 1 inside d < r, smooth edge
+        return self.m("SUBTRACT", 1.0, self.m("SMOOTH_MAX", 0.0, self.m("MINIMUM", 1.0, self.m("DIVIDE", self.m("SUBTRACT", d, r - soft), 2 * soft)), 0.0))
+    def ell(self, px, py, cx, cy, rx, ry):
+        a = self.m("DIVIDE", self.m("SUBTRACT", px, cx), rx)
+        b = self.m("DIVIDE", self.m("SUBTRACT", py, cy), ry)
+        return self.m("SQRT", self.m("ADD", self.m("MULTIPLY", a, a), self.m("MULTIPLY", b, b)))
+
+
+def mhs3_eye_material(tag, iris=(0.10, 0.33, 0.12, 1), R=1.10):
+    """MHS3 painted iris (from the official frames): flat green, dark outline, two dark concentric arcs on the
+    left, a big light-green area in the lower half, a darker top under the lid, a vertical oval pupil, one white
+    highlight half outside the iris on the left and a small one low right; grey-blue sclera with a grey band under
+    the upper lid. Emission (painted), on the plate's UVs (-1..1 = the eye's half height)."""
+    name = "MAT_MHS3Eye_" + tag
+    m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree; nt.nodes.clear()
+    b = _NB(nt)
+    uv = nt.nodes.new("ShaderNodeUVMap")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ"); nt.links.new(uv.outputs[0], sep.inputs[0])
+    px = b.m("MULTIPLY_ADD", sep.outputs[0], 2.0, -1.0)
+    py = b.m("MULTIPLY_ADD", sep.outputs[1], 2.0, -1.0)
+    r = b.ell(px, py, 0.0, 0.0, R, R)
+    dark = tuple(c * 0.28 for c in iris[:3]) + (1,)
+    light = tuple(min(1.0, c * 1.4 + 0.12) for c in iris[:3]) + (1,)   # colours sampled from the MHS3 frame (linear)
+    sclera = (0.60, 0.62, 0.68, 1)
+    col = b.mix(b.m("MULTIPLY", b.m("GREATER_THAN", py, 0.30), 0.85), sclera, (0.42, 0.44, 0.51, 1))       # lid band
+    ic = iris
+    # light lower area
+    low = b.m("MULTIPLY", b.inside(b.ell(px, py, 0.10 * R, -0.55 * R, 0.46 * R, 0.30 * R), 1.0, 0.04), 1.0)
+    icol = b.mix(low, ic, light)
+    # darker top under the lid
+    icol = b.mix(b.m("MULTIPLY", b.m("GREATER_THAN", b.m("DIVIDE", py, R), 0.50), 0.55), icol, dark)
+    # two thin dark concentric arcs on the left side
+    for rr in (0.60, 0.80):
+        ring = b.m("MULTIPLY", b.inside(r, rr + 0.035, 0.012), b.m("SUBTRACT", 1.0, b.inside(r, rr - 0.035, 0.012)))
+        left = b.m("LESS_THAN", px, 0.10 * R)
+        notlow = b.m("GREATER_THAN", py, -0.70 * R)
+        icol = b.mix(b.m("MULTIPLY", b.m("MULTIPLY", ring, left), notlow), icol, dark)
+    # dark outline
+    rim = b.m("SUBTRACT", 1.0, b.inside(r, 0.92, 0.02))
+    icol = b.mix(rim, icol, dark)
+    # pupil
+    pup = b.inside(b.ell(px, py, 0.02 * R, 0.02 * R, 0.21 * R, 0.33 * R), 1.0, 0.06)
+    icol = b.mix(pup, icol, (0.03, 0.05, 0.04, 1))
+    col = b.mix(b.inside(r, 1.0, 0.015), col, icol)
+    # highlights
+    h1 = b.inside(b.ell(px, py, -0.72 * R, -0.08 * R, 0.24 * R, 0.13 * R), 1.0, 0.08)
+    col = b.mix(h1, col, (1, 1, 1, 1))
+    h2 = b.inside(b.ell(px, py, 0.40 * R, -0.45 * R, 0.07 * R, 0.05 * R), 1.0, 0.15)
+    col = b.mix(b.m("MULTIPLY", h2, 0.85), col, (1, 1, 1, 1))
+    em = nt.nodes.new("ShaderNodeEmission"); nt.links.new(col, em.inputs["Color"])
+    out = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(em.outputs[0], out.inputs["Surface"])
+    return m
+
+
+def _lid_loop(bm, LID, tag):
+    """The lid edge loop (verts tagged at build time), walked in order."""
+    vs = [v for v in bm.verts if LID[v.index] == tag]
+    S_ = set(vs)
+    loop, prev, cur = [vs[0]], None, vs[0]
+    while True:
+        nxt = [e.other_vert(cur) for e in cur.link_edges if e.other_vert(cur) in S_ and e.other_vert(cur) is not prev]
+        if not nxt or nxt[0] is loop[0]:
+            break
+        prev, cur = cur, nxt[0]
+        loop.append(cur)
+    return loop
+
+
+def _mesh(name, verts, faces, uvs, mat, col, off_x):
     me = bpy.data.meshes.new(name)
-    vs, fs = [], []
-    for a, b in rows:
-        vs += [tuple(a), tuple(b)]
-    for i in range(len(rows) - 1):
-        fs.append((2 * i, 2 * i + 2, 2 * i + 3, 2 * i + 1))
-    me.from_pydata(vs, [], fs); me.update()
+    me.from_pydata([tuple(v) for v in verts], [], faces); me.update()
+    lay = me.uv_layers.new(name="UVMap")
     for p in me.polygons:
         p.use_smooth = True
+        for li in p.loop_indices:
+            lay.data[li].uv = uvs[me.loops[li].vertex_index]
     me.materials.append(mat)
     o = bpy.data.objects.new(name, me); o.location.x = off_x
     col.objects.link(o)
     return o
 
 
-def lashes_and_brows(ob, col, off_x, tag):
-    """MHS3: a thick dark upper lash over the lid edge, heavier toward the outer corner and ending in a wing; a thin
-    lower lash on the outer half; thick brush-stroke brows (hair colour) above. Strips sit on the skin, pushed out
-    along the surface normal."""
+def _strip(name, rows, mat, col, off_x):
+    """rows: (inner, outer) points; one quad strip with UV u along, v across."""
+    vs, uvs, fs = [], [], []
+    n = len(rows)
+    for i, (a, b) in enumerate(rows):
+        vs += [a, b]; t = i / max(n - 1, 1); uvs += [(t, 0.0), (t, 1.0)]
+    for i in range(n - 1):
+        fs.append((2 * i, 2 * i + 2, 2 * i + 3, 2 * i + 1))
+    return _mesh(name, vs, fs, uvs, mat, col, off_x)
+
+
+def painted_eyes(ob, col, LID, off_x, tag):
+    """MHS3 eyes are flat colour on the face, not a ball in a socket: each lid opening is filled with a thin plate
+    flush with the skin (just behind the lid edge, following the face's curve) carrying the NG_Eye iris, and the lid
+    lines and brows are flat painted strokes on the skin."""
     bm = bmesh.new(); bm.from_mesh(ob.data); bm.verts.ensure_lookup_table()
-    tree = _bvh(ob)
-    lash_m = bpy.data.materials.get("MAT_Lash_Line")
-    brow_m = bpy.data.materials.get("MAT_Hair_Brows") or lash_m
+    em = mhs3_eye_material(tag)
+    lash_m = _emission("MAT_PaintLash_" + tag, (0.07, 0.03, 0.018, 1))
+    low_m = _emission("MAT_PaintLowLid_" + tag, (0.28, 0.12, 0.07, 1))
+    brow_m = _emission("MAT_PaintBrow_" + tag, (0.18, 0.09, 0.035, 1), hatch=0.5)
     made = []
-    for side in (1, -1):
-        cx, cz = side * EYE_X * S, O + EYE_Z * S
-        bnd = [v for v in bm.verts if v.is_boundary and v.co.y < -0.03 and abs(v.co.x - cx) < EYE_HW * 1.6 * S
-               and abs(v.co.z - cz) < EYE_HH * 2 * S]                    # front only: the ear root loop sits at eye height
-        dist = {v: 0 for v in bnd}; cur = list(bnd)
-        for k in range(1, 5):
-            nxt = []
-            for v in cur:
-                for e in v.link_edges:
-                    o_ = e.other_vert(v)
-                    if o_ not in dist:
-                        dist[o_] = k; nxt.append(o_)
-            cur = nxt
-        lid = [v for v, k in dist.items() if k == 4]                     # the lid edge (opening ring on the skin)
-        ang = lambda v: math.atan2(v.co.z - cz, (v.co.x - cx) * side)    # 0 = outer corner, pi = inner corner
-        # split the lid ring at its two corners; the upper lid is the arc between them that runs higher
-        ring = sorted(lid, key=lambda v: math.atan2(v.co.z - cz, (v.co.x - cx) * side))
-        ii = min(range(len(ring)), key=lambda i: (ring[i].co.x - cx) * side)          # inner corner
-        oo = max(range(len(ring)), key=lambda i: (ring[i].co.x - cx) * side)          # outer corner
-        arc1 = [ring[(oo + k) % len(ring)] for k in range((ii - oo) % len(ring) + 1)]  # outer -> inner, one way
-        arc2 = [ring[(ii + k) % len(ring)] for k in range((oo - ii) % len(ring) + 1)]  # inner -> outer, other way
-        mz = lambda arc: sum(v.co.z for v in arc) / len(arc)
+    for tagv, side in ((1, 1), (2, -1)):
+        loop = _lid_loop(bm, LID, tagv)
+        P = [v.co.copy() for v in loop]
+        Nm = [v.normal.copy() for v in loop]
+        n = len(P)
+        c = sum(P, Vector()) / n
+        nav = sum(Nm, Vector()); nav.normalize()
+        xs = [p.x for p in P]; zs = [p.z for p in P]
+        cx, cz = (max(xs) + min(xs)) / 2, (max(zs) + min(zs)) / 2
+        hh = (max(zs) - min(zs)) / 2
+        # plate: the lid ring 0.6 mm behind, 4 inner rings toward the middle with a slight forward bulge, a centre
+        verts = [p - nav * 0.0006 for p in P]
+        faces = []
+        for k, s_ in enumerate((0.8, 0.6, 0.4, 0.2)):
+            for p in P:
+                q = c + (p - c) * s_ - nav * 0.0006 + nav * 0.0010 * (1 - s_ * s_)
+                verts.append(q)
+            r0, r1 = k * n, (k + 1) * n
+            for m in range(n):
+                faces.append((r0 + m, r0 + (m + 1) % n, r1 + (m + 1) % n, r1 + m))
+        verts.append(c + nav * 0.0004)
+        ctr = len(verts) - 1
+        r0 = 4 * n
+        for m in range(n):
+            faces.append((r0 + m, r0 + (m + 1) % n, ctr))
+        uvs = [(0.5 + (q.x - cx) / (2 * hh * 0.80), 0.5 + (q.z - (cz + 0.14 * hh)) / (2 * hh)) for q in verts]   # tall oval iris, cut by the upper lid
+        made.append(_mesh("NewEyePlate_%s_%s" % (tag, "LR"[side < 0]), verts, faces, uvs, em, col, off_x))
+        # split the lid loop at the corners
+        ii = min(range(n), key=lambda i: (P[i].x - cx) * side)
+        oo = max(range(n), key=lambda i: (P[i].x - cx) * side)
+        arc1 = [(oo + k) % n for k in range((ii - oo) % n + 1)]
+        arc2 = [(ii + k) % n for k in range((oo - ii) % n + 1)]
+        mz = lambda arc: sum(P[i].z for i in arc) / len(arc)
         up_arc, low_arc = (arc1, arc2) if mz(arc1) > mz(arc2) else (arc2, arc1)
-        up = sorted(up_arc, key=lambda v: (v.co.x - cx) * side)                       # inner -> outer
-        low_ring = low_arc
+        up = sorted(up_arc, key=lambda i: (P[i].x - cx) * side)          # inner -> outer
+        low = sorted(low_arc, key=lambda i: -(P[i].x - cx) * side)        # outer -> inner
+
+        def row(i, th, inset=0.0025):
+            p, nr = P[i], Nm[i]
+            rad = Vector((p.x - cx, 0.0, (p.z - cz) * 1.6)); rad.normalize()
+            return (p - rad * inset * S + nr * 0.0006, p + rad * th * S + nr * 0.0006)
+        # upper lid line: thin at the open inner corner, ~0.014 H across, heavier at the outer end, then it wraps
+        # down around the outer corner onto the lower lid and tapers out
         rows = []
-        n_ = len(up)
-        for i, v in enumerate(up):
-            t = i / max(n_ - 1, 1)
-            p = v.co.copy(); nrm = v.normal.copy()
-            radial = Vector((p.x - cx, 0.0, p.z - cz)); radial.normalize()
-            th = (0.010 + 0.020 * t ** 1.4) * S
-            inner = p - radial * 0.004 * S + nrm * 0.0012
-            outer = p + radial * th + nrm * 0.0016
-            rows.append((inner, outer))
-        # wing past the outer corner
+        for k, i in enumerate(up):
+            t = k / max(len(up) - 1, 1)
+            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.006 * t * t
+            rows.append(row(i, float(th), inset=0.006))
+        wrap = low[1:max(3, int(len(low) * 0.30))]
+        for k, i in enumerate(wrap):
+            t = (k + 1) / (len(wrap) + 1)
+            rows.append(row(i, 0.018 * (1 - t) + 0.003 * t, inset=0.0025 * (1 - t)))
+        made.append(_strip("NewLidLine_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
+        # lower lid line: thin, lighter brown, from the wrap to near the inner corner
+        seg = low[max(3, int(len(low) * 0.30)) - 1: int(len(low) * 0.88)]
+        rows = []
+        for k, i in enumerate(seg):
+            t = k / max(len(seg) - 1, 1)
+            rows.append(row(i, 0.0045 * (1 - 0.7 * t), inset=0.0005))
         if len(rows) >= 2:
-            a1, b1 = rows[-1]
-            tang = (a1 - rows[-2][0]); tang.normalize()
-            wing_dir = (tang + Vector((side * 0.6, 0, 0.55))).normalized()
-            for k, f in ((1, 0.55), (2, 0.0)):
-                a = a1 + wing_dir * (0.016 * k * S)
-                b = a + (b1 - a1) * f + wing_dir * 0.002 * S
-                hit = tree.find_nearest(a)
-                if hit[0] is not None:
-                    a = hit[0] + hit[1] * 0.0016; b = a + (b - a)
-                rows.append((a, b))
-        made.append(_strip("NewLashUp_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
-        # lower lash: outer half of the lower lid, thin
-        low = sorted([v for v in low_ring if (v.co.x - cx) * side > 0.15 * EYE_HW * S], key=lambda v: (v.co.x - cx) * side)[:-1]
+            made.append(_strip("NewLowLid_%s_%s" % (tag, "LR"[side < 0]), rows, low_m, col, off_x))
+        # brow: blunt and thick at the inner end, angling up to a peak at ~65%, tapering out (MHS3 male)
+        tree = _bvh(ob)
+        w = max(xs) - min(xs)
+        ztop = max(zs)
         rows = []
-        for i, v in enumerate(low):
-            t = i / max(len(low) - 1, 1)
-            p = v.co.copy(); nrm = v.normal.copy()
-            radial = Vector((p.x - cx, 0.0, p.z - cz)); radial.normalize()
-            rows.append((p + nrm * 0.0012, p + radial * (0.003 + 0.006 * t) * S + nrm * 0.0014))
-        if len(rows) >= 2:
-            made.append(_strip("NewLashLow_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
-        # brow: thick at the inner end, tapering outward, a gentle arch
-        rows = []
-        for i in range(12):
-            t = i / 11
-            x = side * (EYE_X - 0.085 + 0.20 * t) * S
-            z = O + (EYE_Z + EYE_HH + 0.060 + 0.022 * math.sin(math.pi * min(1.0, t * 1.15)) - 0.012 * t) * S
-            th = (0.030 - 0.018 * t) * S
-            res = []
-            for zz in (z - th / 2, z + th / 2):
-                loc, nrm, _, _ = tree.ray_cast(Vector((x, -1.0, zz)), Vector((0, 1, 0)))
-                res.append(loc + nrm * 0.0015 if loc is not None else Vector((x, -0.12, zz)))
-            rows.append((res[0], res[1]))
+        for k in range(14):
+            t = k / 13
+            x = cx + side * (-0.50 + 1.12 * t) * w
+            zc = ztop + S * (0.016 + 0.046 * t - 0.016 * t * t)            # straight diagonal, rising outward (MHS3 male)
+            th = S * (0.040 * (1 - float(smooth(0.30, 1.0, np.array(t)))) + 0.0015)   # thick for a third, then tapering
+            lo, hi = zc - th * 0.45, zc + th * 0.55
+            if k == 0:
+                lo = lo + th * 0.55                                       # inner end cut on a diagonal
+            pair = []
+            for xx, zz in ((x, lo), (x + side * (0.0 if k else 0.012 * S), hi)):
+                loc, nrm, _, _ = tree.ray_cast(Vector((xx, -1.0, zz)), Vector((0, 1, 0)))
+                pair.append(loc + nrm * 0.0008 if loc is not None else Vector((xx, -0.12, zz)))
+            rows.append(tuple(pair))
         made.append(_strip("NewBrow_%s_%s" % (tag, "LR"[side < 0]), rows, brow_m, col, off_x))
     bm.free()
     return made
 
 
 def run(npz, eyes_json, tag, off_x):
-    ob, col, V, D = load(npz, tag, off_x)
+    global EYE_X, EYE_Z, EYE_HW, EYE_HH, MOUTH_Z, MOUTH_HW, NOSE_Z
+    ej = json.load(open(eyes_json))
+    EYE_X, EYE_Z = ej.get("eye_x", EYE_X), ej.get("eye_z", EYE_Z)
+    EYE_HW, EYE_HH = ej.get("eye_hw", EYE_HW), ej.get("eye_hh", EYE_HH)
+    MOUTH_Z, MOUTH_HW, NOSE_Z = ej.get("mouth_z", MOUTH_Z), ej.get("mouth_hw", MOUTH_HW), ej.get("nose_z", NOSE_Z)
+    ob, col, V, D, LID = load(npz, tag, off_x)
     me = ob.data
     P = head_coords(V)
     N = vertex_normals(me)
@@ -342,8 +458,7 @@ def run(npz, eyes_json, tag, off_x):
     global EAR_ROOT
     EAR_ROOT = ear_root(ob, P)
     outline(ob, P, D)
-    eyes(col, eyes_json, off_x, tag)
-    lashes_and_brows(ob, col, off_x, tag)
+    painted_eyes(ob, col, LID, off_x, tag)
     return ob, int((sh < 0.5).sum())
 
 

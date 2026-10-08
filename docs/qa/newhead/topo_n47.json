@@ -1,0 +1,43 @@
+{
+ "ours": {
+  "head_faces": 5700,
+  "quad_ratio": 1.0,
+  "tri_ratio": 0.0,
+  "head_verts": 5823,
+  "poles": 56,
+  "pole_fraction": 0.0099,
+  "front_share": 0.624,
+  "density_front_over_back": 1.442,
+  "eye_openings": [
+   {
+    "verts": 48,
+    "u": 0.518,
+    "width_over_H": 0.164,
+    "closed_rings": 6,
+    "ring_sizes": [
+     48,
+     48,
+     48,
+     48,
+     48,
+     48
+    ]
+   },
+   {
+    "verts": 48,
+    "u": 0.518,
+    "width_over_H": 0.164,
+    "closed_rings": 6,
+    "ring_sizes": [
+     48,
+     48,
+     48,
+     48,
+     48,
+     48
+    ]
+   }
+  ],
+  "mouth_opening": null
+ }
+}

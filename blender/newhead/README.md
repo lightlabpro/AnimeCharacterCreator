@@ -28,3 +28,10 @@ ellipsoid turned toward the viewer (MHS3 flat-lit face, shadow on the far cheek)
 outline faded at the eyes/nose/mouth and off on the buried ear root, upper lash with wing, outer lower lash, brows.
 Ears: O-grid in the ear plane, relief in fractions of ear height (helix, scapha, antihelix, concha, tragus, lobe),
 back grown out of the skull, one Catmull-Clark level; box 0.19-0.605 H so the visible ear runs brow to nose base.
+
+## Painted eyes (n47)
+Matched to an MHS3 frame (eyes_n47c.png: ours top, the game bottom). The lid opening is filled with a thin plate flush
+with the skin carrying a painted iris (MAT_MHS3Eye: flat green, dark outline, two concentric arcs on the inner side,
+light lower area, darker top, vertical oval pupil, one big highlight half outside the iris, grey sclera with a lid
+band). Lid line, lower lid line and brows are flat emission strokes. Eye opening: lid edge h/w 0.64, eye gap 1.20
+eye widths (frame 0.57 / 1.2; MHS3 creator 0.62 / 1.25). The lid edge loop is saved per vertex ("lid" in the npz).

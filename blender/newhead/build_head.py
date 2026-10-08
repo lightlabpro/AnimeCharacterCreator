@@ -22,7 +22,7 @@ BACK_ANGLE = math.radians(92)   # the back face covers the back of the skull wit
 LEVELS = 1
 
 # dataset landmarks (fractions of H above the chin; forward = -y), from mean_head / topology_dataset
-EYE_Z, EYE_X, EYE_HW, EYE_HH = 0.48, 0.178, 0.102, 0.072      # eye centre height, x, half width, half height
+EYE_Z, EYE_X, EYE_HW, EYE_HH = 0.48, 0.200, 0.092, 0.058   # n45: MHS3 ref - lid edge h/w 0.63, gap 1.18 eye widths (centre height, x, half width, half height)
 MOUTH_Z, MOUTH_HW = 0.165, 0.085
 NOSE_Z, NOSE_FWD = 0.246, 0.470
 CHIN_Y = -0.386
@@ -204,14 +204,15 @@ def orient_ccw(loop, c):
     return loop if a > 0 else loop[::-1]
 
 
-def almond(t, cx, cz, hw, hh, tilt=0.012):
+def almond(t, cx, cz, hw, hh, tilt=0.0):
     """Anime eye opening, t in [0,1): 0 = inner corner (toward the nose), going over the top. Flat upper lid that
     peaks toward the inner third, fuller lower lid, outer corner a little higher."""
     th = 2 * math.pi * t
     c, s_ = -math.cos(th), math.sin(th)           # c: -1 inner .. +1 outer (for the left eye, +x outward)
     x = hw * c
     a = abs(c)
-    z = hh * (1 - a ** 3.0) ** 0.55 * (1 + 0.08 * c) if s_ >= 0 else -0.78 * hh * (1 - a ** 2.0) ** 0.85
+    # n46 (MHS3 ref): level corners, upper lid peaking toward the inner side, a deep round lower lid
+    z = hh * (1 - a ** 2.2) ** 0.55 * (1 - 0.10 * c) if s_ >= 0 else -0.92 * hh * (1 - a ** 2.0) ** 0.60
     return x, z + tilt * c * 0.5
 
 
@@ -240,7 +241,7 @@ def rings_from_hole(bm, hole, n):
 def cut_eye(bm, F, side):
     """O-grid eye: the block of front cells around the eye becomes concentric rings around an almond opening."""
     ex = side * EYE_X
-    blk = front_cells(F, lambda f: abs(f.calc_center_median().x - ex) < EYE_HW * 1.3 and abs(f.calc_center_median().z - EYE_Z) < EYE_HH * 1.6)
+    blk = front_cells(F, lambda f: abs(f.calc_center_median().x - ex) < EYE_HW * 1.45 and abs(f.calc_center_median().z - EYE_Z) < EYE_HH * 2.0)
     outer = orient_ccw(ordered_loop(region_boundary(blk)), (ex, EYE_Z))
     rings = [outer]
     for th in (0.0, 0.0, 0.0):                      # three new rings; positions are set below
@@ -596,9 +597,28 @@ def main(out, levels=LEVELS):
     ob = fit_limit(bm, levels)
     save(bm, out.replace(".npz", "_cage.npz"))
     # final mesh = applied subdivision
-    me = ob.data; bm.to_mesh(me)
+    me = ob.data
+    bm.verts.index_update()
+    lid_cage = {}
+    for s_, ch in zip((1, -1), eyes):
+        for v in ch[-1]:
+            if v.is_valid:
+                lid_cage[v.index] = 1 if s_ > 0 else 2
+    bm.to_mesh(me)
     dg = bpy.context.evaluated_depsgraph_get(); ev = ob.evaluated_get(dg); m2 = ev.to_mesh()
     bmf = bmesh.new(); bmf.from_mesh(m2); ev.to_mesh_clear()
+    # lid edge in the subdivided mesh: the cage opening verts (subsurf keeps original indices first) plus the edge
+    # points between two consecutive opening verts
+    bmf.verts.ensure_lookup_table()
+    lid_l = bmf.verts.layers.int.new("lid")
+    for i, sd in lid_cage.items():
+        bmf.verts[i][lid_l] = sd
+    for v in bmf.verts:
+        if v[lid_l] == 0:
+            nb = [e.other_vert(v) for e in v.link_edges]
+            tags = [w[lid_l] for w in nb if w.index in lid_cage]
+            if len(tags) >= 2 and tags[0] == tags[1]:
+                v[lid_l] = tags[0]
     # soften the corner where the skull meets the skull base / jaw floor behind the jaw (a crease, not a form)
     zone = [v for v in bmf.verts if v.co.y > NECK_Y - 0.12 and 0.08 < v.co.z < 0.36 and not v.is_boundary]
     for _ in range(12):
@@ -630,7 +650,8 @@ def main(out, levels=LEVELS):
         cents.append(c)
     print("eyeball centre y", [round(float(c[1]), 3) for c in cents])
     json.dump({"eyes": [[c * 0.262 + o for c, o in zip(cc, (0, 0, 1.4826))] for cc in cents],
-               "eye_r": EYEBALL_R * 0.262}, open(out.replace(".npz", "_eyes.json"), "w"))
+               "eye_r": EYEBALL_R * 0.262, "eye_x": EYE_X, "eye_z": EYE_Z, "eye_hw": EYE_HW, "eye_hh": EYE_HH,
+               "mouth_z": MOUTH_Z, "mouth_hw": MOUTH_HW, "nose_z": NOSE_Z}, open(out.replace(".npz", "_eyes.json"), "w"))
     print("cage faces", len(bm.faces), "final faces", len(bmf.faces))
     return bm
 
@@ -705,7 +726,9 @@ def save(bm, out):
         PL += [idx[v] for v in f.verts]; PS.append(len(f.verts))
     lay = bm.verts.layers.float.get("ear_dark")
     D = np.array([v[lay] for v in bm.verts], np.float32) if lay is not None else np.zeros(len(V), np.float32)
-    np.savez(out, V=V * 0.262 + np.array([0, 0, 1.4826]), PL=np.array(PL), PS=np.array(PS), T=np.zeros((0, 3), int), ear_dark=D)
+    ll = bm.verts.layers.int.get("lid")
+    LID = np.array([v[ll] for v in bm.verts], np.int8) if ll is not None else np.zeros(len(V), np.int8)
+    np.savez(out, V=V * 0.262 + np.array([0, 0, 1.4826]), PL=np.array(PL), PS=np.array(PS), T=np.zeros((0, 3), int), ear_dark=D, lid=LID)
 
 
 if __name__ == "__main__":
