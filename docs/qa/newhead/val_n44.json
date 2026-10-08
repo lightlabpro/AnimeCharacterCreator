@@ -1,0 +1,77 @@
+{
+ "bands_outside": [],
+ "rows": [
+  "  width@0.05             band 0.327-0.456 (median 0.385, n=18)  got 0.382  in",
+  "  width@0.1              band 0.476-0.610 (median 0.523, n=18)  got 0.521  in",
+  "  width@0.15             band 0.571-0.702 (median 0.613, n=18)  got 0.610  in",
+  "  width@0.2              band 0.626-0.766 (median 0.669, n=18)  got 0.667  in",
+  "  width@0.25             band 0.659-0.804 (median 0.706, n=18)  got 0.705  in",
+  "  width@0.3              band 0.684-0.830 (median 0.725, n=18)  got 0.726  in",
+  "  width@0.35             band 0.695-0.846 (median 0.735, n=18)  got 0.735  in",
+  "  width@0.75             band 0.577-0.781 (median 0.671, n=18)  got 0.606  in",
+  "  width@0.8              band 0.530-0.718 (median 0.561, n=18)  got 0.560  in",
+  "  width@0.85             band 0.470-0.714 (median 0.506, n=18)  got 0.506  in",
+  "  width@0.9              band 0.392-0.715 (median 0.437, n=18)  got 0.426  in",
+  "  width@0.95             band 0.288-0.847 (median 0.353, n=18)  got 0.405  in",
+  "  behind_nose@0.1        band 0.156-0.224 (median 0.185, n=18)  got 0.178  in",
+  "  behind_nose@0.2        band 0.075-0.140 (median 0.094, n=18)  got 0.088  in",
+  "  behind_nose@0.3        band 0.026-0.100 (median 0.053, n=18)  got 0.047  in",
+  "  behind_nose@0.4        band 0.024-0.105 (median 0.038, n=18)  got 0.036  in",
+  "  behind_nose@0.6        band 0.020-0.092 (median 0.062, n=18)  got 0.068  in",
+  "  behind_nose@0.8        band 0.017-0.081 (median 0.036, n=18)  got 0.045  in",
+  "  behind_nose@0.9        band 0.061-0.116 (median 0.090, n=18)  got 0.086  in",
+  "  skull_depth@0.3        band 0.768-0.889 (median 0.849, n=18)  got 0.839  in",
+  "  width:depth            band 0.770-0.925 (median 0.815, n=18)  got 0.834  in"
+ ],
+ "profile": {
+  "H": 0.2617747956514358,
+  "width": {
+   "0.05": 0.382,
+   "0.1": 0.521,
+   "0.15": 0.61,
+   "0.2": 0.667,
+   "0.25": 0.705,
+   "0.3": 0.726,
+   "0.35": 0.735,
+   "0.75": 0.606,
+   "0.8": 0.56,
+   "0.85": 0.506,
+   "0.9": 0.426,
+   "0.95": 0.405
+  },
+  "behind_nose": {
+   "0.1": 0.178,
+   "0.2": 0.088,
+   "0.3": 0.047,
+   "0.4": 0.036,
+   "0.6": 0.068,
+   "0.8": 0.045,
+   "0.9": 0.086
+  },
+  "skull_depth_0.3": 0.839,
+  "width_to_depth": 0.834
+ },
+ "topology": {
+  "faces": 5700,
+  "tris": 0,
+  "quads": 5700,
+  "ngons": 0,
+  "quad_ratio": 1.0,
+  "tri_ratio": 0.0,
+  "ngon_ratio": 0.0,
+  "valence_hist": {
+   "3": 34,
+   "4": 5522,
+   "5": 22,
+   "12": 1
+  },
+  "pole_fraction": 0.010216884746370317,
+  "edge_len_cv": 0.6292718760191369,
+  "quad_skew_p95": 33.62421460849082,
+  "quad_aspect_p95": 2.7571104766617256,
+  "quad_warp_p95": 0.11823068448484009
+ },
+ "head_faces": 5700,
+ "top": 1.7443747956514357,
+ "chin": 1.4826
+}

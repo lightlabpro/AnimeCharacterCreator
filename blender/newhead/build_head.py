@@ -18,7 +18,7 @@ import surf
 
 NX, NY, NZ = 14, 8, 14            # cube cells across x, y (depth), z
 FRONT_ANGLE = math.radians(52)   # the front face holds the whole face
-BACK_ANGLE = math.radians(100)   # the back face covers the back of the skull with large cells
+BACK_ANGLE = math.radians(92)   # the back face covers the back of the skull with large cells
 LEVELS = 1
 
 # dataset landmarks (fractions of H above the chin; forward = -y), from mean_head / topology_dataset
@@ -30,7 +30,7 @@ NECK_R, NECK_Y = 0.20, 0.03                                   # neck radius and 
 NECK_ON = False   # n29: the neck column is the analytic tube only; rays from C behind the neck hit the column
 #                   far down and stacked back-wall cells inside the tube (a hidden fold sheet)
 NAPE_Z = 0.20                                                 # skull base behind the neck (H)
-EAR_TOP, EAR_BOT, EAR_FRONT, EAR_BACK = 0.56, 0.31, 0.07, 0.22  # ear box (H; y front/back of the head centre)
+EAR_TOP, EAR_BOT, EAR_FRONT, EAR_BACK = 0.605, 0.190, 0.045, 0.195  # ear box (H; y front/back of the head centre)
 EYEBALL_R = 0.118                                             # eyeball radius (H)
 NOSE_GAIN = 0.045                                            # nose ridge height at the tip (H)
 
@@ -445,7 +445,13 @@ def add_ears(bmf):
     FF.surface_x = lambda y, z, s, *a, **k: surface_x_H(y / S_, (z - O_) / S_, s) * S_
     for s_ in (1, -1):
         eb = ears3d.build_one(s_)
-        me = bpy.data.meshes.new("ear"); eb.to_mesh(me); eb.free()
+        me0 = bpy.data.meshes.new("ear0"); eb.to_mesh(me0); eb.free()
+        # n37: one Catmull-Clark level like the head (the unsubdivided ear read as an angular plate)
+        ob0 = bpy.data.objects.new("ear0", me0); bpy.context.scene.collection.objects.link(ob0)
+        md = ob0.modifiers.new("s", "SUBSURF"); md.levels = 1; md.render_levels = 1
+        dg = bpy.context.evaluated_depsgraph_get(); ev = ob0.evaluated_get(dg)
+        me = bpy.data.meshes.new_from_object(ev)
+        bpy.data.objects.remove(ob0); bpy.data.meshes.remove(me0)
         for v in me.vertices:
             v.co = Vector((v.co.x / S_, v.co.y / S_, (v.co.z - O_) / S_))
         bmf.from_mesh(me)
@@ -697,7 +703,9 @@ def save(bm, out):
     PL, PS = [], []
     for f in bm.faces:
         PL += [idx[v] for v in f.verts]; PS.append(len(f.verts))
-    np.savez(out, V=V * 0.262 + np.array([0, 0, 1.4826]), PL=np.array(PL), PS=np.array(PS), T=np.zeros((0, 3), int))
+    lay = bm.verts.layers.float.get("ear_dark")
+    D = np.array([v[lay] for v in bm.verts], np.float32) if lay is not None else np.zeros(len(V), np.float32)
+    np.savez(out, V=V * 0.262 + np.array([0, 0, 1.4826]), PL=np.array(PL), PS=np.array(PS), T=np.zeros((0, 3), int), ear_dark=D)
 
 
 if __name__ == "__main__":

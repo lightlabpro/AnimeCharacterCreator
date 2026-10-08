@@ -16,3 +16,15 @@ O-grid with a bag -> neck: footprint hole + inset ring + analytic tube -> quad s
 one subdivision -> O-grid ears laid out in the ear plane and quad-squared.
 
 Some helper paths (head_audit, the dataset band json) still point at the session scratch folder; see validate_head.py.
+
+## Look (n44)
+In Blender (needs the project's NG_ groups from blender/scripts/shaders.py in the file):
+
+    exec(open(r"<repo>\blender\newhead\apply_look.py").read(), {"NPZ": npz, "EYES": eyes_json, "TAG": "n44", "OFF_X": 1.8})
+    exec(open(r"<repo>\blender\newhead\render_look.py").read(), {"TAG": "n44", "OUT": r"<repo>\docs\qa\newhead\look_n44"})
+
+NG_ToonSkin with a "shade" mask (ear bowl, under the nose, jaw underside, neck), face normals blended to a head
+ellipsoid turned toward the viewer (MHS3 flat-lit face, shadow on the far cheek), NG_Eye irises, inverted-hull
+outline faded at the eyes/nose/mouth and off on the buried ear root, upper lash with wing, outer lower lash, brows.
+Ears: O-grid in the ear plane, relief in fractions of ear height (helix, scapha, antihelix, concha, tragus, lobe),
+back grown out of the skull, one Catmull-Clark level; box 0.19-0.605 H so the visible ear runs brow to nose base.

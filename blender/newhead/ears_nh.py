@@ -30,9 +30,7 @@ def _outline(t, H, W):
     c, s = math.cos(t), math.sin(t)
     b = s * H / 2
     w = W / 2 * (0.62 + 0.38 * (s + 1) / 2)            # narrow lobe, broad top
-    a = -c * w
-    if c < 0:                                           # front edge: straighter (attached to the head)
-        a *= 0.80
+    a = -c * w * (0.90 + 0.10 * c)                      # front edge straighter (attached to the head); n37: smooth, no corner
     return a, b
 
 
@@ -57,6 +55,31 @@ def _height(r, t, a, b, H, W):
     conc = math.exp(-(((a - 0.10 * W) / (0.24 * W)) ** 2 + ((b + 0.00 * H) / (0.24 * H)) ** 2))
     groove = math.exp(-((r - 0.76) / 0.045) ** 2) * rim_mask * (1 - lobe) * max(0.0, s + 0.35)
     _height.dark = max(conc, 0.9 * groove)
+    return h
+
+
+
+def _relief(r, t, a, b, H, W):
+    """n37: ear relief as fractions of the ear height H (the old one used fixed millimetres and read as a flat plate).
+    Helix: a rolled crest near the rim over the top and back, falling to the edge. Scapha: the groove inside it.
+    Antihelix: a Y ridge inside the scapha. Concha: the deep bowl in the middle third. Tragus: a bump in front of the
+    concha. Lobe: soft and full, no helix. Values are out of the ear plane (+ = away from the head)."""
+    c, s = math.cos(t), math.sin(t)
+    front = max(0.0, -c) ** 2 * (1 - max(0.0, -s))
+    rim_mask = 1.0 - front
+    lobe = max(0.0, -s) ** 3
+    h = 0.0
+    h += 0.10 * H * math.exp(-((r - 0.86) / 0.08) ** 2) * rim_mask * (1 - 0.7 * lobe)
+    h -= 0.045 * H * math.exp(-((r - 0.70) / 0.05) ** 2) * rim_mask * (1 - lobe)
+    ah = math.exp(-((r - 0.54) / 0.07) ** 2) * (1 - lobe) * (1 - front)
+    fork = math.exp(-((t - math.radians(70)) / 0.45) ** 2)
+    h += 0.060 * H * ah * (1 + 0.4 * fork)
+    conc = math.exp(-(((a - 0.10 * W) / (0.22 * W)) ** 2 + ((b + 0.03 * H) / (0.17 * H)) ** 2))
+    h -= 0.11 * H * conc
+    h += 0.055 * H * math.exp(-(((a - 0.38 * W) / (0.09 * W)) ** 2 + ((b + 0.06 * H) / (0.07 * H)) ** 2))
+    h += 0.030 * H * lobe * (1 - r)
+    groove = math.exp(-((r - 0.70) / 0.05) ** 2) * rim_mask * (1 - lobe) * max(0.0, s + 0.35)
+    _relief.dark = max(conc ** 0.7, 0.9 * groove)
     return h
 
 
@@ -96,7 +119,7 @@ def build_one(s, H=None, W=None):
     # tall: a 4 x 8 rectangle in the middle (near-square cells there), 4 rings out to the outline, the outline points
     # spaced by arc length; then a 2-D relax that pulls every quad toward a square (Procrustes target, as topo_relax)
     # with the outline fixed. Placement maps (a, b) back to the ring/spoke (r, t) the relief function uses.
-    MU, MV, RINGS = 4, 8, 4
+    MU, MV, RINGS = 3, 8, 4
     ts = np.linspace(0, 2 * math.pi, 2000, endpoint=False)
     OL = np.array([_outline(t, H, W) for t in ts])
     seg = np.linalg.norm(np.roll(OL, -1, 0) - OL, axis=1); cum = np.concatenate([[0], np.cumsum(seg)])
@@ -165,32 +188,55 @@ def build_one(s, H=None, W=None):
         P2 = P2n
     build_one.last2d = (P2, Q)
 
-    def place_ab(a, b):
-        # (a, b) -> spoke t and fraction r of the outline along it
+    def front_point(a, b):
         t = math.atan2(b / bmax, -a / amax) % (2 * math.pi)
         oa, ob = _outline(t, H, W)
         r = min(1.0, math.hypot(a, b) / max(math.hypot(oa, ob), 1e-9))
-        h = _height(max(r, 1e-3), t, a, b, H, W)
+        h = _relief(max(r, 1e-3), t, a, b, H, W)
         aa = a * ca + b * sa
         bb = -a * sa + b * ca
         y = yc - aa
         z = zc + bb
-        out = 0.0015 + max(0.0, (W / 2 - aa)) * math.tan(FLARE) * 0.95 + h
+        flare = max(0.0, (W / 2 - aa)) * math.tan(FLARE)
+        return y, z, flare, h, _relief.dark
+
+    def vert(y, z, out, dark):
         vv = bm.verts.new((s * (abs(FF.surface_x(y, z, s)) + out), y, z))
-        vv[dl] = _height.dark
+        vv[dl] = dark
         return vv
-    vv_ = [place_ab(float(u), float(v)) for u, v in P2]
+
+    vv_ = []
+    for u, v in P2:
+        y, z, flare, h, dk = front_point(float(u), float(v))
+        vv_.append(vert(y, z, 0.0012 + flare + h, dk))
     for fc in Q:
         addq(tuple(vv_[t] for t in fc))
-    # back skin: duplicate pushed toward the head, joined at the rim
     front_faces = list(bm.faces)
-    bmesh.ops.recalc_face_normals(bm, faces=front_faces)
-    # make the outer face point away from the head (+x for s > 0)
+    # n37: the back of the ear grows out of the skull instead of a thin solidified plate floating off it:
+    # rim edge (thickness ~6% of H) -> under the rim -> a contracted loop sunk into the skull (hidden)
+    outline = list(prev)
+    rings = [[vv_[i] for i in outline]]
+    for scale, kind in ((1.0, "edge"), (0.88, "under"), (0.62, "root")):
+        ring = []
+        for i in outline:
+            a, b = P2[i] * scale
+            y, z, flare, h, _ = front_point(float(a), float(b))
+            if kind == "edge":
+                out = 0.0012 + flare + h - 0.060 * H
+            elif kind == "under":
+                out = 0.55 * flare - 0.010 * H
+            else:
+                out = -0.05 * H
+            ring.append(vert(y, z, out, 0.0))
+        rings.append(ring)
+    n_ = len(outline)
+    for r0, r1 in zip(rings, rings[1:]):
+        for m in range(n_):
+            addq((r0[m], r0[(m + 1) % n_], r1[(m + 1) % n_], r1[m]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
     avg_n = sum((f.normal for f in front_faces), Vector()) / len(front_faces)
     if avg_n.x * s < 0:
-        bmesh.ops.reverse_faces(bm, faces=front_faces)
-    ret = bmesh.ops.solidify(bm, geom=front_faces, thickness=THICK)
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+        bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
     for f in bm.faces:
         f.smooth = True
     return bm
