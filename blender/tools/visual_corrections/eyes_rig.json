@@ -1,0 +1,171 @@
+{
+ "region": "eyes",
+ "note": "r1: animatable eyes (eye_shape.py / eye_tex.py / face_rig.py). Shape and placement knobs change the head's eye opening, so they need a head rebuild (build_head.py) before the look pass.",
+ "corrections": [
+  {
+   "id": "eye_bigger",
+   "description": "Make the whole eye bigger on the face.",
+   "setting": "eye_shape.py EYE_W2 +0.006 (head rebuild: the opening follows)"
+  },
+  {
+   "id": "eye_smaller",
+   "description": "Make the whole eye smaller on the face.",
+   "setting": "eye_shape.py EYE_W2 -0.006 (head rebuild)"
+  },
+  {
+   "id": "eyes_further_apart",
+   "description": "Move the eyes further apart.",
+   "setting": "eye_shape.py EYE_CX +0.006 (head rebuild)"
+  },
+  {
+   "id": "eyes_closer",
+   "description": "Move the eyes closer together.",
+   "setting": "eye_shape.py EYE_CX -0.006 (head rebuild)"
+  },
+  {
+   "id": "upper_lid_rounder",
+   "description": "Make the upper lid arch higher and rounder.",
+   "setting": "eye_shape.py EYE_TOP x1.10 (head rebuild)"
+  },
+  {
+   "id": "upper_lid_flatter",
+   "description": "Make the upper lid flatter and lower.",
+   "setting": "eye_shape.py EYE_TOP x0.90 (head rebuild)"
+  },
+  {
+   "id": "lower_lid_deeper",
+   "description": "Make the lower lid curve deeper.",
+   "setting": "eye_shape.py EYE_LOW x1.08 (head rebuild)"
+  },
+  {
+   "id": "lower_lid_shallower",
+   "description": "Make the lower lid curve shallower.",
+   "setting": "eye_shape.py EYE_LOW x0.92 (head rebuild)"
+  },
+  {
+   "id": "lid_line_thicker",
+   "description": "Make the upper lid line thicker.",
+   "setting": "eye_shape.py LID_TH +0.03"
+  },
+  {
+   "id": "lid_line_thinner",
+   "description": "Make the upper lid line thinner.",
+   "setting": "eye_shape.py LID_TH -0.03"
+  },
+  {
+   "id": "wing_longer",
+   "description": "Run the lid line further down along the lower lid at the outer corner.",
+   "setting": "eye_shape.py WING +0.06"
+  },
+  {
+   "id": "wing_shorter",
+   "description": "Shorten the lid line's run down the outer corner.",
+   "setting": "eye_shape.py WING -0.06"
+  },
+  {
+   "id": "low_rim_thinner",
+   "description": "Make the pale rim along the lower lid thinner.",
+   "setting": "eye_shape.py LOW_RIM -0.012"
+  },
+  {
+   "id": "low_rim_off",
+   "description": "Remove the pale rim along the lower lid.",
+   "setting": "eye_shape.py LOW_RIM 0"
+  },
+  {
+   "id": "band_bigger",
+   "description": "Make the grey shadow band under the upper lid taller.",
+   "setting": "eye_tex.py BAND +0.06"
+  },
+  {
+   "id": "band_smaller",
+   "description": "Make the grey shadow band under the upper lid shorter.",
+   "setting": "eye_tex.py BAND -0.06"
+  },
+  {
+   "id": "iris_bigger",
+   "description": "Make the iris bigger inside the eye.",
+   "setting": "eye_shape.py IRIS_RX, IRIS_RY x1.08"
+  },
+  {
+   "id": "iris_smaller",
+   "description": "Make the iris smaller inside the eye.",
+   "setting": "eye_shape.py IRIS_RX, IRIS_RY x0.93"
+  },
+  {
+   "id": "iris_higher",
+   "description": "Move the iris up.",
+   "setting": "eye_shape.py IRIS_Z +0.05"
+  },
+  {
+   "id": "iris_lower",
+   "description": "Move the iris down.",
+   "setting": "eye_shape.py IRIS_Z -0.05"
+  },
+  {
+   "id": "rings_thicker",
+   "description": "Make the dark arcs inside the iris thicker.",
+   "setting": "eye_tex.py RING_W +0.010"
+  },
+  {
+   "id": "rings_thinner",
+   "description": "Make the dark arcs inside the iris thinner.",
+   "setting": "eye_tex.py RING_W -0.010"
+  },
+  {
+   "id": "pupil_bigger",
+   "description": "Make the pupil bigger.",
+   "setting": "eye_tex.py PUPIL radii x1.15"
+  },
+  {
+   "id": "pupil_smaller",
+   "description": "Make the pupil smaller.",
+   "setting": "eye_tex.py PUPIL radii x0.87"
+  },
+  {
+   "id": "highlight_bigger",
+   "description": "Make the white highlight bigger.",
+   "setting": "eye_tex.py HL radii x1.2"
+  },
+  {
+   "id": "highlight_smaller",
+   "description": "Make the white highlight smaller.",
+   "setting": "eye_tex.py HL radii x0.83"
+  },
+  {
+   "id": "brow_lower",
+   "description": "Move the brows down, closer to the eyes.",
+   "setting": "eye_shape.py BROW_DZ -0.05"
+  },
+  {
+   "id": "brow_higher",
+   "description": "Move the brows up.",
+   "setting": "eye_shape.py BROW_DZ +0.05"
+  },
+  {
+   "id": "brow_thicker",
+   "description": "Make the brows thicker.",
+   "setting": "eye_shape.py BROW_THICK x1.12"
+  },
+  {
+   "id": "brow_thinner",
+   "description": "Make the brows thinner.",
+   "setting": "eye_shape.py BROW_THICK x0.89"
+  },
+  {
+   "id": "brow_darker",
+   "description": "Make the brow colour darker brown.",
+   "setting": "eye_tex.py C_BROW, C_BROW_DARK x0.9"
+  },
+  {
+   "id": "brow_lighter",
+   "description": "Make the brow colour lighter.",
+   "setting": "eye_tex.py C_BROW, C_BROW_DARK x1.1"
+  },
+  {
+   "id": "brow_shadow_off",
+   "description": "Remove the mauve shadow under the inner end of the brows.",
+   "setting": "face_rig.py brow shade strip off"
+  }
+ ]
+}

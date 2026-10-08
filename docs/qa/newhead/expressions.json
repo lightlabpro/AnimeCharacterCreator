@@ -1,0 +1,29 @@
+{
+ "neutral": {},
+ "blink": {
+  "PF-Blink_L": 1,
+  "PF-Blink_R": 1
+ },
+ "wink_left": {
+  "PF-Blink_L": 1,
+  "PF-BrowDown": 0.3
+ },
+ "amazed": {
+  "PF-EyeWide": 1,
+  "PF-BrowUp": 1,
+  "PF-IrisSmall": 1
+ },
+ "sad": {
+  "PF-EyeSad": 1,
+  "PF-BrowSad": 1,
+  "PF-LookDown": 0.4
+ },
+ "angry": {
+  "PF-EyeAngry": 1,
+  "PF-BrowAngry": 1
+ },
+ "happy": {
+  "PF-EyeHappy": 1,
+  "PF-BrowUp": 0.35
+ }
+}

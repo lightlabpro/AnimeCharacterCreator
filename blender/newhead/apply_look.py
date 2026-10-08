@@ -50,6 +50,7 @@ BROW_IN, BROW_OUT = 0.50, 0.62   # brow extent toward the nose / past the eye ce
 BROW_ARCH = 0.010         # brow arch (H)
 BROW_INNER = 0.0         # extra thickness at the brow's inner end (x)
 BROW_TAPER = 0.30        # where the brow starts to thin (0..1 along it)
+EYE_RIG = 1              # r1: animatable eyes/brows (face_rig.py): opening + eye white + iris + lid strips + shape keys
 EYE_DECAL = 1            # q1: eyes painted into a texture decal on the skin (shape free of the mesh opening); 0 = old plate + strips
 # ears (g12, reference-match judge knobs; 0 = off)
 IRIS_RING_X = -0.15       # dark iris arcs only where px < this (x R)
@@ -151,7 +152,7 @@ def custom_normals(me, P, D, N):
     lo = 0.07 * CHIN_LIT
     w = 0.96 * smooth(0.04 - lo, 0.12 - lo, z)                                                  # whole head above the jaw (n41b: 0.8 front-only left a jagged edge)
     de = np.sqrt(((np.abs(x) - EYE_X) / (EYE_HW * 1.5)) ** 2 + ((z - EYE_Z) / (EYE_HH * 2.0)) ** 2)
-    if not EYE_DECAL:
+    if not (EYE_DECAL or EYE_RIG):
         w *= 0.55 + 0.45 * smooth(0.9, 1.15, de)                                      # only the lid itself keeps some form
     dm = np.sqrt((x / (MOUTH_HW * 1.6)) ** 2 + ((z - MOUTH_Z) / 0.05) ** 2)
     w *= 0.8 + 0.2 * smooth(0.6, 1.0, dm)
@@ -740,7 +741,14 @@ def run(npz, eyes_json, tag, off_x):
     global EAR_ROOT
     EAR_ROOT = ear_root(ob, P)
     outline(ob, P, D)
-    painted_eyes(ob, col, LID, off_x, tag)
+    if EYE_RIG:
+        import os
+        exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "face_rig.py")).read(), globals())
+        build_rig(ob, col, LID, off_x, tag)
+        bpy.app.driver_namespace["set_expression"] = set_expression
+        bpy.app.driver_namespace["EXPRESSIONS"] = EXPRESSIONS
+    else:
+        painted_eyes(ob, col, LID, off_x, tag)
     face_strokes(ob, col, off_x, tag)
     return ob, int((sh < 0.5).sum())
 

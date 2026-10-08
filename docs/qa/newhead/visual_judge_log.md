@@ -136,3 +136,29 @@ Notes:
 Needs a human: iris arcs (ours thinner/fainter), eye size (0.71 vs 0.77), brow inner end, brow colour.
 Boards: eyes_q0.png (before), eyes_q1.png, eyes_q15.png, eyes_q21.png, face_q20.png (brow fold), face_q21.png,
 eye_paint_cmp.png (painted eye + brow vs the reference crop), eye_paint_n53.png (the texture).
+
+## r1 - animatable eyes and brows (rig, replaces the painted decal by default)
+
+Sammy asked for eyes and brows that animate in the character creator (blink, amazed, sad...), smooth round lines
+instead of polygonal ones, the brown line running down the outer corner, and thicker iris arcs.
+
+Build (`EYE_RIG = 1` in apply_look.py; `EYE_RIG = 0` keeps the q21 decal path):
+- `eye_shape.py`: the MHS3 eye/brow outlines as densely resampled, Gaussian-smoothed curves (no polygon chords) plus the
+  expression offsets. The head's eye opening is cut to this contour in the cage (build_head `EYE_SHAPE`), n56.
+- `face_rig.py`: per side an eye-white plate 2 mm behind the face, an iris disc (texture with highlight, `eye_tex.py`,
+  arcs `RING_W` 0.042 = about twice the q-series), a lid-line ribbon with a wing down the outer corner, a brow strip
+  with hatch texture and the mauve shade strip.
+- Shape keys (glTF morph targets): head + lid strips `PF-Blink_L/R, PF-EyeWide, PF-EyeSad, PF-EyeAngry, PF-EyeHappy`;
+  iris `PF-LookLeft/Right/Up/Down, PF-IrisSmall`; brows `PF-BrowUp/Down/Angry/Sad`. Presets in `expressions.json`
+  (neutral, blink, wink_left, amazed, sad, angry, happy).
+- `eye_lit`: skin moved by the lid keys blends to flat lit skin so rotated custom normals do not leave shadow specks.
+
+Checks: dataset bands - nothing outside. Temples within 0.17 mm of n53. Skin skew p95 50.8 (was 38 on n53/n55):
+an honest regression from cutting the curved opening into the cage; not hidden.
+
+Judge (menu eyes_rig): s3 picked low_rim_off (applied). s4 picked brow_thicker in both orders (ours thinner, so no
+contradiction) - applied as BROW_THICK 1.12 (s5). After s4 every other feature was "needs a human": height_to_width
+0.40, upper_lid_line 0.40, eye_size 0.44, brow_shape 0.52, brow_position 0.55, lower_lid_line 0.61, brow_colour 0.69
+- the stop condition, so the loop ends here.
+Boards: board_eyes_s5.png, board_expr_s5.png (all 7 expressions, front), board_expr34_s3.png, board_look_s5.png.
+Shape / placement entries in eyes_rig.json need a head rebuild (build_head), not just apply_look.

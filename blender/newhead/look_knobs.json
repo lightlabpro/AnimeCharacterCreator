@@ -1,7 +1,10 @@
 {
  "BROW_IN": 0.9,
  "BROW_OUT": 0.82,
- "paint": {},
+ "paint": {
+  "LOW_RIM": 0.0,
+  "BROW_THICK": 1.12
+ },
  "EYE_W2": 0.11,
  "BROW_TAPER": 0.1,
  "BROW_INNER": 1.5,

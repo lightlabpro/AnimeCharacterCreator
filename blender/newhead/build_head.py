@@ -32,6 +32,12 @@ NECK_ON = False   # n29: the neck column is the analytic tube only; rays from C 
 NAPE_Z = 0.20                                                 # skull base behind the neck (H)
 EAR_TOP, EAR_BOT, EAR_FRONT, EAR_BACK = 0.605, 0.190, 0.045, 0.195  # ear box (H; y front/back of the head centre)
 EYEBALL_R = 0.118                                             # eyeball radius (H)
+EYE_RELAX = 0         # r1: smoothing passes on the skin around the reshaped opening
+EYE_SQUARE = 0        # r1: quad-squaring passes around the eye openings
+EYE_SNAP_R = 0.45      # r1: falloff radius (x half-width) of the final lid snap around the opening
+EYE_FINAL_SNAP = 1    # r1: after subdivision, snap the lid loop onto the contour exactly
+EYE_SHAPE = 1         # r1: snap the eye opening onto eye_shape.opening_contour (MHS3, smoothed)
+LID_SNAP = 0.0        # x0: final lid loop snapped onto the traced MHS3 eye outline (0 = off)
 CHIN_TAPER = 0.16     # narrows the jaw toward the chin (reference-match judge knob)
 NOSE_GAIN = 0.045                                            # nose ridge height at the tip (H)
 
@@ -269,9 +275,21 @@ def cut_eye(bm, F, side):
     m0 = min(range(n), key=lambda m: (side * (outer[m].co.x - ex)) + 3 * abs(outer[m].co.z - EYE_Z))
     order = [(m0 - side * i) % n for i in range(n)]   # CCW chains; the almond runs over the top first
     # opening on the almond with even steps; lid rings blend from the almond to the outer block
+    if EYE_SHAPE:                                   # r1: the cage opening already follows the MHS3 contour
+        import os
+        g = {}
+        exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "eye_shape.py")).read(), g)
+        Cc = g["opening_contour"](m=400)
+        cs = np.linalg.norm(np.diff(np.vstack([Cc, Cc[:1]]), axis=0), axis=1)
+        cc = np.concatenate([[0], np.cumsum(cs)]) / cs.sum()
+        ox_, oz_ = g["EYE_CX"] - EYE_X, g["EYE_Z0"] - EYE_Z
     for step, m in enumerate(order):
         t = step / n
-        ax, az = almond(t, 0, 0, EYE_HW, EYE_HH)
+        if EYE_SHAPE:
+            ax = ox_ + g["EYE_W2"] * float(np.interp(t, cc, np.append(Cc[:, 0], Cc[0, 0])))
+            az = oz_ + g["EYE_W2"] * float(np.interp(t, cc, np.append(Cc[:, 1], Cc[0, 1])))
+        else:
+            ax, az = almond(t, 0, 0, EYE_HW, EYE_HH)
         o = outer[m].co
         for k, blend in ((3, 0.0), (2, 0.28), (1, 0.62)):
             px = ex + side * ax * (1 + 0.10 * (k < 3)) * (1 - blend) + (o.x - ex) * blend
@@ -636,6 +654,12 @@ def main(out, levels=LEVELS):
             new[v] = v.co * 0.5 + sum(nb, Vector()) / len(nb) * 0.5
         for v, c in new.items():
             v.co = c
+    if EYE_SHAPE and EYE_FINAL_SNAP:
+        reshape_lids_contour(bmf, lid_l)                # r1: opening = eye_shape.py contour (animatable eyes)
+        if EYE_SQUARE:
+            print("eye_square free verts", eye_square(bmf, lid_l, EYE_SQUARE))
+    elif LID_SNAP:
+        reshape_lids(bmf, lid_l, LID_SNAP)
     # final_square(bmf)  # n22: made the neck join and eye corners worse (BVH projection across creases)
     # ears: the O-grid ear shells (rim, antihelix, concha relief), placed on this head's side surface
     add_ears(bmf)
@@ -662,6 +686,141 @@ def main(out, levels=LEVELS):
                "mouth_z": MOUTH_Z, "mouth_hw": MOUTH_HW, "nose_z": NOSE_Z}, open(out.replace(".npz", "_eyes.json"), "w"))
     print("cage faces", len(bm.faces), "final faces", len(bmf.faces))
     return bm
+
+
+def _in_contour(x, z, C, grow=1.05):
+    """Point inside the closed contour C (eye-local), grown a little about its centre."""
+    c = C.mean(0); P = c + (C - c) * grow
+    x0, z0 = P[:, 0], P[:, 1]; x1, z1 = np.roll(x0, -1), np.roll(z0, -1)
+    hit = ((z0 > z) != (z1 > z)) & (x < (x1 - x0) * (z - z0) / (z1 - z0 + 1e-12) + x0)
+    return bool(hit.sum() % 2)
+
+
+def reshape_lids_contour(bmf, lid_l):
+    """r1: snap each lid loop onto eye_shape.opening_contour (placement EYE_CX / EYE_Z0 / EYE_W2 there), by arc
+    length from the inner corner over the top; carry the move to the lid rim (fully) and the skin around (fading),
+    and keep the skin on the face: moved front verts get the depth of the original surface at their new x, z."""
+    import os
+    from mathutils.bvhtree import BVHTree
+    g = {}
+    exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "eye_shape.py")).read(), g)
+    C = g["opening_contour"](m=400)
+    cx0, z0, w2 = g["EYE_CX"], g["EYE_Z0"], g["EYE_W2"]
+    bmf.normal_update()
+    tree = BVHTree.FromBMesh(bmf)
+    for sd, side in ((1, 1), (2, -1)):
+        lid = [v for v in bmf.verts if v[lid_l] == sd]
+        S_ = set(lid)
+        start = min(lid, key=lambda v: side * v.co.x)                  # inner corner
+        nb = [e.other_vert(start) for e in start.link_edges if e.other_vert(start) in S_]
+        loop, prev, cur = [start], start, max(nb, key=lambda v: v.co.z)  # go over the top first
+        while cur is not start:
+            loop.append(cur)
+            nxt = [e.other_vert(cur) for e in cur.link_edges if e.other_vert(cur) in S_ and e.other_vert(cur) is not prev]
+            prev, cur = cur, nxt[0]
+        P = np.array([v.co[:] for v in loop])
+        # angle-preserving map (keeps the rings around the opening radial): normalised old loop -> normalised contour
+        ox, oz = side * P[:, 0], P[:, 2]
+        ocx, ocz = (ox.max() + ox.min()) / 2, (oz.max() + oz.min()) / 2
+        ohw, ohh = (ox.max() - ox.min()) / 2, (oz.max() - oz.min()) / 2
+        ncx, ncz = (C[:, 0].max() + C[:, 0].min()) / 2, (C[:, 1].max() + C[:, 1].min()) / 2
+        nhw, nhh = (C[:, 0].max() - C[:, 0].min()) / 2, (C[:, 1].max() - C[:, 1].min()) / 2
+        phc = np.unwrap(np.arctan2((C[:, 1] - ncz) / nhh, (C[:, 0] - ncx) / nhw))
+        order = np.argsort(np.mod(phc, 2 * np.pi))
+        phs = np.mod(phc, 2 * np.pi)[order]
+        phl = np.mod(np.arctan2((oz - ocz) / ohh, (ox - ocx) / ohw), 2 * np.pi)
+        Cx = np.interp(phl, phs, C[order, 0], period=2 * np.pi); Cz = np.interp(phl, phs, C[order, 1], period=2 * np.pi)
+        tx = side * (cx0 + Cx * w2); tz = z0 + Cz * w2
+        D = np.stack([tx - P[:, 0], np.zeros(len(P)), tz - P[:, 2]], 1)
+        # depth of the face at the new loop positions
+        for k, v in enumerate(loop):
+            hit = tree.ray_cast(Vector((tx[k], -1.0, tz[k])), Vector((0, 1, 0)))
+            if hit[0] is not None and abs(hit[0].y - v.co.y) < 0.06:
+                D[k, 1] = hit[0].y - v.co.y
+        L2 = P[:, [0, 2]]
+        cxm, czm = side * cx0, z0 - 0.115 * w2
+        moved = {}
+        for v in bmf.verts:
+            if v in S_ or v.co.y > 0.0:
+                continue
+            dx, dz = side * (v.co.x - cxm), v.co.z - czm
+            if abs(dx) > w2 * 3.0 or abs(dz) > w2 * 2.6:
+                continue
+            d = np.linalg.norm(L2 - np.array([v.co.x, v.co.z]), axis=1)
+            j = np.argsort(d)[:3]; wts = 1.0 / np.maximum(d[j], 1e-4); dd = (D[j] * wts[:, None]).sum(0) / wts.sum()
+            ex_, ez_ = (side * v.co.x - cx0) / w2, (v.co.z - z0) / w2
+            inside = (v.co.y > P[j[0], 1] + 0.002) and _in_contour(ex_, ez_, C)   # the lid rim behind the opening
+            fall = 1.0 if inside else max(0.0, 1 - d[j[0]] / (w2 * EYE_SNAP_R)) ** 2
+            moved[v] = (dd * fall, inside)
+        # the lid rim follows its own loop vertex radially (BFS from the loop into the rim), not the nearest three
+        rim_d = {v: D[k] for k, v in enumerate(loop)}
+        front_ = list(loop)
+        for _ in range(8):
+            nxt = []
+            for v in front_:
+                for e in v.link_edges:
+                    q = e.other_vert(v)
+                    if q in rim_d or q not in moved or not moved[q][1]:
+                        continue
+                    rim_d[q] = rim_d[v]; nxt.append(q)
+            front_ = nxt
+        for v, (dd, inside) in moved.items():
+            if inside and v in rim_d:
+                dd = rim_d[v]
+            nx, nz = v.co.x + dd[0], v.co.z + dd[2]
+            if inside:
+                v.co = Vector((nx, v.co.y + dd[1], nz))
+            else:                                          # skin: carry the loop's move (no re-projection: it made lumps)
+                v.co = Vector((nx, v.co.y + dd[1], nz))
+        for k, v in enumerate(loop):
+            v.co = Vector((tx[k], P[k, 1] + D[k, 1], tz[k]))
+        ring = [v for v, (dd, inside) in moved.items() if not inside and not v.is_boundary and dd.any()]
+        for _ in range(EYE_RELAX):
+            new = {}
+            for v in ring:
+                nbs = [e.other_vert(v).co for e in v.link_edges]
+                new[v] = v.co * 0.5 + sum(nbs, Vector()) / len(nbs) * 0.5
+            for v, c in new.items():
+                hit = tree.ray_cast(Vector((c.x, -1.0, c.z)), Vector((0, 1, 0)))
+                y = hit[0].y if (hit[0] is not None and abs(hit[0].y - c.y) < 0.06) else c.y
+                v.co = Vector((c.x, y, c.z))
+
+
+def reshape_lids(bmf, lid_l, strength=1.0):
+    """x0: snap the subdivided lid loop onto the traced MHS3 eye outline (mhs3_eye_trace.json, the near eye of the
+    protagonist frame), then carry the same move to the lid rim inside it and, fading out, to the skin around it.
+    The cage-level almond could not hold the shape: Catmull-Clark rounded it into a pointed slanted almond."""
+    import json, os
+    tr = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "mhs3_eye_trace.json")))
+    P, Rh = np.array(tr["phi"]), np.array(tr["rho"])
+    for sd, side in ((1, 1), (2, -1)):
+        lid = [v for v in bmf.verts if v[lid_l] == sd]
+        if not lid:
+            continue
+        cx, cz = side * EYE_X, EYE_Z
+        disp = {}
+        for v in lid:
+            u = side * (v.co.x - cx) / EYE_HW
+            w = (v.co.z - cz - 0.04 * EYE_HH) / (0.96 * EYE_HH)
+            ph = math.atan2(w, u)
+            rho = float(np.interp(ph, P, Rh))
+            tx, tz = cx + side * EYE_HW * rho * math.cos(ph), cz + 0.04 * EYE_HH + 0.96 * EYE_HH * rho * math.sin(ph)
+            disp[v] = np.array([tx - v.co.x, 0.0, tz - v.co.z]) * strength
+        L = np.array([v.co[:] for v in lid]); D = np.array([disp[v] for v in lid])
+        # region: verts near this eye on the front of the face (not the ears)
+        for v in bmf.verts:
+            if v[lid_l] == sd:
+                continue
+            dx, dz = side * (v.co.x - cx), v.co.z - cz
+            if abs(dx) > EYE_HW * 2.2 or abs(dz) > EYE_HH * 3.0 or v.co.y > 0.0:
+                continue
+            d = np.linalg.norm(L[:, [0, 2]] - np.array([v.co.x, v.co.z]), axis=1)
+            j = np.argsort(d)[:3]; wts = 1.0 / np.maximum(d[j], 1e-4); dd = (D[j] * wts[:, None]).sum(0) / wts.sum()
+            inside = ((dx / EYE_HW) ** 2 + ((dz) / EYE_HH) ** 2) < 1.0 or v.is_boundary
+            fall = 1.0 if inside else max(0.0, 1 - d[j[0]] / (EYE_HH * 1.2)) ** 2
+            v.co.x += dd[0] * fall; v.co.z += dd[2] * fall
+        for v in lid:
+            v.co.x += disp[v][0]; v.co.z += disp[v][2]
 
 
 def final_square(bmf, iters=60, hold=5):
@@ -721,6 +880,60 @@ def final_square(bmf, iters=60, hold=5):
         tw = co[mir] * np.array([-1.0, 1.0, 1.0])
         co[idx] = (co[idx] + tw[idx]) / 2
         co[idx[mid[idx]], 0] = 0.0
+    for v in bmf.verts:
+        v.co = Vector(co[v.index])
+    return int(free.sum())
+
+
+def eye_square(bmf, lid_l, iters=60, radius=0.16):
+    """r1: quad squaring on the skin around the reshaped eye openings only (front verts within `radius` of a lid loop,
+    the loop itself and everything behind it fixed); verts slide on the surface, the result is mirrored."""
+    from mathutils.bvhtree import BVHTree
+    from mathutils.kdtree import KDTree
+    bmf.verts.ensure_lookup_table()
+    n = len(bmf.verts)
+    co = np.array([v.co[:] for v in bmf.verts])
+    lid = np.array([v[lid_l] for v in bmf.verts])
+    L = co[lid > 0]
+    bvh = BVHTree.FromBMesh(bmf)
+    d = np.array([np.min(np.linalg.norm(L[:, [0, 2]] - c[[0, 2]], axis=1)) for c in co])
+    front = co[:, 1] < np.interp(np.abs(co[:, 0]), [0.0, 0.4], [-0.30, -0.12])
+    free = (d < radius) & (d > 1e-6) & (lid == 0) & front & np.array([not v.is_boundary for v in bmf.verts])
+    # keep the ring right next to the loop on the loop's side of the surface
+    quads = np.array([[v.index for v in f.verts] for f in bmf.faces if len(f.verts) == 4])
+    cnt = np.bincount(quads.ravel(), minlength=n).astype(float)
+    adj = [[e.other_vert(v).index for e in v.link_edges] for v in bmf.verts]
+    kd = KDTree(n)
+    for i, c in enumerate(co):
+        kd.insert(Vector(c), i)
+    kd.balance()
+    mir = np.array([kd.find(Vector((-c[0], c[1], c[2])))[1] for c in co])
+    idx = np.nonzero(free)[0]
+    sq = np.array([[-1, -1], [1, -1], [1, 1], [-1, 1]], float)
+    for _ in range(iters):
+        P = co[quads]; c = P.mean(1, keepdims=True); Q = P - c
+        nrm = np.cross(Q[:, 2] - Q[:, 0], Q[:, 3] - Q[:, 1]); nrm /= np.maximum(np.linalg.norm(nrm, axis=1, keepdims=True), 1e-12)
+        u = Q[:, 1] - Q[:, 0] + Q[:, 2] - Q[:, 3]; u -= nrm * np.sum(u * nrm, 1)[:, None]
+        u /= np.maximum(np.linalg.norm(u, axis=1, keepdims=True), 1e-12); w = np.cross(nrm, u)
+        a2 = np.stack([np.sum(Q * u[:, None], 2), np.sum(Q * w[:, None], 2)], -1)
+        num = np.sum(sq[None, :, 0] * a2[:, :, 1] - sq[None, :, 1] * a2[:, :, 0], 1)
+        den = np.sum(sq[None, :, 0] * a2[:, :, 0] + sq[None, :, 1] * a2[:, :, 1], 1)
+        th = np.arctan2(num, den); sc = np.sqrt(np.sum(a2 ** 2, (1, 2)) / 8.0)
+        ct, st = np.cos(th), np.sin(th)
+        tx = (sq[None, :, 0] * ct[:, None] - sq[None, :, 1] * st[:, None]) * sc[:, None]
+        ty = (sq[None, :, 0] * st[:, None] + sq[None, :, 1] * ct[:, None]) * sc[:, None]
+        tgt = c + tx[..., None] * u[:, None] + ty[..., None] * w[:, None]
+        acc = np.zeros_like(co); np.add.at(acc, quads.ravel(), tgt.reshape(-1, 3))
+        goal = acc[idx] / np.maximum(cnt[idx], 1)[:, None]
+        avg = np.array([co[adj[i]].mean(0) for i in idx])
+        new = co[idx] + 0.5 * (0.8 * (goal - co[idx]) + 0.2 * (avg - co[idx]))
+        for k, i in enumerate(idx):
+            hit = bvh.find_nearest(Vector(new[k]))
+            if hit[0] is not None:
+                new[k] = hit[0][:]
+        co[idx] = new
+        tw = co[mir] * np.array([-1.0, 1.0, 1.0])
+        co[idx] = (co[idx] + tw[idx]) / 2
     for v in bmf.verts:
         v.co = Vector(co[v.index])
     return int(free.sum())

@@ -1,0 +1,122 @@
+{
+ "region": "eyes",
+ "subject": "s3: animatable eyes (n56 opening shaped to the MHS3 contour, eye-white plate + movable iris behind it, lid-line and lower-rim strips, painted brow strips; all with shape keys), neutral pose, eyes_s3.png; measured on the front render",
+ "features": [
+  {
+   "feature": "height_to_width",
+   "p_same": 0.28,
+   "confidence": 0.44,
+   "verdict": "off"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.31,
+   "confidence": 0.38,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.37,
+   "confidence": 0.26,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.44,
+   "confidence": 0.12,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.46,
+   "confidence": 0.08,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.49,
+   "confidence": 0.02,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.65,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.74,
+   "confidence": 0.48,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline_shape",
+   "p_same": 0.9,
+   "confidence": 0.8,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.95,
+   "confidence": 0.9,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "low_rim_off",
+  "order_b": "low_rim_off",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "low_rim_off",
+    "eye_smaller"
+   ],
+   "order_a": "low_rim_off",
+   "order_b": "low_rim_off"
+  },
+  "apply": "low_rim_off",
+  "setting": "eye_shape.py LOW_RIM 0"
+ }
+}
