@@ -212,7 +212,7 @@ def almond(t, cx, cz, hw, hh, tilt=0.0):
     x = hw * c
     a = abs(c)
     # n46 (MHS3 ref): level corners, upper lid peaking toward the inner side, a deep round lower lid
-    z = hh * (1 - a ** 2.2) ** 0.55 * (1 - 0.10 * c) if s_ >= 0 else -0.92 * hh * (1 - a ** 2.0) ** 0.60
+    z = hh * (1 - a ** 1.6) ** 0.50 * (1 - 0.10 * c) if s_ >= 0 else -0.92 * hh * (1 - a ** 2.0) ** 0.40   # n49: eye_rounder_corners again, double step
     return x, z + tilt * c * 0.5
 
 

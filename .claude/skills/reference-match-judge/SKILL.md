@@ -1,0 +1,70 @@
+---
+name: reference-match-judge
+description: Use when a render looks different from its reference images, especially MHS3 frames - Claude describes both images feature by feature, TypeSafe judges which features are off and picks the correction from a fixed menu, then Claude applies it and repeats.
+---
+
+# Reference match judge (Claude sees, TypeSafe decides)
+
+Claude can see images but should not grade its own work; TypeSafe (jev-1.13.0) cannot see images but judges words
+well. This skill splits the job: **Claude analyses the images in words, TypeSafe decides what is off and which
+correction to make.** Use it whenever a model, shader, hair, outfit or pose looks different from its references,
+with MHS3 (Monster Hunter Stories 3) frames as the main reference. It works together with the TypeSafe rules already
+in the repo (docs/VALIDATORS.md "TypeSafe usage rules"): words only, yes = good, a "none" option, choices asked in both
+option orders, answers under 0.4 confidence go to a human.
+
+Files (repo `AnimeCharacterCreator-main`):
+- `blender/tools/typesafe_visual_judge.py` - the judge (runs on Sammy's PC, key from TYPESAFE_API_KEY; never fake a
+  judgment if it is missing).
+- `blender/tools/visual_corrections/<region>.json` - the correction menu per region (eyes.json exists). Each entry:
+  `id`, a plain description, and the exact `setting` in code it changes (one step).
+- `docs/qa/<work>/visual_<tag>_<region>.json` - Claude's analysis for one render; `visual_judge_<tag>_<region>.json`
+  - TypeSafe's result.
+
+## Loop
+
+1. **Board.** Render ours at the reference's framing (same view, similar crop and scale) and build one image: ours on
+   top, the reference below (e.g. `render_look.py` close-up + the board script). Look at the board, not memory.
+2. **Analyse (Claude).** Write `visual_<tag>_<region>.json`:
+   `{"region", "subject", "reference_style", "features": {name: {"reference": "...", "ours": "..."}}}`.
+   - Use the same feature list every round for a region (eyes: outline_shape, height_to_width, eye_spacing,
+     iris_size, iris_colour, iris_pattern, pupil, highlight, sclera, upper_lid_line, lower_lid_line, brow_shape,
+     brow_position, brow_colour, flatness).
+   - Describe the reference first, then ours, **each on its own** in the same concrete terms: shape, size relative to
+     the eye/head, colour, position, thickness. No verdict words (better, worse, wrong, matches).
+   - **Measure anything measurable** - ratios, sizes, spacing - in pixels on the board or on the mesh, and write the
+     number into the description. Eyeballed proportions were wrong in practice (n49: "about half as tall" when both
+     eyes measured 0.60/0.61) and sent TypeSafe toward a wrong fix.
+   - Describe what is visible now, honestly, including when a correction changed nothing.
+3. **Judge (TypeSafe).** On the PC:
+   `python blender/tools/typesafe_visual_judge.py <analysis.json> blender/tools/visual_corrections/<region>.json <out.json> [--exclude id,id]`
+   It asks in one request: `analysis_usable` (are the descriptions concrete and comparable?), one yes/no per feature
+   (do the two descriptions describe the same look?), and `first_fix` (a choice over the menu plus "none"), then the
+   choice again with the options reversed. If the two orders disagree it re-asks with only the two candidates and
+   "none" in both orders. It outputs the features ranked by `p_same` and `first_fix.apply` (set only when the orders
+   agree and the analysis is usable).
+4. **Act (Claude).**
+   - `analysis` says rewrite → rewrite the descriptions, do not change the model.
+   - `apply` is set → make exactly that one step from its `setting`, rebuild/re-render, re-run the deterministic
+     checks (dataset bands, topology). If those fail, revert the step and report.
+   - `apply` is null (orders still disagree) → change nothing; report the two candidates.
+   - Features marked "needs a human" are shown to Sammy, not acted on.
+5. **Repeat** from step 1 with a new tag.
+   - The same fix chosen again with no visible change in its feature: apply it once more at double step; if it still
+     does not move, add it to `--exclude` and record why (n49: the eye-corner shape is limited by the head grid, the
+     knob had no visible effect).
+   - Stop when `first_fix` is "none", when every feature is "matches" or "needs a human", or after about five rounds;
+     then report the remaining off features honestly.
+
+## Writing a new region's menu
+
+One file per region in `blender/tools/visual_corrections/`. Each correction is one small step on one setting, phrased
+as the visible result ("Make the brows thicker"), with opposite pairs where both directions make sense (thicker /
+thinner, higher / lower). Keep 10-30 entries; TypeSafe always gets "none" added. When a correction is added because
+TypeSafe could not express a fix, note it in the menu's `note`.
+
+## Rules
+
+- TypeSafe never sees images or raw numbers alone; it reads Claude's descriptions (numbers inside a sentence are fine).
+- Claude never applies a correction TypeSafe did not choose with agreement, and never claims a match TypeSafe did not
+  report. The deterministic checks stay authoritative: a correction that breaks them is reverted.
+- Show Sammy the final board, the judge's ranked features, what was applied each round, and what is still off.

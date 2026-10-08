@@ -354,7 +354,7 @@ def painted_eyes(ob, col, LID, off_x, tag):
     bm = bmesh.new(); bm.from_mesh(ob.data); bm.verts.ensure_lookup_table()
     em = mhs3_eye_material(tag)
     lash_m = _emission("MAT_PaintLash_" + tag, (0.07, 0.03, 0.018, 1))
-    low_m = _emission("MAT_PaintLowLid_" + tag, (0.28, 0.12, 0.07, 1))
+    low_m = _emission("MAT_PaintLowLid_" + tag, (0.21, 0.09, 0.05, 1))
     brow_m = _emission("MAT_PaintBrow_" + tag, (0.18, 0.09, 0.035, 1), hatch=0.5)
     made = []
     for tagv, side in ((1, 1), (2, -1)):
@@ -403,19 +403,19 @@ def painted_eyes(ob, col, LID, off_x, tag):
         rows = []
         for k, i in enumerate(up):
             t = k / max(len(up) - 1, 1)
-            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.006 * t * t
+            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.0 * t * t   # TypeSafe upper_lid_line_even (x2): even thickness
             rows.append(row(i, float(th), inset=0.006))
-        wrap = low[1:max(3, int(len(low) * 0.30))]
+        wrap = low[1:max(3, int(len(low) * 0.22))]
         for k, i in enumerate(wrap):
             t = (k + 1) / (len(wrap) + 1)
-            rows.append(row(i, 0.018 * (1 - t) + 0.003 * t, inset=0.0025 * (1 - t)))
+            rows.append(row(i, 0.010 * (1 - t) + 0.003 * t, inset=0.0025 * (1 - t)))
         made.append(_strip("NewLidLine_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
         # lower lid line: thin, lighter brown, from the wrap to near the inner corner
-        seg = low[max(3, int(len(low) * 0.30)) - 1: int(len(low) * 0.88)]
+        seg = low[max(3, int(len(low) * 0.22)) - 1: int(len(low) * 0.95)]   # TypeSafe lower_lid_line_full
         rows = []
         for k, i in enumerate(seg):
             t = k / max(len(seg) - 1, 1)
-            rows.append(row(i, 0.0045 * (1 - 0.7 * t), inset=0.0005))
+            rows.append(row(i, 0.0055 * (1 - 0.6 * t), inset=0.0005))
         if len(rows) >= 2:
             made.append(_strip("NewLowLid_%s_%s" % (tag, "LR"[side < 0]), rows, low_m, col, off_x))
         # brow: blunt and thick at the inner end, angling up to a peak at ~65%, tapering out (MHS3 male)
@@ -426,7 +426,7 @@ def painted_eyes(ob, col, LID, off_x, tag):
         for k in range(14):
             t = k / 13
             x = cx + side * (-0.50 + 1.12 * t) * w
-            zc = ztop + S * (0.016 + 0.046 * t - 0.016 * t * t)            # straight diagonal, rising outward (MHS3 male)
+            zc = ztop + S * (0.016 + 0.046 * t - 0.016 * t * t + 0.010 * math.sin(math.pi * t))   # rising outward; TypeSafe brow_arch
             th = S * (0.040 * (1 - float(smooth(0.30, 1.0, np.array(t)))) + 0.0015)   # thick for a third, then tapering
             lo, hi = zc - th * 0.45, zc + th * 0.55
             if k == 0:

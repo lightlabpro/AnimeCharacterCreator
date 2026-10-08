@@ -1,0 +1,67 @@
+{
+ "region": "eyes",
+ "subject": "new head n49 (eye_rounder_corners applied twice, no visible change), eye close-ups vs the MHS3 frame, docs/qa/newhead/eyes_n49.png",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, male protagonist",
+ "features": {
+  "outline_shape": {
+   "reference": "wide rounded almond; both corners rounded; the lower lid is a deep smooth curve; the upper lid is a gentle arch peaking slightly toward the inner side",
+   "ours": "almond; the inner corner is slightly rounder than before but the outer corner is still a sharp point, made sharper by the dark lid line ending in a wedge past the eye; the upper lid rises steeply from the inner corner; the lower lid is a shallow slope"
+  },
+  "height_to_width": {
+   "reference": "the opening is a little more than half as tall as it is wide",
+   "ours": "the opening is about half as tall as it is wide"
+  },
+  "eye_spacing": {
+   "reference": "the gap between the two eyes is a little more than one eye width",
+   "ours": "the gap between the two eyes is about one eye width"
+  },
+  "iris_size": {
+   "reference": "a tall oval iris filling almost the whole eye height, about 45 percent of the eye width, top cut by the upper lid",
+   "ours": "a tall oval iris filling the whole eye height, about 40 percent of the eye width, top cut by the upper lid"
+  },
+  "iris_colour": {
+   "reference": "medium saturated green with a lighter mint area covering the lower half of the iris",
+   "ours": "medium saturated green, slightly darker, with a lighter mint area in the lower third of the iris"
+  },
+  "iris_pattern": {
+   "reference": "two or three thin dark concentric arcs on the inner side of the iris, clearly visible, plus a dark outline around the iris",
+   "ours": "two thin dark concentric arcs on the inner side of the iris, visible, plus a dark outline around the iris"
+  },
+  "pupil": {
+   "reference": "a dark vertical oval about a quarter of the iris width",
+   "ours": "a dark vertical oval about a quarter of the iris width"
+  },
+  "highlight": {
+   "reference": "one white horizontal oval at the inner edge of the iris, overlapping the white of the eye, at mid height",
+   "ours": "one white horizontal oval at the inner edge of the iris at mid height, plus a tiny second white dot low on the outer side"
+  },
+  "sclera": {
+   "reference": "light neutral grey, with a darker grey band under the upper lid",
+   "ours": "light grey with a slight lavender tint, with a darker grey-lavender band under the upper lid"
+  },
+  "upper_lid_line": {
+   "reference": "a medium dark-brown line of fairly even thickness, slightly thicker at the outer end, wrapping around the outer corner",
+   "ours": "a dark-brown line thin at the inner corner and growing into a thick wedge at the outer corner that ends in a point past the eye"
+  },
+  "lower_lid_line": {
+   "reference": "a thin brown line along the whole lower lid, joining the upper line at the outer corner",
+   "ours": "a thin, faint light-brown line along the middle part of the lower lid only"
+  },
+  "brow_shape": {
+   "reference": "a thick brush stroke with a blunt inner end, thickest in the first third, tapering to a point, with a gentle arch",
+   "ours": "a thick wedge with a blunt diagonal inner end, tapering to a long thin point, almost straight"
+  },
+  "brow_position": {
+   "reference": "close above the eye: at the inner end the gap is about a quarter of the eye height, rising toward the outer end",
+   "ours": "above the eye: at the inner end the gap is about a third of the eye height, rising toward the outer end"
+  },
+  "brow_colour": {
+   "reference": "dark brown with darker brush hatching",
+   "ours": "medium-dark brown with fine darker diagonal hatching"
+  },
+  "flatness": {
+   "reference": "the eye reads as flat paint on the skin with no depth or socket",
+   "ours": "the eye reads as flat paint on the skin with no depth or socket"
+  }
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "region": "eyes",
+ "subject": "new head n49 after lower_lid_line_full, eye close-ups vs the MHS3 frame, docs/qa/newhead/eyes_n49d.png; size and proportion rows measured in pixels on the board",
+ "features": [
+  {
+   "feature": "outline_shape",
+   "p_same": 0.03,
+   "confidence": 0.94,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.09,
+   "confidence": 0.82,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.14,
+   "confidence": 0.72,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.21,
+   "confidence": 0.58,
+   "verdict": "off"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.3,
+   "confidence": 0.4,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.38,
+   "confidence": 0.24,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.5,
+   "confidence": 0.0,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.54,
+   "confidence": 0.08,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.59,
+   "confidence": 0.18,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.87,
+   "confidence": 0.74,
+   "verdict": "matches"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.89,
+   "confidence": 0.78,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "brow_arch",
+  "order_b": "brow_arch",
+  "agree": true,
+  "tie_break": null,
+  "apply": "brow_arch",
+  "setting": "apply_look.py brow zc: add 0.010*sin(pi*t)"
+ }
+}
