@@ -22,8 +22,8 @@ BACK_ANGLE = math.radians(100)   # the back face covers the back of the skull wi
 LEVELS = 1
 
 # dataset landmarks (fractions of H above the chin; forward = -y), from mean_head / topology_dataset
-EYE_Z, EYE_X, EYE_HW, EYE_HH = 0.48, 0.175, 0.090, 0.050      # eye centre height, x, half width, half height
-MOUTH_Z, MOUTH_HW = 0.165, 0.105
+EYE_Z, EYE_X, EYE_HW, EYE_HH = 0.48, 0.178, 0.102, 0.072      # eye centre height, x, half width, half height
+MOUTH_Z, MOUTH_HW = 0.165, 0.085
 NOSE_Z, NOSE_FWD = 0.246, 0.470
 CHIN_Y = -0.386
 NECK_R, NECK_Y = 0.20, 0.03                                   # neck radius and centre (depth), H units
@@ -31,8 +31,8 @@ NECK_ON = False   # n29: the neck column is the analytic tube only; rays from C 
 #                   far down and stacked back-wall cells inside the tube (a hidden fold sheet)
 NAPE_Z = 0.20                                                 # skull base behind the neck (H)
 EAR_TOP, EAR_BOT, EAR_FRONT, EAR_BACK = 0.56, 0.31, 0.07, 0.22  # ear box (H; y front/back of the head centre)
-EYEBALL_R = 0.105                                             # eyeball radius (H)
-NOSE_GAIN = 0.065                                            # nose ridge height at the tip (H)
+EYEBALL_R = 0.118                                             # eyeball radius (H)
+NOSE_GAIN = 0.045                                            # nose ridge height at the tip (H)
 
 
 # ------------------------------------------------------------------ target surface
@@ -63,8 +63,8 @@ def feature_bumps(x, z, r0):
     d = np.zeros_like(x)
     # nose: ridge from the nasion down to the tip, narrow, growing toward the tip
     t = np.clip((0.40 - z) / (0.40 - NOSE_Z), 0, 1)
-    ridge = np.exp(-(x / (0.026 + 0.014 * t)) ** 2)
-    prof = np.where(z >= NOSE_Z, t ** 1.4, np.exp(-((z - NOSE_Z) / 0.024) ** 2))   # continuous at the tip, tucks in (n30: 0.017 was finer than the mesh, jagged underside)
+    ridge = np.exp(-(x / (0.020 + 0.014 * t)) ** 2)
+    prof = np.where(z >= NOSE_Z, t ** 2.4, np.exp(-((z - NOSE_Z) / 0.024) ** 2))   # continuous at the tip, tucks in (n30: 0.017 was finer than the mesh, jagged underside)
     d += NOSE_GAIN * prof * ridge
     d += 0.010 * g2(ax, z, 0.040, NOSE_Z + 0.005, 0.020, 0.018)                      # nostril wings
     # eye sockets and brow
@@ -240,7 +240,7 @@ def rings_from_hole(bm, hole, n):
 def cut_eye(bm, F, side):
     """O-grid eye: the block of front cells around the eye becomes concentric rings around an almond opening."""
     ex = side * EYE_X
-    blk = front_cells(F, lambda f: abs(f.calc_center_median().x - ex) < EYE_HW * 1.6 and abs(f.calc_center_median().z - EYE_Z) < EYE_HH * 1.6)
+    blk = front_cells(F, lambda f: abs(f.calc_center_median().x - ex) < EYE_HW * 1.3 and abs(f.calc_center_median().z - EYE_Z) < EYE_HH * 1.6)
     outer = orient_ccw(ordered_loop(region_boundary(blk)), (ex, EYE_Z))
     rings = [outer]
     for th in (0.0, 0.0, 0.0):                      # three new rings; positions are set below
@@ -607,7 +607,23 @@ def main(out, levels=LEVELS):
     add_ears(bmf)
     save(bmf, out)
     import json
-    json.dump({"eyes": [[c * 0.262 + o for c, o in zip(eyeball_centre(s_), (0, 0, 1.4826))] for s_ in (1, -1)],
+    # n34: seat each eyeball just behind the skin: push it back until no skin vertex is inside it (the larger anime
+    # eyeball poked through the lower lid at the outer corner)
+    # the lid rim (the turned-in rings at the opening, which tuck around the ball by design) does not count
+    near = {v for v in bmf.verts if v.is_boundary and abs(abs(v.co.x) - EYE_X) < EYE_HW * 1.6 and abs(v.co.z - EYE_Z) < EYE_HH * 2}
+    for _ in range(3):
+        near |= {e.other_vert(v) for v in near for e in v.link_edges}
+    Vs = np.array([v.co[:] for v in bmf.verts if v not in near])
+    cents = []
+    for s_ in (1, -1):
+        c = np.array(eyeball_centre(s_), float)
+        for _ in range(200):
+            if (np.linalg.norm(Vs - c, axis=1) < EYEBALL_R * 0.995).sum() == 0:
+                break
+            c[1] += 0.001
+        cents.append(c)
+    print("eyeball centre y", [round(float(c[1]), 3) for c in cents])
+    json.dump({"eyes": [[c * 0.262 + o for c, o in zip(cc, (0, 0, 1.4826))] for cc in cents],
                "eye_r": EYEBALL_R * 0.262}, open(out.replace(".npz", "_eyes.json"), "w"))
     print("cage faces", len(bm.faces), "final faces", len(bmf.faces))
     return bm
