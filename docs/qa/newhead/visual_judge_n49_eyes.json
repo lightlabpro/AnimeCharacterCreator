@@ -1,0 +1,108 @@
+{
+ "region": "eyes",
+ "subject": "new head n49 (eye_rounder_corners applied twice, no visible change), eye close-ups vs the MHS3 frame, docs/qa/newhead/eyes_n49.png",
+ "features": [
+  {
+   "feature": "outline_shape",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.05,
+   "confidence": 0.9,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.09,
+   "confidence": 0.82,
+   "verdict": "off"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.24,
+   "confidence": 0.52,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.29,
+   "confidence": 0.42,
+   "verdict": "off"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.51,
+   "confidence": 0.02,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "upper_lid_line_even",
+  "order_b": "upper_lid_line_even",
+  "agree": true,
+  "apply": "upper_lid_line_even",
+  "setting": "apply_look.py upper lid th: outer term 0.006*t^2 -> 0.003*t^2, wrap start 0.018 -> 0.012"
+ }
+}

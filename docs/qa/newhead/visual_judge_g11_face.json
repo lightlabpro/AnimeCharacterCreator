@@ -1,0 +1,62 @@
+{
+ "region": "face",
+ "subject": "round g11 (after outline_darker, OUTLINE_DARK 1.5), face_g11.png",
+ "features": [
+  {
+   "feature": "face_shadow",
+   "p_same": 0.19,
+   "confidence": 0.62,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.45,
+   "confidence": 0.1,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.55,
+   "confidence": 0.1,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.64,
+   "confidence": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.9,
+  "confidence": 0.8,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "chin_narrower",
+  "order_b": "chin_narrower",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "chin_narrower",
+    "outline_darker"
+   ],
+   "order_a": "chin_narrower",
+   "order_b": "chin_narrower"
+  },
+  "apply": "chin_narrower",
+  "setting": "build_head.py CHIN_TAPER +0.08"
+ }
+}

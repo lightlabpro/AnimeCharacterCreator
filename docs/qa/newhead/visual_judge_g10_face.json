@@ -1,0 +1,55 @@
+{
+ "region": "face",
+ "subject": "round g10 (after chin_lit 1.0), face_g10.png",
+ "features": [
+  {
+   "feature": "face_shadow",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.27,
+   "confidence": 0.46,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.42,
+   "confidence": 0.16,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.6,
+   "confidence": 0.2,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.9,
+  "confidence": 0.8,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "outline_darker",
+  "order_b": "outline_darker",
+  "agree": true,
+  "tie_break": null,
+  "apply": "outline_darker",
+  "setting": "apply_look.py OUTLINE_DARK x1.5"
+ }
+}

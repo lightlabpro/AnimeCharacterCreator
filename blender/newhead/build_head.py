@@ -32,6 +32,7 @@ NECK_ON = False   # n29: the neck column is the analytic tube only; rays from C 
 NAPE_Z = 0.20                                                 # skull base behind the neck (H)
 EAR_TOP, EAR_BOT, EAR_FRONT, EAR_BACK = 0.605, 0.190, 0.045, 0.195  # ear box (H; y front/back of the head centre)
 EYEBALL_R = 0.118                                             # eyeball radius (H)
+CHIN_TAPER = 0.16     # narrows the jaw toward the chin (reference-match judge knob)
 NOSE_GAIN = 0.045                                            # nose ridge height at the tip (H)
 
 
@@ -115,6 +116,13 @@ def target_point(d):
         rn = neck_exit(d)
         k = 22.0
         r = np.where(rn > 0, np.log(np.exp(k * r) + np.exp(k * rn)) / k, r)
+    if CHIN_TAPER:
+        # radial (stays on the ray, as the fit expects): pull in sideways-facing directions near the chin
+        pz = surf.C[2] + d[:, 2] * r
+        t = np.clip((0.20 - pz) / 0.20, 0, 1)
+        t = t * t * (3 - 2 * t) * (d[:, 1] < 0.2)
+        side = np.abs(d[:, 0]) / np.maximum(np.hypot(d[:, 0], d[:, 1]), 1e-9)
+        r = r * (1 - CHIN_TAPER * t * side)
     return surf.C + d * r[:, None]
 
 
@@ -728,7 +736,9 @@ def save(bm, out):
     D = np.array([v[lay] for v in bm.verts], np.float32) if lay is not None else np.zeros(len(V), np.float32)
     ll = bm.verts.layers.int.get("lid")
     LID = np.array([v[ll] for v in bm.verts], np.int8) if ll is not None else np.zeros(len(V), np.int8)
-    np.savez(out, V=V * 0.262 + np.array([0, 0, 1.4826]), PL=np.array(PL), PS=np.array(PS), T=np.zeros((0, 3), int), ear_dark=D, lid=LID)
+    el = bm.verts.layers.float.get("ear_line")
+    EL = np.array([v[el] for v in bm.verts], np.float32) if el is not None else np.zeros(len(V), np.float32)
+    np.savez(out, V=V * 0.262 + np.array([0, 0, 1.4826]), PL=np.array(PL), PS=np.array(PS), T=np.zeros((0, 3), int), ear_dark=D, lid=LID, ear_line=EL)
 
 
 if __name__ == "__main__":

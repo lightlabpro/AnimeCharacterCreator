@@ -1,0 +1,20 @@
+{
+ "region": "ears",
+ "note": "Each correction is one step on one setting. Claude applies the step, re-renders and re-runs the judge. g12: first ears menu.",
+ "corrections": [
+  {"id": "ear_lit", "description": "Light the ear so it reads as lit skin instead of sitting in shadow.", "setting": "apply_look.py EAR_LIT +1.0 (ear normals blended 0.45 per step toward the lit face direction)"},
+  {"id": "ear_darker", "description": "Put more of the ear into shadow.", "setting": "apply_look.py EAR_LIT -1.0"},
+  {"id": "add_ear_inner_line", "description": "Paint a dark-brown line along the inner side of the rim (helix) over the top and back of the ear.", "setting": "apply_look.py EAR_LINE 0 -> 1"},
+  {"id": "ear_inner_line_thicker", "description": "Make the dark line inside the ear rim thicker.", "setting": "apply_look.py EAR_LINE +0.5"},
+  {"id": "ear_inner_line_thinner", "description": "Make the dark line inside the ear rim thinner.", "setting": "apply_look.py EAR_LINE -0.3"},
+  {"id": "concha_mauve", "description": "Give the shadowed bowl in the middle of the ear (concha) a mauve, pinkish-brown colour.", "setting": "apply_look.py EAR_TINT +1.0"},
+  {"id": "concha_shadow_bigger", "description": "Make the dark shadow shape inside the ear bigger.", "setting": "apply_look.py EAR_BOWL +1.0"},
+  {"id": "concha_shadow_smaller", "description": "Make the dark shadow shape inside the ear smaller.", "setting": "apply_look.py EAR_BOWL -1.0"},
+  {"id": "ear_narrower", "description": "Make the ear narrower relative to its height.", "setting": "ears_nh.py EAR_W -0.04"},
+  {"id": "ear_wider", "description": "Make the ear wider relative to its height.", "setting": "ears_nh.py EAR_W +0.04"},
+  {"id": "ear_taller", "description": "Make the ear taller (top higher).", "setting": "build_head.py EAR_TOP +0.02"},
+  {"id": "ear_shorter", "description": "Make the ear shorter (top lower).", "setting": "build_head.py EAR_TOP -0.02"},
+  {"id": "ear_closer_to_head", "description": "Make the ear lie closer to the side of the head.", "setting": "ears_nh.py EAR_FLARE_DEG -5"},
+  {"id": "ear_stand_out", "description": "Make the ear stand out more from the side of the head.", "setting": "ears_nh.py EAR_FLARE_DEG +5"}
+ ]
+}

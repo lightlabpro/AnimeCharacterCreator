@@ -1,0 +1,67 @@
+{
+ "region": "ears",
+ "subject": "round e4 (after add_ear_inner_line, EAR_LINE 1.0), ear_e4.png",
+ "features": [
+  {
+   "feature": "inner_line",
+   "p_same": 0.04,
+   "confidence": 0.92,
+   "verdict": "off"
+  },
+  {
+   "feature": "rim_highlight",
+   "p_same": 0.11,
+   "confidence": 0.78,
+   "verdict": "off"
+  },
+  {
+   "feature": "concha",
+   "p_same": 0.17,
+   "confidence": 0.66,
+   "verdict": "off"
+  },
+  {
+   "feature": "shape_ratio",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "stand_off",
+   "p_same": 0.25,
+   "confidence": 0.5,
+   "verdict": "off"
+  },
+  {
+   "feature": "ear_lighting",
+   "p_same": 0.32,
+   "confidence": 0.36,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "size_position",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.91,
+  "confidence": 0.82,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "ear_inner_line_thicker",
+  "order_b": "ear_inner_line_thicker",
+  "agree": true,
+  "tie_break": null,
+  "apply": "ear_inner_line_thicker",
+  "setting": "apply_look.py EAR_LINE +0.5"
+ }
+}

@@ -15,7 +15,7 @@ option orders, answers under 0.4 confidence go to a human.
 Files (repo `AnimeCharacterCreator-main`):
 - `blender/tools/typesafe_visual_judge.py` - the judge (runs on Sammy's PC, key from TYPESAFE_API_KEY; never fake a
   judgment if it is missing).
-- `blender/tools/visual_corrections/<region>.json` - the correction menu per region (eyes.json exists). Each entry:
+- `blender/tools/visual_corrections/<region>.json` - the correction menu per region (eyes, nose_mouth, face, ears exist). Each entry:
   `id`, a plain description, and the exact `setting` in code it changes (one step).
 - `docs/qa/<work>/visual_<tag>_<region>.json` - Claude's analysis for one render; `visual_judge_<tag>_<region>.json`
   - TypeSafe's result.
@@ -35,6 +35,11 @@ Files (repo `AnimeCharacterCreator-main`):
      number into the description. Eyeballed proportions were wrong in practice (n49: "about half as tall" when both
      eyes measured 0.60/0.61) and sent TypeSafe toward a wrong fix.
    - Describe what is visible now, honestly, including when a correction changed nothing.
+   - Note what the reference cannot show, inside the description, so TypeSafe does not chase it: an open mouth in the
+     reference when ours is closed (nose/mouth f4: mouth_line_wider was picked four times), a skull hidden under hair
+     (leave the skull out of the shadow comparison).
+   - Put a second view in the board when one view hides the problem (front + 3/4 for the face; a close-up crop for
+     small features like ears), and check the whole head after a local change (ears e3: a box mask lit the skull).
 3. **Judge (TypeSafe).** On the PC:
    `python blender/tools/typesafe_visual_judge.py <analysis.json> blender/tools/visual_corrections/<region>.json <out.json> [--exclude id,id]`
    It asks in one request: `analysis_usable` (are the descriptions concrete and comparable?), one yes/no per feature
@@ -52,8 +57,20 @@ Files (repo `AnimeCharacterCreator-main`):
    - The same fix chosen again with no visible change in its feature: apply it once more at double step; if it still
      does not move, add it to `--exclude` and record why (n49: the eye-corner shape is limited by the head grid, the
      knob had no visible effect).
-   - Stop when `first_fix` is "none", when every feature is "matches" or "needs a human", or after about five rounds;
-     then report the remaining off features honestly.
+   - When a knob is excluded because it had no effect, exclude its opposite too (face g8: face_shadow_smaller and
+     face_shadow_bigger). Exclude `add_*` entries once applied; later rounds use the thicker/thinner entries.
+   - Before excluding a knob for "no effect", check what actually produces the feature (read the shade mask, the
+     attribute values, the geometry normals). If the knob is aimed at the wrong cause, fix the knob's implementation
+     so its menu step reaches the real cause, note it in the menu `note`, and keep the entry (face g9: the chin patch
+     was the forced jaw-underside shade, not the normal blend; ears e5: the helix-line band covered only 9 vertices
+     per ear on the coarse grid). Re-measure the pixel change after every step (`>30` RGB difference fraction); under
+     1% means the step did nothing.
+   - A pick that contradicts a measured number in the analysis (e.g. "wider" when ours already measures wider) is
+     declined and reported, not applied; that feature goes to Sammy.
+   - Deterministic checks after a geometry step: dataset bands, topology (quads only), skin skew. A step that pushes
+     a band out is reverted and excluded (face g11: chin_narrower took width@0.85 below the band).
+   - Stop when `first_fix` is "none", when the two orders (and the tie-break) still disagree, when every feature is
+     "matches" or "needs a human", or after about five rounds; then report the remaining off features honestly.
 
 ## Writing a new region's menu
 

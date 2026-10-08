@@ -19,8 +19,10 @@ import face_layout as L
 
 N_R, N_T = 6, 20   # iter26: dataset topology - whole anime heads median 2.8k faces; the old 9 x 40 ear pair alone was 1.5k
 LEAN = math.radians(17.0)          # long axis leans back
-FLARE = math.radians(24.0)         # angle between the ear and the side of the head
+FLARE = math.radians(24.0)         # angle between the ear and the side of the head (build_one reads EAR_FLARE_DEG)
 THICK = 0.0026
+EAR_W = 0.52          # ear width / height (reference-match judge knob)
+EAR_FLARE_DEG = 24.0  # judge knob: how far the ear stands off the head
 EAR_GRID = 6           # iter26: O-grid, 6 x 6 centre + 4 rings of 24 (132 quads per ear face)
 
 
@@ -80,18 +82,23 @@ def _relief(r, t, a, b, H, W):
     h += 0.030 * H * lobe * (1 - r)
     groove = math.exp(-((r - 0.70) / 0.05) ** 2) * rim_mask * (1 - lobe) * max(0.0, s + 0.35)
     _relief.dark = max(conc ** 0.7, 0.9 * groove)
+    # g12: MHS3 paints a dark line on the inner side of the helix (top and back, fading at the lobe and front)
+    _relief.line = math.exp(-((r - 0.77) / 0.09) ** 2) * rim_mask * (1 - lobe) * min(1.0, max(0.0, (s + 0.55) / 0.4))
     return h
 
 
 def build_one(s, H=None, W=None):
     """s = +1 his left, -1 his right. Returns a bmesh in body space."""
     H = H or (FF.EAR_TOP - FF.EAR_BOT) * 1.02
-    W = W or H * 0.56
+    W = W or H * EAR_W
+    global FLARE
+    FLARE = math.radians(EAR_FLARE_DEG)
     zc = (FF.EAR_TOP + FF.EAR_BOT) / 2
     yc = (FF.EAR_FRONT + FF.EAR_BACK) / 2 + 0.0005
     xs = abs(FF.surface_x(yc, zc, s))
     bm = bmesh.new()
     dl = bm.verts.layers.float.new("ear_dark")
+    ll = bm.verts.layers.float.new("ear_line")
     # iter26: the shell is an O-grid: a square quad grid in the middle (concha and antihelix) and quad rings out to the
     # outline (helix). All quads, no radial pole and no 180-degree corner quads (dataset topology check).
     ca, sa = math.cos(LEAN), math.sin(LEAN)
@@ -198,11 +205,13 @@ def build_one(s, H=None, W=None):
         y = yc - aa
         z = zc + bb
         flare = max(0.0, (W / 2 - aa)) * math.tan(FLARE)
-        return y, z, flare, h, _relief.dark
+        return y, z, flare, h, (_relief.dark, _relief.line)
 
     def vert(y, z, out, dark):
         vv = bm.verts.new((s * (abs(FF.surface_x(y, z, s)) + out), y, z))
-        vv[dl] = dark
+        dk, ln = dark if isinstance(dark, tuple) else (dark, 0.0)
+        vv[dl] = dk
+        vv[ll] = ln
         return vv
 
     vv_ = []

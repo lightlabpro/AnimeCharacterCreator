@@ -1,0 +1,62 @@
+{
+ "region": "face",
+ "subject": "new head n49 after the eye and nose/mouth passes: face close-ups front and 3/4 (left) vs the MHS3 protagonist frame in 3/4 (right), docs/qa/newhead/face_f9.png; widths measured in pixels",
+ "features": [
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.01,
+   "confidence": 0.98,
+   "verdict": "off"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "face_shadow",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.92,
+  "confidence": 0.84,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "chin_narrower",
+  "order_b": "chin_narrower",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "chin_narrower",
+    "face_shadow_smaller"
+   ],
+   "order_a": "chin_narrower",
+   "order_b": "chin_narrower"
+  },
+  "apply": "chin_narrower",
+  "setting": "build_head.py CHIN_TAPER +0.08"
+ }
+}

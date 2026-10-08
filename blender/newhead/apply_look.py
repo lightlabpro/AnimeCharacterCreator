@@ -26,6 +26,23 @@ MOUTH_Z, MOUTH_HW = 0.165, 0.085
 NOSE_Z = 0.246
 NECK_Y = 0.03
 SKIN = (0.807, 0.558, 0.402, 1)
+# painted face strokes (MHS3 draws the nose and mouth as lines); 0 = off. Tuned by the reference-match judge.
+NOSE_LINE = 1.0          # line down the shadow side of the nose bridge: thickness factor
+NOSE_LINE_LEN = 1.15      # its length (1 = from under the brow to the nose tip)
+NOSE_LINE_X = 0.012        # extra offset toward the shadow side (H)
+NOSTRIL = 1.0            # nostril mark on the shadow side: size factor
+MOUTH_LINE = 1.0         # painted mouth line: thickness factor
+MOUTH_LINE_W = 1.6       # its width relative to the mouth opening
+FACE_FORWARD = 2.5       # how much the face normals turn toward the viewer (bigger = shadow only at the far edge)
+OUTLINE_W = 0.0015       # outline width (m)
+OUTLINE_DARK = 1.5       # outline darkness factor (1 = current colour)
+CHIN_LIT = 1.0           # 0..1: lowers where the face plane / normal blend fade out, so the chin front is lit (g7)
+LIP_SHADOW = 1.0         # short shadow stroke under the lower lip: thickness factor
+# ears (g12, reference-match judge knobs; 0 = off)
+EAR_LIT = 2.0            # turns the ear normals toward the lit face direction (MHS3 ears read lit, not in shadow)
+EAR_LINE = 1.5           # painted dark line on the inner side of the helix: 1 = on, higher = thicker
+EAR_TINT = 0.0           # mauve tint in the concha shadow
+EAR_BOWL = 0.0           # grows (+) / shrinks (-) the forced concha shadow
 
 
 def smooth(e0, e1, x):
@@ -54,6 +71,10 @@ def load(npz, tag, off_x):
     ob.location.x = off_x
     D = d["ear_dark"] if "ear_dark" in d.files else np.zeros(len(V))
     LID = d["lid"] if "lid" in d.files else np.zeros(len(V), np.int8)
+    EL = d["ear_line"] if "ear_line" in d.files else np.zeros(len(V), np.float32)
+    for nm, val in (("ear_line", EL), ("ear_bowl", smooth(0.35, 0.60, D))):
+        a = me.attributes.get(nm) or me.attributes.new(nm, "FLOAT", "POINT")
+        a.data.foreach_set("value", np.asarray(val, np.float32))
     return ob, col, V, D, LID
 
 
@@ -70,10 +91,11 @@ def vertex_normals(me):
 def shade_mask(me, P, D, N):
     x, y, z = np.abs(P[:, 0]), P[:, 1], P[:, 2]
     shade = np.ones(len(P))
-    shade = np.minimum(shade, 1 - 0.75 * smooth(0.35, 0.60, D))                       # ear bowl + rim groove
+    shade = np.minimum(shade, 1 - 0.75 * smooth(0.35 - 0.08 * EAR_BOWL, 0.60 - 0.08 * EAR_BOWL, D))  # ear bowl + rim groove
     nose = (x < 0.035) & (y < -0.36) & (z < NOSE_Z + 0.004) & (z > NOSE_Z - 0.045) & (N[:, 2] < -0.25)
     shade = np.where(nose, 0.25, shade)                                              # under the nose tip
     under = smooth(-0.30, -0.55, N[:, 2]) * (1 - smooth(0.10, 0.16, z)) * (z > -0.05)
+    under = under * (1 - min(1.0, 2 * CHIN_LIT) * smooth(-0.18, -0.24, y))             # g9: chin front stays lit (MHS3: shadow falls on the neck)
     shade = np.minimum(shade, 1 - 0.70 * under)                                       # jaw underside
     ra = np.hypot(P[:, 0] / 0.20, (y - NECK_Y) / (0.20 * 0.92))
     neck = (z < 0.24) & (z > -0.16) & (ra < 1.12)                                     # the whole neck under the head
@@ -84,6 +106,22 @@ def shade_mask(me, P, D, N):
     return shade
 
 
+def main_component(me):
+    """True for vertices in the largest connected piece (the head skin); the ear shells are separate pieces."""
+    n = len(me.vertices); E = np.zeros(len(me.edges) * 2, int); me.edges.foreach_get("vertices", E); E = E.reshape(-1, 2)
+    par = np.arange(n)
+    def root(i):
+        while par[i] != i:
+            par[i] = par[par[i]]; i = par[i]
+        return i
+    for a, b in E:
+        ra, rb = root(a), root(b)
+        if ra != rb:
+            par[ra] = rb
+    r = np.array([root(i) for i in range(n)])
+    return r == np.bincount(r).argmax()
+
+
 def custom_normals(me, P, D, N):
     x, y, z = P[:, 0], P[:, 1], P[:, 2]
     c, r = np.array([0.0, -0.02, 0.47]), np.array([0.40, 0.46, 0.56])
@@ -91,19 +129,25 @@ def custom_normals(me, P, D, N):
     pe /= np.linalg.norm(pe, axis=1, keepdims=True)
     pc = np.stack([x, y - NECK_Y, np.zeros_like(x)], 1)
     pc /= np.maximum(np.linalg.norm(pc, axis=1, keepdims=True), 1e-9)
-    w = 0.96 * smooth(0.04, 0.12, z)                                                  # whole head above the jaw (n41b: 0.8 front-only left a jagged edge)
+    lo = 0.07 * CHIN_LIT
+    w = 0.96 * smooth(0.04 - lo, 0.12 - lo, z)                                                  # whole head above the jaw (n41b: 0.8 front-only left a jagged edge)
     de = np.sqrt(((np.abs(x) - EYE_X) / (EYE_HW * 1.5)) ** 2 + ((z - EYE_Z) / (EYE_HH * 2.0)) ** 2)
     w *= 0.55 + 0.45 * smooth(0.9, 1.15, de)                                          # only the lid itself keeps some form
     dm = np.sqrt((x / (MOUTH_HW * 1.6)) ** 2 + ((z - MOUTH_Z) / 0.05) ** 2)
     w *= 0.8 + 0.2 * smooth(0.6, 1.0, dm)
     # MHS3 face plane: the front of the face is turned toward the viewer (lit), the shadow stays on the far cheek
-    face = smooth(0.0, -0.25, y) * smooth(0.05, 0.15, z) * (1 - smooth(0.62, 0.75, z))
-    pe = pe + np.array([0.0, -0.9, 0.0]) * face[:, None]
+    face = smooth(0.0, -0.25, y) * smooth(0.05 - lo, 0.15 - lo, z) * (1 - smooth(0.62, 0.75, z))
+    pe = pe + np.array([0.0, -FACE_FORWARD, 0.0]) * face[:, None]
     pe /= np.linalg.norm(pe, axis=1, keepdims=True)
     w *= (D < 0.01) & (np.abs(x) < 0.33)                                              # ears keep their own
     wn = 0.8 * (1 - smooth(-0.02, 0.06, z)) * (z > -0.6)                               # neck column
     tgt = pe * w[:, None] + pc * wn[:, None]
     n = N * (1 - w - wn)[:, None] + tgt
+    if EAR_LIT:
+        ear = ~main_component(me)                                                     # the ear shells only (e3: a box mask lit the skull)
+        k = min(0.9, 0.45 * EAR_LIT) * ear
+        lit = np.array([0.0, -1.0, 0.25]) / np.linalg.norm([0.0, -1.0, 0.25])
+        n = n * (1 - k)[:, None] + lit * k[:, None]
     n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-9)
     me.normals_split_custom_set_from_vertices([tuple(v) for v in n])
 
@@ -119,7 +163,26 @@ def skin_material(tag):
     g.inputs["blush_strength"].default_value = 0.0
     at = nt.nodes.new("ShaderNodeAttribute"); at.attribute_name = "shade"; at.location = (-300, -200)
     nt.links.new(at.outputs["Fac"], g.inputs["Shadow Mask"])
-    nt.links.new(g.outputs["Shader"], out.inputs["Surface"])
+    last = g.outputs["Shader"]
+    if EAR_TINT:      # mauve concha
+        ab = nt.nodes.new("ShaderNodeAttribute"); ab.attribute_name = "ear_bowl"
+        mf = nt.nodes.new("ShaderNodeMath"); mf.operation = "MULTIPLY"; mf.inputs[1].default_value = min(0.9, 0.45 * EAR_TINT)
+        nt.links.new(ab.outputs["Fac"], mf.inputs[0])
+        em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.26, 0.13, 0.14, 1)
+        mx = nt.nodes.new("ShaderNodeMixShader")
+        nt.links.new(mf.outputs[0], mx.inputs["Fac"]); nt.links.new(last, mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
+        last = mx.outputs[0]
+    if EAR_LINE:      # painted inner-helix line
+        al = nt.nodes.new("ShaderNodeAttribute"); al.attribute_name = "ear_line"
+        t0 = 0.62 - 0.12 * (EAR_LINE - 1)
+        mr = nt.nodes.new("ShaderNodeMapRange"); mr.clamp = True
+        mr.inputs["From Min"].default_value = t0; mr.inputs["From Max"].default_value = t0 + 0.06
+        nt.links.new(al.outputs["Fac"], mr.inputs["Value"])
+        em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.21, 0.09, 0.05, 1)
+        mx = nt.nodes.new("ShaderNodeMixShader")
+        nt.links.new(mr.outputs["Result"], mx.inputs["Fac"]); nt.links.new(last, mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
+        last = mx.outputs[0]
+    nt.links.new(last, out.inputs["Surface"])
     return m
 
 
@@ -133,7 +196,7 @@ def outline_material(tag):
     m.use_backface_culling = True
     em = next((n for n in m.node_tree.nodes if n.type == "EMISSION"), None) if m.use_nodes else None
     if em:
-        em.inputs["Color"].default_value = (0.30, 0.15, 0.10, 1)      # dark warm brown: a darker shade of the skin
+        em.inputs["Color"].default_value = (0.30 / OUTLINE_DARK, 0.15 / OUTLINE_DARK, 0.10 / OUTLINE_DARK, 1)   # dark warm brown
     return m
 
 
@@ -184,7 +247,7 @@ def outline(ob, P, D):
     for i, wi in enumerate(w):
         vg.add([i], float(wi), "REPLACE")
     md = ob.modifiers.get("Outline") or ob.modifiers.new("Outline", "SOLIDIFY")
-    md.thickness = 0.0011
+    md.thickness = OUTLINE_W
     md.offset = 1.0
     md.use_flip_normals = True
     md.use_rim = False
@@ -260,7 +323,7 @@ class _NB:
         return self.m("SQRT", self.m("ADD", self.m("MULTIPLY", a, a), self.m("MULTIPLY", b, b)))
 
 
-def mhs3_eye_material(tag, iris=(0.10, 0.33, 0.12, 1), R=1.10):
+def mhs3_eye_material(tag, iris=(0.10, 0.33, 0.12, 1), R=1.02):   # TypeSafe iris_smaller
     """MHS3 painted iris (from the official frames): flat green, dark outline, two dark concentric arcs on the
     left, a big light-green area in the lower half, a darker top under the lid, a vertical oval pupil, one white
     highlight half outside the iris on the left and a small one low right; grey-blue sclera with a grey band under
@@ -403,12 +466,12 @@ def painted_eyes(ob, col, LID, off_x, tag):
         rows = []
         for k, i in enumerate(up):
             t = k / max(len(up) - 1, 1)
-            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.0 * t * t   # TypeSafe upper_lid_line_even (x2): even thickness
+            th = 0.003 + 0.011 * smooth(0.0, 0.3, np.array(t)) + 0.0 * t * t - 0.004 * float(smooth(0.85, 1.0, np.array(t)))   # TypeSafe upper_lid_line_even (x3): even, tapered end
             rows.append(row(i, float(th), inset=0.006))
         wrap = low[1:max(3, int(len(low) * 0.22))]
         for k, i in enumerate(wrap):
             t = (k + 1) / (len(wrap) + 1)
-            rows.append(row(i, 0.010 * (1 - t) + 0.003 * t, inset=0.0025 * (1 - t)))
+            rows.append(row(i, 0.007 * (1 - t) + 0.003 * t, inset=0.0025 * (1 - t)))
         made.append(_strip("NewLidLine_%s_%s" % (tag, "LR"[side < 0]), rows, lash_m, col, off_x))
         # lower lid line: thin, lighter brown, from the wrap to near the inner corner
         seg = low[max(3, int(len(low) * 0.22)) - 1: int(len(low) * 0.95)]   # TypeSafe lower_lid_line_full
@@ -426,7 +489,7 @@ def painted_eyes(ob, col, LID, off_x, tag):
         for k in range(14):
             t = k / 13
             x = cx + side * (-0.50 + 1.12 * t) * w
-            zc = ztop + S * (0.016 + 0.046 * t - 0.016 * t * t + 0.010 * math.sin(math.pi * t))   # rising outward; TypeSafe brow_arch
+            zc = ztop + S * (0.000 + 0.046 * t - 0.016 * t * t + 0.010 * math.sin(math.pi * t))   # rising outward; TypeSafe brow_arch
             th = S * (0.040 * (1 - float(smooth(0.30, 1.0, np.array(t)))) + 0.0015)   # thick for a third, then tapering
             lo, hi = zc - th * 0.45, zc + th * 0.55
             if k == 0:
@@ -438,6 +501,60 @@ def painted_eyes(ob, col, LID, off_x, tag):
             rows.append(tuple(pair))
         made.append(_strip("NewBrow_%s_%s" % (tag, "LR"[side < 0]), rows, brow_m, col, off_x))
     bm.free()
+    return made
+
+
+def face_strokes(ob, col, off_x, tag):
+    """MHS3 nose and mouth as flat painted strokes on the skin (each off at 0)."""
+    tree = _bvh(ob)
+    made = []
+
+    def on_skin(x, z, lift=0.0008):
+        # front-most skin around the point: rays that fall into the mouth opening land deep inside it
+        best = None
+        for dz in (0.0, -0.006, 0.006, -0.012, 0.012):
+            loc, nrm, _, _ = tree.ray_cast(Vector((x * S, -1.0, O + (z + dz) * S)), Vector((0, 1, 0)))
+            if loc is not None and (best is None or loc.y < best[0].y - 0.0015):
+                best = (loc, nrm)
+        if best is None:
+            return None
+        loc, nrm = best
+        return Vector((x * S, loc.y, O + z * S)) + Vector((0, -1, 0)) * lift
+
+    def stroke(name, pts, widths, mat, lift=0.0008):
+        rows = []
+        for i, ((x, z), w) in enumerate(zip(pts, widths)):
+            j = min(i + 1, len(pts) - 1); k = max(i - 1, 0)
+            tx, tz = pts[j][0] - pts[k][0], pts[j][1] - pts[k][1]
+            L = math.hypot(tx, tz) or 1.0
+            nx, nz = -tz / L, tx / L
+            a_ = on_skin(x - nx * w / 2, z - nz * w / 2, lift); b_ = on_skin(x + nx * w / 2, z + nz * w / 2, lift)
+            if a_ is not None and b_ is not None:
+                rows.append((a_, b_))
+        if len(rows) >= 2:
+            made.append(_strip(name + "_" + tag, rows, mat, col, off_x))
+    line_m = _emission("MAT_PaintFaceLine_" + tag, (0.12, 0.05, 0.03, 1))
+    mouth_m = _emission("MAT_PaintMouth_" + tag, (0.10, 0.025, 0.02, 1))
+    if NOSE_LINE > 0:
+        n = 10
+        z0, z1 = EYE_Z + 0.02, EYE_Z - (EYE_Z - NOSE_Z - 0.01) * NOSE_LINE_LEN
+        pts = [(0.040 + NOSE_LINE_X - 0.012 * (i / (n - 1)) ** 1.5, z0 + (z1 - z0) * i / (n - 1)) for i in range(n)]
+        wid = [0.0035 * NOSE_LINE * (0.4 + 0.6 * math.sin(math.pi * min(1.0, 0.15 + i / (n - 1)))) for i in range(n)]
+        stroke("NewNoseLine", pts, wid, line_m)
+    if NOSTRIL > 0:
+        pts = [(0.012, NOSE_Z - 0.010), (0.022, NOSE_Z - 0.014), (0.030, NOSE_Z - 0.010)]
+        stroke("NewNostril", pts, [0.004 * NOSTRIL, 0.006 * NOSTRIL, 0.003 * NOSTRIL], line_m)
+    if MOUTH_LINE > 0:
+        n = 13
+        w = MOUTH_HW * MOUTH_LINE_W
+        pts = [(-w + 2 * w * i / (n - 1), MOUTH_Z + 0.004 - 0.010 * ((-1 + 2 * i / (n - 1)) ** 2)) for i in range(n)]
+        wid = [0.006 * MOUTH_LINE * (0.25 + 0.75 * math.sin(math.pi * i / (n - 1))) for i in range(n)]
+        stroke("NewMouthLine", pts, wid, mouth_m, lift=0.0018)   # clears the lip bulge (it hid the line in dashes)
+    if LIP_SHADOW > 0:
+        n = 7
+        pts = [(-0.03 + 0.06 * i / (n - 1), MOUTH_Z - 0.040 - 0.004 * (1 - (-1 + 2 * i / (n - 1)) ** 2)) for i in range(n)]
+        wid = [0.004 * LIP_SHADOW * math.sin(math.pi * i / (n - 1)) + 0.0005 for i in range(n)]
+        stroke("NewLipShadow", pts, wid, line_m)
     return made
 
 
@@ -459,6 +576,7 @@ def run(npz, eyes_json, tag, off_x):
     EAR_ROOT = ear_root(ob, P)
     outline(ob, P, D)
     painted_eyes(ob, col, LID, off_x, tag)
+    face_strokes(ob, col, off_x, tag)
     return ob, int((sh < 0.5).sum())
 
 

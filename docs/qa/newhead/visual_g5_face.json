@@ -1,0 +1,31 @@
+{
+ "region": "face",
+ "subject": "round g5 (after chin_narrower x2, n51), face_g5.png",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, male protagonist",
+ "features": {
+  "jaw_and_chin": {
+   "reference": "in 3/4 the jawline is a long straight diagonal from below the ear to a small, slightly squared chin; the chin is narrow",
+   "ours": "in 3/4 the jawline is a nearly straight diagonal from below the ear to a small chin; in front the jaw forms a V to a small rounded chin"
+  },
+  "chin_width": {
+   "reference": "the chin, just above its tip, is about 0.25 of the face width at eye level (measured in the 3/4 frame)",
+   "ours": "the chin, just above its tip, is about 0.27 of the face width at eye level (measured in front)"
+  },
+  "face_shadow": {
+   "reference": "the front of the face is fully lit; on the far side a narrow shadow band runs along the cheek edge from the temple to the jaw (the skull is hidden under hair)",
+   "ours": "in front a narrow shadow band runs along the far cheek edge from the temple to the jaw; in 3/4 the front of the face and most of the cheek are lit and the shadow is a band along the far edge and temple, with a slightly stepped edge (skull ignored: hidden by hair in the reference)"
+  },
+  "outline": {
+   "reference": "a clear dark-brown outline around the face and jaw, about as thick as the upper lid line",
+   "ours": "a thin light-brown outline around the face and jaw, thinner than the upper lid line"
+  },
+  "skin_colour": {
+   "reference": "warm peach skin with warm orange-brown shadow",
+   "ours": "warm peach skin with warm orange-brown shadow"
+  },
+  "nose_profile": {
+   "reference": "in 3/4 a straight nose bridge ending in a small pointed tip",
+   "ours": "in 3/4 a straight nose bridge ending in a small pointed tip"
+  }
+ }
+}

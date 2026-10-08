@@ -1,0 +1,62 @@
+{
+ "region": "nose_mouth",
+ "subject": "round f8 (after add_nostril), face_f8.png",
+ "features": [
+  {
+   "feature": "mouth_line",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "under_lip",
+   "p_same": 0.32,
+   "confidence": 0.36,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "nose_tip",
+   "p_same": 0.44,
+   "confidence": 0.12,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "nose_bridge",
+   "p_same": 0.54,
+   "confidence": 0.08,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "mouth_height",
+   "p_same": 0.58,
+   "confidence": 0.16,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "nose_height",
+   "p_same": 0.89,
+   "confidence": 0.78,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.86,
+  "confidence": 0.72,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "add_lip_shadow",
+  "order_b": "add_lip_shadow",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "nose_line_join_tip",
+    "add_lip_shadow"
+   ],
+   "order_a": "add_lip_shadow",
+   "order_b": "add_lip_shadow"
+  },
+  "apply": "add_lip_shadow",
+  "setting": "apply_look.py LIP_SHADOW 0 -> 1"
+ }
+}

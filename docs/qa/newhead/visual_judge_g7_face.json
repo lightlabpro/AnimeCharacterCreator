@@ -1,0 +1,55 @@
+{
+ "region": "face",
+ "subject": "round g7 (after face_shadow_smaller, 4th step, FACE_FORWARD 2.5), face_g7.png",
+ "features": [
+  {
+   "feature": "face_shadow",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.28,
+   "confidence": 0.44,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.44,
+   "confidence": 0.12,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.63,
+   "confidence": 0.26,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.9,
+  "confidence": 0.8,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "face_shadow_smaller",
+  "order_b": "face_shadow_smaller",
+  "agree": true,
+  "tie_break": null,
+  "apply": "face_shadow_smaller",
+  "setting": "apply_look.py FACE_FORWARD +0.4"
+ }
+}

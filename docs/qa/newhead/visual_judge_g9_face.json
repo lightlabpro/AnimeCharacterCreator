@@ -1,0 +1,55 @@
+{
+ "region": "face",
+ "subject": "round g9 (after chin_lit 0.5), face_g9.png",
+ "features": [
+  {
+   "feature": "face_shadow",
+   "p_same": 0.1,
+   "confidence": 0.8,
+   "verdict": "off"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.28,
+   "confidence": 0.44,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.38,
+   "confidence": 0.24,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.63,
+   "confidence": 0.26,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.9,
+  "confidence": 0.8,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "chin_lit",
+  "order_b": "chin_lit",
+  "agree": true,
+  "tie_break": null,
+  "apply": "chin_lit",
+  "setting": "apply_look.py CHIN_LIT +0.5 (forced jaw-underside shadow removed from the chin front y<-0.18..-0.24, and face-plane fade 0.035 lower per step)"
+ }
+}

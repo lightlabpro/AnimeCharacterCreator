@@ -1,0 +1,116 @@
+{
+ "region": "eyes",
+ "subject": "new head n49 after upper_lid_line_even x2, eye close-ups vs the MHS3 frame, docs/qa/newhead/eyes_n49c.png",
+ "features": [
+  {
+   "feature": "outline_shape",
+   "p_same": 0.03,
+   "confidence": 0.94,
+   "verdict": "off"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.03,
+   "confidence": 0.94,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.07,
+   "confidence": 0.86,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.12,
+   "confidence": 0.76,
+   "verdict": "off"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.19,
+   "confidence": 0.62,
+   "verdict": "off"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.21,
+   "confidence": 0.58,
+   "verdict": "off"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.27,
+   "confidence": 0.46,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.29,
+   "confidence": 0.42,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.33,
+   "confidence": 0.34,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.34,
+   "confidence": 0.32,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.48,
+   "confidence": 0.04,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.49,
+   "confidence": 0.02,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "lower_lid_line_full",
+  "order_b": "lower_lid_line_full",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "eye_taller",
+    "lower_lid_line_full"
+   ],
+   "order_a": "lower_lid_line_full",
+   "order_b": "lower_lid_line_full"
+  },
+  "apply": "lower_lid_line_full",
+  "setting": "apply_look.py lower lid seg from wrap end to 0.95 of the lid, colour x0.75, th 0.0045 -> 0.0055"
+ }
+}

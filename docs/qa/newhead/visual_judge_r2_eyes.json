@@ -1,0 +1,116 @@
+{
+ "region": "eyes",
+ "subject": "round r2 (after brow_lower x2), eyes_r2.png",
+ "features": [
+  {
+   "feature": "outline_shape",
+   "p_same": 0.06,
+   "confidence": 0.88,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.22,
+   "confidence": 0.56,
+   "verdict": "off"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.23,
+   "confidence": 0.54,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.3,
+   "confidence": 0.4,
+   "verdict": "off"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.38,
+   "confidence": 0.24,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.41,
+   "confidence": 0.18,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.64,
+   "confidence": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.68,
+   "confidence": 0.36,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.68,
+   "confidence": 0.36,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.69,
+   "confidence": 0.38,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.9,
+   "confidence": 0.8,
+   "verdict": "matches"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.91,
+   "confidence": 0.82,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.96,
+   "confidence": 0.92,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "iris_smaller",
+  "order_b": "iris_smaller",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "upper_lid_line_even",
+    "iris_smaller"
+   ],
+   "order_a": "iris_smaller",
+   "order_b": "iris_smaller"
+  },
+  "apply": "iris_smaller",
+  "setting": "apply_look.py mhs3_eye_material R -0.08"
+ }
+}

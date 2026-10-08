@@ -1,0 +1,55 @@
+{
+ "region": "nose_mouth",
+ "subject": "round f4 (after mouth_line_wider x2), face_f4.png",
+ "features": [
+  {
+   "feature": "mouth_line",
+   "p_same": 0.01,
+   "confidence": 0.98,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_tip",
+   "p_same": 0.12,
+   "confidence": 0.76,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_bridge",
+   "p_same": 0.19,
+   "confidence": 0.62,
+   "verdict": "off"
+  },
+  {
+   "feature": "under_lip",
+   "p_same": 0.21,
+   "confidence": 0.58,
+   "verdict": "off"
+  },
+  {
+   "feature": "mouth_height",
+   "p_same": 0.55,
+   "confidence": 0.1,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "nose_height",
+   "p_same": 0.87,
+   "confidence": 0.74,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.87,
+  "confidence": 0.74,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "mouth_line_wider",
+  "order_b": "mouth_line_wider",
+  "agree": true,
+  "tie_break": null,
+  "apply": "mouth_line_wider",
+  "setting": "apply_look.py MOUTH_LINE_W +0.2"
+ }
+}

@@ -1,0 +1,116 @@
+{
+ "region": "eyes",
+ "subject": "round r4 (after upper_lid_line_even x3), eyes_r4.png",
+ "features": [
+  {
+   "feature": "outline_shape",
+   "p_same": 0.09,
+   "confidence": 0.82,
+   "verdict": "off"
+  },
+  {
+   "feature": "highlight",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "brow_shape",
+   "p_same": 0.27,
+   "confidence": 0.46,
+   "verdict": "off"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.3,
+   "confidence": 0.4,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris_colour",
+   "p_same": 0.36,
+   "confidence": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_colour",
+   "p_same": 0.4,
+   "confidence": 0.2,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_size",
+   "p_same": 0.46,
+   "confidence": 0.08,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "upper_lid_line",
+   "p_same": 0.46,
+   "confidence": 0.08,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris_pattern",
+   "p_same": 0.58,
+   "confidence": 0.16,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "brow_position",
+   "p_same": 0.6,
+   "confidence": 0.2,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "lower_lid_line",
+   "p_same": 0.64,
+   "confidence": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "height_to_width",
+   "p_same": 0.9,
+   "confidence": 0.8,
+   "verdict": "matches"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.92,
+   "confidence": 0.84,
+   "verdict": "matches"
+  },
+  {
+   "feature": "pupil",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "flatness",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.94,
+  "confidence": 0.88,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "sclera_greyer",
+  "order_b": "lower_lid_line_full",
+  "agree": false,
+  "tie_break": {
+   "candidates": [
+    "sclera_greyer",
+    "lower_lid_line_full"
+   ],
+   "order_a": "sclera_greyer",
+   "order_b": "lower_lid_line_full"
+  },
+  "apply": null,
+  "setting": null
+ }
+}

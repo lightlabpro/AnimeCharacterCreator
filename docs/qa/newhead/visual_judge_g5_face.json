@@ -1,0 +1,62 @@
+{
+ "region": "face",
+ "subject": "round g5 (after chin_narrower x2, n51), face_g5.png",
+ "features": [
+  {
+   "feature": "outline",
+   "p_same": 0.06,
+   "confidence": 0.88,
+   "verdict": "off"
+  },
+  {
+   "feature": "face_shadow",
+   "p_same": 0.39,
+   "confidence": 0.22,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.43,
+   "confidence": 0.14,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.64,
+   "confidence": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.89,
+  "confidence": 0.78,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "outline_thicker",
+  "order_b": "outline_thicker",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "face_shadow_smaller",
+    "outline_thicker"
+   ],
+   "order_a": "outline_thicker",
+   "order_b": "outline_thicker"
+  },
+  "apply": "outline_thicker",
+  "setting": "apply_look.py OUTLINE_W +0.0004"
+ }
+}

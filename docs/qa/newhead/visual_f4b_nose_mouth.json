@@ -1,0 +1,31 @@
+{
+ "region": "nose_mouth",
+ "subject": "round f4 (after mouth_line_wider x2), face_f4.png",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, male protagonist",
+ "features": {
+  "nose_bridge": {
+   "reference": "a long thin dark-brown line runs down the shadow side of the nose bridge from under the inner brow to the nose tip",
+   "ours": "a very thin dark line runs down the nose bridge from between the brows to just above the nose tip, close to the middle of the nose, not joined to the tip"
+  },
+  "nose_tip": {
+   "reference": "a small nose tip with a darker underside and a short dark nostril mark on the shadow side",
+   "ours": "a small flat light-brown shadow shape under the nose tip, no nostril mark"
+  },
+  "nose_height": {
+   "reference": "the nose tip sits about 0.48 of the way from the eye line to the chin (measured)",
+   "ours": "the nose tip sits about 0.49 of the way from the eye line to the chin (measured)"
+  },
+  "mouth_line": {
+   "reference": "the mouth is open (he is talking), so it appears as a wide dark shape with teeth, about 0.6 of the span between the outer eye corners; a closed neutral mouth is not shown in this frame",
+   "ours": "the mouth is closed (neutral): a thin clean dark line, slightly curved down at the corners, about 0.40 of the span between the outer eye corners (measured)"
+  },
+  "mouth_height": {
+   "reference": "the mouth sits about 0.64 of the way from the eye line to the chin (measured)",
+   "ours": "the mouth slit sits about 0.66 of the way from the eye line to the chin (measured on the mesh)"
+  },
+  "under_lip": {
+   "reference": "a short soft shadow under the lower lip, above the chin",
+   "ours": "a small flat light-brown shadow shape above the chin"
+  }
+ }
+}

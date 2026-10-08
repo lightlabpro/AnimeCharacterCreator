@@ -1,0 +1,55 @@
+{
+ "region": "face",
+ "subject": "round g12: chin_narrower (CHIN_TAPER 0.24) pushed width@0.85 below the dataset band and was reverted; same render as g11",
+ "features": [
+  {
+   "feature": "face_shadow",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.42,
+   "confidence": 0.16,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.43,
+   "confidence": 0.14,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.6,
+   "confidence": 0.2,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.89,
+  "confidence": 0.78,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "chin_wider",
+  "order_b": "chin_wider",
+  "agree": true,
+  "tie_break": null,
+  "apply": "chin_wider",
+  "setting": "build_head.py CHIN_TAPER -0.08"
+ }
+}

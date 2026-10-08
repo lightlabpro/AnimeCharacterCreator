@@ -1,0 +1,74 @@
+{
+ "region": "ears",
+ "subject": "round e6 (after ear_narrower, EAR_W 0.52, mesh n53; bands pass), ear_e6.png",
+ "features": [
+  {
+   "feature": "inner_line",
+   "p_same": 0.11,
+   "confidence": 0.78,
+   "verdict": "off"
+  },
+  {
+   "feature": "rim_highlight",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "stand_off",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "concha",
+   "p_same": 0.18,
+   "confidence": 0.64,
+   "verdict": "off"
+  },
+  {
+   "feature": "ear_lighting",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "shape_ratio",
+   "p_same": 0.31,
+   "confidence": 0.38,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "size_position",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.92,
+  "confidence": 0.84,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "concha_mauve",
+  "order_b": "ear_narrower",
+  "agree": false,
+  "tie_break": {
+   "candidates": [
+    "concha_mauve",
+    "ear_narrower"
+   ],
+   "order_a": "concha_mauve",
+   "order_b": "ear_narrower"
+  },
+  "apply": null,
+  "setting": null
+ }
+}

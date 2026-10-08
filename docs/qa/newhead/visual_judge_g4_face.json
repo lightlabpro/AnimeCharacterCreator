@@ -1,0 +1,55 @@
+{
+ "region": "face",
+ "subject": "round g4 (after face_shadow_smaller x3), face_g4.png",
+ "features": [
+  {
+   "feature": "outline",
+   "p_same": 0.05,
+   "confidence": 0.9,
+   "verdict": "off"
+  },
+  {
+   "feature": "chin_width",
+   "p_same": 0.08,
+   "confidence": 0.84,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_and_chin",
+   "p_same": 0.09,
+   "confidence": 0.82,
+   "verdict": "off"
+  },
+  {
+   "feature": "face_shadow",
+   "p_same": 0.35,
+   "confidence": 0.3,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "nose_profile",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "skin_colour",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.88,
+  "confidence": 0.76,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "chin_narrower",
+  "order_b": "chin_narrower",
+  "agree": true,
+  "tie_break": null,
+  "apply": "chin_narrower",
+  "setting": "build_head.py CHIN_TAPER +0.08"
+ }
+}

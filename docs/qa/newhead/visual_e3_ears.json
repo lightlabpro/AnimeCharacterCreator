@@ -1,0 +1,39 @@
+{
+ "region": "ears",
+ "subject": "round e3 (after ear_lit x2, EAR_LIT 2.0, mask limited to the ear shells), ear_e3.png",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, male protagonist",
+ "features": {
+  "ear_lighting": {
+   "reference": "the ear reads as lit warm peach skin; only the bowl in the middle and a thin band at the front edge are darker",
+   "ours": "the ear reads as lit warm peach skin; only the bowl in the middle and a small mark near the top are darker"
+  },
+  "inner_line": {
+   "reference": "a thin dark-brown painted line follows the inner side of the rim from the top down the back, ending above the lobe, like the letter C",
+   "ours": "no line inside the ear; only a short dark comma-shaped mark under the top of the rim"
+  },
+  "concha": {
+   "reference": "the bowl in the middle of the ear is a clear darker shape in a mauve, pinkish-brown colour, taller than wide, covering about the middle third of the ear",
+   "ours": "the bowl in the middle of the ear is a clear darker oval in the same warm orange-brown as the face shadow, taller than wide, covering about the middle third of the lower half of the ear"
+  },
+  "rim_highlight": {
+   "reference": "the outer rim (helix) is a light peach band along the top and back of the ear",
+   "ours": "the rim is the same light peach as the rest of the ear; it is not separated from the inside by any mark"
+  },
+  "shape_ratio": {
+   "reference": "a tall narrow C shape; width about 0.39 of its height (measured on the board), broadest at the top, narrow lobe",
+   "ours": "a tall oval; width about 0.46 of its height (measured on the board), broadest at the top, narrow lobe"
+  },
+  "size_position": {
+   "reference": "the top of the ear is level with the brows and the lobe is level with the bottom of the nose",
+   "ours": "the top of the ear is level with the brows and the lobe is level with the bottom of the nose"
+  },
+  "outline": {
+   "reference": "a dark-brown outline around the ear, about as thick as the face outline",
+   "ours": "a dark-brown outline around the ear, about as thick as the face outline"
+  },
+  "stand_off": {
+   "reference": "the ear sits close to the side of the head, seen almost from the side, its back edge only slightly away from the skull",
+   "ours": "the ear stands out from the side of the head, seen almost from the side, its back edge slightly away from the skull"
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "region": "face",
+ "note": "Face shape, shading and outline. Geometry knobs need a rebuild and must keep the dataset bands inside. g7: chin_lit added because face_shadow_smaller (FACE_FORWARD) cannot reach the chin patch (the face plane fades out below z 0.15). g9: first chin_lit version only moved the normal blend and changed <1% of pixels; the patch is the forced jaw-underside shade on the down-facing chin front, now covered by the same knob.",
+ "corrections": [
+  {
+   "id": "chin_narrower",
+   "description": "Narrow the jaw toward the chin so the chin is smaller and the jawline straighter.",
+   "setting": "build_head.py CHIN_TAPER +0.08"
+  },
+  {
+   "id": "chin_wider",
+   "description": "Widen the lower jaw and chin.",
+   "setting": "build_head.py CHIN_TAPER -0.08"
+  },
+  {
+   "id": "face_shadow_smaller",
+   "description": "Shrink the cast shadow on the face so the front of the face stays lit and the shadow is only a band at the far edge.",
+   "setting": "apply_look.py FACE_FORWARD +0.4"
+  },
+  {
+   "id": "face_shadow_bigger",
+   "description": "Let the face shadow cover more of the far side.",
+   "setting": "apply_look.py FACE_FORWARD -0.3"
+  },
+  {
+   "id": "outline_thicker",
+   "description": "Make the outline around the head and jaw thicker.",
+   "setting": "apply_look.py OUTLINE_W +0.0004"
+  },
+  {
+   "id": "outline_thinner",
+   "description": "Make the outline thinner.",
+   "setting": "apply_look.py OUTLINE_W -0.0003"
+  },
+  {
+   "id": "outline_darker",
+   "description": "Make the outline colour darker brown.",
+   "setting": "apply_look.py OUTLINE_DARK x1.5"
+  },
+  {
+   "id": "nose_smaller",
+   "description": "Make the nose project less in profile.",
+   "setting": "build_head.py NOSE_GAIN -0.008"
+  },
+  {
+   "id": "nose_bigger",
+   "description": "Make the nose project more in profile (more pointed).",
+   "setting": "build_head.py NOSE_GAIN +0.008"
+  },
+  {
+   "id": "chin_lit",
+   "description": "Light the front of the chin and lower jaw so the patchy shadow there goes away; keep shadow only under the jaw on the neck.",
+   "setting": "apply_look.py CHIN_LIT +0.5 (forced jaw-underside shadow removed from the chin front y<-0.18..-0.24, and face-plane fade 0.035 lower per step)"
+  }
+ ]
+}

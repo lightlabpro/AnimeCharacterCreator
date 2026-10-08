@@ -1,0 +1,31 @@
+{
+ "region": "face",
+ "subject": "round g11 (after outline_darker, OUTLINE_DARK 1.5), face_g11.png",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, male protagonist",
+ "features": {
+  "jaw_and_chin": {
+   "reference": "in 3/4 the jawline is a long straight diagonal from below the ear to a small, slightly squared chin; the chin is narrow",
+   "ours": "in 3/4 the jawline is a nearly straight diagonal from below the ear to a small chin; in front the jaw forms a V to a small rounded chin"
+  },
+  "chin_width": {
+   "reference": "the chin, just above its tip, is about 0.25 of the face width at eye level (measured in the 3/4 frame)",
+   "ours": "the chin, just above its tip, is about 0.27 of the face width at eye level (measured in front)"
+  },
+  "face_shadow": {
+   "reference": "the front of the face, including the chin, is fully lit; on the far side a narrow shadow band runs along the cheek edge from the temple to the jaw with a smooth clean edge; the shadow under the jaw falls on the neck, not on the chin (the skull is hidden under hair)",
+   "ours": "in front the whole face including the chin and jaw is lit except a shadow band along the far cheek edge from the temple down to the jaw; in 3/4 the shadow covers the far third of the face from the temple to the jaw with a jagged stepped edge, the chin front is lit; under the jaw the neck is lit near the chin and shaded only on its far side (skull ignored: hidden by hair in the reference)"
+  },
+  "outline": {
+   "reference": "a clear dark-brown outline around the face and jaw, about as thick as the upper lid line",
+   "ours": "a clear dark-brown outline around the face and jaw, about as thick as the upper lid line, a little lighter than the lid line"
+  },
+  "skin_colour": {
+   "reference": "warm peach skin with warm orange-brown shadow",
+   "ours": "warm peach skin with warm orange-brown shadow"
+  },
+  "nose_profile": {
+   "reference": "in 3/4 a straight nose bridge ending in a small pointed tip",
+   "ours": "in 3/4 a straight nose bridge ending in a small pointed tip"
+  }
+ }
+}

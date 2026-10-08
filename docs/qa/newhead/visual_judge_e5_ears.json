@@ -1,0 +1,67 @@
+{
+ "region": "ears",
+ "subject": "round e5 (after ear_inner_line_thicker, EAR_LINE 1.5, line band widened in the ear builder), ear_e5.png",
+ "features": [
+  {
+   "feature": "inner_line",
+   "p_same": 0.07,
+   "confidence": 0.86,
+   "verdict": "off"
+  },
+  {
+   "feature": "rim_highlight",
+   "p_same": 0.15,
+   "confidence": 0.7,
+   "verdict": "off"
+  },
+  {
+   "feature": "concha",
+   "p_same": 0.18,
+   "confidence": 0.64,
+   "verdict": "off"
+  },
+  {
+   "feature": "ear_lighting",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "shape_ratio",
+   "p_same": 0.2,
+   "confidence": 0.6,
+   "verdict": "off"
+  },
+  {
+   "feature": "stand_off",
+   "p_same": 0.25,
+   "confidence": 0.5,
+   "verdict": "off"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "size_position",
+   "p_same": 0.98,
+   "confidence": 0.96,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.9,
+  "confidence": 0.8,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "ear_narrower",
+  "order_b": "ear_narrower",
+  "agree": true,
+  "tie_break": null,
+  "apply": "ear_narrower",
+  "setting": "ears_nh.py EAR_W -0.04"
+ }
+}

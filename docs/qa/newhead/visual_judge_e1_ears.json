@@ -1,0 +1,67 @@
+{
+ "region": "ears",
+ "subject": "new head n52 (geometry = n51), far ear in the 3/4 view (left) vs the ear in the MHS3 protagonist frame (right), ear_e1.png",
+ "features": [
+  {
+   "feature": "inner_line",
+   "p_same": 0.01,
+   "confidence": 0.98,
+   "verdict": "off"
+  },
+  {
+   "feature": "concha",
+   "p_same": 0.01,
+   "confidence": 0.98,
+   "verdict": "off"
+  },
+  {
+   "feature": "ear_lighting",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "verdict": "off"
+  },
+  {
+   "feature": "rim_highlight",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "verdict": "off"
+  },
+  {
+   "feature": "shape_ratio",
+   "p_same": 0.21,
+   "confidence": 0.58,
+   "verdict": "off"
+  },
+  {
+   "feature": "stand_off",
+   "p_same": 0.34,
+   "confidence": 0.32,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "size_position",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.97,
+   "confidence": 0.94,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.93,
+  "confidence": 0.86,
+  "verdict": "usable"
+ },
+ "first_fix": {
+  "order_a": "ear_lit",
+  "order_b": "ear_lit",
+  "agree": true,
+  "tie_break": null,
+  "apply": "ear_lit",
+  "setting": "apply_look.py EAR_LIT +1.0 (ear normals blended 0.45 per step toward the lit face direction)"
+ }
+}
