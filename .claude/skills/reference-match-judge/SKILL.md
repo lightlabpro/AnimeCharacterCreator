@@ -5,16 +5,24 @@ description: Use when a render looks different from its reference images, especi
 
 # Reference match judge (Claude sees, TypeSafe decides)
 
-Claude can see images but should not grade its own work; TypeSafe (jev-1.13.0) cannot see images but judges words
-well. This skill splits the job: **Claude analyses the images in words, TypeSafe decides what is off and which
-correction to make.** Use it whenever a model, shader, hair, outfit or pose looks different from its references,
+Claude can see images but should not grade its own work; TypeSafe judges words well and, since jev-1.14 (pinned
+`jev-1.14.0`, header `TypeSafe-Danger-Zone-Images: true`), can also look at pictures - less reliably than at words.
+This skill splits the job: **Claude measures and describes the images in words, TypeSafe decides what is off and
+which correction to make, and with the pictures attached it also checks that Claude's words match what is shown.** Use it whenever a model, shader, hair, outfit or pose looks different from its references,
 with MHS3 (Monster Hunter Stories 3) frames as the main reference. It works together with the TypeSafe rules already
-in the repo (docs/VALIDATORS.md "TypeSafe usage rules"): words only, yes = good, a "none" option, choices asked in both
-option orders, answers under 0.4 confidence go to a human.
+in the repo (docs/VALIDATORS.md "TypeSafe usage rules"): words first, yes = good, a "none" option, choices asked in
+both option orders, answers under 0.4 confidence go to a human.
 
 Files (repo `AnimeCharacterCreator-main`):
-- `blender/tools/typesafe_visual_judge.py` - the judge (runs on Sammy's PC, key from TYPESAFE_API_KEY; never fake a
-  judgment if it is missing).
+- `blender/tools/typesafe_visual_judge.py` - the judge v2 (runs on Sammy's PC with `py -3`, which has Pillow; key from
+  TYPESAFE_API_KEY; never fake a judgment if it is missing). `--images ours.png,reference.png` attaches the two halves
+  of the board; `--model` overrides the pinned model; `--long-context` sends the long-context opt-in header (only for
+  very large requests - longer context lowers reliability).
+- `blender/tools/typesafe_box.py` - Box questions (one bounding box per target, fractions of the picture) plus a
+  "visible at all?" question per target. A measuring aid only: on MHS3 frames it placed eyes 40-50 px off and its
+  refined boxes came back at 0.1-0.25 confidence (2026-10-14), so pixel measurements stay primary and a box is used
+  at most to find a region to crop.
+- `blender/newhead/session.py` - Blender helpers (render presets, knobs, judge/box wrappers); exec it after a restart.
 - `blender/tools/visual_corrections/<region>.json` - the correction menu per region (eyes, nose_mouth, face, ears exist). Each entry:
   `id`, a plain description, and the exact `setting` in code it changes (one step).
 - `docs/qa/<work>/visual_<tag>_<region>.json` - Claude's analysis for one render; `visual_judge_<tag>_<region>.json`
@@ -41,7 +49,16 @@ Files (repo `AnimeCharacterCreator-main`):
    - Put a second view in the board when one view hides the problem (front + 3/4 for the face; a close-up crop for
      small features like ears), and check the whole head after a local change (ears e3: a box mask lit the skull).
 3. **Judge (TypeSafe).** On the PC:
-   `python blender/tools/typesafe_visual_judge.py <analysis.json> blender/tools/visual_corrections/<region>.json <out.json> [--exclude id,id]`
+   `py -3 blender/tools/typesafe_visual_judge.py <analysis.json> blender/tools/visual_corrections/<region>.json <out.json> [--exclude id,id] [--images ours.png,ref.png]`
+   - Attach the pictures whenever a board exists: split it into an OURS image and a REFERENCE image (separate files,
+     same framing). Pictures must be PNG/JPEG with each side 280-1568 px (the docs say 256, the API rejects under
+     280) - the script rescales. With pictures it also asks `analysis_faithful` (do the words describe the
+     pictures?) and one `look_<feature>` per feature from the pictures alone. A feature "matches" only when the words
+     say so and the pictures do not strongly disagree (look < 0.3); words and pictures disagreeing goes to a human; an
+     analysis the pictures contradict (faithful < 0.3) is rewritten before anything is applied. Both requests answer
+     every yes/no question and the two answers are averaged.
+   - Keep the words primary (TypeSafe: models are weaker on images; split hard questions into small ones). Pictures of
+     a different character are compared for style, not identity.
    It asks in one request: `analysis_usable` (are the descriptions concrete and comparable?), one yes/no per feature
    (do the two descriptions describe the same look?), and `first_fix` (a choice over the menu plus "none"), then the
    choice again with the options reversed. If the two orders disagree it re-asks with only the two candidates and

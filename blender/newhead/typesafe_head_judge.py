@@ -15,7 +15,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, ROOT)
 from blender.validators import topology_judge, judge  # noqa: E402
 
-URL, MODEL = "https://api.typesafe.ai/v1/systemone", "jev-1.13.0"
+URL, MODEL = "https://api.typesafe.ai/v1/systemone", "jev-1.14.0"
 
 
 def key():
