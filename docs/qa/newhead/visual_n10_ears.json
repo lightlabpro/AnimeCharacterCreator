@@ -1,0 +1,27 @@
+{
+ "region": "ears",
+ "subject": "the ear seen from the side and a little from the front",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male",
+ "features": {
+  "ear_outline": {
+   "reference": "A smooth dark outer outline round the top and back of the ear, continuous where the top of the ear meets the head.",
+   "ours": "A smooth dark outer outline round the top, back and lobe of the ear, with a short gap at the front of the top where the ear meets the head."
+  },
+  "inner_line": {
+   "reference": "One thin dark line inside the ear: it starts under the rim at the top, runs down along the front side of the inner shadow and ends above the lobe, forming a C shape open to the back.",
+   "ours": "One thin dark line inside the ear along the front side of the inner shadow, from the top down to above the lobe, forming a C shape open to the back; it is thinnest at the top."
+  },
+  "inner_shadow": {
+   "reference": "A mauve, pinkish-brown crescent of shadow inside the ear: wide at the top under the rim, narrowing toward the bottom; behind it a lit cream strip, then the lit rim along the back; the lobe is lit.",
+   "ours": "A mauve, pinkish-brown crescent of shadow inside the ear: wide at the top under the rim, narrowing toward the bottom, with smooth edges; behind it lit skin up to the rim along the back; the lobe is lit."
+  },
+  "ear_light": {
+   "reference": "The ear's rim and lobe are lit cream skin while the head skin beside the ear is in shadow.",
+   "ours": "The ear's rim and lobe are lit skin while the head skin beside the ear is in shadow."
+  },
+  "ear_shape": {
+   "reference": "Tall rounded ear, broad at the top, narrowing to a small lobe, leaning back a little; width about half the height.",
+   "ours": "Tall rounded ear, broad at the top, narrowing to a small lobe, leaning back a little; width about half the height."
+  }
+ }
+}

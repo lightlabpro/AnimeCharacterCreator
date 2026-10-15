@@ -10,6 +10,7 @@ Registers in bpy.app.driver_namespace (call them as ns["apply"](), ...):
   sweep(name, yaws)                 face at several camera yaws with the view keys set
   knobs(update)                     deep-merge into blender/newhead/look_knobs.json ("paint", "view" are dicts)
   judge(analysis, region, out, exclude="", images=None)   TypeSafe judge v2 (blender/tools/typesafe_visual_judge.py)
+  audit(prefix, out, exprs)         TypeSafe expression audit on the zoom() close-ups (rubric, pictures)
   box(image, out, targets, refine)  TypeSafe Box measurements (blender/tools/typesafe_box.py)
 The system Python launcher `py` (3.13 with Pillow) runs the TypeSafe scripts; Blender's own Python has no Pillow.
 """
@@ -165,7 +166,15 @@ def box(image, out, targets, refine=False):
     return _py(a)
 
 
-for _f in (col, head, apply, shots, look, face, eyes, nose, ears, zoom, sweep, knobs, judge, box, set_state):
+def audit(prefix, out, exprs=("neutral", "blink", "wink_left", "amazed", "sad", "angry", "happy"), yaw=0):
+    """TypeSafe expression audit (blender/tools/typesafe_expr_audit.py) on the zoom(prefix) close-ups."""
+    a = [os.path.join(TOOLS, "typesafe_expr_audit.py"), os.path.join(Q, out)]
+    a += ["%s=%s" % (e, os.path.join(Q, "%s_%s_y%03d.png" % (prefix, e, yaw))) for e in exprs]
+    a += ["reference=" + os.path.join(Q, "ref_eye_near.png")]      # calibration: the MHS3 eye scored the same way
+    return _py(a)
+
+
+for _f in (audit, col, head, apply, shots, look, face, eyes, nose, ears, zoom, sweep, knobs, judge, box, set_state):
     ns[_f.__name__] = _f
 ns["Q"], ns["NH"], ns["R"] = Q, NH, R
 print("session helpers ready")

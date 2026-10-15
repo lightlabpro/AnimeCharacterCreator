@@ -1,0 +1,57 @@
+{
+ "region": "ears",
+ "subject": "the ear seen from the side and a little from the front",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "inner_shadow",
+   "p_same": 0.16,
+   "confidence": 0.68,
+   "p_look": 0.19,
+   "verdict": "off"
+  },
+  {
+   "feature": "ear_outline",
+   "p_same": 0.18,
+   "confidence": 0.64,
+   "p_look": 0.185,
+   "verdict": "off"
+  },
+  {
+   "feature": "inner_line",
+   "p_same": 0.53,
+   "confidence": 0.06,
+   "p_look": 0.22,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "ear_light",
+   "p_same": 0.855,
+   "confidence": 0.71,
+   "p_look": 0.53,
+   "verdict": "matches"
+  },
+  {
+   "feature": "ear_shape",
+   "p_same": 0.895,
+   "confidence": 0.79,
+   "p_look": 0.505,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.84,
+  "confidence": 0.68,
+  "verdict": "usable",
+  "faithful_p": 0.415
+ },
+ "first_fix": {
+  "order_a": "ear_outline_close_top",
+  "order_b": "ear_outline_close_top",
+  "agree": true,
+  "tie_break": null,
+  "apply": "ear_outline_close_top",
+  "setting": "apply_look.py EAR_ROOT outline weight 0 -> 0.6 on the upper root"
+ }
+}

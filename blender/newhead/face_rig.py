@@ -32,6 +32,9 @@ EXPRESSIONS = {
     "happy": {"PF-EyeHappy": 1, "PF-BrowUp": 0.35},
 }
 EYE_LIT_COLOR = (232, 197, 170)   # lit skin, sampled from the neutral render
+LID_LIFT = 0.0016          # e1: lid line above the skin (1.0 mm let the corner skin poke through the wing)
+COVER = 1                  # e1: skin-coloured lower-edge cover strip
+PLATE_GROW = 1.45          # e1: eye-white plate extent around the widest (EyeWide) opening
 EYE_DEPTH = 0.0020        # eye white behind the face surface (m); the iris sits 0.6 mm in front of it
 LID_KEYS = {"Blink": "PF-Blink", "Wide": "PF-EyeWide", "Sad": "PF-EyeSad", "Angry": "PF-EyeAngry", "Happy": "PF-EyeHappy"}
 
@@ -89,14 +92,28 @@ class _Surf:
         f = self.fit(X, Z)
         out = f.copy()
         x, z = _to_m(self.side, X, Z)
-        ins = _inpoly(X, Z, self.C if C is None else C)
+        Cuse = self.C if C is None else C
+        ins = _inpoly(X, Z, Cuse)
+        # e2: points over the opening also stay in front of the skin at the nearest edge point (the fit alone sits
+        # behind the thick lid corner, which then poked through the lid-line wing as a skin-coloured sliver)
+        cen = Cuse.mean(0); Ce = cen + (Cuse - cen) * 1.05
+        cx, cz = _to_m(self.side, Ce[:, 0], Ce[:, 1])
+        ye = np.full(len(Ce), np.inf)
+        for k in range(len(Ce)):
+            h = tree.ray_cast(Vector((cx[k], -1.0, cz[k])), Vector((0, 1, 0)))
+            if h[0] is not None:
+                ye[k] = h[0].y
+        if ins.any():
+            ii = np.nonzero(ins)[0]
+            dd = (X[ii, None] - Ce[None, :, 0]) ** 2 + (Z[ii, None] - Ce[None, :, 1]) ** 2
+            out[ii] = np.minimum(out[ii], ye[np.argmin(dd, axis=1)])
         for i in range(len(out)):
             hit = tree.ray_cast(Vector((x[i], -1.0, z[i])), Vector((0, 1, 0)))
             if hit[0] is None:
                 continue
             if not ins[i]:
                 out[i] = hit[0].y                       # real skin outside the opening
-            elif hit[0].y < f[i]:
+            elif hit[0].y < out[i]:
                 out[i] = hit[0].y
         return out
 
@@ -155,20 +172,71 @@ def _tex_mat(name, img, alpha=True):
     em = nt.nodes.new("ShaderNodeEmission")
     nt.links.new(tx.outputs["Color"], em.inputs["Color"])
     if alpha:
+        # e1: alpha is cut at 0.5 and the surface is DITHERED (opaque depth): a BLENDED iris was drawn over the lower lid
+        # skin in the happy / sad expressions (EEVEE sorts blended surfaces after the opaque depth of the head)
         tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader")
-        nt.links.new(tx.outputs["Alpha"], mx.inputs["Fac"])
+        cut = nt.nodes.new("ShaderNodeMath"); cut.operation = "GREATER_THAN"; cut.inputs[1].default_value = 0.5
+        nt.links.new(tx.outputs["Alpha"], cut.inputs[0]); nt.links.new(cut.outputs[0], mx.inputs["Fac"])
         nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
         nt.links.new(mx.outputs[0], out.inputs["Surface"])
         try:
-            m.surface_render_method = "BLENDED"
+            m.surface_render_method = "DITHERED"
         except Exception:
-            m.blend_method = "BLEND"
+            m.blend_method = "CLIP"
     else:
         nt.links.new(em.outputs[0], out.inputs["Surface"])
     return m
 
 
-def _head_keys(ob, LID, surfs):
+RIM_TUCK = 1              # e1: fold the lid rim back under the lid (it showed as a skin band between lid line and white)
+RIM_OUT = 0.00025         # per rim ring: outward under the lid (m)
+RIM_IN = 0.00045          # per rim ring: deeper (m)
+
+
+def _tuck_rim(ob, LID):
+    """The lid rim (the vertex rings inside the opening that turn in toward the eyeball) faced the camera and showed
+    as a jagged skin band between the lid line and the eye white (and along the lower lid). Fold each ring back
+    under its lid-loop vertex: a little outward from the eye centre and deeper, so from the front the rim is hidden
+    behind the lid edge. Returns {side: {rim vertex: loop vertex}} for the lid keys (the rim follows its loop vertex)."""
+    me = ob.data
+    V = np.array([v.co[:] for v in me.vertices])
+    bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
+    out = {}
+    vg = ob.vertex_groups.get("OutlineWeight")
+    for tagv, side in ((1, 1), (2, -1)):
+        li = np.nonzero(LID == tagv)[0]
+        X, Z = _from_m(side, V[:, 0], V[:, 2])
+        Cn = ES["opening_contour"]()
+        cen = Cn.mean(0)
+        inside = _inpoly(X, Z, cen + (Cn - cen) * 1.01) & (V[:, 1] > V[li, 1].min() - 0.002)
+        Lset = set(li.tolist())
+        rim, ring = {}, {}
+        front_ = [int(i) for i in li]
+        src = {int(i): int(i) for i in li}
+        for r in range(1, 11):
+            nxt = []
+            for i in front_:
+                for e in bm.verts[i].link_edges:
+                    q = e.other_vert(bm.verts[i]).index
+                    if q in src or q in Lset or not inside[q]:
+                        continue
+                    src[q] = src[i]; rim[q] = src[i]; ring[q] = r; nxt.append(q)
+            front_ = nxt
+        cx, cz = _to_m(side, cen[0], cen[1])
+        for q, sv in rim.items():
+            lx, ly, lz = V[sv]
+            d = np.array([lx - cx, lz - cz]); d /= max(np.linalg.norm(d), 1e-9)
+            r = ring[q]
+            me.vertices[q].co = Vector((lx + d[0] * RIM_OUT * r, ly + RIM_IN * r, lz + d[1] * RIM_OUT * r))
+        if vg is not None:
+            vg.add(list(rim.keys()) + [int(i) for i in li], 0.0, "REPLACE")
+        out[side] = rim
+    bm.free()
+    me.update()
+    return out
+
+
+def _head_keys(ob, LID, surfs, tuck=None):
     """Lid shape keys on the head: each lid loop vertex follows its edge (upper / lower) of the edited contour, the
     lid rim behind it follows radially, the skin around follows with a falloff and stays on the face."""
     me = ob.data
@@ -194,6 +262,8 @@ def _head_keys(ob, LID, surfs):
         inside = _inpoly(X, Z, cen + (Cn - cen) * 1.01) & (V[:, 1] > V[li, 1].min() - 0.002)
         Lset = set(li.tolist())
         rim = {int(i): int(i) for i in li}
+        if tuck and side in tuck:
+            rim.update(tuck[side])               # e1: the folded rim follows its loop vertex
         front_ = list(li)
         for _ in range(10):
             nxt = []
@@ -292,13 +362,35 @@ def _eye_lit(ob, tag, key_co=None):
     nt.links.new(mx.outputs[0], out.inputs["Surface"])
 
 
+def _no_outline_where_keys_move(ob, key_co, thr=0.0002):
+    """e8: the outline shell (inverted hull) poked through the lid skin where the lid keys squeeze it (a dark sliver
+    at the outer corner in the blink): no hull thickness on skin any lid key moves, and one ring around it."""
+    vg = ob.vertex_groups.get("OutlineWeight")
+    if vg is None or not key_co:
+        return
+    me = ob.data
+    V = np.array([v.co[:] for v in me.vertices])
+    moved = np.zeros(len(V), bool)
+    for co in key_co.values():
+        moved |= np.linalg.norm(co - V, axis=1) > thr
+    bm = bmesh.new(); bm.from_mesh(me); bm.verts.ensure_lookup_table()
+    grow = moved.copy()
+    for v in bm.verts:
+        if moved[v.index]:
+            for e in v.link_edges:
+                grow[e.other_vert(v).index] = True
+    bm.free()
+    vg.add([int(i) for i in np.nonzero(grow)[0]], 0.0, "REPLACE")
+
+
 def build_rig(ob, col, LID, off_x, tag):
     from mathutils.bvhtree import BVHTree
+    tuck = _tuck_rim(ob, LID) if RIM_TUCK else None
     bm = bmesh.new(); bm.from_mesh(ob.data); tree = BVHTree.FromBMesh(bm); bm.free()
     surfs = {s: _Surf(ob, s, tree) for s in (1, -1)}
     made = []
     # lid keys on the head first: the strips' key shapes sit on the head deformed by the same key
-    key_co = _head_keys(ob, LID, surfs)
+    key_co = _head_keys(ob, LID, surfs, tuck)
     polys = [tuple(p.vertices) for p in ob.data.polygons]
     key_tree = {k: BVHTree.FromPolygons([tuple(v) for v in co], polys) for k, co in key_co.items()}
     Xg0, U0, L0, _ = ES["base_curves"]()
@@ -313,9 +405,10 @@ def build_rig(ob, col, LID, off_x, tag):
     Xg, U, L, _ = ES["base_curves"]()
     line_m = _emission("MAT_RigLidLine_" + tag, _lin((84, 64, 48)))
     rim_m = _emission("MAT_RigLowRim_" + tag, _lin((196, 186, 168)))
+    cover_m = _emission("MAT_RigLidCover_" + tag, _lin(EYE_LIT_COLOR))
     shade_m = _emission("MAT_RigBrowShade_" + tag, _lin((176, 128, 112)))
     # textures
-    X0, X1, Z0, Z1 = -1.15, 1.20, -0.95, 0.70
+    X0, X1, Z0, Z1 = -1.30, 1.35, -1.10, 0.85   # e1: room for the grown plate
     scl = _image("IMG_RigSclera_" + tag, ET["sclera"](X0, X1, Z0, Z1, Xg, U))
     scl_m = _tex_mat("MAT_RigSclera_" + tag, scl, alpha=False)
     lo, hi = ES["brow_ribbon"]()
@@ -330,7 +423,10 @@ def build_rig(ob, col, LID, off_x, tag):
         GX, GZ = np.meshgrid(gx, gz); GX = GX.ravel(); GZ = GZ.ravel()
         Cn = ES["opening_contour"]()
         cen = Cn.mean(0)
-        Cbig = cen + (ES["opening_contour"](*ES["expression_offsets"]("Wide", Xg, U, L)) - cen) * 1.12
+        Cw = ES["opening_contour"](*ES["expression_offsets"]("Wide", Xg, U, L)) - cen
+        # e3: grown upward only (the upper lids open past the old 1.12 trim in amazed / sad and showed the plate's
+        # stepped edge); growing it all round put the plate in front of the lower-lid skin (grey shards)
+        Cbig = cen + Cw * np.where(Cw[:, 1:2] > 0, [[1.12, PLATE_GROW]], [[1.12, 1.12]])
 
         def plate_y(X, Z):
             # inside the opening: behind the fitted face; outside: behind the real skin
@@ -339,12 +435,18 @@ def build_rig(ob, col, LID, off_x, tag):
             x, z = _to_m(side, X, Z)
             ins = _inpoly(X, Z, Cn)
             out = f.copy()
+            # e7: outside the opening the plate sinks further with distance from the edge, so a plate quad spanning a
+            # lower-lid crease cannot poke through the skin (grey specks under the eye)
+            dmin = np.sqrt(((X[:, None] - Cn[None, :, 0]) ** 2 + (Z[:, None] - Cn[None, :, 1]) ** 2).min(1))
+            extra = 0.004 * np.clip(dmin / 0.15, 0, 1)
             for i in range(len(X)):
                 if ins[i]:
                     continue
                 hit = surf.tree.ray_cast(Vector((x[i], -1.0, z[i])), Vector((0, 1, 0)))
                 if hit[0] is not None:
-                    out[i] = max(f[i], hit[0].y + EYE_DEPTH)
+                    out[i] = max(f[i], hit[0].y + EYE_DEPTH + extra[i])
+                else:
+                    out[i] = f[i] + extra[i]
             return out
         py = plate_y(GX, GZ)
         x, z = _to_m(side, GX, GZ)
@@ -362,36 +464,55 @@ def build_rig(ob, col, LID, off_x, tag):
         plate.visible_shadow = False
         made.append(plate)
 
-        # iris: a disc in front of the white (still behind the skin), texture incl. the highlight
+        # iris (e5): an opaque disc exactly the iris size plus the highlight as its own opaque ellipse, both in one mesh
+        # (two materials) so the look keys move them together; no alpha anywhere (the alpha-cut / blended disc showed
+        # its transparent outer ring as grey shards and was drawn over the lower lid)
         ix, iz, rx, ry = ES["IRIS_X"], ES["IRIS_Z"], ES["IRIS_RX"], ES["IRIS_RY"]
         ext = ET["EXT"]
-        nr, na = 8, 40
+        nr, na, nh = 8, 48, 24
+        hl_sign = 1.0 if (side > 0 or not HL_SAME_SIDE) else -1.0
+        hu, hv, hrx, hry = ET["HL"]
 
         def iris_pts(dx=0.0, dz=0.0, sc=1.0):
-            pts = [(ix + dx, iz + dz)]
+            cx_, cz_ = ix + dx, iz + dz
+            pts = [(cx_, cz_)]
             for r in range(1, nr + 1):
-                for a in range(na):
-                    t = 2 * np.pi * a / na
-                    pts.append((ix + dx + np.cos(t) * rx * ext * sc * r / nr, iz + dz + np.sin(t) * ry * ext * sc * r / nr))
+                for a_ in range(na):
+                    t = 2 * np.pi * a_ / na
+                    pts.append((cx_ + np.cos(t) * rx * sc * r / nr, cz_ + np.sin(t) * ry * sc * r / nr))
+            hx, hz = cx_ + hl_sign * hu * rx * sc, cz_ + hv * ry * sc
+            pts.append((hx, hz))
+            for a_ in range(nh):
+                t = 2 * np.pi * a_ / nh
+                pts.append((hx + np.cos(t) * hrx * rx * sc, hz + np.sin(t) * hry * ry * sc))
             P = np.array(pts)
             y = plate_y(P[:, 0], P[:, 1]) - 0.0006
+            y[-(nh + 1):] -= 0.0003                     # highlight just in front of the iris
             xx, zz = _to_m(side, P[:, 0], P[:, 1])
             return [Vector((xx[k], y[k], zz[k])) for k in range(len(P))], P
         ivs, IP = iris_pts()
         ifaces = []
-        for a in range(na):
-            b = (a + 1) % na
-            tri = (0, 1 + a, 1 + b)
+        for a_ in range(na):
+            b_ = (a_ + 1) % na
+            tri = (0, 1 + a_, 1 + b_)
             ifaces.append(tri if side > 0 else tri[::-1])
         for r in range(1, nr):
-            for a in range(na):
-                b = (a + 1) % na
-                q = (1 + (r - 1) * na + a, 1 + r * na + a, 1 + r * na + b, 1 + (r - 1) * na + b)
+            for a_ in range(na):
+                b_ = (a_ + 1) % na
+                q = (1 + (r - 1) * na + a_, 1 + r * na + a_, 1 + r * na + b_, 1 + (r - 1) * na + b_)
                 ifaces.append(q if side > 0 else q[::-1])
+        h0 = 1 + nr * na
+        n_iris_faces = len(ifaces)
+        for a_ in range(nh):
+            b_ = (a_ + 1) % nh
+            tri = (h0, h0 + 1 + a_, h0 + 1 + b_)
+            ifaces.append(tri if side > 0 else tri[::-1])
         iuv = [(0.5 + (p[0] - ix) / (2 * rx * ext), 0.5 + (p[1] - iz) / (2 * ry * ext)) for p in IP]
-        hl_sign = 1.0 if (side > 0 or not HL_SAME_SIDE) else -1.0
         iimg = _image("IMG_RigIris_" + sfx, ET["iris"](512, hl_sign))
-        iris = _mesh("RigIris_" + sfx, ivs, ifaces, iuv, _tex_mat("MAT_RigIris_" + sfx, iimg), col, off_x)
+        iris = _mesh("RigIris_" + sfx, ivs, ifaces, iuv, _tex_mat("MAT_RigIris_" + sfx, iimg, alpha=False), col, off_x)
+        iris.data.materials.append(_emission("MAT_RigHighlight_" + tag, _lin(ET["C_HL"])))
+        for pi, p_ in enumerate(iris.data.polygons):
+            p_.material_index = 1 if pi >= n_iris_faces else 0
         iris.visible_shadow = False
         iris.shape_key_add(name="Basis")
         looks = {"PF-LookLeft": (side * 0.32, 0.0), "PF-LookRight": (-side * 0.32, 0.0),
@@ -413,7 +534,15 @@ def build_rig(ob, col, LID, off_x, tag):
             dU, dL = ES["expression_offsets"](name, Xg, U, L)
             lid_pairs[kname] = ES["lid_ribbon"](dU, dL, wing=0.0 if name == "Blink" else 1.0)[:2]
             rim_pairs[kname] = ES["low_rim_ribbon"](dU, dL)
-        made.append(_rig_strip("RigLidLine_" + sfx, lid_pairs, surf, side, line_m, col, off_x, 0.0010, key_skin=key_skin_for(side)))
+        made.append(_rig_strip("RigLidLine_" + sfx, lid_pairs, surf, side, line_m, col, off_x, LID_LIFT, key_skin=key_skin_for(side)))
+        # e1: skin-coloured cover over the lower edge (hides the stepped mesh edge), same keys
+        cov_pairs = {None: ES["edge_cover_ribbon"]()}
+        for name, key in LID_KEYS.items():
+            kname = key + ("_L" if side > 0 else "_R") if name == "Blink" else key
+            dU, dL = ES["expression_offsets"](name, Xg, U, L)
+            cov_pairs[kname] = ES["edge_cover_ribbon"](dU, dL, scale=0.0 if name == "Blink" else 1.0)   # closed: line covers
+        if COVER:
+            made.append(_rig_strip("RigLidCover_" + sfx, cov_pairs, surf, side, cover_m, col, off_x, 0.0007, rows=2, key_skin=key_skin_for(side)))
         if ES["LOW_RIM"] > 0:
             made.append(_rig_strip("RigLowRim_" + sfx, rim_pairs, surf, side, rim_m, col, off_x, 0.0008, key_skin=key_skin_for(side)))
         # brow + inner-end shadow
@@ -431,7 +560,9 @@ def build_rig(ob, col, LID, off_x, tag):
         shade_pairs = {k: shade_of(v) for k, v in brow_pairs.items()}
         made.append(_rig_strip("RigBrow_" + sfx, brow_pairs, surf, side, brow_m, col, off_x, 0.0012, over_fit=True))
         made.append(_rig_strip("RigBrowShade_" + sfx, shade_pairs, surf, side, shade_m, col, off_x, 0.0010, over_fit=True))
-    _eye_lit(ob, tag, key_co)
+    if not globals().get("PIXEL_NORMAL", 0):   # s1: per-pixel normals do not rotate with the lid keys -> no lit patch needed
+        _eye_lit(ob, tag, key_co)
+    _no_outline_where_keys_move(ob, key_co)
     try:
         json.dump(EXPRESSIONS, open(os.path.join(os.path.dirname(EYES_PATH), "expressions.json"), "w"), indent=1)
     except Exception:

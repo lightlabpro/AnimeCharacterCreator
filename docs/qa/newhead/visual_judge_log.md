@@ -202,3 +202,55 @@ Judge (menu view.json, analyses visual_v14..v30_view.json, ours at 12/30/50/70 d
   measurements contradict).
 Boards: board_view_before.png, board_view_v30_sweep.png (0-90 deg), board_view_v30_refs.png, board_view_v30_mirror.png
 (-30/-60 deg), board_view_v30_expressions.png (expressions at 30/60 deg), board_expr_v30_front.png (front unchanged).
+
+## e-series - eye edges and expressions (face_rig.py, eye_shape.py, view_keys.py)
+- Skin band between the lid line and the eye white (worst in amazed) was the inner wall of the lid rim facing the
+  camera: `_tuck_rim` folds the rim rings under the lid loop (RIM_OUT/RIM_IN) and the lid keys carry the folded rim.
+- Blink notch: the lid ribbon doubled back along the closed curve; `lid_ribbon` now keeps the neutral sample split
+  between the upper lid and the wing for every key and collapses the wing for the blink (samples 100 -> 160).
+- Dark tick at the outer corner in blink was the outline shell: `_no_outline_where_keys_move` (OutlineWeight 0 on
+  skin any lid key moves, plus one ring).
+- Barbs/broken blink lines at 30-60 deg (lid key + view key): COLUMN mode - eye/iris/brow parts take one horizontal
+  shift per column computed at a reference row. Left: small tails at the ends of the blink line at angles.
+- Expression audit (blender/tools/typesafe_expr_audit.py, pictures): calibrated on the MHS3 eye itself (clean 0.25,
+  iris 0.15 for the reference) - read scores against the reference (vs_ref); lid_line was flagged for amazed/sad.
+
+## s-series - face shading
+- s1 PIXEL_NORMAL: the head normal field evaluated per pixel (an_w weight); s2/s3 the ears keep their own normals.
+- s4 the blurry terminator at the temple / back of the skull was the toon softness (0.012 brightness units) over a
+  slowly changing smooth normal, not a cast shadow (visible_shadow test identical): head-only group copy with
+  Softness 0.002 (SKIN_SOFT). Edges crisp in the 0-90 deg sweep.
+
+## TypeSafe v2 (jev-1.14.0)
+Judge sends the pictures (danger-zone images) next to the words: analysis_faithful + look_<feature> check the
+analysis against the pictures; Box tool (typesafe_box.py) is a measuring aid only (MHS3 eyes boxed 40-50 px off,
+refined confidence 0.09-0.25); the API needs >= 280 px per side.
+
+## n-series - nose, mouth, ears (apply_look.py; mesh unchanged, so the dataset bands are unaffected)
+Reference crops: ref_nosemouth.png, ref_ear.png (MHS3 frame). Measured in pupil distances (IPD).
+- n1 nose: one curved stroke (NOSE_STYLE 2) thin in the middle, heavy hooked end running into a painted shadow lens
+  under the tip (NOSE_SHADE; 0.25 x 0.08 IPD, toon shadow colour + NOSE_TINT mauve) - replaces the straight line, the
+  "v" nostril tick and the hard vertex-mask rectangle. Line moved to the -x side (NOSE_SIDE -1) to match the
+  reference (face turned to the viewer's left: line on the far side, lens toward the near side).
+- n1 under-lip: a shadow lens (LIP_STYLE 2, 0.33 IPD wide) instead of a thin dark line.
+- n1 strokes skip the view-key remap (VIEW SKIP): the column remap made the line jagged and pulled it off the nose
+  at 20-35 deg. They get their own keys instead (stroke_view_keys): toward the line's side its top retracts to
+  EYE_Z-0.07 so it does not cross the far eye (which the eye view key slides toward the nose). A mirror key was tried
+  and dropped (the blend swept the strokes through the nose at 20 deg).
+- n2 ears: the 24-spoke shells drew a polygonal rim/outline; they now render from their own object NEW_Ears_<tag>
+  (Mask on the shared mesh + Subdivision 2 + outline), so the asset mesh keeps its topology and every index/key.
+- n3 ear paint from ear-plane coordinates (PCA of each shell): mauve crescent bowl (EAR_BOWL_E minus EAR_LIT_E,
+  EAR_TINT 1, tint edge at the toon shadow threshold) and a thin C line along its front-top edge (ear_f/ear_lw
+  iso-band) - replaces the thick back slash and the oval blob.
+TypeSafe (menus nose_mouth.json / ears.json updated, images on):
+- n7 nose: picked nose_line_join_tip (the line already joins the tip: declined, excluded) then nose_line_start_higher
+  (applied for the front view; at 3/4 it crossed the far eye, hence the retract key).
+- n5 ears: ear_outline_close_top (tried EAR_TOP_LINE 0.6 on the upper root: no visible change - off, excluded);
+  n10: ear_bowl_bigger (applied, +0.06 radii); n13: ear_bowl_edge_smoother (already applied at n9: stale pick).
+- n13 nose: nose_bigger (geometry, build_head NOSE_GAIN, needs a mesh rebuild + band check: NOT applied yet; our
+  nose bottom is 0.65 IPD under the pupils vs 0.69 in the reference, so it is consistent with the measurement).
+- final words/pictures: ears - ear_shape 0.90 and ear_light 0.84 match; inner_line 0.61 / inner_shadow 0.47 need a
+  human (from 0.53 / 0.16); ear_outline 0.18 off (gap at the top front remains). Nose/mouth - nose_line 0.34 (from
+  0.20), nose_shadow 0.20, under_lip 0.17 off (reference has a darker top edge and a pinker tone); mouth_line 0.01 is
+  not comparable (the reference mouth is open).
+Boards: board_n13_face_sweep.png (-35..90 deg), board_n13_expressions.png, board_n13_nose_ear.png.

@@ -1,12 +1,7 @@
 {
  "region": "nose_mouth",
- "note": "Painted strokes are off (0) until a correction turns them on. Geometry knobs need a rebuild and the dataset band check. add_* entries are excluded once applied.",
+ "note": "n-series (2026-10-15): nose line = one curved stroke with a hooked tip (NOSE_STYLE 2), painted shadow lenses under the nose and the lower lip. add_* entries removed (all applied).",
  "corrections": [
-  {
-   "id": "add_nose_line",
-   "description": "Paint a thin dark-brown line down the shadow side of the nose bridge, from under the brow to the nose tip.",
-   "setting": "apply_look.py NOSE_LINE 0 -> 1"
-  },
   {
    "id": "nose_line_thicker",
    "description": "Make the nose bridge line thicker and darker.",
@@ -21,11 +16,6 @@
    "id": "nose_line_shorter",
    "description": "Make the nose bridge line shorter (start lower, nearer the tip).",
    "setting": "apply_look.py NOSE_LINE_LEN -0.25"
-  },
-  {
-   "id": "add_nostril",
-   "description": "Paint a small dark nostril mark under the nose tip on the shadow side.",
-   "setting": "apply_look.py NOSTRIL 0 -> 1"
   },
   {
    "id": "nose_tip_shadow_bigger",
@@ -43,11 +33,6 @@
    "setting": "build_head.py NOSE_GAIN +0.008"
   },
   {
-   "id": "add_mouth_line",
-   "description": "Paint the mouth as a clear dark line across the lip slit.",
-   "setting": "apply_look.py MOUTH_LINE 0 -> 1"
-  },
-  {
    "id": "mouth_line_wider",
    "description": "Make the mouth line wider.",
    "setting": "apply_look.py MOUTH_LINE_W +0.2"
@@ -61,11 +46,6 @@
    "id": "mouth_line_thicker",
    "description": "Make the mouth line thicker and bolder.",
    "setting": "apply_look.py MOUTH_LINE +0.5"
-  },
-  {
-   "id": "add_lip_shadow",
-   "description": "Paint a short soft stroke under the lower lip.",
-   "setting": "apply_look.py LIP_SHADOW 0 -> 1"
   },
   {
    "id": "mouth_higher",
@@ -86,6 +66,46 @@
    "id": "nose_line_join_tip",
    "description": "Extend the nose bridge line down so it joins the nose tip shape.",
    "setting": "apply_look.py NOSE_LINE_LEN +0.15"
+  },
+  {
+   "id": "nose_shade_bigger",
+   "description": "Make the shadow lens under the nose tip bigger (wider and taller).",
+   "setting": "apply_look.py NOSE_SHADE +0.2"
+  },
+  {
+   "id": "nose_shade_smaller",
+   "description": "Make the shadow lens under the nose tip smaller.",
+   "setting": "apply_look.py NOSE_SHADE -0.2"
+  },
+  {
+   "id": "shadows_more_mauve",
+   "description": "Make the shadow shapes under the nose and the lower lip more pink-mauve.",
+   "setting": "apply_look.py NOSE_TINT +0.2"
+  },
+  {
+   "id": "shadows_less_mauve",
+   "description": "Make the shadow shapes under the nose and the lower lip less pink, closer to the plain skin shadow.",
+   "setting": "apply_look.py NOSE_TINT -0.2"
+  },
+  {
+   "id": "lip_shadow_bigger",
+   "description": "Make the shadow under the lower lip bigger and stronger.",
+   "setting": "apply_look.py LIP_SHADOW +0.3"
+  },
+  {
+   "id": "lip_shadow_smaller",
+   "description": "Make the shadow under the lower lip smaller and fainter.",
+   "setting": "apply_look.py LIP_SHADOW -0.3"
+  },
+  {
+   "id": "nose_hook_heavier",
+   "description": "Make the hooked bottom end of the nose line (the nostril wing) heavier.",
+   "setting": "apply_look.py NOSE_LINE +0.3 (the hook takes most of it)"
+  },
+  {
+   "id": "nose_line_start_higher",
+   "description": "Start the nose line higher, up under the inner end of the brow, bending in toward the bridge.",
+   "setting": "apply_look.py NOSE_STYLE 2 first control point EYE_Z-0.03 -> EYE_Z+0.03"
   }
  ]
 }

@@ -20,6 +20,8 @@ LID_TH = 0.16        # upper lid line thickness
 WING = 0.16          # r1: the line runs down the outer corner along this share of the lower lid
 WING_TH = 0.13       # its start thickness (tapers to 0)
 LOW_RIM = 0.035      # faint warm-grey rim along the lower lid
+LID_TUCK = 0.05      # e1: the lid line's inner edge reaches this far over the opening (covers the edge chords)
+COVER_IN, COVER_OUT = 0.035, 0.03   # e1: skin-coloured cover strip over the lower edge (inside / outside the edge)
 IRIS_X, IRIS_Z, IRIS_RX, IRIS_RY = -0.08, -0.10, 0.45, 0.51
 OPEN_EPS = 0.10      # the opening ends where it is this tall (the lid line covers the thin wedge beyond)
 SMOOTH = 0.055       # Gaussian sigma (W2) along the curves
@@ -122,9 +124,13 @@ def resample_closed(P, m, sig=None):
     return Q
 
 
-def lid_ribbon(dU=None, dL=None, n=400, samples=100, wing=1.0):
-    """The upper lid line as (inner, outer) point pairs along the upper edge from the inner corner to the outer corner,
-    then a short wing down the outer corner along the lower edge, thickness tapering to 0."""
+def _arc_sample(P, k):
+    seg = np.linalg.norm(np.diff(P, axis=0), axis=1); s = np.concatenate([[0], np.cumsum(seg)])
+    t = np.linspace(0, s[-1], k)
+    return t, s
+
+
+def _lid_parts(dU=None, dL=None, n=400, wing=1.0):
     X, U, L, _ = base_curves(n)
     i0, i1 = open_range(X, U, L, eps=OPEN_EPS)
     if dU is not None:
@@ -134,20 +140,50 @@ def lid_ribbon(dU=None, dL=None, n=400, samples=100, wing=1.0):
     xc = X[i1]; xw = xc - 2.0 * WING
     tu = th[i0:i1 + 1] * (1 - (1 - wing) * _sm(xc - 0.30, xc, X[i0:i1 + 1]))   # closed eye: the line tapers off
     j = np.nonzero((X <= xc) & (X >= xw))[0][::-1]       # outer corner -> inward along the lower edge
-    lo = np.stack([X[j], L[j]], 1)[1:]
-    tl = np.interp(X[j], [xw, xc], [0.0, WING_TH])[1:] * max(wing, 1e-3)
-    path = np.concatenate([up, lo]); thick = np.concatenate([tu, tl])
-    seg = np.linalg.norm(np.diff(path, axis=0), axis=1); s = np.concatenate([[0], np.cumsum(seg)])
-    t = np.linspace(0, s[-1], samples)
-    Pp = np.stack([np.interp(t, s, path[:, k]) for k in range(2)], 1)
-    Th = _gauss1d(np.interp(t, s, thick), 2.0)
-    Pp = np.stack([_gauss1d(Pp[:, 0], 1.5), _gauss1d(Pp[:, 1], 1.5)], 1)
-    d = np.gradient(Pp, axis=0); d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
+    lo = np.stack([X[j], L[j]], 1)
+    tl = np.interp(X[j], [xw, xc], [0.0, WING_TH]) * max(wing, 1e-3)
+    return up, tu, lo, tl
+
+
+def lid_ribbon(dU=None, dL=None, n=400, samples=160, wing=1.0):
+    """The upper lid line as (inner, outer) point pairs along the upper edge from the inner corner to the outer corner,
+    then a short wing down the outer corner along the lower edge, thickness tapering to 0.
+    e10: the samples are split between the upper part and the wing in the NEUTRAL proportion for every key, so a
+    vertex keeps the same place along the line in all keys (with the view keys added on top, a vertex that moved from
+    the wing onto the upper part made barbs at the end of the blink line). Closed eye (wing = 0): the wing samples
+    collapse onto the outer end with zero width (the hairpin back along the closed curve cut a notch into the line)."""
+    up0, _, lo0, _ = _lid_parts(n=n)
+    l_up = np.linalg.norm(np.diff(up0, axis=0), axis=1).sum(); l_lo = np.linalg.norm(np.diff(lo0, axis=0), axis=1).sum()
+    n_up = int(round(samples * l_up / (l_up + l_lo))); n_lo = samples - n_up
+    up, tu, lo, tl = _lid_parts(dU, dL, n, wing)
+    t, s = _arc_sample(up, n_up)
+    Pu = np.stack([np.interp(t, s, up[:, k]) for k in range(2)], 1); Tu = np.interp(t, s, tu)
+    if wing <= 1e-3:
+        Pl = np.repeat(Pu[-1:], n_lo, 0); Tl = np.zeros(n_lo)
+    else:
+        t2, s2 = _arc_sample(lo, n_lo + 1)
+        Pl = np.stack([np.interp(t2, s2, lo[:, k]) for k in range(2)], 1)[1:]; Tl = np.interp(t2, s2, tl)[1:]
+    Pp = np.concatenate([Pu, Pl]); Th = _gauss1d(np.concatenate([Tu, Tl]), 2.0)
+    m = n_up if wing <= 1e-3 else samples                # smooth / take normals over the live part only
+    Pq = Pp[:m].copy()
+    Pq = np.stack([_gauss1d(Pq[:, 0], 1.5), _gauss1d(Pq[:, 1], 1.5)], 1)
+    d = np.gradient(Pq, axis=0); d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
     nrm = np.stack([-d[:, 1], d[:, 0]], 1)
     nrm = np.stack([_gauss1d(nrm[:, 0], 3.0), _gauss1d(nrm[:, 1], 3.0)], 1)   # turn smoothly round the corner
     nrm /= np.maximum(np.linalg.norm(nrm, axis=1, keepdims=True), 1e-9)
-    inner = Pp - nrm * 0.03                              # tuck under the skin edge (covers the mesh chords)
-    outer = Pp + nrm * Th[:, None]
+    Thq = Th[:m] if wing > 1e-3 else _gauss1d(Tu, 2.0) * _sm(0, 4, np.arange(m)[::-1])   # closed: taper to 0 at the end
+    tuck = LID_TUCK * np.clip(Thq / (0.5 * LID_TH), 0, 1)  # e1: the tuck tapers with the line (no sliver where it ends)
+    # e2: round the hairpin at the outer corner the inner offset must stay inside the local curvature radius, or the
+    # inner edge crosses itself and leaves a skin-coloured sliver inside the wing
+    ang = np.unwrap(np.arctan2(d[:, 1], d[:, 0])); ds = np.maximum(np.linalg.norm(np.gradient(Pq, axis=0), axis=1), 1e-9)
+    kap = _gauss1d(np.abs(np.gradient(ang)) / ds, 2.0)
+    tuck = np.minimum(tuck, 0.6 / np.maximum(kap, 1e-6))
+    inner = Pq - nrm * tuck[:, None]                     # tuck under the skin edge (covers the mesh chords)
+    outer = Pq + nrm * Thq[:, None]
+    if m < samples:
+        inner = np.concatenate([inner, np.repeat(Pq[-1:], samples - m, 0)])
+        outer = np.concatenate([outer, np.repeat(Pq[-1:], samples - m, 0)])
+        Th = np.concatenate([Thq, np.zeros(samples - m)])
     return inner, outer, Th
 
 
@@ -187,3 +223,25 @@ BROW_KEYS = {
 }
 EYE_KEYS = ["Blink", "Wide", "Sad", "Angry", "Happy"]
 IRIS_KEYS = {"LookLeft": (-0.32, 0.0), "LookRight": (0.32, 0.0), "LookUp": (0.0, 0.16), "LookDown": (0.0, -0.14)}
+
+
+def edge_cover_ribbon(dU=None, dL=None, n=400, samples=90, scale=1.0):
+    """e1: a skin-coloured strip over the lower opening edge, from COVER_IN inside the opening to COVER_OUT outside,
+    inner corner to the start of the lid-line wing: it hides the stepped mesh edge so the white ends in a smooth
+    curve (the lid line covers the upper edge)."""
+    X, U, L, _ = base_curves(n)
+    i0, i1 = open_range(X, U, L, eps=OPEN_EPS)
+    if dU is not None:
+        U = np.maximum(U + dU, L + dL); L = L + dL
+    xw = X[i1] - 1.2 * WING
+    sel = (X >= X[i0] - 0.02) & (X <= xw)
+    P = np.stack([X[sel], L[sel]], 1)
+    seg = np.linalg.norm(np.diff(P, axis=0), axis=1); s = np.concatenate([[0], np.cumsum(seg)])
+    t = np.linspace(0, s[-1], samples)
+    P = np.stack([np.interp(t, s, P[:, k]) for k in range(2)], 1)
+    P = np.stack([_gauss1d(P[:, 0], 1.5), _gauss1d(P[:, 1], 1.5)], 1)
+    d = np.gradient(P, axis=0); d /= np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-9)
+    nrm = np.stack([-d[:, 1], d[:, 0]], 1)               # points into the opening (up) along the lower edge
+    nrm = np.where(nrm[:, 1:2] < 0, -nrm, nrm)
+    taper = _sm(0.0, 0.06, t / s[-1]) * _sm(1.0, 0.92, t / s[-1]) * scale
+    return P + nrm * (COVER_IN * taper)[:, None], P - nrm * (COVER_OUT * taper)[:, None]

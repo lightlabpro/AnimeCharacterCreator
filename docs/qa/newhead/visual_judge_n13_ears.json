@@ -1,0 +1,64 @@
+{
+ "region": "ears",
+ "subject": "the ear seen from the side and a little from the front",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "ear_outline",
+   "p_same": 0.18,
+   "confidence": 0.64,
+   "p_look": 0.2,
+   "verdict": "off"
+  },
+  {
+   "feature": "inner_shadow",
+   "p_same": 0.47,
+   "confidence": 0.06,
+   "p_look": 0.25,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "inner_line",
+   "p_same": 0.61,
+   "confidence": 0.22,
+   "p_look": 0.28,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "ear_light",
+   "p_same": 0.84,
+   "confidence": 0.68,
+   "p_look": 0.595,
+   "verdict": "matches"
+  },
+  {
+   "feature": "ear_shape",
+   "p_same": 0.895,
+   "confidence": 0.79,
+   "p_look": 0.52,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.82,
+  "confidence": 0.64,
+  "verdict": "usable",
+  "faithful_p": 0.44
+ },
+ "first_fix": {
+  "order_a": "ear_bowl_edge_smoother",
+  "order_b": "ear_bowl_edge_smoother",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "ear_line_longer",
+    "ear_bowl_edge_smoother"
+   ],
+   "order_a": "ear_bowl_edge_smoother",
+   "order_b": "ear_bowl_edge_smoother"
+  },
+  "apply": "ear_bowl_edge_smoother",
+  "setting": "apply_look.py bowl smoothstep widths 0.1 -> 0.2"
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "region": "nose_mouth",
+ "subject": "nose, mouth and the shadows under them, face turned about 20 degrees",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "mouth_line",
+   "p_same": 0.01,
+   "confidence": 0.98,
+   "p_look": 0.03,
+   "verdict": "off"
+  },
+  {
+   "feature": "under_lip",
+   "p_same": 0.14,
+   "confidence": 0.72,
+   "p_look": 0.29,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_shadow",
+   "p_same": 0.19,
+   "confidence": 0.62,
+   "p_look": 0.275,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_line",
+   "p_same": 0.205,
+   "confidence": 0.59,
+   "p_look": 0.245,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_height",
+   "p_same": 0.5,
+   "confidence": 0.0,
+   "p_look": 0.425,
+   "verdict": "needs a human"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.865,
+  "confidence": 0.73,
+  "verdict": "usable",
+  "faithful_p": 0.65
+ },
+ "first_fix": {
+  "order_a": "nose_line_join_tip",
+  "order_b": "nose_line_join_tip",
+  "agree": true,
+  "tie_break": null,
+  "apply": "nose_line_join_tip",
+  "setting": "apply_look.py NOSE_LINE_LEN +0.15"
+ }
+}

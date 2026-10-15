@@ -99,6 +99,13 @@ Files (repo `AnimeCharacterCreator-main`):
    - Stop when `first_fix` is "none", when the two orders (and the tie-break) still disagree, when every feature is
      "matches" or "needs a human", or after about five rounds; then report the remaining off features honestly.
 
+- Calibrate picture rubrics on the reference itself before trusting them: the expression audit scored the MHS3 eye
+  clean 0.25 and iris 0.15, so those questions are read only relative to the reference (vs_ref).
+- A pick can be stale (already applied) or undo a measured fix: check it against the log and render it at every
+  angle the region is seen from (the nose_line_start_higher pick was right from the front and crossed the far eye
+  at 3/4). Words for a feature the reference shows in a different state (open vs closed mouth) are not comparable;
+  say so in the analysis instead of chasing the score.
+
 ## Writing a new region's menu
 
 One file per region in `blender/tools/visual_corrections/`. Each correction is one small step on one setting, phrased

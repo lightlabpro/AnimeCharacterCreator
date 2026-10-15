@@ -30,7 +30,7 @@ VIEW = dict(
     SIDE_GAP=0.10,     # profile: the eye keeps this gap behind the front silhouette
     SOFT=0.10,         # soft clamp width at the bridge / silhouette (eye half-widths)
     R_IN=0.14, R_OUT=0.6, R_V=0.45, R_UP=0.8,   # skin falloff around the eye+brow box (eye half-widths)
-    LIT_MM=0.0010, LIT_Y=-0.060, PUSH=0.0015, VIEW_LIT=1, MIN_SLOPE=0.35, BOX_FADE=0.3, FIT_DEPTH=0, PUSH_BACK=0.0035,     # v2: skin moved this far (m) by a view key is drawn fully lit (eye_lit)
+    LIT_MM=0.0010, LIT_Y=-0.060, PUSH=0.0015, VIEW_LIT=1, MIN_SLOPE=0.35, BOX_FADE=0.3, FIT_DEPTH=0, PUSH_BACK=0.0035, SKIP=("NewNose", "NewMouth", "NewLip"), COLUMN=1,     # v2: skin moved this far (m) by a view key is drawn fully lit (eye_lit)
     Y_FACE=-0.075, Y_SIDE=-0.035,    # v2: skin moves fully in front of Y_FACE (m), not at all behind Y_SIDE (temple, ear)
 )
 for _k, _v in EYE_VIEW.items():
@@ -164,10 +164,12 @@ def _objects(col, head):
         if o.type != "MESH":
             continue
         n = o.name
+        if n.startswith(VIEW.get("SKIP", ())):
+            continue                # n1: painted nose/mouth strokes stay on the real surface (the column remap made them jagged)
         side = 1 if n.endswith("_L") else (-1 if n.endswith("_R") else 0)
         if n.startswith("RigIris_"):
             out.append((o, "iris", side))
-        elif n.startswith(("RigEyeWhite_", "RigLidLine_", "RigLowRim_")):
+        elif n.startswith(("RigEyeWhite_", "RigLidLine_", "RigLowRim_", "RigLidCover_")):
             out.append((o, "eye", side))
         elif n.startswith(("RigBrow_", "RigBrowShade_")):
             out.append((o, "brow", side))
@@ -271,8 +273,16 @@ def _key_coords(objs, g, th, mirror, near_only):
         if role in ("eye", "iris", "brow"):
             if s_obj not in M:
                 continue
-            ut = M[s_obj][role](x, z)
-            xt = gg.inv(ut, z, br); w[:] = 1.0
+            if VIEW["COLUMN"]:
+                # e9: one horizontal shift per column, taken at the eye's (brow's) centre row: an expression key moves
+                # lid parts up and down, and with a per-row map the added view offset no longer fitted them (blink
+                # lines broke into barbs at 30-60 degrees)
+                zr = np.full(len(z), _zref(role))
+                xt = gg.inv(M[s_obj][role](x, zr), zr, br)
+            else:
+                ut = M[s_obj][role](x, z)
+                xt = gg.inv(ut, z, br)
+            w[:] = 1.0
         else:
             # v10: the skin map is built per row on a fine x grid and made monotone (slope >= MIN_SLOPE), so the
             # falloff between moved and fixed skin stretches instead of folding (folds showed the outline shell)
@@ -303,14 +313,16 @@ def _key_coords(objs, g, th, mirror, near_only):
             # edge of the white notched)
             xr0 = -x if mirror else x; xr1 = -xn if mirror else xn
             yf0 = _fit_y(g.surfs, xr0, z); yf1 = _fit_y(g.surfs, xr1, z)
-            b = _box_w(xr0, z) * (w > 0) * VIEW["FIT_DEPTH"]
+            b = _box_w(xr0, z) * (w > 0) * max(VIEW["FIT_DEPTH"], VIEW["COLUMN"])
+            if role in ("eye", "iris", "brow") and VIEW["COLUMN"]:
+                b = (w > 0).astype(float)
             yn = np.where(b > 0, b * (yf1 + (y - yf0)) + (1 - b) * yn, yn)
         if o.name.startswith(("RigEyeWhite_", "RigIris_")) and w.any():
             # v12: the eye white and iris step away from this view's camera (invisible in its projection) so the lids
             # still cover them when an expression key is added on top of a view key (the two add their offsets)
             xn = xn - math.sin(th) * VIEW["PUSH_BACK"] * w
             yn = yn + math.cos(th) * VIEW["PUSH_BACK"] * w
-        if o.name.startswith(("RigLidLine_", "RigLowRim_", "RigBrow")) and w.any():
+        if o.name.startswith(("RigLidLine_", "RigLowRim_", "RigLidCover_", "RigBrow")) and w.any():
             # v7: line strips also step toward this view's camera (invisible in its projection) so the slid skin's
             # chords cannot poke through them at the curved corners
             xn = xn + math.sin(th) * VIEW["PUSH"] * w
@@ -360,8 +372,21 @@ def _skin_row(gg, br, M, xs, zz):
             continue
         t = np.clip((Z[sel] - 0.55) / 0.30, 0, 1); t = t * t * (3 - 2 * t)   # lid skin follows the eye map
         ut = (1 - t) * M[s]["eye"](xs[sel], zr[sel]) + t * M[s]["brow"](xs[sel], zr[sel])
-        xt[sel] = gg.inv(ut, zr[sel], br); ww[sel] = ws[sel]
+        xrow = gg.inv(ut, zr[sel], br)
+        if VIEW["COLUMN"]:
+            # e9: inside the eye box the skin takes the same per-column shift as the eye parts
+            ze_ = np.full(sel.sum(), _zref("eye")); zb_ = np.full(sel.sum(), _zref("brow"))
+            xref = (1 - t) * gg.inv(M[s]["eye"](xs[sel], ze_), ze_, br) + t * gg.inv(M[s]["brow"](xs[sel], zb_), zb_, br)
+            b = _box_w(xs[sel] * (1 if not getattr(gg, "_mirror", False) else -1), zr[sel])
+            xrow = b * xref + (1 - b) * xrow
+        xt[sel] = xrow; ww[sel] = ws[sel]
     return ww, xt
+
+
+def _zref(role):
+    w2m = ES["EYE_W2"] * S
+    ze = O + ES["EYE_Z0"] * S
+    return ze + 0.75 * w2m if role == "brow" else ze
 
 
 def add_view_keys(ob, col, tag):
