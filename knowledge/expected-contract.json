@@ -55,6 +55,8 @@
     "ID-BodyLean",
     "ID-BodySoft",
     "ID-BroadShoulders",
+    "ID-BrowInnerThick",
+    "ID-BrowInnerThin",
     "ID-BrowLong",
     "ID-BrowRidge",
     "ID-BrowRidge_Neg",
@@ -558,6 +560,15 @@
       "bipolar": true,
       "shape_key": "ID-BrowLong",
       "shape_key_negative": "ID-BrowShort",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "brow.innerThickness",
+      "label": "Brow inner end",
+      "bipolar": true,
+      "shape_key": "ID-BrowInnerThick",
+      "shape_key_negative": "ID-BrowInnerThin",
       "bone_property": null,
       "bodies": "HUM"
     },
@@ -1761,8 +1772,8 @@
     }
   ],
   "counts": {
-    "sliders": 144,
-    "identity_shape_keys": 171,
+    "sliders": 145,
+    "identity_shape_keys": 173,
     "performance_shape_keys": 59,
     "sockets": 30,
     "documented_sockets": 38

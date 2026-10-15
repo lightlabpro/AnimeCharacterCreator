@@ -23,13 +23,16 @@ import os
 EYE_SIZE_BAKE = 0.80        # eye (and brow) scale about the eye centre (x)
 EYE_SIZE_BAKE_Z = 0.92      # ... vertical (the MHS3 opening is taller for its width than n56's: h/w ~0.6)
 EYE_SPACING_BAKE = 0.89     # eye centre distance from the face centre line
-EAR_OUT_BAKE = 8.0          # deg: ears swing further off the head (MHS3 front views show the inner ear)
-CHIN_WIDE_BAKE = 0.045      # H: the chin front widens by this at the bottom (flatter, squarer MHS3 male chin)
+EAR_OUT_BAKE = 2.0          # q5: TypeSafe ears_closer (agreed; Leo ears lie close); was 8 deg: ears swing further off the head (MHS3 front views show the inner ear)
+CHIN_WIDE_BAKE = 0.055      # q4: TypeSafe chin_wider (agreed, measured 0.30 vs Leo 0.37 D); H: the chin front widens by this at the bottom (flatter, squarer MHS3 male chin)
 ID_AMOUNTS = {"EyeSize": (1.15, 0.87), "EyeSpacing": (1.08, 0.93), "EyeHeight": (0.025, -0.025),
               "MouthWidth": (1.15, 0.87), "MouthHeight": (0.02, -0.02), "JawWidth": (1.08, 0.93),
               "ChinWidth": (0.02, -0.015), "ChinLength": (0.03, -0.025), "EarSize": (1.15, 0.87), "EarOut": 12.0}
 
 OUT_FALL = 0.42             # eye map falloff past the outer eye corner (W2)
+SKIN_SLIDE = 1              # q1: moved skin slides on the pre-bake surface (no dent beside the eyes)
+SLIDE_RIM = (0.004, 0.014)  # q1: m from the lid rim: below the first value the skin keeps its own depth
+ORBIT_FILL = (1.0, 0.085, 0.10, 0.14)   # q1c: strength, brow-line / cheek-line offsets above / below the eye centre (S), region width past the outer corner (S)
 REPROJECT = ("RigBrow_", "RigBrowShade_")   # parts that sit on skin outside the rigid box: depth re-fitted to the skin
 EYE_PART_PREFIX = ("RigEyeWhite_", "RigIris_", "RigLidLine_", "RigLidCover_", "RigLowRim_", "RigBrow_", "RigBrowShade_")
 
@@ -187,11 +190,63 @@ def bake(col, head):
     obs = _objects(col)
     obs.sort(key=lambda t: t[0] != head)                 # head first (the re-projection needs its new surface)
     t_new = None
+    # q1 (2026-10-15): the eye map moved the brow ridge and the cheek tops with the eye (x 0.80 / z 0.92 about the eye
+    # centre) and they kept their depth, so at brow and cheek height the face's cross-section got a ~1 cm concave dent
+    # beside each eye (Sammy: "like a doll's head pushed in"; face_study setback at 0.30 hh 0.16 -> 0.22 vs dataset
+    # median 0.13-0.15). Now the moved skin slides ON the old surface (its depth is re-read from the pre-bake skin at
+    # its new x/z), except at the lid rim, which keeps its own depth so the opening is unchanged.
+    dy_head = None
+    if SKIN_SLIDE and hb is not None:
+        P0 = _get(hb); Q0 = full(P0, head, None)
+        Qe = eye_map(P0, None, EYE_SIZE_BAKE, EYE_SPACING_BAKE, 0.0, ES, EYE_SIZE_BAKE_Z)      # q1b: only the eye map's moves
+        moved = np.linalg.norm((Qe - P0)[:, [0, 2]], axis=1) > 1e-5
+        lid = np.load(NPZ)["lid"].astype(bool) if "lid" in np.load(NPZ).files else np.zeros(len(P0), bool)
+        if lid.any() and len(lid) == len(P0):
+            from mathutils.kdtree import KDTree
+            kd = KDTree(int(lid.sum()))
+            for i, p in zip(np.nonzero(lid)[0], P0[lid]):
+                kd.insert((p[0], 0.0, p[2]), int(i))
+            kd.balance()
+            dl = np.array([kd.find((p[0], 0.0, p[2]))[2] for p in P0])
+        else:
+            dl = np.full(len(P0), 1.0)
+        wr = np.where(moved & ~ear, smooth(SLIDE_RIM[0], SLIDE_RIM[1], dl), 0.0)
+        off = P0[:, 1] - _skin_y(t_old, P0)
+        yn = _skin_y(t_old, Q0) + off
+        ok = np.isfinite(yn) & np.isfinite(off) & (np.abs(off) < 0.002)     # q1b: front-most skin only (not undersides)
+        dy_head = np.where(ok, wr * (yn - Q0[:, 1]), 0.0)
+        if ORBIT_FILL:
+            # q1c: the lateral orbit beside the (smaller) opening still sat ~1.5 cm behind the line from the brow ridge to
+            # the cheek (face_study eye-level setback at 0.30 hh 0.215 vs dataset p10-p90 0.10-0.17, n=7 verified anime
+            # heads) - the 3/4 silhouette notched in at the eye. Fill it to that line: per vertex, the skin depth above
+            # (brow) and below (cheek) at the same x is read off the baked surface and the vertex is pulled forward to the
+            # straight line between them (never pushed back), fading out at the region's edges and at the lid rim.
+            Qb = Q0.copy(); Qb[:, 1] += dy_head
+            tb = _tree(Qb, head)
+            ez = O + ES["EYE_Z0"] * S
+            xo = (ES["EYE_CX"] * EYE_SPACING_BAKE + 0.91 * ES["EYE_W2"] * EYE_SIZE_BAKE) * S      # outer corner after the bake
+            zt, zb = ez + ORBIT_FILL[1] * S, ez - ORBIT_FILL[2] * S
+            ax = np.abs(Qb[:, 0])
+            reg = (ax > xo - 0.006) & (ax < xo + ORBIT_FILL[3] * S) & (Qb[:, 2] < zt) & (Qb[:, 2] > zb) & (Qb[:, 1] < -0.02) & ~ear
+            idx = np.nonzero(reg)[0]
+            if len(idx):
+                Pt = Qb[idx].copy(); Pt[:, 2] = zt; Pb = Qb[idx].copy(); Pb[:, 2] = zb
+                yt, yb = _skin_y(tb, Pt), _skin_y(tb, Pb)
+                f = (Qb[idx, 2] - zb) / (zt - zb)
+                yl = yb + (yt - yb) * f
+                wx = smooth(xo - 0.006, xo + 0.002, ax[idx]) * smooth(xo + ORBIT_FILL[3] * S, xo + 0.5 * ORBIT_FILL[3] * S, ax[idx])
+                wz = np.sin(np.pi * np.clip(f, 0, 1)) ** 0.5
+                wl = smooth(0.002, 0.008, dl[idx])
+                pull = np.where(np.isfinite(yl), np.minimum(yl - Qb[idx, 1], 0.0), 0.0) * ORBIT_FILL[0]
+                dy_head[idx] += pull * wx * wz * wl
+                print("q1c orbit fill: %d verts, max %.1f mm" % (len(idx), -1000 * (pull * wx * wz * wl).min()))
     for o, side in obs:
         rep = o.name.startswith(REPROJECT)
         for tgt in _blocks(o) + [o.data]:
             P = _get(tgt)
             Q = full(P, o, side)
+            if o == head and dy_head is not None:
+                Q[:, 1] += dy_head
             if rep and t_new is not None:
                 off = P[:, 1] - _skin_y(t_old, P)        # how far in front of the skin it sat
                 yn = _skin_y(t_new, Q) + off

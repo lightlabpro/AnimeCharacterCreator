@@ -45,7 +45,8 @@ BROW_SHADE_DEPTH = 0.08              # p1: its depth below the brow (W2; was 0.1
 LASH_KEYS = {"ID-LashThick": {"LASH_SCALE": 1.6}, "ID-LashThin": {"LASH_SCALE": 0.55},
              "ID-LashLong": {"WING": 0.24, "LASH_OUT": 1.25}, "ID-LashShort": {"WING": 0.09, "LASH_OUT": 0.8}}
 BROW_ID_KEYS = {"ID-BrowThick": {"thick": 1.35}, "ID-BrowThin": {"thick": 0.65},
-                "ID-BrowLong": {"length": 1.12}, "ID-BrowShort": {"length": 0.85}}
+                "ID-BrowLong": {"length": 1.12}, "ID-BrowShort": {"length": 0.85},
+                "ID-BrowInnerThick": {"taper_in": 1.0}, "ID-BrowInnerThin": {"taper_in": 0.25}}   # q2: inner-end thickness
 
 
 def _es_with(over, fn, *a, **k):

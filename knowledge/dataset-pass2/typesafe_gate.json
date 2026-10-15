@@ -1,0 +1,3304 @@
+{
+ "04026b862b184a26ba0f101933eb6954": {
+  "gate": {
+   "humanoid_anime": 0.59,
+   "adult": 0.95,
+   "bare_head": 0.97,
+   "top_ok": 0.58,
+   "chin_ok": 0.48,
+   "face_front": 0.96
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime",
+   "top_ok",
+   "chin_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.85,
+     "left": 0.29,
+     "right": 0.74
+    },
+    "conf": 0.39,
+    "face_seen": 0.99,
+    "top_err": 0.01,
+    "chin_err": 0.095
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.82,
+     "left": 0.11,
+     "right": 0.64
+    },
+    "conf": 0.34,
+    "face_seen": 0.68,
+    "top_err": 0.01,
+    "chin_err": 0.044
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "07d70d4f8a86479ba70db40793f10e42": {
+  "gate": {
+   "humanoid_anime": 0.6,
+   "adult": 0.71,
+   "bare_head": 0.3,
+   "top_ok": 0.44,
+   "chin_ok": 0.12,
+   "face_front": 0.23
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ]
+ },
+ "0a8a61528cd64d91b2d1260fe9ac8d73": {
+  "gate": {
+   "humanoid_anime": 0.05,
+   "adult": 0.66,
+   "bare_head": 0.25,
+   "top_ok": 0.47,
+   "chin_ok": 0.19,
+   "face_front": 0.04
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ]
+ },
+ "0e89f32791b6411287922b9d62f45e3c": {
+  "gate": {
+   "humanoid_anime": 0.13,
+   "adult": 0.69,
+   "bare_head": 0.93,
+   "top_ok": 0.27,
+   "chin_ok": 0.02,
+   "face_front": 0.21
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.52,
+     "left": 0.37,
+     "right": 0.64
+    },
+    "conf": 0.69,
+    "face_seen": 0.98,
+    "top_err": 0.007,
+    "chin_err": 0.466
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.51,
+     "left": 0.57,
+     "right": 0.74
+    },
+    "conf": 0.75,
+    "face_seen": 0.64,
+    "top_err": 0.024,
+    "chin_err": 0.483
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.98
+ },
+ "122ebbdc59dd4e2b890067be977a4385": {
+  "gate": {
+   "humanoid_anime": 0.59,
+   "adult": 0.82,
+   "bare_head": 0.1,
+   "top_ok": 0.28,
+   "chin_ok": 0.1,
+   "face_front": 0.01
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime"
+  ]
+ },
+ "1324cbd0c4c047078314a3c4029a838b": {
+  "gate": {
+   "humanoid_anime": 0.05,
+   "adult": 0.34,
+   "bare_head": 0.9,
+   "top_ok": 0.73,
+   "chin_ok": 0.07,
+   "face_front": 0.06
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.9,
+     "left": 0.25,
+     "right": 0.74
+    },
+    "conf": 0.25,
+    "face_seen": 0.23,
+    "top_err": 0.007,
+    "chin_err": 0.18
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.89,
+     "left": 0.33,
+     "right": 0.9
+    },
+    "conf": 0.27,
+    "face_seen": 0.4,
+    "top_err": 0.01,
+    "chin_err": 0.163
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.23
+ },
+ "14fd5f6e05284861af3030097f2b3957": {
+  "gate": {
+   "humanoid_anime": 0.74,
+   "adult": 0.82,
+   "bare_head": 0.04,
+   "top_ok": 0.28,
+   "chin_ok": 0.16,
+   "face_front": 0.52
+  },
+  "pass": false,
+  "needs_human": [
+   "face_front"
+  ]
+ },
+ "1943246f62074b42804ded5f663fb553": {
+  "gate": {
+   "humanoid_anime": 0.88,
+   "adult": 0.96,
+   "bare_head": 0.26,
+   "top_ok": 0.35,
+   "chin_ok": 0.41,
+   "face_front": 0.05
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ]
+ },
+ "1b7084a8d4e04620879610059d98951c": {
+  "gate": {
+   "humanoid_anime": 0.12,
+   "adult": 0.72,
+   "bare_head": 0.9,
+   "top_ok": 0.68,
+   "chin_ok": 0.35,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.92,
+     "left": 0.0,
+     "right": 0.41
+    },
+    "conf": 0.61,
+    "face_seen": 0.98,
+    "top_err": 0.007,
+    "chin_err": 0.214
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.92,
+     "left": 0.23,
+     "right": 0.89
+    },
+    "conf": 0.29,
+    "face_seen": 0.67,
+    "top_err": 0.01,
+    "chin_err": 0.214
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.98
+ },
+ "1c795fd9da4e40fa98c9f10c8c9444ed": {
+  "gate": {
+   "humanoid_anime": 0.79,
+   "adult": 0.86,
+   "bare_head": 0.91,
+   "top_ok": 0.73,
+   "chin_ok": 0.34,
+   "face_front": 0.88
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.58,
+     "bottom": 0.74,
+     "left": 0.3,
+     "right": 0.45
+    },
+    "confidence": 0.7
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.73,
+     "left": 0.3,
+     "right": 0.45
+    },
+    "confidence": 0.35
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.56,
+     "bottom": 0.69,
+     "left": 0.31,
+     "right": 0.45
+    },
+    "confidence": 0.29
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.75,
+     "left": 0.58,
+     "right": 0.76
+    },
+    "confidence": 0.2
+   },
+   "mouth": {
+    "box": {
+     "top": 0.85,
+     "bottom": 0.87,
+     "left": 0.47,
+     "right": 0.54
+    },
+    "confidence": 0.84
+   },
+   "nose": {
+    "box": {
+     "top": 0.64,
+     "bottom": 0.81,
+     "left": 0.43,
+     "right": 0.54
+    },
+    "confidence": 0.7
+   },
+   "face": {
+    "box": {
+     "top": 0.55,
+     "bottom": 0.94,
+     "left": 0.25,
+     "right": 0.78
+    },
+    "confidence": 0.38
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.87,
+     "left": 0.24,
+     "right": 0.76
+    },
+    "conf": 0.44,
+    "face_seen": 0.01,
+    "top_err": 0.007,
+    "chin_err": 0.129
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.87,
+     "left": 0.16,
+     "right": 0.73
+    },
+    "conf": 0.33,
+    "face_seen": 0.46,
+    "top_err": 0.01,
+    "chin_err": 0.129
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.01
+ },
+ "1ca6d15fe2f34bd199252bf73d896e13": {
+  "gate": {
+   "humanoid_anime": 0.81,
+   "adult": 0.97,
+   "bare_head": 0.96,
+   "top_ok": 0.83,
+   "chin_ok": 0.56,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.73,
+     "left": 0.29,
+     "right": 0.44
+    },
+    "confidence": 0.48
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.58,
+     "bottom": 0.71,
+     "left": 0.56,
+     "right": 0.74
+    },
+    "confidence": 0.24
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.55,
+     "bottom": 0.63,
+     "left": 0.32,
+     "right": 0.45
+    },
+    "confidence": 0.38
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.54,
+     "bottom": 0.63,
+     "left": 0.31,
+     "right": 0.45
+    },
+    "confidence": 0.36
+   },
+   "mouth": {
+    "box": {
+     "top": 0.83,
+     "bottom": 0.86,
+     "left": 0.46,
+     "right": 0.54
+    },
+    "confidence": 0.81
+   },
+   "nose": {
+    "box": {
+     "top": 0.66,
+     "bottom": 0.85,
+     "left": 0.47,
+     "right": 0.64
+    },
+    "confidence": 0.59
+   },
+   "face": {
+    "box": {
+     "top": 0.44,
+     "bottom": 0.94,
+     "left": 0.26,
+     "right": 0.75
+    },
+    "confidence": 0.67
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.81,
+     "left": 0.29,
+     "right": 0.73
+    },
+    "conf": 0.58,
+    "face_seen": 0.99,
+    "top_err": 0.024,
+    "chin_err": 0.027
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.82,
+     "left": 0.24,
+     "right": 0.76
+    },
+    "conf": 0.32,
+    "face_seen": 0.59,
+    "top_err": 0.024,
+    "chin_err": 0.044
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "208bf5d9c8ac4049b33f3cab5d40ccba": {
+  "gate": {
+   "humanoid_anime": 0.03,
+   "adult": 0.96,
+   "bare_head": 0.37,
+   "top_ok": 0.34,
+   "chin_ok": 0.18,
+   "face_front": 0.06
+  },
+  "pass": false,
+  "needs_human": []
+ },
+ "21fd15f0f00e4e58925bbec5d8afc6dd": {
+  "gate": {
+   "humanoid_anime": 0.16,
+   "adult": 0.91,
+   "bare_head": 0.13,
+   "top_ok": 0.17,
+   "chin_ok": 0.1,
+   "face_front": 0.04
+  },
+  "pass": false,
+  "needs_human": []
+ },
+ "288baa177abd449aa552e66eeb0d6422": {
+  "gate": {
+   "humanoid_anime": 0.56,
+   "adult": 0.71,
+   "bare_head": 0.85,
+   "top_ok": 0.07,
+   "chin_ok": 0.36,
+   "face_front": 0.12
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.51,
+     "bottom": 0.8,
+     "left": 0.37,
+     "right": 0.63
+    },
+    "conf": 0.43,
+    "face_seen": 0.95,
+    "top_err": 0.517,
+    "chin_err": 0.01
+   },
+   "sside": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.79,
+     "left": 0.34,
+     "right": 0.61
+    },
+    "conf": 0.5,
+    "face_seen": 0.41,
+    "top_err": 0.466,
+    "chin_err": 0.007
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.95
+ },
+ "2b9b59384bbc4072956e8dfc7a52d10e": {
+  "gate": {
+   "humanoid_anime": 0.05,
+   "adult": 0.96,
+   "bare_head": 0.8,
+   "top_ok": 0.74,
+   "chin_ok": 0.29,
+   "face_front": 0.96
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.99,
+     "left": 0.22,
+     "right": 0.76
+    },
+    "conf": 0.39,
+    "face_seen": 0.89,
+    "top_err": 0.01,
+    "chin_err": 0.333
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.97,
+     "left": 0.2,
+     "right": 0.9
+    },
+    "conf": 0.22,
+    "face_seen": 0.53,
+    "top_err": 0.01,
+    "chin_err": 0.299
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.89
+ },
+ "2d970c3fd0904ae6b5bbaffd007255b9": {
+  "gate": {
+   "humanoid_anime": 0.29,
+   "adult": 0.96,
+   "bare_head": 0.82,
+   "top_ok": 0.72,
+   "chin_ok": 0.06,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.69,
+     "bottom": 0.98,
+     "left": 0.14,
+     "right": 0.84
+    },
+    "conf": 0.3,
+    "face_seen": 0.9,
+    "top_err": 0.823,
+    "chin_err": 0.316
+   },
+   "sside": {
+    "box": {
+     "top": 0.67,
+     "bottom": 0.98,
+     "left": 0.02,
+     "right": 0.78
+    },
+    "conf": 0.39,
+    "face_seen": 0.54,
+    "top_err": 0.789,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.9
+ },
+ "2ec91f4bb2ca4669985405e0b6d09956": {
+  "gate": {
+   "humanoid_anime": 0.72,
+   "adult": 0.86,
+   "bare_head": 0.3,
+   "top_ok": 0.43,
+   "chin_ok": 0.23,
+   "face_front": 0.7
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.71,
+     "left": 0.27,
+     "right": 0.37
+    },
+    "confidence": 0.52
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.73,
+     "left": 0.27,
+     "right": 0.44
+    },
+    "confidence": 0.26
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.53,
+     "bottom": 0.68,
+     "left": 0.27,
+     "right": 0.43
+    },
+    "confidence": 0.31
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.53,
+     "bottom": 0.73,
+     "left": 0.43,
+     "right": 0.44
+    },
+    "confidence": 0.26
+   },
+   "mouth": {
+    "box": {
+     "top": 0.67,
+     "bottom": 0.88,
+     "left": 0.34,
+     "right": 0.46
+    },
+    "confidence": 0.44
+   },
+   "nose": {
+    "box": {
+     "top": 0.54,
+     "bottom": 0.74,
+     "left": 0.32,
+     "right": 0.45
+    },
+    "confidence": 0.39
+   },
+   "face": {
+    "box": {
+     "top": 0.56,
+     "bottom": 0.96,
+     "left": 0.19,
+     "right": 0.77
+    },
+    "confidence": 0.38
+   }
+  }
+ },
+ "312e05692524477da666faf4e09810a1": {
+  "gate": {
+   "humanoid_anime": 0.79,
+   "adult": 0.83,
+   "bare_head": 0.81,
+   "top_ok": 0.56,
+   "chin_ok": 0.09,
+   "face_front": 0.61
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.63,
+     "bottom": 0.77,
+     "left": 0.23,
+     "right": 0.42
+    },
+    "confidence": 0.59
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.63,
+     "bottom": 0.76,
+     "left": 0.23,
+     "right": 0.77
+    },
+    "confidence": 0.37
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.62,
+     "bottom": 0.74,
+     "left": 0.23,
+     "right": 0.44
+    },
+    "confidence": 0.58
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.63,
+     "bottom": 0.71,
+     "left": 0.22,
+     "right": 0.77
+    },
+    "confidence": 0.28
+   },
+   "mouth": {
+    "box": {
+     "top": 0.89,
+     "bottom": 0.95,
+     "left": 0.44,
+     "right": 0.53
+    },
+    "confidence": 0.74
+   },
+   "nose": {
+    "box": {
+     "top": 0.66,
+     "bottom": 0.93,
+     "left": 0.44,
+     "right": 0.52
+    },
+    "confidence": 0.32
+   },
+   "face": {
+    "box": {
+     "top": 0.67,
+     "bottom": 0.99,
+     "left": 0.22,
+     "right": 0.77
+    },
+    "confidence": 0.3
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.98,
+     "left": 0.2,
+     "right": 0.8
+    },
+    "conf": 0.26,
+    "face_seen": 0.28,
+    "top_err": 0.007,
+    "chin_err": 0.316
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.98,
+     "left": 0.29,
+     "right": 0.65
+    },
+    "conf": 0.36,
+    "face_seen": 0.63,
+    "top_err": 0.01,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.28
+ },
+ "32291422ee6a487aa969364d35e71a61": {
+  "gate": {
+   "humanoid_anime": 0.85,
+   "adult": 0.59,
+   "bare_head": 0.25,
+   "top_ok": 0.86,
+   "chin_ok": 0.11,
+   "face_front": 0.96
+  },
+  "pass": false,
+  "needs_human": [
+   "adult"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.65,
+     "bottom": 0.82,
+     "left": 0.22,
+     "right": 0.4
+    },
+    "confidence": 0.71
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.64,
+     "bottom": 0.82,
+     "left": 0.22,
+     "right": 0.37
+    },
+    "confidence": 0.26
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.63,
+     "bottom": 0.7,
+     "left": 0.22,
+     "right": 0.34
+    },
+    "confidence": 0.51
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.64,
+     "bottom": 0.7,
+     "left": 0.22,
+     "right": 0.34
+    },
+    "confidence": 0.25
+   },
+   "mouth": {
+    "box": {
+     "top": 0.92,
+     "bottom": 0.98,
+     "left": 0.45,
+     "right": 0.55
+    },
+    "confidence": 0.87
+   },
+   "nose": {
+    "box": {
+     "top": 0.78,
+     "bottom": 0.88,
+     "left": 0.46,
+     "right": 0.54
+    },
+    "confidence": 0.85
+   },
+   "face": {
+    "box": {
+     "top": 0.63,
+     "bottom": 0.97,
+     "left": 0.2,
+     "right": 0.78
+    },
+    "confidence": 0.36
+   }
+  }
+ },
+ "34250b16550748ceb66301ed6d9b6793": {
+  "gate": {
+   "humanoid_anime": 0.65,
+   "adult": 0.95,
+   "bare_head": 0.7,
+   "top_ok": 0.45,
+   "chin_ok": 0.04,
+   "face_front": 0.2
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.66,
+     "left": 0.3,
+     "right": 0.72
+    },
+    "conf": 0.57,
+    "face_seen": 0.86,
+    "top_err": 0.007,
+    "chin_err": 0.228
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.74,
+     "left": 0.25,
+     "right": 0.44
+    },
+    "conf": 0.41,
+    "face_seen": 0.37,
+    "top_err": 0.024,
+    "chin_err": 0.092
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.86
+ },
+ "38b4d142ee7a47d8abbf0cb0815293e9": {
+  "gate": {
+   "humanoid_anime": 0.03,
+   "adult": 0.68,
+   "bare_head": 0.11,
+   "top_ok": 0.36,
+   "chin_ok": 0.21,
+   "face_front": 0.07
+  },
+  "pass": false,
+  "needs_human": []
+ },
+ "3c5edcef5c38425ab0ab10770f7165ce": {
+  "gate": {
+   "humanoid_anime": 0.26,
+   "adult": 0.98,
+   "bare_head": 0.33,
+   "top_ok": 0.43,
+   "chin_ok": 0.39,
+   "face_front": 0.43
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok",
+   "face_front"
+  ]
+ },
+ "3fc1b2f5952446cebc3e7a4cd8d16dc0": {
+  "gate": {
+   "humanoid_anime": 0.76,
+   "adult": 0.96,
+   "bare_head": 0.17,
+   "top_ok": 0.49,
+   "chin_ok": 0.32,
+   "face_front": 0.81
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.3,
+     "bottom": 0.4,
+     "left": 0.4,
+     "right": 0.48
+    },
+    "confidence": 0.78
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.3,
+     "bottom": 0.38,
+     "left": 0.43,
+     "right": 0.54
+    },
+    "confidence": 0.72
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.31,
+     "bottom": 0.37,
+     "left": 0.42,
+     "right": 0.48
+    },
+    "confidence": 0.5
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.31,
+     "bottom": 0.37,
+     "left": 0.41,
+     "right": 0.48
+    },
+    "confidence": 0.55
+   },
+   "mouth": {
+    "box": {
+     "top": 0.33,
+     "bottom": 0.49,
+     "left": 0.44,
+     "right": 0.55
+    },
+    "confidence": 0.73
+   },
+   "nose": {
+    "box": {
+     "top": 0.33,
+     "bottom": 0.48,
+     "left": 0.42,
+     "right": 0.54
+    },
+    "confidence": 0.77
+   },
+   "face": {
+    "box": {
+     "top": 0.3,
+     "bottom": 0.54,
+     "left": 0.36,
+     "right": 0.66
+    },
+    "confidence": 0.73
+   }
+  }
+ },
+ "417000e4843e4ce0938a129bcb50aaab": {
+  "gate": {
+   "humanoid_anime": 0.07,
+   "adult": 0.78,
+   "bare_head": 0.58,
+   "top_ok": 0.08,
+   "chin_ok": 0.31,
+   "face_front": 0.03
+  },
+  "pass": false,
+  "needs_human": [
+   "bare_head"
+  ]
+ },
+ "44ecaf69076341758a457174d97bb431": {
+  "gate": {
+   "humanoid_anime": 0.7,
+   "adult": 0.87,
+   "bare_head": 0.48,
+   "top_ok": 0.85,
+   "chin_ok": 0.16,
+   "face_front": 0.47
+  },
+  "pass": false,
+  "needs_human": [
+   "bare_head",
+   "face_front"
+  ]
+ },
+ "47a4e71d24fd48b8ab0ae46ae940650d": {
+  "gate": {
+   "humanoid_anime": 0.73,
+   "adult": 0.89,
+   "bare_head": 0.98,
+   "top_ok": 0.9,
+   "chin_ok": 0.51,
+   "face_front": 0.02
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.82,
+     "left": 0.29,
+     "right": 0.74
+    },
+    "conf": 0.43,
+    "face_seen": 0.99,
+    "top_err": 0.01,
+    "chin_err": 0.044
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.8,
+     "left": 0.22,
+     "right": 0.76
+    },
+    "conf": 0.27,
+    "face_seen": 0.62,
+    "top_err": 0.024,
+    "chin_err": 0.01
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "48e0397e57704b15a3539aaadecd95d5": {
+  "gate": {
+   "humanoid_anime": 0.62,
+   "adult": 0.74,
+   "bare_head": 0.05,
+   "top_ok": 0.22,
+   "chin_ok": 0.19,
+   "face_front": 0.14
+  },
+  "pass": false,
+  "needs_human": []
+ },
+ "48e6db3752b14e238816118883752441": {
+  "gate": {
+   "humanoid_anime": 0.55,
+   "adult": 0.98,
+   "bare_head": 0.59,
+   "top_ok": 0.73,
+   "chin_ok": 0.33,
+   "face_front": 0.98
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime",
+   "bare_head"
+  ]
+ },
+ "49808a700ed94e778af4c131c953e82a": {
+  "gate": {
+   "humanoid_anime": 0.5,
+   "adult": 0.37,
+   "bare_head": 0.98,
+   "top_ok": 0.73,
+   "chin_ok": 0.19,
+   "face_front": 0.1
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.96,
+     "left": 0.24,
+     "right": 0.75
+    },
+    "conf": 0.37,
+    "face_seen": 0.99,
+    "top_err": 0.007,
+    "chin_err": 0.282
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.94,
+     "left": 0.11,
+     "right": 0.74
+    },
+    "conf": 0.24,
+    "face_seen": 0.54,
+    "top_err": 0.01,
+    "chin_err": 0.248
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "55468f42958448e3a1e58fcab24e8cc0": {
+  "gate": {
+   "humanoid_anime": 0.88,
+   "adult": 0.9,
+   "bare_head": 0.93,
+   "top_ok": 0.82,
+   "chin_ok": 0.37,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.52,
+     "bottom": 0.63,
+     "left": 0.31,
+     "right": 0.45
+    },
+    "confidence": 0.66
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.53,
+     "bottom": 0.63,
+     "left": 0.33,
+     "right": 0.63
+    },
+    "confidence": 0.4
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.62,
+     "left": 0.34,
+     "right": 0.57
+    },
+    "confidence": 0.44
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.47,
+     "bottom": 0.62,
+     "left": 0.32,
+     "right": 0.55
+    },
+    "confidence": 0.51
+   },
+   "mouth": {
+    "box": {
+     "top": 0.71,
+     "bottom": 0.78,
+     "left": 0.37,
+     "right": 0.54
+    },
+    "confidence": 0.64
+   },
+   "nose": {
+    "box": {
+     "top": 0.55,
+     "bottom": 0.81,
+     "left": 0.43,
+     "right": 0.55
+    },
+    "confidence": 0.68
+   },
+   "face": {
+    "box": {
+     "top": 0.46,
+     "bottom": 0.83,
+     "left": 0.31,
+     "right": 0.64
+    },
+    "confidence": 0.43
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.85,
+     "left": 0.3,
+     "right": 0.74
+    },
+    "conf": 0.46,
+    "face_seen": 0.98,
+    "top_err": 0.01,
+    "chin_err": 0.095
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.8,
+     "left": 0.19,
+     "right": 0.74
+    },
+    "conf": 0.35,
+    "face_seen": 0.66,
+    "top_err": 0.007,
+    "chin_err": 0.01
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.98
+ },
+ "56fbd6d283954777a30ab75032795973": {
+  "gate": {
+   "humanoid_anime": 0.04,
+   "adult": 0.82,
+   "bare_head": 0.91,
+   "top_ok": 0.76,
+   "chin_ok": 0.21,
+   "face_front": 0.11
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.19,
+     "bottom": 0.93,
+     "left": 0.25,
+     "right": 0.74
+    },
+    "conf": 0.47,
+    "face_seen": 0.16,
+    "top_err": 0.027,
+    "chin_err": 0.231
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.98,
+     "left": 0.31,
+     "right": 0.92
+    },
+    "conf": 0.37,
+    "face_seen": 0.55,
+    "top_err": 0.01,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.16
+ },
+ "5a2a226d483343638019a09a8ae76a92": {
+  "gate": {
+   "humanoid_anime": 0.09,
+   "adult": 0.76,
+   "bare_head": 0.92,
+   "top_ok": 0.77,
+   "chin_ok": 0.57,
+   "face_front": 0.11
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.84,
+     "left": 0.32,
+     "right": 0.73
+    },
+    "conf": 0.44,
+    "face_seen": 0.65,
+    "top_err": 0.007,
+    "chin_err": 0.078
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.81,
+     "left": 0.22,
+     "right": 0.74
+    },
+    "conf": 0.28,
+    "face_seen": 0.15,
+    "top_err": 0.007,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.65
+ },
+ "602d0ea4fb7f4b3aaf28863f96202900": {
+  "gate": {
+   "humanoid_anime": 0.74,
+   "adult": 0.92,
+   "bare_head": 0.95,
+   "top_ok": 0.75,
+   "chin_ok": 0.45,
+   "face_front": 0.92
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.3,
+     "bottom": 0.38,
+     "left": 0.34,
+     "right": 0.48
+    },
+    "confidence": 0.59
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.31,
+     "bottom": 0.38,
+     "left": 0.35,
+     "right": 0.54
+    },
+    "confidence": 0.43
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.31,
+     "bottom": 0.37,
+     "left": 0.34,
+     "right": 0.47
+    },
+    "confidence": 0.3
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.31,
+     "bottom": 0.37,
+     "left": 0.34,
+     "right": 0.47
+    },
+    "confidence": 0.29
+   },
+   "mouth": {
+    "box": {
+     "top": 0.44,
+     "bottom": 0.49,
+     "left": 0.47,
+     "right": 0.55
+    },
+    "confidence": 0.79
+   },
+   "nose": {
+    "box": {
+     "top": 0.36,
+     "bottom": 0.48,
+     "left": 0.44,
+     "right": 0.56
+    },
+    "confidence": 0.63
+   },
+   "face": {
+    "box": {
+     "top": 0.05,
+     "bottom": 0.53,
+     "left": 0.3,
+     "right": 0.73
+    },
+    "confidence": 0.5
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.82,
+     "left": 0.23,
+     "right": 0.77
+    },
+    "conf": 0.43,
+    "face_seen": 0.98,
+    "top_err": 0.007,
+    "chin_err": 0.044
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.84,
+     "left": 0.16,
+     "right": 0.77
+    },
+    "conf": 0.31,
+    "face_seen": 0.57,
+    "top_err": 0.024,
+    "chin_err": 0.078
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.98
+ },
+ "605b45e6c3c946089c4441225b5ed328": {
+  "gate": {
+   "humanoid_anime": 0.76,
+   "adult": 0.98,
+   "bare_head": 0.72,
+   "top_ok": 0.54,
+   "chin_ok": 0.34,
+   "face_front": 0.18
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.99,
+     "left": 0.14,
+     "right": 0.82
+    },
+    "conf": 0.3,
+    "face_seen": 0.51,
+    "top_err": 0.01,
+    "chin_err": 0.333
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.99,
+     "left": 0.29,
+     "right": 0.77
+    },
+    "conf": 0.37,
+    "face_seen": 0.48,
+    "top_err": 0.007,
+    "chin_err": 0.333
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.51
+ },
+ "76a1aa04f7a544589c455b448bbc5efd": {
+  "gate": {
+   "humanoid_anime": 0.87,
+   "adult": 0.91,
+   "bare_head": 0.94,
+   "top_ok": 0.73,
+   "chin_ok": 0.37,
+   "face_front": 0.89
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.55,
+     "left": 0.34,
+     "right": 0.46
+    },
+    "confidence": 0.8
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.46,
+     "bottom": 0.58,
+     "left": 0.34,
+     "right": 0.65
+    },
+    "confidence": 0.39
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.36,
+     "bottom": 0.54,
+     "left": 0.34,
+     "right": 0.44
+    },
+    "confidence": 0.45
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.36,
+     "bottom": 0.47,
+     "left": 0.34,
+     "right": 0.44
+    },
+    "confidence": 0.44
+   },
+   "mouth": {
+    "box": {
+     "top": 0.61,
+     "bottom": 0.68,
+     "left": 0.38,
+     "right": 0.54
+    },
+    "confidence": 0.59
+   },
+   "nose": {
+    "box": {
+     "top": 0.53,
+     "bottom": 0.63,
+     "left": 0.43,
+     "right": 0.53
+    },
+    "confidence": 0.61
+   },
+   "face": {
+    "box": {
+     "top": 0.35,
+     "bottom": 0.66,
+     "left": 0.3,
+     "right": 0.76
+    },
+    "confidence": 0.33
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.92,
+     "left": 0.24,
+     "right": 0.76
+    },
+    "conf": 0.33,
+    "face_seen": 0.86,
+    "top_err": 0.01,
+    "chin_err": 0.214
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.96,
+     "left": 0.31,
+     "right": 0.88
+    },
+    "conf": 0.26,
+    "face_seen": 0.34,
+    "top_err": 0.007,
+    "chin_err": 0.282
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.86
+ },
+ "842c31a561484cb78a88523ddbb7946c": {
+  "gate": {
+   "humanoid_anime": 0.07,
+   "adult": 0.98,
+   "bare_head": 0.64,
+   "top_ok": 0.78,
+   "chin_ok": 0.35,
+   "face_front": 0.96
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.99,
+     "left": 0.13,
+     "right": 0.87
+    },
+    "conf": 0.31,
+    "face_seen": 0.01,
+    "top_err": 0.007,
+    "chin_err": 0.333
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.99,
+     "left": 0.01,
+     "right": 0.67
+    },
+    "conf": 0.38,
+    "face_seen": 0.5,
+    "top_err": 0.007,
+    "chin_err": 0.333
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.01
+ },
+ "85de88eca19144419769ff1225bdc1f0": {
+  "gate": {
+   "humanoid_anime": 0.78,
+   "adult": 0.99,
+   "bare_head": 0.83,
+   "top_ok": 0.73,
+   "chin_ok": 0.26,
+   "face_front": 0.9
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.26,
+     "bottom": 0.33,
+     "left": 0.38,
+     "right": 0.56
+    },
+    "confidence": 0.74
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.26,
+     "bottom": 0.32,
+     "left": 0.44,
+     "right": 0.58
+    },
+    "confidence": 0.77
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.25,
+     "bottom": 0.32,
+     "left": 0.45,
+     "right": 0.58
+    },
+    "confidence": 0.67
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.25,
+     "bottom": 0.33,
+     "left": 0.38,
+     "right": 0.56
+    },
+    "confidence": 0.6
+   },
+   "mouth": {
+    "box": {
+     "top": 0.36,
+     "bottom": 0.42,
+     "left": 0.46,
+     "right": 0.55
+    },
+    "confidence": 0.83
+   },
+   "nose": {
+    "box": {
+     "top": 0.27,
+     "bottom": 0.42,
+     "left": 0.42,
+     "right": 0.55
+    },
+    "confidence": 0.79
+   },
+   "face": {
+    "box": {
+     "top": 0.13,
+     "bottom": 0.46,
+     "left": 0.37,
+     "right": 0.65
+    },
+    "confidence": 0.76
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.93,
+     "left": 0.25,
+     "right": 0.75
+    },
+    "conf": 0.45,
+    "face_seen": 0.99,
+    "top_err": 0.007,
+    "chin_err": 0.231
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.95,
+     "left": 0.34,
+     "right": 0.98
+    },
+    "conf": 0.13,
+    "face_seen": 0.52,
+    "top_err": 0.024,
+    "chin_err": 0.265
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "8ae231b61fc34827be30e2a1edc5b811": {
+  "gate": {
+   "humanoid_anime": 0.66,
+   "adult": 0.92,
+   "bare_head": 0.15,
+   "top_ok": 0.54,
+   "chin_ok": 0.34,
+   "face_front": 0.59
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok",
+   "face_front"
+  ]
+ },
+ "8ba031f10f594e9bbff11d120d540caa": {
+  "gate": {
+   "humanoid_anime": 0.56,
+   "adult": 0.96,
+   "bare_head": 0.86,
+   "top_ok": 0.74,
+   "chin_ok": 0.18,
+   "face_front": 0.03
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.79,
+     "left": 0.3,
+     "right": 0.69
+    },
+    "conf": 0.39,
+    "face_seen": 0.27,
+    "top_err": 0.007,
+    "chin_err": 0.007
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.81,
+     "left": 0.16,
+     "right": 0.73
+    },
+    "conf": 0.22,
+    "face_seen": 0.4,
+    "top_err": 0.007,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": true,
+  "front_is_face": 0.27
+ },
+ "90913426a8f8430caedc6efec6b1cc1d": {
+  "gate": {
+   "humanoid_anime": 0.87,
+   "adult": 0.91,
+   "bare_head": 0.12,
+   "top_ok": 0.63,
+   "chin_ok": 0.43,
+   "face_front": 0.96
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.6,
+     "bottom": 0.75,
+     "left": 0.29,
+     "right": 0.44
+    },
+    "confidence": 0.74
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.6,
+     "bottom": 0.75,
+     "left": 0.26,
+     "right": 0.45
+    },
+    "confidence": 0.26
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.54,
+     "bottom": 0.59,
+     "left": 0.33,
+     "right": 0.45
+    },
+    "confidence": 0.32
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.52,
+     "bottom": 0.59,
+     "left": 0.34,
+     "right": 0.47
+    },
+    "confidence": 0.22
+   },
+   "mouth": {
+    "box": {
+     "top": 0.85,
+     "bottom": 0.89,
+     "left": 0.45,
+     "right": 0.57
+    },
+    "confidence": 0.92
+   },
+   "nose": {
+    "box": {
+     "top": 0.73,
+     "bottom": 0.8,
+     "left": 0.47,
+     "right": 0.53
+    },
+    "confidence": 0.83
+   },
+   "face": {
+    "box": {
+     "top": 0.3,
+     "bottom": 0.95,
+     "left": 0.18,
+     "right": 0.79
+    },
+    "confidence": 0.64
+   }
+  }
+ },
+ "92182aa9286b4b0e912f8654d47f4e84": {
+  "gate": {
+   "humanoid_anime": 0.4,
+   "adult": 0.94,
+   "bare_head": 0.6,
+   "top_ok": 0.62,
+   "chin_ok": 0.23,
+   "face_front": 0.01
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.86,
+     "left": 0.08,
+     "right": 0.73
+    },
+    "conf": 0.43,
+    "face_seen": 0.03,
+    "top_err": 0.007,
+    "chin_err": 0.112
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.76,
+     "left": 0.65,
+     "right": 0.97
+    },
+    "conf": 0.12,
+    "face_seen": 0.39,
+    "top_err": 0.024,
+    "chin_err": 0.058
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.03
+ },
+ "937e788d818f4839b6d1434944bebb2a": {
+  "gate": {
+   "humanoid_anime": 0.87,
+   "adult": 0.81,
+   "bare_head": 0.84,
+   "top_ok": 0.54,
+   "chin_ok": 0.14,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.62,
+     "bottom": 0.77,
+     "left": 0.23,
+     "right": 0.42
+    },
+    "confidence": 0.51
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.62,
+     "bottom": 0.76,
+     "left": 0.23,
+     "right": 0.77
+    },
+    "confidence": 0.39
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.53,
+     "bottom": 0.63,
+     "left": 0.26,
+     "right": 0.34
+    },
+    "confidence": 0.56
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.56,
+     "bottom": 0.64,
+     "left": 0.25,
+     "right": 0.34
+    },
+    "confidence": 0.34
+   },
+   "mouth": {
+    "box": {
+     "top": 0.89,
+     "bottom": 0.96,
+     "left": 0.44,
+     "right": 0.54
+    },
+    "confidence": 0.85
+   },
+   "nose": {
+    "box": {
+     "top": 0.8,
+     "bottom": 0.95,
+     "left": 0.47,
+     "right": 0.54
+    },
+    "confidence": 0.62
+   },
+   "face": {
+    "box": {
+     "top": 0.53,
+     "bottom": 0.99,
+     "left": 0.19,
+     "right": 0.78
+    },
+    "confidence": 0.37
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.99,
+     "left": 0.2,
+     "right": 0.8
+    },
+    "conf": 0.28,
+    "face_seen": 0.36,
+    "top_err": 0.007,
+    "chin_err": 0.333
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.98,
+     "left": 0.28,
+     "right": 0.65
+    },
+    "conf": 0.32,
+    "face_seen": 0.63,
+    "top_err": 0.01,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.36
+ },
+ "a2198738314a44f38264670efe1f9cb2": {
+  "gate": {
+   "humanoid_anime": 0.03,
+   "adult": 0.62,
+   "bare_head": 0.43,
+   "top_ok": 0.18,
+   "chin_ok": 0.25,
+   "face_front": 0.05
+  },
+  "pass": false,
+  "needs_human": [
+   "bare_head"
+  ]
+ },
+ "a2842bf62a3a4a639ed7d356ccb54d56": {
+  "gate": {
+   "humanoid_anime": 0.04,
+   "adult": 0.98,
+   "bare_head": 0.97,
+   "top_ok": 0.64,
+   "chin_ok": 0.33,
+   "face_front": 0.98
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.23,
+     "bottom": 0.66,
+     "left": 0.32,
+     "right": 0.69
+    },
+    "conf": 0.47,
+    "face_seen": 0.02,
+    "top_err": 0.041,
+    "chin_err": 0.228
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.82,
+     "left": 0.04,
+     "right": 0.6
+    },
+    "conf": 0.29,
+    "face_seen": 0.48,
+    "top_err": 0.007,
+    "chin_err": 0.044
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.02
+ },
+ "a5172798d4df43e5bcfaa79d32c32c36": {
+  "gate": {
+   "humanoid_anime": 0.68,
+   "adult": 0.86,
+   "bare_head": 0.97,
+   "top_ok": 0.09,
+   "chin_ok": 0.31,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.6,
+     "bottom": 0.67,
+     "left": 0.36,
+     "right": 0.44
+    },
+    "confidence": 0.85
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.6,
+     "bottom": 0.66,
+     "left": 0.36,
+     "right": 0.51
+    },
+    "confidence": 0.64
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.67,
+     "left": 0.36,
+     "right": 0.43
+    },
+    "confidence": 0.73
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.66,
+     "left": 0.35,
+     "right": 0.44
+    },
+    "confidence": 0.72
+   },
+   "mouth": {
+    "box": {
+     "top": 0.73,
+     "bottom": 0.79,
+     "left": 0.38,
+     "right": 0.52
+    },
+    "confidence": 0.84
+   },
+   "nose": {
+    "box": {
+     "top": 0.6,
+     "bottom": 0.78,
+     "left": 0.41,
+     "right": 0.51
+    },
+    "confidence": 0.83
+   },
+   "face": {
+    "box": {
+     "top": 0.52,
+     "bottom": 0.84,
+     "left": 0.31,
+     "right": 0.59
+    },
+    "confidence": 0.75
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.31,
+     "bottom": 0.81,
+     "left": 0.35,
+     "right": 0.65
+    },
+    "conf": 0.56,
+    "face_seen": 0.96,
+    "top_err": 0.177,
+    "chin_err": 0.027
+   },
+   "sside": {
+    "box": {
+     "top": 0.33,
+     "bottom": 0.81,
+     "left": 0.21,
+     "right": 0.65
+    },
+    "conf": 0.41,
+    "face_seen": 0.49,
+    "top_err": 0.211,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.96
+ },
+ "add1992524ac4a07b9d9c912de22a1d7": {
+  "gate": {
+   "humanoid_anime": 0.28,
+   "adult": 0.26,
+   "bare_head": 0.96,
+   "top_ok": 0.31,
+   "chin_ok": 0.44,
+   "face_front": 0.14
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.32,
+     "bottom": 0.82,
+     "left": 0.32,
+     "right": 0.68
+    },
+    "conf": 0.56,
+    "face_seen": 0.99,
+    "top_err": 0.194,
+    "chin_err": 0.044
+   },
+   "sside": {
+    "box": {
+     "top": 0.26,
+     "bottom": 0.81,
+     "left": 0.32,
+     "right": 0.64
+    },
+    "conf": 0.51,
+    "face_seen": 0.64,
+    "top_err": 0.092,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "aeb0caeddddb40729fbe7761d6d107b9": {
+  "gate": {
+   "humanoid_anime": 0.13,
+   "adult": 0.96,
+   "bare_head": 0.18,
+   "top_ok": 0.48,
+   "chin_ok": 0.23,
+   "face_front": 0.5
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok",
+   "face_front"
+  ]
+ },
+ "b2e18c2c89c54e0b985dcd9a4ccb1f75": {
+  "gate": {
+   "humanoid_anime": 0.02,
+   "adult": 0.98,
+   "bare_head": 0.49,
+   "top_ok": 0.39,
+   "chin_ok": 0.15,
+   "face_front": 0.43
+  },
+  "pass": false,
+  "needs_human": [
+   "bare_head",
+   "face_front"
+  ]
+ },
+ "ba5c9e77ce7c4442818add5febb04d69": {
+  "gate": {
+   "humanoid_anime": 0.6,
+   "adult": 0.58,
+   "bare_head": 0.95,
+   "top_ok": 0.78,
+   "chin_ok": 0.31,
+   "face_front": 0.91
+  },
+  "pass": false,
+  "needs_human": [
+   "adult"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.49,
+     "bottom": 0.54,
+     "left": 0.34,
+     "right": 0.47
+    },
+    "confidence": 0.74
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.49,
+     "bottom": 0.54,
+     "left": 0.35,
+     "right": 0.54
+    },
+    "confidence": 0.53
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.54,
+     "left": 0.34,
+     "right": 0.46
+    },
+    "confidence": 0.41
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.53,
+     "left": 0.34,
+     "right": 0.46
+    },
+    "confidence": 0.32
+   },
+   "mouth": {
+    "box": {
+     "top": 0.62,
+     "bottom": 0.73,
+     "left": 0.42,
+     "right": 0.54
+    },
+    "confidence": 0.84
+   },
+   "nose": {
+    "box": {
+     "top": 0.51,
+     "bottom": 0.66,
+     "left": 0.37,
+     "right": 0.54
+    },
+    "confidence": 0.64
+   },
+   "face": {
+    "box": {
+     "top": 0.46,
+     "bottom": 0.69,
+     "left": 0.31,
+     "right": 0.7
+    },
+    "confidence": 0.67
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.82,
+     "left": 0.25,
+     "right": 0.75
+    },
+    "conf": 0.44,
+    "face_seen": 0.99,
+    "top_err": 0.007,
+    "chin_err": 0.044
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.81,
+     "left": 0.18,
+     "right": 0.75
+    },
+    "conf": 0.28,
+    "face_seen": 0.62,
+    "top_err": 0.007,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "bd3a6589bc10467a9c5025ee802b8a39": {
+  "gate": {
+   "humanoid_anime": 0.02,
+   "adult": 0.98,
+   "bare_head": 0.95,
+   "top_ok": 0.73,
+   "chin_ok": 0.35,
+   "face_front": 0.18
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.81,
+     "left": 0.29,
+     "right": 0.73
+    },
+    "conf": 0.42,
+    "face_seen": 0.99,
+    "top_err": 0.007,
+    "chin_err": 0.027
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.81,
+     "left": 0.07,
+     "right": 0.58
+    },
+    "conf": 0.39,
+    "face_seen": 0.64,
+    "top_err": 0.007,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": true,
+  "front_is_face": 0.99
+ },
+ "c654d061a07d413893fbf6838f5cc64b": {
+  "gate": {
+   "humanoid_anime": 0.05,
+   "adult": 0.99,
+   "bare_head": 0.82,
+   "top_ok": 0.6,
+   "chin_ok": 0.08,
+   "face_front": 0.98
+  },
+  "pass": false,
+  "needs_human": [],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.98,
+     "left": 0.14,
+     "right": 0.86
+    },
+    "conf": 0.32,
+    "face_seen": 0.93,
+    "top_err": 0.01,
+    "chin_err": 0.316
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.98,
+     "left": 0.12,
+     "right": 0.79
+    },
+    "conf": 0.22,
+    "face_seen": 0.78,
+    "top_err": 0.007,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.93
+ },
+ "c89325dde9b14ce4b5c9001504b92085": {
+  "gate": {
+   "humanoid_anime": 0.72,
+   "adult": 0.88,
+   "bare_head": 0.11,
+   "top_ok": 0.31,
+   "chin_ok": 0.32,
+   "face_front": 0.11
+  },
+  "pass": false,
+  "needs_human": []
+ },
+ "cadc1e7d00f54cbeb14e0beb3b1a2e7f": {
+  "gate": {
+   "humanoid_anime": 0.74,
+   "adult": 0.88,
+   "bare_head": 0.79,
+   "top_ok": 0.76,
+   "chin_ok": 0.12,
+   "face_front": 0.93
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.46,
+     "bottom": 0.6,
+     "left": 0.29,
+     "right": 0.45
+    },
+    "confidence": 0.57
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.6,
+     "left": 0.28,
+     "right": 0.68
+    },
+    "confidence": 0.38
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.42,
+     "bottom": 0.48,
+     "left": 0.29,
+     "right": 0.43
+    },
+    "confidence": 0.36
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.42,
+     "bottom": 0.47,
+     "left": 0.29,
+     "right": 0.41
+    },
+    "confidence": 0.4
+   },
+   "mouth": {
+    "box": {
+     "top": 0.73,
+     "bottom": 0.78,
+     "left": 0.43,
+     "right": 0.54
+    },
+    "confidence": 0.76
+   },
+   "nose": {
+    "box": {
+     "top": 0.56,
+     "bottom": 0.73,
+     "left": 0.45,
+     "right": 0.52
+    },
+    "confidence": 0.71
+   },
+   "face": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.84,
+     "left": 0.25,
+     "right": 0.75
+    },
+    "confidence": 0.6
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.98,
+     "left": 0.14,
+     "right": 0.77
+    },
+    "conf": 0.32,
+    "face_seen": 0.12,
+    "top_err": 0.007,
+    "chin_err": 0.316
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.98,
+     "left": 0.18,
+     "right": 0.7
+    },
+    "conf": 0.38,
+    "face_seen": 0.72,
+    "top_err": 0.007,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.12
+ },
+ "d0d0ca33ea62470c867f28ac587e5414": {
+  "gate": {
+   "humanoid_anime": 0.83,
+   "adult": 0.97,
+   "bare_head": 0.67,
+   "top_ok": 0.55,
+   "chin_ok": 0.26,
+   "face_front": 0.98
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.51,
+     "bottom": 0.63,
+     "left": 0.31,
+     "right": 0.44
+    },
+    "confidence": 0.78
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.51,
+     "bottom": 0.63,
+     "left": 0.3,
+     "right": 0.45
+    },
+    "confidence": 0.46
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.47,
+     "bottom": 0.53,
+     "left": 0.3,
+     "right": 0.67
+    },
+    "confidence": 0.38
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.53,
+     "left": 0.29,
+     "right": 0.43
+    },
+    "confidence": 0.5
+   },
+   "mouth": {
+    "box": {
+     "top": 0.71,
+     "bottom": 0.77,
+     "left": 0.44,
+     "right": 0.55
+    },
+    "confidence": 0.88
+   },
+   "nose": {
+    "box": {
+     "top": 0.58,
+     "bottom": 0.71,
+     "left": 0.46,
+     "right": 0.52
+    },
+    "confidence": 0.82
+   },
+   "face": {
+    "box": {
+     "top": 0.37,
+     "bottom": 0.82,
+     "left": 0.28,
+     "right": 0.81
+    },
+    "confidence": 0.46
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.98,
+     "left": 0.11,
+     "right": 0.8
+    },
+    "conf": 0.36,
+    "face_seen": 0.78,
+    "top_err": 0.01,
+    "chin_err": 0.316
+   },
+   "sside": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.98,
+     "left": 0.22,
+     "right": 0.76
+    },
+    "conf": 0.21,
+    "face_seen": 0.4,
+    "top_err": 0.007,
+    "chin_err": 0.316
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.78
+ },
+ "d1530a17f2a74851a09f9c6013c3f3e9": {
+  "gate": {
+   "humanoid_anime": 0.04,
+   "adult": 0.47,
+   "bare_head": 0.87,
+   "top_ok": 0.77,
+   "chin_ok": 0.12,
+   "face_front": 0.04
+  },
+  "pass": false,
+  "needs_human": [
+   "adult"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.91,
+     "left": 0.27,
+     "right": 0.74
+    },
+    "conf": 0.32,
+    "face_seen": 0.31,
+    "top_err": 0.007,
+    "chin_err": 0.197
+   },
+   "sside": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.96,
+     "left": 0.27,
+     "right": 0.83
+    },
+    "conf": 0.27,
+    "face_seen": 0.23,
+    "top_err": 0.024,
+    "chin_err": 0.282
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.31
+ },
+ "d1583ae7e58a4c11951ef0d8ff9c8319": {
+  "gate": {
+   "humanoid_anime": 0.8,
+   "adult": 0.92,
+   "bare_head": 0.94,
+   "top_ok": 0.79,
+   "chin_ok": 0.47,
+   "face_front": 0.92
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.53,
+     "left": 0.3,
+     "right": 0.42
+    },
+    "confidence": 0.65
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.52,
+     "left": 0.3,
+     "right": 0.43
+    },
+    "confidence": 0.38
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.34,
+     "bottom": 0.38,
+     "left": 0.29,
+     "right": 0.42
+    },
+    "confidence": 0.54
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.33,
+     "bottom": 0.38,
+     "left": 0.29,
+     "right": 0.43
+    },
+    "confidence": 0.57
+   },
+   "mouth": {
+    "box": {
+     "top": 0.64,
+     "bottom": 0.71,
+     "left": 0.46,
+     "right": 0.49
+    },
+    "confidence": 0.76
+   },
+   "nose": {
+    "box": {
+     "top": 0.47,
+     "bottom": 0.6,
+     "left": 0.45,
+     "right": 0.55
+    },
+    "confidence": 0.65
+   },
+   "face": {
+    "box": {
+     "top": 0.22,
+     "bottom": 0.8,
+     "left": 0.27,
+     "right": 0.75
+    },
+    "confidence": 0.42
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.82,
+     "left": 0.25,
+     "right": 0.76
+    },
+    "conf": 0.45,
+    "face_seen": 0.98,
+    "top_err": 0.007,
+    "chin_err": 0.044
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.85,
+     "left": 0.19,
+     "right": 0.73
+    },
+    "conf": 0.36,
+    "face_seen": 0.47,
+    "top_err": 0.01,
+    "chin_err": 0.095
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.98
+ },
+ "d60fb4427e6e4858bc82c4175b0fdbb5": {
+  "gate": {
+   "humanoid_anime": 0.84,
+   "adult": 0.73,
+   "bare_head": 0.97,
+   "top_ok": 0.85,
+   "chin_ok": 0.57,
+   "face_front": 0.95
+  },
+  "pass": false,
+  "needs_human": [
+   "chin_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.63,
+     "left": 0.27,
+     "right": 0.44
+    },
+    "confidence": 0.66
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.65,
+     "left": 0.27,
+     "right": 0.45
+    },
+    "confidence": 0.39
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.44,
+     "bottom": 0.54,
+     "left": 0.27,
+     "right": 0.43
+    },
+    "confidence": 0.46
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.43,
+     "bottom": 0.52,
+     "left": 0.3,
+     "right": 0.43
+    },
+    "confidence": 0.51
+   },
+   "mouth": {
+    "box": {
+     "top": 0.69,
+     "bottom": 0.78,
+     "left": 0.44,
+     "right": 0.49
+    },
+    "confidence": 0.78
+   },
+   "nose": {
+    "box": {
+     "top": 0.48,
+     "bottom": 0.77,
+     "left": 0.42,
+     "right": 0.48
+    },
+    "confidence": 0.51
+   },
+   "face": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.83,
+     "left": 0.2,
+     "right": 0.75
+    },
+    "confidence": 0.36
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.82,
+     "left": 0.26,
+     "right": 0.76
+    },
+    "conf": 0.48,
+    "face_seen": 0.99,
+    "top_err": 0.007,
+    "chin_err": 0.044
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.81,
+     "left": 0.22,
+     "right": 0.75
+    },
+    "conf": 0.39,
+    "face_seen": 0.67,
+    "top_err": 0.01,
+    "chin_err": 0.027
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "d6b0128c464144f5b4202bd8e0e40099": {
+  "gate": {
+   "humanoid_anime": 0.86,
+   "adult": 0.82,
+   "bare_head": 0.93,
+   "top_ok": 0.47,
+   "chin_ok": 0.39,
+   "face_front": 0.98
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.43,
+     "bottom": 0.57,
+     "left": 0.27,
+     "right": 0.44
+    },
+    "confidence": 0.58
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.43,
+     "bottom": 0.58,
+     "left": 0.26,
+     "right": 0.68
+    },
+    "confidence": 0.33
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.38,
+     "bottom": 0.46,
+     "left": 0.3,
+     "right": 0.68
+    },
+    "confidence": 0.33
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.38,
+     "bottom": 0.45,
+     "left": 0.29,
+     "right": 0.66
+    },
+    "confidence": 0.32
+   },
+   "mouth": {
+    "box": {
+     "top": 0.68,
+     "bottom": 0.75,
+     "left": 0.44,
+     "right": 0.53
+    },
+    "confidence": 0.85
+   },
+   "nose": {
+    "box": {
+     "top": 0.57,
+     "bottom": 0.79,
+     "left": 0.46,
+     "right": 0.54
+    },
+    "confidence": 0.67
+   },
+   "face": {
+    "box": {
+     "top": 0.09,
+     "bottom": 0.84,
+     "left": 0.29,
+     "right": 0.65
+    },
+    "confidence": 0.37
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.86,
+     "left": 0.24,
+     "right": 0.78
+    },
+    "conf": 0.37,
+    "face_seen": 0.87,
+    "top_err": 0.007,
+    "chin_err": 0.112
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.91,
+     "left": 0.22,
+     "right": 0.76
+    },
+    "conf": 0.3,
+    "face_seen": 0.58,
+    "top_err": 0.01,
+    "chin_err": 0.197
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.87
+ },
+ "dbc1ed4f0f834665a2f315318e97820a": {
+  "gate": {
+   "humanoid_anime": 0.86,
+   "adult": 0.93,
+   "bare_head": 0.95,
+   "top_ok": 0.72,
+   "chin_ok": 0.33,
+   "face_front": 0.91
+  },
+  "pass": false,
+  "needs_human": [],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.54,
+     "left": 0.33,
+     "right": 0.46
+    },
+    "confidence": 0.74
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.46,
+     "bottom": 0.58,
+     "left": 0.35,
+     "right": 0.66
+    },
+    "confidence": 0.43
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.53,
+     "left": 0.36,
+     "right": 0.47
+    },
+    "confidence": 0.27
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.48,
+     "left": 0.35,
+     "right": 0.45
+    },
+    "confidence": 0.42
+   },
+   "mouth": {
+    "box": {
+     "top": 0.62,
+     "bottom": 0.68,
+     "left": 0.43,
+     "right": 0.49
+    },
+    "confidence": 0.61
+   },
+   "nose": {
+    "box": {
+     "top": 0.54,
+     "bottom": 0.64,
+     "left": 0.44,
+     "right": 0.51
+    },
+    "confidence": 0.81
+   },
+   "face": {
+    "box": {
+     "top": 0.12,
+     "bottom": 0.7,
+     "left": 0.26,
+     "right": 0.76
+    },
+    "confidence": 0.27
+   }
+  },
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.92,
+     "left": 0.24,
+     "right": 0.76
+    },
+    "conf": 0.35,
+    "face_seen": 0.85,
+    "top_err": 0.01,
+    "chin_err": 0.214
+   },
+   "sside": {
+    "box": {
+     "top": 0.67,
+     "bottom": 0.96,
+     "left": 0.31,
+     "right": 0.87
+    },
+    "conf": 0.31,
+    "face_seen": 0.42,
+    "top_err": 0.789,
+    "chin_err": 0.282
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.85
+ },
+ "df883ff9afff432cbacdd86d99b4513f": {
+  "gate": {
+   "humanoid_anime": 0.03,
+   "adult": 0.86,
+   "bare_head": 0.28,
+   "top_ok": 0.55,
+   "chin_ok": 0.13,
+   "face_front": 0.05
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ]
+ },
+ "e32befd3763748b0bb27ce562d9f80f8": {
+  "gate": {
+   "humanoid_anime": 0.36,
+   "adult": 0.99,
+   "bare_head": 0.93,
+   "top_ok": 0.58,
+   "chin_ok": 0.3,
+   "face_front": 0.93
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ],
+  "box_check": {
+   "sfront": {
+    "box": {
+     "top": 0.21,
+     "bottom": 0.91,
+     "left": 0.25,
+     "right": 0.75
+    },
+    "conf": 0.42,
+    "face_seen": 0.99,
+    "top_err": 0.007,
+    "chin_err": 0.197
+   },
+   "sside": {
+    "box": {
+     "top": 0.2,
+     "bottom": 0.91,
+     "left": 0.15,
+     "right": 0.65
+    },
+    "conf": 0.32,
+    "face_seen": 0.68,
+    "top_err": 0.01,
+    "chin_err": 0.197
+   }
+  },
+  "landmarks_ok": false,
+  "front_is_face": 0.99
+ },
+ "f2a05eff174b4e7f9cc1542dc9210829": {
+  "gate": {
+   "humanoid_anime": 0.77,
+   "adult": 0.97,
+   "bare_head": 0.5,
+   "top_ok": 0.37,
+   "chin_ok": 0.37,
+   "face_front": 0.97
+  },
+  "pass": false,
+  "needs_human": [
+   "bare_head"
+  ],
+  "boxes": {
+   "eye_r": {
+    "box": {
+     "top": 0.43,
+     "bottom": 0.51,
+     "left": 0.41,
+     "right": 0.48
+    },
+    "confidence": 0.83
+   },
+   "eye_l": {
+    "box": {
+     "top": 0.45,
+     "bottom": 0.51,
+     "left": 0.5,
+     "right": 0.53
+    },
+    "confidence": 0.73
+   },
+   "brow_r": {
+    "box": {
+     "top": 0.43,
+     "bottom": 0.51,
+     "left": 0.43,
+     "right": 0.48
+    },
+    "confidence": 0.66
+   },
+   "brow_l": {
+    "box": {
+     "top": 0.42,
+     "bottom": 0.51,
+     "left": 0.41,
+     "right": 0.48
+    },
+    "confidence": 0.69
+   },
+   "mouth": {
+    "box": {
+     "top": 0.55,
+     "bottom": 0.62,
+     "left": 0.46,
+     "right": 0.53
+    },
+    "confidence": 0.82
+   },
+   "nose": {
+    "box": {
+     "top": 0.43,
+     "bottom": 0.57,
+     "left": 0.46,
+     "right": 0.53
+    },
+    "confidence": 0.79
+   },
+   "face": {
+    "box": {
+     "top": 0.41,
+     "bottom": 0.63,
+     "left": 0.34,
+     "right": 0.56
+    },
+    "confidence": 0.52
+   }
+  }
+ },
+ "faf2a9d5cb4c407ab1275a80ed0120f1": {
+  "gate": {
+   "humanoid_anime": 0.06,
+   "adult": 0.83,
+   "bare_head": 0.06,
+   "top_ok": 0.21,
+   "chin_ok": 0.11,
+   "face_front": 0.01
+  },
+  "pass": false,
+  "needs_human": []
+ },
+ "fbfaee83e1be430f8edf584055452716": {
+  "gate": {
+   "humanoid_anime": 0.71,
+   "adult": 0.77,
+   "bare_head": 0.16,
+   "top_ok": 0.44,
+   "chin_ok": 0.1,
+   "face_front": 0.04
+  },
+  "pass": false,
+  "needs_human": [
+   "top_ok"
+  ]
+ },
+ "fe8ae8c8f39b4094a865c9a7574143ef": {
+  "gate": {
+   "humanoid_anime": 0.54,
+   "adult": 0.98,
+   "bare_head": 0.13,
+   "top_ok": 0.55,
+   "chin_ok": 0.36,
+   "face_front": 0.98
+  },
+  "pass": false,
+  "needs_human": [
+   "humanoid_anime",
+   "top_ok"
+  ]
+ }
+}

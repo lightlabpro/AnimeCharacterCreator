@@ -53,3 +53,13 @@ Thresholds are calibrated on only three real models, so treat borderline results
 - `character-gate` runs `anatomy_rules.py`, `pose_stress.py` and the proportion check on every export and cross-checks them against `library-pack-check` (heights, triangle counts, shape keys, sockets, `DEF-` prefix). Run the gate, not the pieces, before calling a body done.
 - `skin_io.py` uses `library-pack-check` (`check_pack.read_gltf`), so both skills must be installed.
 - The head is `head-shape-audit`'s job; the gate checks the two agree on head height.
+
+## Dataset pass 2 tools (2026-10-15)
+- `scripts/render_dataset_heads.py` (bpy module): per model a textured full-body and face render in Blender's own
+  frame, plus the MEASURED geometry rebuilt as a plain mesh with the measured skull-top and chin rows drawn. The two
+  frames differ (bind-space skinned vertices, skeleton orientation vs node transforms), so never draw measured
+  landmarks on an imported render.
+- `blender/tools/typesafe_dataset_gate.py` (on the PC, needs TYPESAFE_API_KEY): TypeSafe picture gate per model
+  (anime style, adult, face front, bare head) and face Boxes. Reliable for style / age / bare head; NOT for thin
+  landmark lines or chin boxes (see `knowledge/dataset-study-pass2.md`) - Claude checks landmark rows on the sheets.
+- `scripts/face_study.py`: face cross-section bands (width and setback at five levels).

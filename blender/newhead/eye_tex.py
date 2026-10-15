@@ -3,23 +3,23 @@ strokes. Pure numpy; RGBA float arrays (rows bottom-up, Blender pixel order), sR
 MHS3 protagonist frame."""
 import numpy as np
 
-C_SCLERA = (199, 197, 188)
-C_BAND = (161, 159, 161)
-C_IRIS_TOP = (88, 112, 84)
-C_IRIS = (112, 141, 100)
-C_IRIS_LIGHT = (162, 201, 149)
-C_IRIS_LINE = (58, 66, 46)
-C_PUPIL = (60, 63, 48)
+C_SCLERA = (230, 228, 227)      # q3: Leo face reference sample (was 199,197,188)
+C_BAND = (198, 200, 208)        # q3: faint cool shade under the lid (was a heavy grey band)
+C_IRIS_TOP = (39, 64, 39)       # q3: Leo dark top under the lid
+C_IRIS = (120, 165, 112)        # q3: Leo mid green ~(145,187,139) with the top shade blended in
+C_IRIS_LIGHT = (168, 214, 146)  # q3: lighter lower crescent
+C_IRIS_LINE = (42, 72, 46)      # q3
+C_PUPIL = (36, 58, 38)          # q3
 C_HL = (250, 250, 248)
 C_BROW = (122, 95, 71)
 C_BROW_DARK = (92, 66, 45)
 RING_W = 0.042        # r1: thicker iris arcs (MHS3 frame; q-series 0.022)
 RIM_W = 0.075         # dark iris outline width (share of the radius)
-PUPIL = (0.02, 0.12, 0.27, 0.33)      # centre u, v and radii, iris-local
+PUPIL = (0.0, 0.26, 0.30, 0.44)       # q3: tall oval set high (Leo)      # centre u, v and radii, iris-local
 LIGHT = (0.0, -0.62, 0.95, 0.45)      # light crescent ellipse
-HL = (-1.02, -0.18, 0.31, 0.13)       # highlight (iris-local; u mirrored for the viewer-right eye)
+HL = (1.02, -0.10, 0.31, 0.13)        # q3: on the viewer-right (Leo: light from the image right); highlight (iris-local; u mirrored for the viewer-right eye)
 EXT = 1.40            # texture / mesh extent around the iris (the highlight overlaps the white)
-BAND = 0.26
+BAND = 0.12          # q3: thinner lid shade band
 BROW_STROKES = 2      # p1: 2 = irregular thin hair strokes (MHS3), 1 = the old regular stripes
 
 
@@ -40,15 +40,23 @@ def iris(res=512, hl_sign=1.0, ss=3):
     r = np.hypot(U, V)
     col = np.zeros(U.shape + (3,)); a = np.zeros(U.shape)
     ic = _c(C_IRIS) * np.ones_like(col)
-    tm = 0.6 * _sm(0.2, 0.9, V)[..., None]
+    tm = 0.85 * _sm(0.25, 0.75, V)[..., None]    # q3: darker top
     ic = ic * (1 - tm) + _c(C_IRIS_TOP) * tm
     lr = np.hypot((U - LIGHT[0]) / LIGHT[2], (V - LIGHT[1]) / LIGHT[3])
     ic = np.where((lr < 1)[..., None], _c(C_IRIS_LIGHT), ic)
     deg = np.degrees(np.arctan2(V, U))
-    for rr, lo, hi in ((0.60, 95, 235), (0.79, 110, 215), (0.63, -55, 70)):
-        ring = (np.abs(r - rr) < RING_W) & (deg > lo) & (deg < hi)
+    # q4: Leo's iris has the two thin dark arcs on ONE upper side only - the highlight side (TypeSafe q4: iris off)
+    dside = deg if hl_sign > 0 else np.degrees(np.arctan2(V, -U))
+    for rr, lo, hi in ((0.62, -10, 75), (0.80, 5, 70)):
+        ring = (np.abs(r - rr) < RING_W) & (dside > lo) & (dside < hi)
         ic = np.where(ring[..., None], _c(C_IRIS_LINE), ic)
     ic = np.where((r > 1 - RIM_W)[..., None], _c(C_IRIS_LINE), ic)
+    # q3: two small light cross sparkles in the lower half (Leo face reference)
+    for su in (-0.42, 0.42):
+        du, dv = U - su, V + 0.30
+        near = np.hypot(du, dv) < 0.16
+        cross = near & ((np.abs(du - dv) < 0.035) | (np.abs(du + dv) < 0.035))
+        ic = np.where(cross[..., None], _c((190, 236, 170)), ic)
     pr = np.hypot((U - PUPIL[0]) / PUPIL[2], (V - PUPIL[1]) / PUPIL[3])
     ic = np.where((pr < 1)[..., None], _c(C_PUPIL), ic)
     inside = r < 1

@@ -1,0 +1,92 @@
+{
+ "region": "face_q",
+ "subject": "bald head, front view, neutral expression (hair not built on this head: ignore hair, compare only the face)",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "ears",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "p_look": 0.23,
+   "verdict": "off"
+  },
+  {
+   "feature": "brows",
+   "p_same": 0.105,
+   "confidence": 0.79,
+   "p_look": 0.215,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_mouth",
+   "p_same": 0.23,
+   "confidence": 0.54,
+   "p_look": 0.155,
+   "verdict": "off"
+  },
+  {
+   "feature": "iris",
+   "p_same": 0.24,
+   "confidence": 0.52,
+   "p_look": 0.285,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_chin",
+   "p_same": 0.275,
+   "confidence": 0.45,
+   "p_look": 0.36,
+   "verdict": "off"
+  },
+  {
+   "feature": "lash_line",
+   "p_same": 0.29,
+   "confidence": 0.42,
+   "p_look": 0.355,
+   "verdict": "off"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.405,
+   "confidence": 0.19,
+   "p_look": 0.61,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.715,
+   "confidence": 0.43,
+   "p_look": 0.52,
+   "verdict": "matches"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.825,
+   "confidence": 0.65,
+   "p_look": 0.535,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.77,
+  "confidence": 0.54,
+  "verdict": "rewrite the analysis (pictures disagree)",
+  "faithful_p": 0.285
+ },
+ "first_fix": {
+  "order_a": "brows_inner_thicker",
+  "order_b": "brows_inner_thicker",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "nose_line_off",
+    "brows_inner_thicker"
+   ],
+   "order_a": "brows_inner_thicker",
+   "order_b": "brows_inner_thicker"
+  },
+  "apply": null,
+  "setting": "eye_shape BROW_TAPER_IN +0.15"
+ }
+}

@@ -25,5 +25,21 @@ Open items first. Claude Code reads this at session start and moves finished ite
     1 - s(90,150,a) beyond; the other side's keys 0. Expression keys add on top. Ask the chat if the yaw source
     (head bone vs. root) is unclear.
 
+- **2026-10-15 - modular hair pieces, two new attributes, a brow slider and a game-style UI theme (chat).**
+  - Hair is now built per region from recipes (`blender/newhead/hair_nh.py` RECIPES): objects `Hair_<Piece>_<recipe>`
+    with Piece in Front, Top, SideL, SideR, Back, Base and attachments (Tail, TailL/R, BraidL/R, Bun, Ahoge), sockets
+    `SOC-Hair<Piece>`, plus `Hair_<Piece>Tie_*` / `Hair_<Piece>Bow_*` (hair ties, ribbon bows; their own material) and
+    `Hair_Cap_*`. Every hair piece carries ID-HairVolume / ID-HairWidth / ID-HairLength (+ _Neg); the app should
+    drive them per piece (one slider set per socket) rather than once per hairstyle. New point attribute
+    `hair_sec` (0..1, two-tone mask) on every piece; new point attribute `hair_cast` (1 lit, 0 = fringe shadow) on
+    the head mesh, multiplied into the skin's Shadow Mask.
+  - New identity keys on the brow strips: `ID-BrowInnerThick` / `ID-BrowInnerThin` (inner-end thickness). The
+    control `brow.innerThickness` was added to `src/model/controls.ts` and the contract re-exported (145 sliders).
+  - UI: `src/ui/theme-game.css` (loaded in main.tsx after styles.css) restyles the app as an anime-RPG character
+    creation screen; App.tsx adds labels on both rails, a stage overlay (`.stage-fx`) and an action bar
+    (`GameActions`: Randomize / Undo / Reset / Confirm); MenuBar gains Shift+R = randomize (R alone stays scale).
+    Typecheck and the 50 tests pass. Screenshots: `docs/qa/newhead/ui_before_theme.png`, `ui_game_theme.png`,
+    `ui_game_brow_sliders.png`. Remove the one import line to switch the theme off.
+
 ## Done
 (none yet)

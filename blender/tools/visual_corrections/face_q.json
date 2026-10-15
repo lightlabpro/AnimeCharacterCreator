@@ -1,0 +1,181 @@
+{
+ "region": "face_q",
+ "note": "q-series (2026-10-15): face after the head-form fix (skin slide + orbit fill), painted MHS3 eyes (eye_tex.py), brow inner taper. Settings name the knob that changes; one step per round.",
+ "corrections": [
+  {
+   "id": "eyes_bigger",
+   "description": "Make both eyes bigger (wider and taller).",
+   "setting": "id_morphs.py EYE_SIZE_BAKE +0.03"
+  },
+  {
+   "id": "eyes_smaller",
+   "description": "Make both eyes smaller.",
+   "setting": "id_morphs.py EYE_SIZE_BAKE -0.03"
+  },
+  {
+   "id": "eyes_taller",
+   "description": "Make the eye openings taller (rounder) without changing their width.",
+   "setting": "id_morphs.py EYE_SIZE_BAKE_Z +0.04"
+  },
+  {
+   "id": "eyes_closer",
+   "description": "Move the eyes closer together.",
+   "setting": "id_morphs.py EYE_SPACING_BAKE -0.02"
+  },
+  {
+   "id": "eyes_apart",
+   "description": "Move the eyes further apart.",
+   "setting": "id_morphs.py EYE_SPACING_BAKE +0.02"
+  },
+  {
+   "id": "lash_thicker",
+   "description": "Make the dark upper lash line thicker.",
+   "setting": "eye_shape.py LASH_MID +0.1, LASH_OUT +0.1"
+  },
+  {
+   "id": "lash_thinner",
+   "description": "Make the dark upper lash line thinner.",
+   "setting": "eye_shape.py LASH_MID -0.1"
+  },
+  {
+   "id": "brows_thicker",
+   "description": "Make the eyebrows thicker.",
+   "setting": "look_knobs paint BROW_THICK +0.15"
+  },
+  {
+   "id": "brows_thinner",
+   "description": "Make the eyebrows thinner.",
+   "setting": "look_knobs paint BROW_THICK -0.15"
+  },
+  {
+   "id": "brows_lower",
+   "description": "Move the eyebrows lower, closer to the eyes.",
+   "setting": "look_knobs paint BROW_DZ -0.05"
+  },
+  {
+   "id": "brows_higher",
+   "description": "Move the eyebrows higher above the eyes.",
+   "setting": "look_knobs paint BROW_DZ +0.05"
+  },
+  {
+   "id": "brows_more_angled",
+   "description": "Angle the eyebrows more steeply down toward the nose.",
+   "setting": "look_knobs paint BROW_INNER_DROP +0.05"
+  },
+  {
+   "id": "mouth_wider",
+   "description": "Make the mouth line wider.",
+   "setting": "apply_look.py MOUTH_LINE_W +0.1"
+  },
+  {
+   "id": "mouth_narrower",
+   "description": "Make the mouth line narrower.",
+   "setting": "apply_look.py MOUTH_LINE_W -0.1"
+  },
+  {
+   "id": "lip_shadow_bigger",
+   "description": "Make the soft shadow under the lower lip bigger.",
+   "setting": "apply_look.py LIP_SHADOW +0.3"
+  },
+  {
+   "id": "chin_wider",
+   "description": "Make the chin and lower jaw wider and squarer.",
+   "setting": "id_morphs.py CHIN_WIDE_BAKE +0.01"
+  },
+  {
+   "id": "chin_narrower",
+   "description": "Make the chin narrower and more pointed.",
+   "setting": "id_morphs.py CHIN_WIDE_BAKE -0.01"
+  },
+  {
+   "id": "nose_highlight_smaller",
+   "description": "Make the pale highlight on the nose bridge smaller.",
+   "setting": "apply_look.py NOSE_HL -0.3"
+  },
+  {
+   "id": "nose_line_shorter",
+   "description": "Make the dark line on the side of the nose shorter.",
+   "setting": "apply_look.py NOSE_LINE_TOP -0.04"
+  },
+  {
+   "id": "nose_line_off",
+   "description": "Remove the dark line on the side of the nose in the front view.",
+   "setting": "apply_look.py NOSE_LINE 0 (front)"
+  },
+  {
+   "id": "iris_wider",
+   "description": "Make the iris wider (rounder oval).",
+   "setting": "eye_shape IRIS_RX +0.05"
+  },
+  {
+   "id": "iris_narrower",
+   "description": "Make the iris narrower (taller oval).",
+   "setting": "eye_shape IRIS_RX -0.05"
+  },
+  {
+   "id": "sclera_greyer",
+   "description": "Make the eye whites greyer / darker.",
+   "setting": "eye_tex C_SCLERA -15"
+  },
+  {
+   "id": "sclera_whiter",
+   "description": "Make the eye whites whiter.",
+   "setting": "eye_tex C_SCLERA +10"
+  },
+  {
+   "id": "highlight_bigger",
+   "description": "Make the white eye highlight bigger.",
+   "setting": "eye_tex HL radii x1.25"
+  },
+  {
+   "id": "iris_darker",
+   "description": "Make the iris colour darker overall.",
+   "setting": "eye_tex C_IRIS -15"
+  },
+  {
+   "id": "lower_lid_lighter",
+   "description": "Make the lower lid line lighter / shorter (only a thin line on the outer half).",
+   "setting": "apply_look LID_WRAP -0.1"
+  },
+  {
+   "id": "orbit_fuller",
+   "description": "Fill the sides of the face beside the eyes so the 3/4 outline runs smoothly from brow to cheek.",
+   "setting": "id_morphs ORBIT_FILL strength +0.3"
+  },
+  {
+   "id": "cheeks_fuller",
+   "description": "Make the cheeks fuller / rounder in the 3/4 view.",
+   "setting": "id_morphs cheek push +2 mm"
+  },
+  {
+   "id": "brows_inner_thinner",
+   "description": "Make the inner (nose-side) end of the brows thinner.",
+   "setting": "eye_shape BROW_TAPER_IN -0.15"
+  },
+  {
+   "id": "brows_inner_thicker",
+   "description": "Make the inner end of the brows thicker.",
+   "setting": "eye_shape BROW_TAPER_IN +0.15"
+  },
+  {
+   "id": "ears_smaller",
+   "description": "Make the ears smaller.",
+   "setting": "id_morphs EarSize bake 0.9"
+  },
+  {
+   "id": "ears_closer",
+   "description": "Make the ears lie closer to the head.",
+   "setting": "id_morphs EAR_OUT_BAKE -6"
+  },
+  {
+   "id": "hair_shadow_on_forehead",
+   "description": "Add the hard shadow the fringe casts on the forehead (a dark band under the hair edge).",
+   "setting": "apply_look HAIR_CAST mask from the hair pieces"
+  },
+  {
+   "id": "stronger_shadow_side",
+   "description": "Put more of one side of the face in the darker shadow tone.",
+   "setting": "apply_look face shadow threshold +0.05"
+  }
+ ]
+}

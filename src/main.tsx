@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
 import '@fontsource-variable/inter';
 import './ui/styles.css';
+import './ui/theme-game.css';
 import { useStore } from './state/store';
 import { captureViews, type CaptureOptions } from './viewport/cleanCapture';
 import { getEngine } from './ui/Viewport';

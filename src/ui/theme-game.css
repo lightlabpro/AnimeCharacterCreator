@@ -1,0 +1,134 @@
+/* Game theme (2026-10-15): the creator restyled as a character-creation screen of a stylised anime RPG (MHS3-like):
+   deep navy panels framed in warm gold, an orange accent, labelled category tabs, a lit stage with a platform under
+   the character, chunky diamond sliders and an action bar with key prompts. Loaded after styles.css; it only
+   overrides tokens and component skins, so every panel keeps working. Switch it off by removing the import in main.tsx. */
+
+:root {
+  --s0: #0b1424;
+  --s1: #102038;
+  --s2: #142846;
+  --s3: #1b3357;
+  --s4: #24406a;
+  --line: #2a466e;
+  --line2: #3a5a86;
+  --text: #f6eedc;
+  --dim: #c9bfa8;
+  --faint: #8c97ab;
+  --accent: #f08a24;
+  --accent2: #ffb257;
+  --accentBg: rgba(240, 138, 36, 0.16);
+  --accentLine: rgba(255, 178, 87, 0.6);
+  --gold: #d9a441;
+  --gold2: #f3cf7a;
+  --goldLine: rgba(217, 164, 65, 0.55);
+  --teal: #3fb6c8;
+  --r1: 7px;
+  --r2: 10px;
+  --sh2: 0 14px 36px rgba(0, 0, 0, 0.55);
+  --display: 'Inter Variable', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ---------- shell ---------- */
+.app { background: radial-gradient(140% 120% at 50% 0%, #17305a 0%, #0b1424 60%) fixed; }
+
+.menubar {
+  height: 46px;
+  background: linear-gradient(180deg, #16305a 0%, #0f2242 100%);
+  border-bottom: 2px solid var(--gold);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 -6px 12px rgba(0, 0, 0, 0.25);
+}
+.brand { font-family: var(--display); font-weight: 800; font-style: italic; text-transform: uppercase; letter-spacing: 0.12em; font-size: 14px; color: var(--gold2); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45); }
+.brand .logo { width: 26px; height: 26px; border-radius: 8px; transform: rotate(45deg); background: linear-gradient(135deg, var(--accent), #c8461b); box-shadow: 0 0 0 2px var(--gold), 0 3px 8px rgba(0, 0, 0, 0.5); }
+.brand .logo > * { transform: rotate(-45deg); }
+.doc-title b { font-weight: 800; letter-spacing: 0.04em; }
+.menu > button { color: var(--dim); font-weight: 600; letter-spacing: 0.03em; }
+.menu-pop { background: var(--s1); border: 1px solid var(--goldLine); }
+
+/* labelled category rails */
+.rail { width: 84px; background: linear-gradient(180deg, #0f2140, #0b1730); gap: 4px; padding: 8px 0; }
+.rail.left { border-right: 2px solid var(--goldLine); }
+.rail.right { border-left: 2px solid var(--goldLine); }
+.rail-btn {
+  width: 72px; height: 54px; border-radius: 10px; color: var(--faint);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+  background: rgba(255, 255, 255, 0.02);
+}
+.rail-btn .rail-label { font-size: 8.5px; font-weight: 700; letter-spacing: 0.01em; text-transform: uppercase; line-height: 1.05; text-align: center; max-width: 66px; white-space: normal; overflow-wrap: normal; }
+.rail-btn:hover:not(:disabled) { color: var(--text); background: linear-gradient(180deg, #23426e, #1a3255); }
+.rail-btn.on { color: #1a0f05; background: linear-gradient(180deg, var(--gold2), var(--gold)); }
+.rail-btn.on::before { display: none; }
+.rail .sep { width: 50px; background: var(--goldLine); }
+
+/* panels framed like game windows */
+.panel { background: linear-gradient(180deg, rgba(20, 40, 70, 0.96), rgba(13, 27, 50, 0.96)); }
+.panel-head {
+  height: 48px; padding: 0 14px;
+  background: linear-gradient(90deg, rgba(240, 138, 36, 0.22), transparent 70%);
+  border-bottom: 2px solid var(--gold);
+}
+.panel-head .title { font-family: var(--display); font-size: 15px; font-weight: 800; font-style: italic; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold2); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5); }
+.panel-head .title::before { content: '◆'; color: var(--accent); margin-right: 8px; font-style: normal; font-size: 11px; vertical-align: 2px; }
+.splitter::after { background: var(--goldLine); }
+
+/* sub tabs as game pills */
+.tabs { gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.tabs button { padding: 6px 12px; border-radius: 999px; font-weight: 700; letter-spacing: 0.03em; color: var(--dim); background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
+.tabs button.on { color: #1a0f05; background: linear-gradient(180deg, var(--accent2), var(--accent)); border-color: var(--gold2); }
+.tabs button.on::after { display: none; }
+
+/* buttons */
+.btn { border-radius: 999px; background: linear-gradient(180deg, #24426c, #1a3254); border-color: var(--line2); font-weight: 600; }
+.btn.primary { background: linear-gradient(180deg, var(--accent2), var(--accent)); border-color: var(--gold2); color: #1a0f05; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.btn.primary:hover:not(:disabled) { background: linear-gradient(180deg, #ffc477, #f59a3c); border-color: #fff0c4; }
+.search { border-radius: 999px; background: #0a1322; border-color: var(--line2); }
+.seg { border-radius: 999px; background: #0a1322; }
+.seg button { border-radius: 999px; }
+.seg button.on { background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a0f05; }
+.chip.on { border-color: var(--gold2); background: var(--accentBg); }
+.switch input:checked + .track { background: var(--accent); border-color: var(--gold2); }
+
+/* sliders: chunky track, diamond thumb */
+.rng::-webkit-slider-runnable-track { height: 6px; border-radius: 6px; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(90deg, #0a1322 var(--a), var(--accent) var(--a), var(--accent2) var(--b), #0a1322 var(--b)); }
+.rng::-webkit-slider-thumb { width: 14px; height: 14px; margin-top: -4px; border-radius: 3px; transform: rotate(45deg);
+  background: linear-gradient(135deg, #fff6df, var(--gold2)); box-shadow: 0 0 0 2px #5a3a10, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.rng:hover::-webkit-slider-thumb { transform: rotate(45deg) scale(1.15); }
+.slider { padding: 6px 8px; border-radius: 10px; margin: 2px 0; }
+.slider:hover { background: rgba(240, 138, 36, 0.08); }
+.slider .s-label { color: var(--dim); font-weight: 600; }
+.slider.changed .s-label { color: var(--gold2); }
+.slider.changed .s-label::after { background: var(--accent); transform: rotate(45deg); border-radius: 1px; }
+.section > .sec-head { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold2); font-weight: 800; }
+
+/* library cards as framed item slots */
+.card .thumb { border-radius: 12px; border: 2px solid var(--line); background: radial-gradient(120% 90% at 50% 20%, #2a4c7c 0%, #12243f 75%); }
+.card:hover .thumb { border-color: var(--gold); }
+.card.sel .thumb { border-color: var(--gold2); box-shadow: 0 0 0 2px var(--accent), 0 0 18px rgba(240, 138, 36, 0.45); }
+.card .check { background: var(--accent); box-shadow: 0 0 0 2px var(--gold2); }
+.card .name { font-weight: 600; }
+
+/* stage: spotlight + platform under the character */
+.viewport { position: relative; }
+.viewport .stage-fx { position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background:
+    radial-gradient(38% 9% at 50% 92%, rgba(255, 196, 120, 0.28), rgba(255, 196, 120, 0) 70%),
+    radial-gradient(55% 70% at 50% 35%, rgba(255, 236, 200, 0.08), rgba(0, 0, 0, 0) 60%),
+    radial-gradient(120% 100% at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(4, 10, 22, 0.55) 100%); }
+.viewport .stage-fx::after { content: ''; position: absolute; left: 50%; bottom: 5.5%; width: 34%; height: 7%; transform: translateX(-50%);
+  border-radius: 50%; border: 2px solid rgba(243, 207, 122, 0.55); box-shadow: 0 0 0 6px rgba(243, 207, 122, 0.12), inset 0 0 30px rgba(240, 138, 36, 0.25); }
+
+/* action bar with key prompts */
+.game-actions { position: absolute; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 5; display: flex; gap: 10px; }
+.game-actions .ga { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px 0 6px; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(27, 51, 87, 0.95), rgba(14, 29, 52, 0.95)); border: 2px solid var(--goldLine);
+  color: var(--text); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12px; box-shadow: var(--sh2); }
+.game-actions .ga:hover:not(:disabled) { border-color: var(--gold2); }
+.game-actions .ga.confirm { background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a0f05; border-color: var(--gold2); }
+.game-actions .key { min-width: 26px; height: 26px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 50%;
+  background: #0a1322; color: var(--gold2); border: 2px solid var(--gold); font-size: 11px; font-weight: 800; }
+.game-actions .ga.confirm .key { background: #2a1606; color: var(--gold2); }
+.game-actions .ga:disabled { opacity: 0.45; }
+
+.statusbar { background: linear-gradient(180deg, #0f2242, #0b1730); border-top: 2px solid var(--goldLine); color: var(--dim); }
+.statusbar b { color: var(--gold2); }

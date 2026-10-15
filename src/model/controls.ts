@@ -92,6 +92,7 @@ export const CONTROLS: ControlDef[] = [
   c('brow.spacing', 'Brow spacing', 'Moves the brows apart or together.', BROW, { bi: true, region: 'brows', bone: ['brow_spacing', 0.85, 1.15] }),
   c('brow.thickness', 'Brow thickness', 'Thicker or thinner brow strip.', BROW, { bi: true, region: 'brows', morph: 'ID-BrowThick', morphNeg: 'ID-BrowThin' }),
   c('brow.length', 'Brow length', 'Longer or shorter brow strip.', BROW, { bi: true, region: 'brows', morph: 'ID-BrowLong', morphNeg: 'ID-BrowShort' }),
+  c('brow.innerThickness', 'Brow inner end', 'Thickness of the brow start near the nose: thinner to the left, thicker to the right.', BROW, { bi: true, region: 'brows', morph: 'ID-BrowInnerThick', morphNeg: 'ID-BrowInnerThin' }),
 
   c('eye.size', 'Eye size', 'Larger or smaller eyes.', EYE, { bi: true, region: 'eyes', morph: 'ID-EyeSize', morphNeg: 'ID-EyeSize_Neg' }),
   c('eye.height', 'Eye height', 'Places the eyes higher or lower on the face.', EYE, { bi: true, region: 'eyes', morph: 'ID-EyeHeight', morphNeg: 'ID-EyeHeight_Neg' }),

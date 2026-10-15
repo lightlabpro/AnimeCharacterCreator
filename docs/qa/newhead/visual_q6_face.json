@@ -1,0 +1,47 @@
+{
+ "region": "face_q",
+ "subject": "face, front view, neutral expression, short brown hair (compare the face; the hair is judged separately)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo)",
+ "features": {
+  "eye_size": {
+   "reference": "Medium almond eyes, each about a third of the distance from the eyes to the chin wide.",
+   "ours": "Medium almond eyes, each about a third of the distance from the eyes to the chin wide."
+  },
+  "eye_spacing": {
+   "reference": "About one and a quarter eye widths between the eyes.",
+   "ours": "About one and a quarter eye widths between the eyes."
+  },
+  "iris": {
+   "reference": "Green iris, taller than wide, dark green at the top, lighter green at the bottom, dark outline and dark pupil, one white highlight on the right side of the iris.",
+   "ours": "Green iris, taller than wide, dark green at the top, lighter green at the bottom, dark outline and dark pupil, one white highlight on the right side of the iris."
+  },
+  "sclera": {
+   "reference": "Very light, almost white eye whites.",
+   "ours": "Very light, almost white eye whites."
+  },
+  "lash_line": {
+   "reference": "Dark-brown upper lid line, thicker at the outer corner; the lower lid has only a faint thin line.",
+   "ours": "Dark-brown upper lid line, thicker at the outer corner and wrapping a short way under the outer corner; no other lower line."
+  },
+  "brows": {
+   "reference": "Brown brows with darker hair strokes, angled down toward the nose, thick at the inner end and thinner toward the outer end.",
+   "ours": "Brown brows with darker hair strokes, angled down toward the nose, thin at the inner end, thickest a little way out, thinner toward the outer end."
+  },
+  "nose_mouth": {
+   "reference": "Nose shown only as a pale highlight on the bridge and a small pinkish shadow under the tip; thin dark mouth line with a pinkish shadow under the lower lip.",
+   "ours": "Nose shown only as a pale highlight on the bridge and a small brown shadow under the tip; thin dark mouth line with a brown shadow under the lower lip."
+  },
+  "jaw_chin": {
+   "reference": "Strong jaw narrowing to a short squarish chin.",
+   "ours": "Jaw narrowing to a rounded-square chin, slightly narrower and more pointed than the reference's."
+  },
+  "ears": {
+   "reference": "Ears partly covered by the side hair, lying close to the head.",
+   "ours": "Ears partly covered by the side hair, lying close to the head, the left one showing its inner shade."
+  },
+  "shading": {
+   "reference": "Clear two-tone shading: hair casts a shadow band on the forehead, the right side of the face and the neck under the jaw are in a darker warm shadow.",
+   "ours": "Mostly flat lit face with no hair shadow on the forehead; only the neck under the jaw and a sliver at the far right of the face are in darker warm shadow."
+  }
+ }
+}

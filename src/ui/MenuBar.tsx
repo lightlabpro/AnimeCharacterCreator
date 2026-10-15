@@ -47,6 +47,7 @@ export const SHORTCUTS: [string, string][] = [
   ['Ctrl+N', 'New character'],
   ['Ctrl+O', 'Open character'],
   ['Ctrl+S', 'Save character'],
+  ['Shift+R', 'Randomize the look'],
   ['Ctrl+I', 'Import library'],
   ['Ctrl+Z', 'Undo'],
   ['Ctrl+Y or Ctrl+Shift+Z', 'Redo'],
@@ -93,6 +94,7 @@ export function useShortcuts() {
       else if (k === 'd') st.setUI({ shapeDrag: !st.ui.shapeDrag });
       else if (k === 'w') st.setUI({ gizmoMode: 'translate' });
       else if (k === 'e') st.setUI({ gizmoMode: 'rotate' });
+      else if (k === 'r' && e.shiftKey) st.randomize();
       else if (k === 'r') st.setUI({ gizmoMode: 'scale' });
       else if (k === 'b') st.playClip('blink', false);
       else if (k === '\\') {

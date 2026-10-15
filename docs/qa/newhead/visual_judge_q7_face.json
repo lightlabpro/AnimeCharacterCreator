@@ -1,0 +1,99 @@
+{
+ "region": "face_q",
+ "subject": "face, front view, neutral expression, short brown hair (compare the face; the hair is judged separately)",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "brows",
+   "p_same": 0.105,
+   "confidence": 0.79,
+   "p_look": 0.18,
+   "verdict": "off"
+  },
+  {
+   "feature": "shading",
+   "p_same": 0.115,
+   "confidence": 0.77,
+   "p_look": 0.115,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_mouth",
+   "p_same": 0.165,
+   "confidence": 0.67,
+   "p_look": 0.115,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_chin",
+   "p_same": 0.17,
+   "confidence": 0.66,
+   "p_look": 0.265,
+   "verdict": "off"
+  },
+  {
+   "feature": "lash_line",
+   "p_same": 0.375,
+   "confidence": 0.25,
+   "p_look": 0.425,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "iris",
+   "p_same": 0.48,
+   "confidence": 0.04,
+   "p_look": 0.245,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "ears",
+   "p_same": 0.585,
+   "confidence": 0.17,
+   "p_look": 0.365,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "eye_size",
+   "p_same": 0.73,
+   "confidence": 0.46,
+   "p_look": 0.52,
+   "verdict": "matches"
+  },
+  {
+   "feature": "sclera",
+   "p_same": 0.76,
+   "confidence": 0.52,
+   "p_look": 0.71,
+   "verdict": "matches"
+  },
+  {
+   "feature": "eye_spacing",
+   "p_same": 0.82,
+   "confidence": 0.64,
+   "p_look": 0.485,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.785,
+  "confidence": 0.57,
+  "verdict": "rewrite the analysis (pictures disagree)",
+  "faithful_p": 0.255
+ },
+ "first_fix": {
+  "order_a": "brows_more_angled",
+  "order_b": "brows_more_angled",
+  "agree": true,
+  "tie_break": {
+   "candidates": [
+    "nose_line_off",
+    "brows_more_angled"
+   ],
+   "order_a": "brows_more_angled",
+   "order_b": "brows_more_angled"
+  },
+  "apply": null,
+  "setting": "look_knobs paint BROW_INNER_DROP +0.05"
+ }
+}

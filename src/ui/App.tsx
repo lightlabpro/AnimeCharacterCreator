@@ -14,11 +14,11 @@ import { PlayBar } from './PlayBar';
 import { Toolstrip } from './Toolstrip';
 import { Viewport, regionLabel, useHover } from './Viewport';
 
-const PANELS: { id: RightPanel; label: string; icon: string }[] = [
-  { id: 'modify', label: 'Modify', icon: 'modify' },
-  { id: 'mixer', label: 'Face mixer', icon: 'mixer' },
-  { id: 'appearance', label: 'Appearance layers', icon: 'appearance' },
-  { id: 'face', label: 'Face profile', icon: 'face' },
+const PANELS: { id: RightPanel; label: string; short: string; icon: string }[] = [
+  { id: 'modify', label: 'Modify', short: 'Modify', icon: 'modify' },
+  { id: 'mixer', label: 'Face mixer', short: 'Mixer', icon: 'mixer' },
+  { id: 'appearance', label: 'Appearance layers', short: 'Layers', icon: 'appearance' },
+  { id: 'face', label: 'Face profile', short: 'Profile', icon: 'face' },
 ];
 
 function usePersistedWidth(key: string, initial: number, min: number, max: number) {
@@ -96,7 +96,8 @@ export function App() {
                   }
                 }}
               >
-                <Icon name={CATEGORY_ICON[c]} size={18} />
+                <Icon name={CATEGORY_ICON[c]} size={20} />
+                <span className="rail-label">{c}</span>
               </button>
             </span>
           ))}
@@ -116,7 +117,9 @@ export function App() {
         <div className="center">
           <main className="viewport">
             <Viewport />
+            <div className="stage-fx" aria-hidden />
             <Toolstrip />
+            <GameActions />
           </main>
           <PlayBar />
         </div>
@@ -148,7 +151,8 @@ export function App() {
                 }
               }}
             >
-              <Icon name={p.icon} size={18} />
+              <Icon name={p.icon} size={20} />
+              <span className="rail-label">{p.short}</span>
             </button>
           ))}
           <span className="grow" />
@@ -164,6 +168,28 @@ export function App() {
       <ImportReportModal />
       {help && <HelpModal onClose={() => setHelp(false)} shortcuts={SHORTCUTS} />}
       <Toast />
+    </div>
+  );
+}
+
+/** Game-style action bar with key prompts (theme-game.css). */
+function GameActions() {
+  const past = useStore((s) => s.past.length);
+  const st = useStore.getState;
+  return (
+    <div className="game-actions">
+      <button className="ga" title="Random look for every slider" onClick={() => st().randomize()}>
+        <span className="key">⇧R</span>Randomize
+      </button>
+      <button className="ga" title="Undo (Ctrl+Z)" disabled={past === 0} onClick={() => st().undo()}>
+        <span className="key">^Z</span>Undo
+      </button>
+      <button className="ga" title="Back to the starting character" onClick={() => st().resetIdentity()}>
+        <span className="key">⟲</span>Reset
+      </button>
+      <button className="ga confirm" title="Save character (Ctrl+S)" onClick={() => void st().saveCharacter()}>
+        <span className="key">^S</span>Confirm
+      </button>
     </div>
   );
 }

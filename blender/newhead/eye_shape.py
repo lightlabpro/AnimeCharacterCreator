@@ -28,7 +28,7 @@ LOW_RIM = 0.035      # faint warm-grey rim along the lower lid
 LID_TUCK = 0.05      # e1: the lid line's inner edge reaches this far over the opening (covers the edge chords)
 COVER_IN, COVER_OUT = 0.035, 0.03
 COVER_REACH = 0.35   # p5: the lower-edge cover runs to X_corner - this x WING (was 1.2)   # e1: skin-coloured cover strip over the lower edge (inside / outside the edge)
-IRIS_X, IRIS_Z, IRIS_RX, IRIS_RY = -0.08, -0.10, 0.45, 0.51
+IRIS_X, IRIS_Z, IRIS_RX, IRIS_RY = -0.06, -0.04, 0.46, 0.62   # q3: Leo tall oval iris (w ~0.40 of the opening), cut by the upper lid
 OPEN_EPS = 0.10      # the opening ends where it is this tall (the lid line covers the thin wedge beyond)
 SMOOTH = 0.055       # Gaussian sigma (W2) along the curves
 
@@ -47,6 +47,8 @@ BROW_THICK = 1.0
 BROW_DZ = 0.0
 BROW_TAPER_OUT = 0.55  # p5: thickness at the outer end (x the traced profile); Leo: thick inner end, thin outer
 BROW_INNER_DROP = 0.0   # p1: the inner end sits lower (Leo: the brow angles down toward the nose)
+BROW_TAPER_IN = 0.55    # q2: thickness at the inner end (Sammy: "too thick on the inner part"); full thickness at BROW_PEAK
+BROW_PEAK = 0.35        # q2: share of the length (from the inner end) where the brow is thickest
 
 
 def _sm(e0, e1, x):
@@ -213,7 +215,7 @@ def low_rim_ribbon(dU=None, dL=None, n=400, samples=60):
     return P + np.array([0, 0.02]), P - np.stack([np.zeros(samples), LOW_RIM * taper], 1)
 
 
-def brow_ribbon(samples=60, d=None, thick=1.0, length=1.0):
+def brow_ribbon(samples=60, d=None, thick=1.0, length=1.0, taper_in=None):
     """Brow as (bottom, top) pairs along its length; d(t) adds a vertical offset (expression), t 0 inner -> 1 outer.
     p1: thick / length scale the strip (ID-BrowThick/Thin, ID-BrowLong/Short); length stretches the outer part."""
     X = np.linspace(BX[0], BX[-1], samples)
@@ -221,7 +223,10 @@ def brow_ribbon(samples=60, d=None, thick=1.0, length=1.0):
     T = _gauss1d(T, 1.2); B = _gauss1d(B, 1.2)
     T[0] = B[0] = (BT[0] + BB[0]) / 2
     cm = (T + B) / 2
-    tp = 1 - (1 - BROW_TAPER_OUT) * np.linspace(0, 1, samples) ** 1.3
+    tl = np.linspace(0, 1, samples)
+    ti = BROW_TAPER_IN if taper_in is None else taper_in
+    rise = np.clip(tl / max(BROW_PEAK, 1e-3), 0, 1); rise = rise * rise * (3 - 2 * rise)
+    tp = (ti + (1 - ti) * rise) * (1 - (1 - BROW_TAPER_OUT) * tl ** 1.3)    # q2: thin inner end, thickest ~1/3 in
     T = cm + (T - cm) * BROW_THICK * thick * tp + BROW_DZ; B = cm + (B - cm) * BROW_THICK * thick * tp + BROW_DZ
     if BROW_INNER_DROP:
         tt = (X - X[0]) / (X[-1] - X[0])

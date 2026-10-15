@@ -322,3 +322,32 @@ Note: k17's descriptions were not faithful to the pictures (0.315); k17's p_same
 the later rows. Still off: clumps (Leo's are many fine strands; ours a dozen big blades + strands), width 0.90 vs
 0.80 D, top outline smoother than Leo's. Sides match. The hair is much closer but TypeSafe still calls four of five
 features off - this is not a match yet.
+
+## m-series - modular hair (hair_nh.py RECIPES)
+Research (modular anime hair kits: front / back / side / ponytail / extras; Braidify / Braid Hair Curves; MHS3
+creator Front + Back + two-tone) -> hair built per region (Front, Top, SideL, SideR, Back, Base) plus attachments
+(tail, braid, bun, ahoge, tie, bow), each its own object with ID-HairVolume/Width/Length. Leo rebuilt as a recipe
+(renders match k31). Demo recipes ponytail / twintails / braids / bun / leia (board m1_grid.png, m5_leia.png).
+TypeSafe m4 (Leia, pictures): faithful 0.80, all features off (silhouette 0.015, sidelocks 0.02, clumps 0.02, fringe
+0.035, ponytail 0.035); smoother_top applied (m5). Parked at Sammy's request to fix the head first.
+
+## q-series - head form, MHS3 eyes, brows, ears (2026-10-15)
+- Head "pushed in" (Sammy): the p-series eye bake dented the brow and cheek cross-sections ~1 cm beside each eye
+  (face_study setback at 0.30 hh: brow 0.146 -> 0.212, cheek 0.161 -> 0.228; dataset band 0.12-0.19, n = 7 verified
+  anime heads). q1 skin slides on the pre-bake surface (brow 0.147, cheek 0.157); q1b fixed jaw artifacts from the
+  first slide; q1c orbit fill (eye-level setback 0.215 -> 0.169). Slices: slices_q1_brow_eye_cheek.png, slices3.png.
+- Brows: inner end thinner (BROW_TAPER_IN 0.55, thickest at 0.35 of the length); new keys ID-BrowInnerThick/Thin and
+  the creator slider "Brow inner end" (brow.thickness already existed).
+- Eyes from the Leo reference (sRGB samples): near-white sclera, tall oval iris (RX 0.46, RY 0.62), dark top, lighter
+  lower crescent, tall pupil set high, arcs only on the highlight side, cross sparkles, highlight on the viewer's right.
+- TypeSafe (menu face_q.json, pictures on):
+| round | eye_size | eye_spacing | sclera | iris | brows | ears | shading | jaw_chin | faithful | first_fix |
+|---|---|---|---|---|---|---|---|---|---|---|
+| q4 | 0.84 | 0.675 | 0.38 | 0.195 | 0.28 | - | - | 0.145 | 0.31 | chin_wider (applied) |
+| q5 | 0.825 | 0.715 | 0.405 | 0.24 | 0.105 | 0.02 | - | 0.275 | 0.285 | brows_inner_thicker - DECLINED (Sammy: inner part too thick) |
+| q5b | 0.74 | 0.79 | 0.805 | 0.485 | 0.10 | 0.01 | - | 0.14 | 0.24 | ears_closer (applied, EAR_OUT 8 -> 2 deg) |
+| q6 (with hair) | 0.76 | 0.79 | 0.79 | 0.455 | 0.11 | 0.585 | 0.02 | 0.155 | 0.30 | hair_shadow_on_forehead (applied: hair_cast) |
+| q7 | 0.73 | 0.82 | 0.76 | 0.48 | 0.105 | 0.585 | 0.115 | 0.17 | 0.255 | brows_more_angled (applied, BROW_INNER_DROP 0.18; little visible change) |
+TypeSafe says "pictures disagree" with the descriptions (faithful 0.24-0.31) in every face round, even after plain
+rewrites; a bald test head against Leo with hair kept it low. Eye size, spacing and sclera match; iris, ears need a
+human; brows, jaw/chin, nose/mouth and shading are still off. Not near-perfect yet.

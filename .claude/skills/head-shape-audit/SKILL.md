@@ -54,3 +54,16 @@ This route needs the `render-validator` skill installed as well, because the scr
 
 ## Works with other skills
 The `head_audit.json` it writes is read by `render-validator` (`validate.py --head-audit`) and by `character-gate` (`run_gate.py --head-audit`), which also checks that the head height here agrees with the neck-to-top height from `body-proportion-audit`. Run the gate after this audit so the result is cross-checked.
+
+## Face form check (dataset pass 2, 2026-10-15)
+Proportions can pass while the face still looks "pushed in" (Sammy's words for the p-series head). Measure the
+cross-sections too: `body-proportion-audit/scripts/face_study.py` slices the head at brow (0.42 hh), eye (0.50),
+cheek (0.62), mouth (0.76) and jaw (0.86) and reports `setback_k`, how far the face front at |x| = k hh lies behind
+the centre line. Bands from 7 verified anime heads are in `knowledge/dataset-study-pass2.md` (setback at 0.30 hh:
+0.10-0.19). Plot the slices of the mesh before and after any bake or morph: a concave bow beside the eyes is the
+"pushed in" look.
+- Any map that moves facial features (eye size, spacing, height) must let the skin **slide on the old surface**
+  (re-read its depth at the new x/z), keeping only the lid rim's own depth; otherwise the brow ridge and cheek tops
+  carry their depth into new places and the cross-section dents (`id_morphs.py` SKIN_SLIDE, q1).
+- When an eye opening gets smaller, fill the lateral orbit to the line from the brow ridge to the cheek
+  (`ORBIT_FILL`, q1c), or the 3/4 silhouette notches in at eye level.

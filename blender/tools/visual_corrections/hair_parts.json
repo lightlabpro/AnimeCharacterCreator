@@ -1,0 +1,23 @@
+{
+ "region": "hair_parts",
+ "note": "m-series (2026-10-15): modular hair (hair_nh.py RECIPES: region variants + attachments). Each setting edits one recipe parameter. One step per round.",
+ "corrections": [
+  {"id": "tail_longer", "description": "Make the ponytail / pigtails longer.", "setting": "recipe Tail.len +0.04"},
+  {"id": "tail_shorter", "description": "Make the ponytail / pigtails shorter.", "setting": "recipe Tail.len -0.04"},
+  {"id": "tail_fuller", "description": "Make the ponytail fuller and thicker (more hair in the bundle).", "setting": "recipe Tail.width +0.012, Tail.splay +0.01"},
+  {"id": "tail_thinner", "description": "Make the ponytail slimmer.", "setting": "recipe Tail.width -0.012"},
+  {"id": "tail_higher", "description": "Tie the ponytail higher on the head.", "setting": "recipe Tail.anchor p -8"},
+  {"id": "tail_lower", "description": "Tie the ponytail lower on the head.", "setting": "recipe Tail.anchor p +8"},
+  {"id": "bow_bigger", "description": "Make the ribbon bow on the tie bigger.", "setting": "recipe Tail.bow_size +0.012"},
+  {"id": "fringe_longer", "description": "Make the fringe longer.", "setting": "recipe Front.len +4"},
+  {"id": "fringe_shorter", "description": "Make the fringe shorter.", "setting": "recipe Front.len -4"},
+  {"id": "fringe_more_swept", "description": "Sweep more of the fringe across the forehead from the part.", "setting": "recipe Front.count_l +1, Front.reach_l +15"},
+  {"id": "sidelocks_longer", "description": "Make the locks framing the face longer.", "setting": "recipe SideL/SideR.len +0.03"},
+  {"id": "sidelocks_shorter", "description": "Make the locks framing the face shorter.", "setting": "recipe SideL/SideR.len -0.03"},
+  {"id": "sidelocks_flick", "description": "Curl the ends of the face-framing locks outward more.", "setting": "recipe SideL/SideR.flick +0.01"},
+  {"id": "smoother_top", "description": "Make the pulled-back top smoother and flatter (fewer separate clumps showing).", "setting": "recipe Back.vol -0.4"},
+  {"id": "clumps_narrower", "description": "Make the hair clumps narrower (finer strands).", "setting": "hair WID_SCALE -0.12"},
+  {"id": "hair_lighter", "description": "Make the hair colour lighter.", "setting": "hair LIGHTNESS +0.12"},
+  {"id": "hair_darker", "description": "Make the hair colour darker.", "setting": "hair LIGHTNESS -0.12"}
+ ]
+}

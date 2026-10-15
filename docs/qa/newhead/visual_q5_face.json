@@ -1,0 +1,43 @@
+{
+ "region": "face_q",
+ "subject": "bald head, front view, neutral expression (hair not built on this head: ignore hair, compare only the face)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo)",
+ "features": {
+  "eye_size": {
+   "reference": "Almond eyes, each about 0.33 of the pupil-to-chin distance wide; opening height about 0.55-0.6 of its width.",
+   "ours": "Almond eyes, each about 0.35 of the pupil-to-chin distance wide; opening height about 0.55 of its width."
+  },
+  "eye_spacing": {
+   "reference": "Pupils about 0.72 of the pupil-to-chin distance apart; gap between the inner corners about 1.3 eye widths.",
+   "ours": "Pupils about 0.73 of the pupil-to-chin distance apart; gap between the inner corners about 1.2 eye widths."
+  },
+  "iris": {
+   "reference": "Tall oval green iris about 0.45 of the opening wide and the full opening tall, cut by the upper lid; dark green top, mid green middle, a lighter green lower crescent, a dark outline, a tall dark pupil set high, two thin dark arcs on one upper side, small light cross-shaped sparkles in the lower half, one white teardrop highlight at the iris edge on the viewer's right.",
+   "ours": "Tall oval green iris about 0.45 of the opening wide and the full opening tall, cut by the upper lid; dark green top, mid green middle, a lighter green lower crescent, a dark outline, a tall dark pupil set high, two thin dark arcs on the upper side toward the highlight only, small light cross-shaped sparkles in the lower half, one white oval highlight at the iris edge on the viewer's right."
+  },
+  "sclera": {
+   "reference": "Near-white eye whites (about sRGB 230,228,227) with no grey band.",
+   "ours": "Near-white eye whites (about sRGB 230,228,227) with a faint cool shade right under the upper lid."
+  },
+  "lash_line": {
+   "reference": "Dark-brown upper lid line, thin over the eye and thicker with a short wing at the outer corner; only a thin line under the outer half of the lower lid.",
+   "ours": "Dark-brown upper lid line, thin over the eye and thicker with a short wing at the outer corner that wraps a little under the outer corner of the lower lid."
+  },
+  "brows": {
+   "reference": "Brown brush-stroke brows with darker hair strokes, angled down toward the nose, close above the eyes, thick at the inner end and thinning toward the outer end.",
+   "ours": "Brown brows with thin dark diagonal hair strokes, angled down toward the nose, close above the eyes, thin at the inner end, thickest about a third of the way out, thinning to the outer end past the outer eye corner."
+  },
+  "nose_mouth": {
+   "reference": "No nose line in front view, a pale highlight on the bridge, a small soft shadow under the tip about 0.49 of the pupil-to-chin distance below the pupils; a thin dark mouth line about 0.5 wide at 0.64-0.67 below the pupils with a soft shadow under the lower lip.",
+   "ours": "No nose line in front view, a pale highlight on the bridge, a lens-shaped brown shadow under the tip about 0.50 below the pupils; a thin dark mouth line about 0.5 wide at about 0.66 below the pupils with a brown shadow under the lower lip."
+  },
+  "jaw_chin": {
+   "reference": "Face narrowing from the cheekbones to a short, squarish chin about 0.37 of the pupil-to-chin distance wide at the bottom.",
+   "ours": "Face narrowing from the cheekbones to a rounded-square chin about 0.33 of the pupil-to-chin distance wide at the bottom."
+  },
+  "ears": {
+   "reference": "Ears partly hidden by hair; the visible ear sits close to the head, its top level with the brows, the inner ear shaded darker.",
+   "ours": "Ears fully visible (no hair), standing out from the head at about 20 degrees, top level with the brows, bottom level with the nose shadow, a large mauve-brown inner shade."
+  }
+ }
+}

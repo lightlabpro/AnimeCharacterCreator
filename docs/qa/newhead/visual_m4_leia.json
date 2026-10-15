@@ -1,0 +1,27 @@
+{
+ "region": "hair_parts",
+ "subject": "female hair with a high ponytail, three-quarter front view (face only; the head underneath is a male test head, judge the hair)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, Leia (official render)",
+ "features": {
+  "silhouette": {
+   "reference": "Smooth rounded head of hair pulled back, a high ponytail rising just above the top at the back with a big purple ribbon bow on the image-right top; long locks frame the face down past the jaw on both sides with outward-curled ends.",
+   "ours": "Rounded head of hair with a short ponytail stub just above the top at the back and a smallish purple bow showing on the image-right top; straight locks frame the face down to about the jaw on both sides, ends pointed, not curled."
+  },
+  "fringe": {
+   "reference": "Side-parted on the image left; long strands sweep from the part across the forehead toward the image right, the longest reaching the eye on the image right; thin strands fall beside the image-left eye.",
+   "ours": "Parted on the image left; about seven pointed clumps fall over the forehead, the longest reaching the eyes on both sides, only a slight sweep toward the image right; forehead shows between the clumps."
+  },
+  "sidelocks": {
+   "reference": "Long wispy face-framing locks from the temples down past the jaw to the neck, ends curling outward, a few loose strands.",
+   "ours": "Two to three straight pointed locks per side from the temples down to about the jaw, ends straight, not curled outward."
+  },
+  "ponytail": {
+   "reference": "High ponytail tied at the top back with a large purple ribbon bow (two loops), the tail rising a little then falling behind the head to the image right, full and wavy.",
+   "ours": "High ponytail tied at the top back with a purple bow (two flat loops, smaller than the reference's), the tail mostly hidden behind the head in this view; from the side it falls to the nape as a bundle of pointed clumps."
+  },
+  "clumps": {
+   "reference": "Smooth hair with many fine strand lines, thin dark outlines, a few pale highlight streaks on the top front, soft warm shading.",
+   "ours": "Fewer, bigger flat clumps with pointed tips and thin dark rim lines, pale highlight streaks across the top, flat light brown with a darker shadow side on the image right."
+  }
+ }
+}

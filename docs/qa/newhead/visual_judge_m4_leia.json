@@ -1,0 +1,57 @@
+{
+ "region": "hair_parts",
+ "subject": "female hair with a high ponytail, three-quarter front view (face only; the head underneath is a male test head, judge the hair)",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "silhouette",
+   "p_same": 0.015,
+   "confidence": 0.97,
+   "p_look": 0.075,
+   "verdict": "off"
+  },
+  {
+   "feature": "sidelocks",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "p_look": 0.08,
+   "verdict": "off"
+  },
+  {
+   "feature": "clumps",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "p_look": 0.12,
+   "verdict": "off"
+  },
+  {
+   "feature": "fringe",
+   "p_same": 0.035,
+   "confidence": 0.93,
+   "p_look": 0.13,
+   "verdict": "off"
+  },
+  {
+   "feature": "ponytail",
+   "p_same": 0.035,
+   "confidence": 0.93,
+   "p_look": 0.065,
+   "verdict": "off"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.855,
+  "confidence": 0.71,
+  "verdict": "usable",
+  "faithful_p": 0.8
+ },
+ "first_fix": {
+  "order_a": "smoother_top",
+  "order_b": "smoother_top",
+  "agree": true,
+  "tie_break": null,
+  "apply": "smoother_top",
+  "setting": "recipe Back.vol -0.4"
+ }
+}

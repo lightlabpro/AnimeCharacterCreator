@@ -1,0 +1,2445 @@
+[
+ {
+  "file": "glbs__glbs_1k__000-000__04026b862b184a26ba0f101933eb6954_1024.glb",
+  "heads_tall": 7.611,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.731,
+    "front": 0.014,
+    "setback_0.10": 0.05,
+    "setback_0.30": 0.222
+   },
+   "eye": {
+    "width": 0.724,
+    "front": 0.004,
+    "setback_0.10": 0.057,
+    "setback_0.20": 0.14,
+    "setback_0.30": 0.215
+   },
+   "cheek": {
+    "width": 0.826,
+    "front": -0.017,
+    "setback_0.10": 0.106,
+    "setback_0.20": 0.124,
+    "setback_0.30": 0.185
+   },
+   "mouth": {
+    "width": 0.622,
+    "front": 0.038,
+    "setback_0.10": 0.108,
+    "setback_0.20": 0.173
+   },
+   "jaw": {
+    "width": 0.463,
+    "front": -0.019,
+    "setback_0.10": 0.053,
+    "setback_0.20": 0.368
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-001__07d70d4f8a86479ba70db40793f10e42_1024.glb",
+  "heads_tall": 20.403,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.472,
+    "front": 0.256,
+    "setback_0.10": -0.229,
+    "setback_0.20": -0.09,
+    "setback_0.30": -0.213
+   },
+   "cheek": {
+    "width": 1.488,
+    "front": 0.496,
+    "setback_0.20": 0.033,
+    "setback_0.30": 0.042
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-002__0a8a61528cd64d91b2d1260fe9ac8d73_1024.glb",
+  "heads_tall": 9.445,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.164,
+    "front": -0.347,
+    "setback_0.10": -0.064,
+    "setback_0.20": -0.029,
+    "setback_0.30": -0.06
+   },
+   "eye": {
+    "width": 1.333,
+    "front": -0.523,
+    "setback_0.10": -0.008,
+    "setback_0.20": -0.015,
+    "setback_0.30": -0.036
+   },
+   "cheek": {
+    "width": 1.474,
+    "front": -0.738,
+    "setback_0.10": 0.002,
+    "setback_0.20": 0.054,
+    "setback_0.30": -0.034
+   },
+   "mouth": {
+    "width": 1.437,
+    "front": -0.942,
+    "setback_0.10": -0.017,
+    "setback_0.20": -0.041,
+    "setback_0.30": -0.053
+   },
+   "jaw": {
+    "width": 1.445,
+    "front": -1.029,
+    "setback_0.10": -0.02,
+    "setback_0.20": 0.002,
+    "setback_0.30": -0.018
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-004__14fd5f6e05284861af3030097f2b3957_1024.glb",
+  "heads_tall": 8.052,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.498,
+    "front": 0.022
+   },
+   "eye": {
+    "width": 1.466,
+    "front": 0.067,
+    "setback_0.10": 0.059,
+    "setback_0.30": 0.103
+   },
+   "cheek": {
+    "width": 1.418,
+    "front": 0.087,
+    "setback_0.10": 0.323,
+    "setback_0.20": 0.33,
+    "setback_0.30": 0.039
+   },
+   "mouth": {
+    "width": 1.46,
+    "front": 0.213,
+    "setback_0.10": 0.209,
+    "setback_0.20": 0.132,
+    "setback_0.30": 0.247
+   },
+   "jaw": {
+    "width": 1.438,
+    "front": 0.374,
+    "setback_0.10": 0.244,
+    "setback_0.20": 0.177,
+    "setback_0.30": 0.315
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-005__1943246f62074b42804ded5f663fb553_1024.glb",
+  "heads_tall": 4.573,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.432,
+    "setback_0.10": 0.054,
+    "setback_0.20": 0.101
+   },
+   "eye": {
+    "width": 0.921,
+    "setback_0.10": 0.005,
+    "setback_0.20": 0.112,
+    "setback_0.30": 0.649
+   },
+   "cheek": {
+    "width": 1.209,
+    "setback_0.10": 0.015,
+    "setback_0.20": -0.043,
+    "setback_0.30": 0.575
+   },
+   "mouth": {
+    "width": 0.908,
+    "setback_0.10": 0.02,
+    "setback_0.20": 0.123,
+    "setback_0.30": 0.532
+   },
+   "jaw": {
+    "width": 0.823,
+    "setback_0.10": 0.084,
+    "setback_0.20": 0.215,
+    "setback_0.30": 0.517
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-006__208bf5d9c8ac4049b33f3cab5d40ccba_1024.glb",
+  "heads_tall": 9.069,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.0,
+    "front": 0.027,
+    "setback_0.10": -1.053,
+    "setback_0.20": -1.048,
+    "setback_0.30": -0.953
+   },
+   "eye": {
+    "width": 0.961,
+    "front": 0.06,
+    "setback_0.10": -1.043,
+    "setback_0.20": -0.997,
+    "setback_0.30": -0.935
+   },
+   "cheek": {
+    "width": 0.75,
+    "front": 0.151,
+    "setback_0.10": -0.962,
+    "setback_0.20": -0.905,
+    "setback_0.30": -0.789
+   },
+   "mouth": {
+    "width": 0.679,
+    "front": 1.106,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.068,
+    "setback_0.30": 0.224
+   },
+   "jaw": {
+    "width": 0.633,
+    "front": 1.105,
+    "setback_0.10": 0.021,
+    "setback_0.20": 0.117,
+    "setback_0.30": 0.531
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-006__21fd15f0f00e4e58925bbec5d8afc6dd_1024.glb",
+  "heads_tall": 62.691,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored",
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {}
+ },
+ {
+  "file": "glbs__glbs_1k__000-008__2b9b59384bbc4072956e8dfc7a52d10e_1024.glb",
+  "heads_tall": 9.592,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.86,
+    "front": 0.049,
+    "setback_0.10": 0.003,
+    "setback_0.20": 1.086,
+    "setback_0.30": 0.102
+   },
+   "eye": {
+    "width": 0.899,
+    "front": 0.079,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.045
+   },
+   "cheek": {
+    "width": 0.936,
+    "front": 0.061,
+    "setback_0.10": 0.05,
+    "setback_0.20": 0.093,
+    "setback_0.30": 0.119
+   },
+   "mouth": {
+    "width": 1.106,
+    "front": 0.105,
+    "setback_0.10": 0.111,
+    "setback_0.20": 0.163,
+    "setback_0.30": 0.177
+   },
+   "jaw": {
+    "width": 1.073,
+    "front": 0.174,
+    "setback_0.10": 0.086,
+    "setback_0.20": 0.193,
+    "setback_0.30": 0.22
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-009__2ec91f4bb2ca4669985405e0b6d09956_1024.glb",
+  "heads_tall": 12.693,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.197,
+    "front": -0.5,
+    "setback_0.10": -0.058,
+    "setback_0.20": -0.192,
+    "setback_0.30": -0.277
+   },
+   "eye": {
+    "width": 1.257,
+    "front": -0.456,
+    "setback_0.10": -0.055,
+    "setback_0.20": -0.191,
+    "setback_0.30": -0.116
+   },
+   "cheek": {
+    "width": 1.278,
+    "front": -0.647,
+    "setback_0.10": 0.037,
+    "setback_0.20": -0.089,
+    "setback_0.30": -0.358
+   },
+   "mouth": {
+    "width": 1.291,
+    "front": -0.754,
+    "setback_0.10": -0.012,
+    "setback_0.20": -0.039,
+    "setback_0.30": -0.083
+   },
+   "jaw": {
+    "width": 1.32,
+    "front": -0.804,
+    "setback_0.10": -0.005,
+    "setback_0.20": -0.041,
+    "setback_0.30": -0.117
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-009__312e05692524477da666faf4e09810a1_1024.glb",
+  "heads_tall": 8.973,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.031,
+    "front": -0.041,
+    "setback_0.10": -0.025,
+    "setback_0.30": -0.127
+   },
+   "eye": {
+    "width": 1.062,
+    "front": -0.054
+   },
+   "cheek": {
+    "width": 1.072,
+    "front": -0.055,
+    "setback_0.20": -0.065,
+    "setback_0.30": -0.137
+   },
+   "mouth": {
+    "width": 1.043,
+    "front": 1.07,
+    "setback_0.10": 0.009,
+    "setback_0.30": 0.94
+   },
+   "jaw": {
+    "width": 1.477,
+    "front": 1.023,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.041,
+    "setback_0.30": 0.084
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-010__34250b16550748ceb66301ed6d9b6793_1024.glb",
+  "heads_tall": 6.16,
+  "flags": [
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.99,
+    "front": 0.021,
+    "setback_0.10": -0.03,
+    "setback_0.20": -0.067,
+    "setback_0.30": -0.185
+   },
+   "eye": {
+    "width": 0.816,
+    "front": 0.032,
+    "setback_0.10": -0.117,
+    "setback_0.20": -0.153,
+    "setback_0.30": -0.27
+   },
+   "cheek": {
+    "width": 0.565,
+    "front": 0.583,
+    "setback_0.10": 0.286,
+    "setback_0.20": 0.073
+   },
+   "mouth": {
+    "width": 0.378,
+    "front": 0.436,
+    "setback_0.10": 0.039
+   },
+   "jaw": {
+    "width": 0.215,
+    "front": 0.417,
+    "setback_0.10": 0.046
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-012__3c5edcef5c38425ab0ab10770f7165ce_1024.glb",
+  "heads_tall": 12.326,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.469,
+    "front": -0.166,
+    "setback_0.10": 0.004
+   },
+   "eye": {
+    "width": 1.477,
+    "front": 0.767,
+    "setback_0.10": 0.024,
+    "setback_0.20": 0.951
+   },
+   "cheek": {
+    "width": 1.161,
+    "front": 0.882,
+    "setback_0.20": 0.058,
+    "setback_0.30": 0.115
+   },
+   "mouth": {
+    "width": 1.185,
+    "front": 0.95,
+    "setback_0.20": 0.054,
+    "setback_0.30": 1.17
+   },
+   "jaw": {
+    "width": 1.195,
+    "front": 0.975,
+    "setback_0.20": 0.057,
+    "setback_0.30": 1.201
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-012__3fc1b2f5952446cebc3e7a4cd8d16dc0_1024.glb",
+  "heads_tall": 13.753,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored",
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.496,
+    "front": 0.075,
+    "setback_0.10": 0.081,
+    "setback_0.20": 0.04,
+    "setback_0.30": 0.093
+   },
+   "eye": {
+    "width": 1.396,
+    "front": 0.108,
+    "setback_0.10": 0.078,
+    "setback_0.20": 0.04,
+    "setback_0.30": 0.092
+   },
+   "cheek": {
+    "width": 1.427,
+    "front": 0.141,
+    "setback_0.10": 0.072,
+    "setback_0.20": 0.044,
+    "setback_0.30": 0.088
+   },
+   "mouth": {
+    "width": 1.466,
+    "front": 0.154,
+    "setback_0.10": 0.066,
+    "setback_0.20": 0.043,
+    "setback_0.30": 0.085
+   },
+   "jaw": {
+    "width": 1.473,
+    "front": 0.151,
+    "setback_0.10": 0.064,
+    "setback_0.20": 0.041,
+    "setback_0.30": 0.09
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-013__44ecaf69076341758a457174d97bb431_1024.glb",
+  "heads_tall": 9.474,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored",
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.05,
+    "front": 0.05,
+    "setback_0.10": 0.012,
+    "setback_0.20": 0.587,
+    "setback_0.30": 0.088
+   },
+   "eye": {
+    "width": 1.07,
+    "front": 0.071,
+    "setback_0.10": 0.599,
+    "setback_0.20": 1.176,
+    "setback_0.30": 0.09
+   },
+   "cheek": {
+    "width": 1.088,
+    "front": 0.085,
+    "setback_0.10": 0.605,
+    "setback_0.20": 1.19,
+    "setback_0.30": 0.091
+   },
+   "mouth": {
+    "width": 1.305,
+    "front": 0.073,
+    "setback_0.10": 1.168,
+    "setback_0.20": 0.043,
+    "setback_0.30": 0.083
+   },
+   "jaw": {
+    "width": 1.346,
+    "front": 0.044,
+    "setback_0.10": 0.558,
+    "setback_0.20": 1.056,
+    "setback_0.30": 0.097
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-014__48e0397e57704b15a3539aaadecd95d5_1024.glb",
+  "heads_tall": 21.896,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {}
+ },
+ {
+  "file": "glbs__glbs_1k__000-014__48e6db3752b14e238816118883752441_1024.glb",
+  "heads_tall": 7.072,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.727,
+    "front": 0.012,
+    "setback_0.10": 0.008,
+    "setback_0.20": 0.054,
+    "setback_0.30": 0.18
+   },
+   "eye": {
+    "width": 0.706,
+    "front": -0.005,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.054,
+    "setback_0.30": 0.151
+   },
+   "cheek": {
+    "width": 0.788,
+    "front": -0.01,
+    "setback_0.10": 0.051,
+    "setback_0.20": 0.078,
+    "setback_0.30": 0.164
+   },
+   "mouth": {
+    "width": 0.573,
+    "front": 0.007,
+    "setback_0.10": 0.044,
+    "setback_0.20": 0.111
+   },
+   "jaw": {
+    "width": 0.462,
+    "front": -0.021,
+    "setback_0.10": 0.045,
+    "setback_0.20": 0.12
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-014__49808a700ed94e778af4c131c953e82a_1024.glb",
+  "heads_tall": 8.806,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.909,
+    "front": 0.028,
+    "setback_0.10": 0.019,
+    "setback_0.30": 0.137
+   },
+   "eye": {
+    "width": 0.913,
+    "front": 0.033,
+    "setback_0.20": 0.063,
+    "setback_0.30": 0.14
+   },
+   "cheek": {
+    "width": 0.907,
+    "front": 0.016,
+    "setback_0.20": 0.092,
+    "setback_0.30": 0.134
+   },
+   "mouth": {
+    "width": 1.01,
+    "front": -0.027,
+    "setback_0.10": 0.059,
+    "setback_0.20": 0.116,
+    "setback_0.30": 0.139
+   },
+   "jaw": {
+    "width": 0.959,
+    "front": 0.007,
+    "setback_0.10": 0.072,
+    "setback_0.20": 0.138,
+    "setback_0.30": 0.157
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-018__5a2a226d483343638019a09a8ae76a92_1024.glb",
+  "heads_tall": 5.696,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.703,
+    "front": 0.01,
+    "setback_0.10": 0.425,
+    "setback_0.20": 0.058,
+    "setback_0.30": 0.142
+   },
+   "eye": {
+    "width": 0.679,
+    "front": 0.0,
+    "setback_0.10": 0.023,
+    "setback_0.20": 0.066,
+    "setback_0.30": 0.147
+   },
+   "cheek": {
+    "width": 0.637,
+    "front": -0.014,
+    "setback_0.10": 0.008,
+    "setback_0.20": 0.061,
+    "setback_0.30": 0.139
+   },
+   "mouth": {
+    "width": 0.546,
+    "front": 0.038,
+    "setback_0.10": 0.057,
+    "setback_0.20": 0.104
+   },
+   "jaw": {
+    "width": 0.432,
+    "front": 0.006,
+    "setback_0.10": 0.047,
+    "setback_0.20": 0.117
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-019__605b45e6c3c946089c4441225b5ed328_1024.glb",
+  "heads_tall": 12.015,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.17,
+    "front": -0.033,
+    "setback_0.10": -0.006,
+    "setback_0.20": -0.022,
+    "setback_0.30": -0.05
+   },
+   "eye": {
+    "width": 1.201,
+    "front": -0.048,
+    "setback_0.10": -0.008,
+    "setback_0.20": -0.023,
+    "setback_0.30": -0.048
+   },
+   "cheek": {
+    "width": 1.189,
+    "front": -0.057,
+    "setback_0.10": -0.01,
+    "setback_0.20": -0.028,
+    "setback_0.30": -0.055
+   },
+   "mouth": {
+    "width": 1.152,
+    "front": -0.049,
+    "setback_0.10": -0.016,
+    "setback_0.20": -0.05,
+    "setback_0.30": -0.085
+   },
+   "jaw": {
+    "width": 1.398,
+    "front": -0.026,
+    "setback_0.10": -0.043,
+    "setback_0.20": -0.094,
+    "setback_0.30": -0.043
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-023__76a1aa04f7a544589c455b448bbc5efd_1024.glb",
+  "heads_tall": 7.655,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.879,
+    "front": 0.031,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.881,
+    "setback_0.30": 0.105
+   },
+   "eye": {
+    "width": 0.88,
+    "front": 0.035,
+    "setback_0.10": 0.014,
+    "setback_0.20": 0.05,
+    "setback_0.30": 0.112
+   },
+   "cheek": {
+    "width": 0.862,
+    "front": 0.017,
+    "setback_0.10": 0.017,
+    "setback_0.20": 0.049,
+    "setback_0.30": 0.103
+   },
+   "mouth": {
+    "width": 1.215,
+    "front": -0.006,
+    "setback_0.10": 0.033,
+    "setback_0.20": 0.193,
+    "setback_0.30": 0.23
+   },
+   "jaw": {
+    "width": 0.971,
+    "front": 0.023,
+    "setback_0.10": 0.041,
+    "setback_0.20": 0.081,
+    "setback_0.30": 0.131
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-026__842c31a561484cb78a88523ddbb7946c_1024.glb",
+  "heads_tall": 14.0,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.231,
+    "front": 0.053
+   },
+   "eye": {
+    "width": 1.266,
+    "front": 0.066,
+    "setback_0.30": 0.101
+   },
+   "cheek": {
+    "width": 1.27,
+    "front": 0.063
+   },
+   "mouth": {
+    "width": 1.272,
+    "front": 0.049,
+    "setback_0.30": 0.108
+   },
+   "jaw": {
+    "width": 1.387,
+    "front": 0.005
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-026__85de88eca19144419769ff1225bdc1f0_1024.glb",
+  "heads_tall": 10.531,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.858,
+    "front": 0.041,
+    "setback_0.10": 0.012,
+    "setback_0.30": 0.11
+   },
+   "eye": {
+    "width": 0.848,
+    "front": 0.054,
+    "setback_0.20": 0.043,
+    "setback_0.30": 0.102
+   },
+   "cheek": {
+    "width": 0.825,
+    "front": 0.046,
+    "setback_0.10": 0.021,
+    "setback_0.20": 0.063,
+    "setback_0.30": 0.138
+   },
+   "mouth": {
+    "width": 0.934,
+    "front": 0.041,
+    "setback_0.10": 0.056,
+    "setback_0.20": 0.094,
+    "setback_0.30": 0.156
+   },
+   "jaw": {
+    "width": 0.822,
+    "front": 0.106,
+    "setback_0.10": 0.089,
+    "setback_0.20": 0.157,
+    "setback_0.30": 0.207
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-027__8ae231b61fc34827be30e2a1edc5b811_1024.glb",
+  "heads_tall": 7.683,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.15,
+    "front": 0.028,
+    "setback_0.10": 0.014,
+    "setback_0.20": 0.067,
+    "setback_0.30": 0.172
+   },
+   "eye": {
+    "width": 1.176,
+    "front": 0.038,
+    "setback_0.10": 0.017,
+    "setback_0.20": 0.061,
+    "setback_0.30": 0.1
+   },
+   "cheek": {
+    "width": 1.338,
+    "front": 0.036,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.078,
+    "setback_0.30": 0.153
+   },
+   "mouth": {
+    "width": 1.219,
+    "front": 0.014,
+    "setback_0.10": 0.086,
+    "setback_0.20": 0.255,
+    "setback_0.30": 0.246
+   },
+   "jaw": {
+    "width": 1.265,
+    "front": -0.066,
+    "setback_0.10": 0.124,
+    "setback_0.20": 0.258,
+    "setback_0.30": 0.211
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-028__90913426a8f8430caedc6efec6b1cc1d_1024.glb",
+  "heads_tall": 5.692,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.854,
+    "front": 0.055,
+    "setback_0.10": 0.02,
+    "setback_0.20": 0.083,
+    "setback_0.30": 0.23
+   },
+   "eye": {
+    "width": 0.897,
+    "front": 0.057,
+    "setback_0.10": 0.025,
+    "setback_0.20": 0.088,
+    "setback_0.30": 0.2
+   },
+   "cheek": {
+    "width": 0.918,
+    "front": 0.037,
+    "setback_0.10": 0.039,
+    "setback_0.20": 0.076,
+    "setback_0.30": 0.164
+   },
+   "mouth": {
+    "width": 0.942,
+    "front": 0.047,
+    "setback_0.10": 0.044,
+    "setback_0.20": 0.084,
+    "setback_0.30": 0.411
+   },
+   "jaw": {
+    "width": 0.995,
+    "front": 0.068,
+    "setback_0.10": 0.034,
+    "setback_0.20": 0.109,
+    "setback_0.30": 0.76
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-029__937e788d818f4839b6d1434944bebb2a_1024.glb",
+  "heads_tall": 8.973,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.031,
+    "front": -0.041,
+    "setback_0.10": -0.025,
+    "setback_0.30": -0.127
+   },
+   "eye": {
+    "width": 1.062,
+    "front": -0.054
+   },
+   "cheek": {
+    "width": 1.072,
+    "front": -0.055,
+    "setback_0.20": -0.065,
+    "setback_0.30": -0.137
+   },
+   "mouth": {
+    "width": 1.043,
+    "front": 1.07,
+    "setback_0.10": 0.009,
+    "setback_0.30": 0.94
+   },
+   "jaw": {
+    "width": 1.477,
+    "front": 1.023,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.041,
+    "setback_0.30": 0.084
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-032__a2198738314a44f38264670efe1f9cb2_1024.glb",
+  "heads_tall": 13.5,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored",
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "eye": {
+    "width": 1.389,
+    "front": 0.307,
+    "setback_0.10": -0.146,
+    "setback_0.20": 0.539,
+    "setback_0.30": -0.115
+   },
+   "cheek": {
+    "width": 1.489,
+    "front": 0.327,
+    "setback_0.10": -0.324,
+    "setback_0.20": -0.295,
+    "setback_0.30": -0.25
+   },
+   "mouth": {
+    "width": 1.437,
+    "front": 0.613,
+    "setback_0.10": -0.092,
+    "setback_0.20": 0.033,
+    "setback_0.30": 0.275
+   },
+   "jaw": {
+    "width": 1.472,
+    "front": 0.673,
+    "setback_0.10": -0.08,
+    "setback_0.20": 0.036,
+    "setback_0.30": 0.064
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-032__a2842bf62a3a4a639ed7d356ccb54d56_1024.glb",
+  "heads_tall": 8.389,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.717,
+    "front": 0.03,
+    "setback_0.10": 0.027,
+    "setback_0.20": 0.042,
+    "setback_0.30": 0.159
+   },
+   "eye": {
+    "width": 0.822,
+    "front": 0.054,
+    "setback_0.10": 0.081,
+    "setback_0.20": 0.082,
+    "setback_0.30": 0.164
+   },
+   "cheek": {
+    "width": 0.795,
+    "front": -0.779,
+    "setback_0.10": -0.811,
+    "setback_0.20": -0.448,
+    "setback_0.30": -0.683
+   },
+   "mouth": {
+    "width": 0.781,
+    "front": -0.705,
+    "setback_0.10": -0.763,
+    "setback_0.20": -0.699,
+    "setback_0.30": -0.488
+   },
+   "jaw": {
+    "width": 0.836,
+    "front": 0.089,
+    "setback_0.10": 0.055,
+    "setback_0.20": 0.145
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-033__a5172798d4df43e5bcfaa79d32c32c36_1024.glb",
+  "heads_tall": 5.02,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.538,
+    "front": 0.072,
+    "setback_0.10": 0.033,
+    "setback_0.20": 0.099
+   },
+   "eye": {
+    "width": 0.549,
+    "front": 0.085,
+    "setback_0.10": 0.692,
+    "setback_0.20": 0.073
+   },
+   "cheek": {
+    "width": 1.493,
+    "front": 0.083,
+    "setback_0.10": 0.032,
+    "setback_0.20": 0.076
+   },
+   "mouth": {
+    "width": 1.498,
+    "front": 0.148,
+    "setback_0.10": 0.079,
+    "setback_0.20": 0.125
+   },
+   "jaw": {
+    "width": 1.485,
+    "front": 0.1,
+    "setback_0.10": 0.053,
+    "setback_0.20": 0.146
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-034__add1992524ac4a07b9d9c912de22a1d7_1024.glb",
+  "heads_tall": 5.424,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.671,
+    "front": 0.054,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.054,
+    "setback_0.30": 0.325
+   },
+   "eye": {
+    "width": 0.594,
+    "front": 0.073,
+    "setback_0.10": 0.007,
+    "setback_0.20": 0.048
+   },
+   "cheek": {
+    "width": 0.594,
+    "front": 0.075,
+    "setback_0.10": 0.012,
+    "setback_0.20": 0.06
+   },
+   "mouth": {
+    "width": 0.559,
+    "front": 0.06,
+    "setback_0.10": 0.203,
+    "setback_0.20": 0.219
+   },
+   "jaw": {
+    "width": 0.49,
+    "front": 0.116,
+    "setback_0.10": 0.028,
+    "setback_0.20": 0.078
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-037__bd3a6589bc10467a9c5025ee802b8a39_1024.glb",
+  "heads_tall": 7.445,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.706,
+    "front": 0.014,
+    "setback_0.10": 0.029,
+    "setback_0.20": 0.052,
+    "setback_0.30": 0.226
+   },
+   "eye": {
+    "width": 0.816,
+    "front": 0.04,
+    "setback_0.10": 0.08,
+    "setback_0.20": 0.101,
+    "setback_0.30": 0.229
+   },
+   "cheek": {
+    "width": 0.766,
+    "front": -0.74,
+    "setback_0.10": -0.742,
+    "setback_0.20": -0.707,
+    "setback_0.30": -0.559
+   },
+   "mouth": {
+    "width": 0.584,
+    "front": 0.022,
+    "setback_0.10": 0.038,
+    "setback_0.20": 0.084
+   },
+   "jaw": {
+    "width": 0.522,
+    "front": 0.004,
+    "setback_0.10": 0.033,
+    "setback_0.20": 0.122
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-039__c654d061a07d413893fbf6838f5cc64b_1024.glb",
+  "heads_tall": 15.355,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.203,
+    "front": -0.03,
+    "setback_0.10": -0.015
+   },
+   "eye": {
+    "width": 1.226,
+    "front": -0.043,
+    "setback_0.10": -0.011,
+    "setback_0.20": -0.043
+   },
+   "cheek": {
+    "width": 1.231,
+    "front": -0.047,
+    "setback_0.10": -0.011,
+    "setback_0.30": -0.093
+   },
+   "mouth": {
+    "width": 1.376,
+    "front": -0.025,
+    "setback_0.10": -0.205,
+    "setback_0.20": -0.128,
+    "setback_0.30": -0.128
+   },
+   "jaw": {
+    "width": 1.338,
+    "front": -0.033,
+    "setback_0.10": -0.217,
+    "setback_0.20": -0.144,
+    "setback_0.30": -0.15
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-040__c89325dde9b14ce4b5c9001504b92085_1024.glb",
+  "heads_tall": 6.799,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.823,
+    "front": 0.056,
+    "setback_0.10": 0.023,
+    "setback_0.20": 0.003,
+    "setback_0.30": 0.069
+   },
+   "eye": {
+    "width": 0.894,
+    "front": 0.082,
+    "setback_0.10": -0.043,
+    "setback_0.20": 0.036,
+    "setback_0.30": 0.097
+   },
+   "cheek": {
+    "width": 0.977,
+    "front": 0.094,
+    "setback_0.10": 0.058,
+    "setback_0.20": 0.06,
+    "setback_0.30": 0.104
+   },
+   "mouth": {
+    "width": 1.025,
+    "front": 0.052,
+    "setback_0.10": 0.061,
+    "setback_0.20": 0.118,
+    "setback_0.30": 0.123
+   },
+   "jaw": {
+    "width": 1.088,
+    "front": -0.021,
+    "setback_0.10": 0.049,
+    "setback_0.20": 0.092,
+    "setback_0.30": 0.117
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-041__d1530a17f2a74851a09f9c6013c3f3e9_1024.glb",
+  "heads_tall": 9.826,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored",
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.855,
+    "front": 0.026,
+    "setback_0.10": 0.008,
+    "setback_0.20": 0.026,
+    "setback_0.30": 0.081
+   },
+   "eye": {
+    "width": 0.849,
+    "front": 0.032,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.027,
+    "setback_0.30": 0.078
+   },
+   "cheek": {
+    "width": 0.823,
+    "front": 0.019,
+    "setback_0.10": 0.014,
+    "setback_0.20": 0.04,
+    "setback_0.30": 0.079
+   },
+   "mouth": {
+    "width": 0.775,
+    "front": 0.009,
+    "setback_0.10": 0.052,
+    "setback_0.20": 0.065,
+    "setback_0.30": 0.092
+   },
+   "jaw": {
+    "width": 0.738,
+    "front": 0.05,
+    "setback_0.10": 0.869,
+    "setback_0.20": 0.083,
+    "setback_0.30": 0.131
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-042__d60fb4427e6e4858bc82c4175b0fdbb5_1024.glb",
+  "heads_tall": 6.539,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.825,
+    "front": 0.014,
+    "setback_0.10": 0.023,
+    "setback_0.20": 0.07,
+    "setback_0.30": 0.131
+   },
+   "eye": {
+    "width": 0.837,
+    "front": 0.001,
+    "setback_0.10": 0.031,
+    "setback_0.20": 0.069,
+    "setback_0.30": 0.137
+   },
+   "cheek": {
+    "width": 0.782,
+    "front": -0.019,
+    "setback_0.10": 0.039,
+    "setback_0.20": 0.1,
+    "setback_0.30": 0.126
+   },
+   "mouth": {
+    "width": 0.622,
+    "front": 0.053,
+    "setback_0.10": 0.094,
+    "setback_0.20": 0.153
+   },
+   "jaw": {
+    "width": 0.509,
+    "front": -0.005,
+    "setback_0.10": 0.051,
+    "setback_0.20": 0.108
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-042__d6b0128c464144f5b4202bd8e0e40099_1024.glb",
+  "heads_tall": 5.312,
+  "flags": [
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.901,
+    "front": -0.012,
+    "setback_0.30": -0.121
+   },
+   "eye": {
+    "width": 0.959,
+    "front": -0.007,
+    "setback_0.10": -0.026,
+    "setback_0.20": -0.076,
+    "setback_0.30": -0.122
+   },
+   "cheek": {
+    "width": 1.139,
+    "front": 0.01,
+    "setback_0.10": -0.043,
+    "setback_0.20": -0.064,
+    "setback_0.30": -0.103
+   },
+   "mouth": {
+    "width": 1.07,
+    "front": -0.085,
+    "setback_0.30": -0.207
+   },
+   "jaw": {
+    "width": 0.817,
+    "front": -0.057,
+    "setback_0.10": -0.03,
+    "setback_0.20": -0.094,
+    "setback_0.30": -0.864
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-043__dbc1ed4f0f834665a2f315318e97820a_1024.glb",
+  "heads_tall": 7.655,
+  "flags": [
+   "skeleton disagrees with the mesh (head joint not near the top): rig ignored"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.879,
+    "front": 0.031,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.881,
+    "setback_0.30": 0.105
+   },
+   "eye": {
+    "width": 0.88,
+    "front": 0.035,
+    "setback_0.10": 0.014,
+    "setback_0.20": 0.05,
+    "setback_0.30": 0.112
+   },
+   "cheek": {
+    "width": 0.862,
+    "front": 0.017,
+    "setback_0.10": 0.017,
+    "setback_0.20": 0.049,
+    "setback_0.30": 0.103
+   },
+   "mouth": {
+    "width": 1.215,
+    "front": -0.006,
+    "setback_0.10": 0.033,
+    "setback_0.20": 0.193,
+    "setback_0.30": 0.23
+   },
+   "jaw": {
+    "width": 0.971,
+    "front": 0.023,
+    "setback_0.10": 0.041,
+    "setback_0.20": 0.081,
+    "setback_0.30": 0.131
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-045__e32befd3763748b0bb27ce562d9f80f8_1024.glb",
+  "heads_tall": 11.23,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.44,
+    "front": 0.026,
+    "setback_0.20": 0.06
+   },
+   "eye": {
+    "width": 1.48,
+    "front": 0.024,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.056,
+    "setback_0.30": 0.132
+   },
+   "cheek": {
+    "width": 1.294,
+    "front": -0.001,
+    "setback_0.10": 0.05,
+    "setback_0.20": 0.098,
+    "setback_0.30": 0.157
+   },
+   "mouth": {
+    "width": 1.019,
+    "front": -0.001,
+    "setback_0.10": 0.071,
+    "setback_0.30": 0.159
+   },
+   "jaw": {
+    "width": 0.746,
+    "front": 0.082,
+    "setback_0.10": 0.136,
+    "setback_0.20": 0.866,
+    "setback_0.30": 0.285
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-048__f2a05eff174b4e7f9cc1542dc9210829_1024.glb",
+  "heads_tall": 12.412,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "cheek": {
+    "width": 1.28,
+    "setback_0.10": 0.077,
+    "setback_0.20": 0.736
+   },
+   "mouth": {
+    "width": 1.467,
+    "setback_0.20": 1.093,
+    "setback_0.30": 0.094
+   },
+   "jaw": {
+    "width": 1.47,
+    "setback_0.10": 0.207,
+    "setback_0.20": 0.046,
+    "setback_0.30": 0.103
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-050__fbfaee83e1be430f8edf584055452716_1024.glb",
+  "heads_tall": 5.867,
+  "flags": [
+   "skull depth implausible"
+  ],
+  "face": {
+   "eye": {
+    "width": 1.431,
+    "setback_0.10": 0.055,
+    "setback_0.20": 0.221,
+    "setback_0.30": 0.263
+   },
+   "cheek": {
+    "width": 1.446,
+    "setback_0.10": 0.153,
+    "setback_0.20": -0.043
+   },
+   "jaw": {
+    "width": 1.483,
+    "setback_0.30": 0.32
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-050__fe8ae8c8f39b4094a865c9a7574143ef_1024.glb",
+  "heads_tall": 13.869,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.466
+   },
+   "eye": {
+    "width": 1.489,
+    "setback_0.10": 0.037,
+    "setback_0.30": 0.367
+   },
+   "cheek": {
+    "width": 1.499,
+    "setback_0.20": -0.127
+   },
+   "mouth": {
+    "width": 1.488,
+    "setback_0.10": 0.015
+   },
+   "jaw": {
+    "width": 1.493,
+    "setback_0.20": 0.06,
+    "setback_0.30": 0.124
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-053__122ebbdc59dd4e2b890067be977a4385_1024.glb",
+  "heads_tall": 19.909,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.041,
+    "setback_0.10": 0.436,
+    "setback_0.20": -0.003,
+    "setback_0.30": 0.149
+   },
+   "eye": {
+    "width": 0.985,
+    "setback_0.10": -0.045,
+    "setback_0.20": 0.081
+   },
+   "cheek": {
+    "width": 1.013,
+    "setback_0.10": 0.232,
+    "setback_0.20": 0.656,
+    "setback_0.30": 0.205
+   },
+   "mouth": {
+    "width": 1.017,
+    "setback_0.10": 0.605,
+    "setback_0.30": 0.395
+   },
+   "jaw": {
+    "width": 1.014,
+    "setback_0.10": -0.128,
+    "setback_0.20": -0.664,
+    "setback_0.30": -0.709
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-054__1b7084a8d4e04620879610059d98951c_1024.glb",
+  "heads_tall": 8.464,
+  "flags": [],
+  "face": {}
+ },
+ {
+  "file": "glbs__glbs_1k__000-054__1c795fd9da4e40fa98c9f10c8c9444ed_1024.glb",
+  "heads_tall": 7.382,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.884,
+    "front": 0.03,
+    "setback_0.10": 0.011,
+    "setback_0.20": 0.046,
+    "setback_0.30": 0.102
+   },
+   "eye": {
+    "width": 0.88,
+    "front": 0.033,
+    "setback_0.10": 0.012,
+    "setback_0.20": 0.044,
+    "setback_0.30": 0.104
+   },
+   "cheek": {
+    "width": 0.924,
+    "front": 0.018,
+    "setback_0.10": 0.02,
+    "setback_0.20": 0.043,
+    "setback_0.30": 0.105
+   },
+   "mouth": {
+    "width": 0.769,
+    "front": -0.032,
+    "setback_0.10": 0.031,
+    "setback_0.20": 0.081,
+    "setback_0.30": 0.105
+   },
+   "jaw": {
+    "width": 0.709,
+    "front": -0.019,
+    "setback_0.10": 0.044,
+    "setback_0.20": 0.077,
+    "setback_0.30": 0.139
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-054__1ca6d15fe2f34bd199252bf73d896e13_1024.glb",
+  "heads_tall": 7.367,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.711,
+    "front": 0.014,
+    "setback_0.10": 0.012,
+    "setback_0.20": 0.039,
+    "setback_0.30": 0.156
+   },
+   "eye": {
+    "width": 0.708,
+    "front": -0.002,
+    "setback_0.10": 0.023,
+    "setback_0.20": 0.046,
+    "setback_0.30": 0.145
+   },
+   "cheek": {
+    "width": 0.826,
+    "front": -0.004,
+    "setback_0.10": 0.055,
+    "setback_0.20": 0.093,
+    "setback_0.30": 0.19
+   },
+   "mouth": {
+    "width": 0.714,
+    "front": 0.037,
+    "setback_0.10": 0.09,
+    "setback_0.20": 0.144,
+    "setback_0.30": 0.301
+   },
+   "jaw": {
+    "width": 0.469,
+    "front": -0.248,
+    "setback_0.10": -0.167,
+    "setback_0.20": -0.099
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-055__288baa177abd449aa552e66eeb0d6422_1024.glb",
+  "heads_tall": 3.454,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "cheek": {
+    "width": 0.432,
+    "front": -0.07,
+    "setback_0.10": 0.02,
+    "setback_0.20": 0.112
+   },
+   "mouth": {
+    "width": 0.419,
+    "front": -0.075,
+    "setback_0.10": 0.024
+   },
+   "jaw": {
+    "width": 0.535,
+    "front": -0.083,
+    "setback_0.10": 0.34,
+    "setback_0.20": 0.255
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-056__32291422ee6a487aa969364d35e71a61_1024.glb",
+  "heads_tall": 5.133,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.113,
+    "front": -0.018,
+    "setback_0.10": -0.026,
+    "setback_0.20": -0.989,
+    "setback_0.30": -0.916
+   },
+   "eye": {
+    "width": 1.131,
+    "front": -0.02,
+    "setback_0.10": -0.029,
+    "setback_0.20": -0.981,
+    "setback_0.30": -0.534
+   },
+   "cheek": {
+    "width": 1.12,
+    "front": 1.0,
+    "setback_0.10": 0.973,
+    "setback_0.20": 0.065,
+    "setback_0.30": 0.856
+   },
+   "mouth": {
+    "width": 1.095,
+    "front": 0.959,
+    "setback_0.10": 0.012,
+    "setback_0.20": 0.047,
+    "setback_0.30": 0.136
+   },
+   "jaw": {
+    "width": 1.108,
+    "front": 0.891,
+    "setback_0.10": 0.005,
+    "setback_0.20": 0.027,
+    "setback_0.30": 0.081
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-058__47a4e71d24fd48b8ab0ae46ae940650d_1024.glb",
+  "heads_tall": 7.503,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.709,
+    "front": 0.011,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.057,
+    "setback_0.30": 0.14
+   },
+   "eye": {
+    "width": 0.694,
+    "front": -0.001,
+    "setback_0.10": 0.023,
+    "setback_0.20": 0.06,
+    "setback_0.30": 0.129
+   },
+   "cheek": {
+    "width": 0.726,
+    "front": -0.019,
+    "setback_0.10": 0.042,
+    "setback_0.20": 0.737,
+    "setback_0.30": 0.136
+   },
+   "mouth": {
+    "width": 0.571,
+    "front": 0.079,
+    "setback_0.10": 0.1,
+    "setback_0.20": 0.154
+   },
+   "jaw": {
+    "width": 0.457,
+    "front": 0.015,
+    "setback_0.10": 0.056,
+    "setback_0.20": 0.122
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-060__55468f42958448e3a1e58fcab24e8cc0_1024.glb",
+  "heads_tall": 7.101,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.708,
+    "front": 0.022,
+    "setback_0.10": 0.043,
+    "setback_0.20": 0.45,
+    "setback_0.30": 0.225
+   },
+   "eye": {
+    "width": 0.704,
+    "front": 0.025,
+    "setback_0.10": 0.049,
+    "setback_0.20": 0.094,
+    "setback_0.30": 0.198
+   },
+   "cheek": {
+    "width": 0.651,
+    "front": -0.021,
+    "setback_0.10": 0.033,
+    "setback_0.20": 0.081,
+    "setback_0.30": 0.192
+   },
+   "mouth": {
+    "width": 0.574,
+    "front": 0.023,
+    "setback_0.10": 0.073,
+    "setback_0.20": 0.125
+   },
+   "jaw": {
+    "width": 0.463,
+    "front": -0.035,
+    "setback_0.10": 0.052,
+    "setback_0.20": 0.096
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-060__56fbd6d283954777a30ab75032795973_1024.glb",
+  "heads_tall": 9.486,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.861,
+    "front": 0.066,
+    "setback_0.10": 0.018,
+    "setback_0.20": 0.05,
+    "setback_0.30": 0.487
+   },
+   "eye": {
+    "width": 0.956,
+    "front": 0.097,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.048,
+    "setback_0.30": 0.101
+   },
+   "cheek": {
+    "width": 0.988,
+    "front": 0.099,
+    "setback_0.10": -0.001,
+    "setback_0.20": 0.043,
+    "setback_0.30": 0.12
+   },
+   "mouth": {
+    "width": 0.883,
+    "front": 0.093,
+    "setback_0.10": 0.015,
+    "setback_0.20": 0.051,
+    "setback_0.30": 0.128
+   },
+   "jaw": {
+    "width": 0.713,
+    "front": 0.111,
+    "setback_0.10": 0.037,
+    "setback_0.20": 0.087,
+    "setback_0.30": 0.164
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-065__8ba031f10f594e9bbff11d120d540caa_1024.glb",
+  "heads_tall": 5.331,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.712,
+    "front": -0.015,
+    "setback_0.10": 0.027,
+    "setback_0.20": 0.073,
+    "setback_0.30": 0.15
+   },
+   "eye": {
+    "width": 0.705,
+    "front": -0.035,
+    "setback_0.10": 0.025,
+    "setback_0.20": 0.223,
+    "setback_0.30": 0.137
+   },
+   "cheek": {
+    "width": 0.662,
+    "front": -0.013,
+    "setback_0.10": 0.056,
+    "setback_0.20": 0.086,
+    "setback_0.30": 0.176
+   },
+   "mouth": {
+    "width": 0.575,
+    "front": 0.005,
+    "setback_0.10": 0.042,
+    "setback_0.20": 0.111
+   },
+   "jaw": {
+    "width": 0.46,
+    "front": -0.023,
+    "setback_0.10": 0.041,
+    "setback_0.20": 0.161
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-066__92182aa9286b4b0e912f8654d47f4e84_1024.glb",
+  "heads_tall": 7.859,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.059,
+    "front": 0.009,
+    "setback_0.10": -0.022,
+    "setback_0.20": 0.062,
+    "setback_0.30": 0.163
+   },
+   "eye": {
+    "width": 1.05,
+    "front": 0.013,
+    "setback_0.20": 0.057,
+    "setback_0.30": 0.149
+   },
+   "mouth": {
+    "width": 1.429,
+    "front": -0.019,
+    "setback_0.10": 0.008,
+    "setback_0.20": 0.047,
+    "setback_0.30": 0.088
+   },
+   "jaw": {
+    "width": 1.382,
+    "front": -0.027,
+    "setback_0.10": 0.028,
+    "setback_0.20": 0.061,
+    "setback_0.30": 0.087
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-069__aeb0caeddddb40729fbe7761d6d107b9_1024.glb",
+  "heads_tall": 10.477,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "eye": {
+    "width": 1.186
+   },
+   "mouth": {
+    "width": 1.423,
+    "setback_0.10": -0.657,
+    "setback_0.20": 0.095,
+    "setback_0.30": -0.291
+   },
+   "jaw": {
+    "width": 1.488,
+    "setback_0.10": 0.219,
+    "setback_0.20": 0.086,
+    "setback_0.30": 0.447
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-070__b2e18c2c89c54e0b985dcd9a4ccb1f75_1024.glb",
+  "heads_tall": 9.542,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.982,
+    "front": 0.014,
+    "setback_0.10": 0.071,
+    "setback_0.20": 0.1,
+    "setback_0.30": 0.111
+   },
+   "eye": {
+    "width": 0.905,
+    "front": -0.992,
+    "setback_0.10": -0.974,
+    "setback_0.20": -0.938,
+    "setback_0.30": -0.902
+   },
+   "cheek": {
+    "width": 0.842,
+    "front": 0.054,
+    "setback_0.10": 0.078,
+    "setback_0.20": 0.108,
+    "setback_0.30": 0.164
+   },
+   "mouth": {
+    "width": 0.729,
+    "front": -0.03,
+    "setback_0.10": 0.002,
+    "setback_0.20": 0.062,
+    "setback_0.30": 0.178
+   },
+   "jaw": {
+    "width": 0.598,
+    "front": -0.021,
+    "setback_0.10": 0.025,
+    "setback_0.20": 0.118
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-072__cadc1e7d00f54cbeb14e0beb3b1a2e7f_1024.glb",
+  "heads_tall": 10.089,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.013,
+    "front": -0.033,
+    "setback_0.10": 0.019,
+    "setback_0.20": -0.034,
+    "setback_0.30": -0.19
+   },
+   "eye": {
+    "width": 1.031,
+    "front": -0.043,
+    "setback_0.10": -0.009,
+    "setback_0.20": -0.092,
+    "setback_0.30": -0.162
+   },
+   "cheek": {
+    "width": 1.036,
+    "front": -0.013,
+    "setback_0.10": 0.019,
+    "setback_0.20": -0.042,
+    "setback_0.30": -0.09
+   },
+   "mouth": {
+    "width": 1.127,
+    "front": 0.115,
+    "setback_0.10": 0.009,
+    "setback_0.20": -0.109,
+    "setback_0.30": -0.384
+   },
+   "jaw": {
+    "width": 1.038,
+    "front": 0.128,
+    "setback_0.10": -0.803,
+    "setback_0.20": -0.754,
+    "setback_0.30": -0.693
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-073__d0d0ca33ea62470c867f28ac587e5414_1024.glb",
+  "heads_tall": 4.688,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.177,
+    "setback_0.10": 0.002,
+    "setback_0.30": 0.022
+   },
+   "eye": {
+    "width": 1.168,
+    "setback_0.30": 0.03
+   },
+   "cheek": {
+    "width": 1.134,
+    "setback_0.10": 0.032,
+    "setback_0.20": 0.039,
+    "setback_0.30": 0.07
+   },
+   "mouth": {
+    "width": 1.468,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.114,
+    "setback_0.30": 0.198
+   },
+   "jaw": {
+    "width": 1.356,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.179,
+    "setback_0.30": 0.15
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-073__d1583ae7e58a4c11951ef0d8ff9c8319_1024.glb",
+  "heads_tall": 4.911,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.83,
+    "front": 0.02,
+    "setback_0.10": 0.009,
+    "setback_0.20": 0.039
+   },
+   "eye": {
+    "width": 0.804,
+    "front": 0.022,
+    "setback_0.10": 0.019,
+    "setback_0.20": 0.777,
+    "setback_0.30": 0.104
+   },
+   "cheek": {
+    "width": 0.744,
+    "front": 0.041,
+    "setback_0.10": 0.034,
+    "setback_0.20": 0.733,
+    "setback_0.30": 0.129
+   },
+   "mouth": {
+    "width": 0.644,
+    "front": 0.048,
+    "setback_0.10": 0.042,
+    "setback_0.20": 0.08,
+    "setback_0.30": 0.164
+   },
+   "jaw": {
+    "width": 0.508,
+    "front": 0.017,
+    "setback_0.10": 0.035,
+    "setback_0.20": 0.084
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-074__df883ff9afff432cbacdd86d99b4513f_1024.glb",
+  "heads_tall": 5.112,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.909,
+    "front": 0.071,
+    "setback_0.10": 0.091,
+    "setback_0.20": 0.104,
+    "setback_0.30": 0.182
+   },
+   "eye": {
+    "width": 0.825,
+    "front": 0.171,
+    "setback_0.10": 0.072,
+    "setback_0.20": 0.192,
+    "setback_0.30": 0.267
+   },
+   "cheek": {
+    "width": 0.699,
+    "front": 0.106,
+    "setback_0.10": 0.03,
+    "setback_0.20": 0.093,
+    "setback_0.30": 0.202
+   },
+   "mouth": {
+    "width": 0.687,
+    "front": 0.114,
+    "setback_0.10": 0.031,
+    "setback_0.20": 0.106,
+    "setback_0.30": 0.221
+   },
+   "jaw": {
+    "width": 1.005,
+    "front": 0.105,
+    "setback_0.10": 0.034,
+    "setback_0.20": 0.165,
+    "setback_0.30": 0.415
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-079__1324cbd0c4c047078314a3c4029a838b_1024.glb",
+  "heads_tall": 8.681,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.845,
+    "front": 0.023,
+    "setback_0.10": 0.017,
+    "setback_0.20": 0.061,
+    "setback_0.30": 0.133
+   },
+   "eye": {
+    "width": 0.841,
+    "front": 0.013,
+    "setback_0.10": 0.022,
+    "setback_0.20": 0.06,
+    "setback_0.30": 0.81
+   },
+   "cheek": {
+    "width": 0.956,
+    "front": -0.018,
+    "setback_0.10": 0.034,
+    "setback_0.20": 0.085,
+    "setback_0.30": 0.121
+   },
+   "mouth": {
+    "width": 0.878,
+    "front": -0.017,
+    "setback_0.10": 0.041,
+    "setback_0.20": 0.093,
+    "setback_0.30": 0.132
+   },
+   "jaw": {
+    "width": 0.77,
+    "front": 0.058,
+    "setback_0.10": 0.082,
+    "setback_0.20": 0.141,
+    "setback_0.30": 0.228
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-080__2d970c3fd0904ae6b5bbaffd007255b9_1024.glb",
+  "heads_tall": 9.719,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 1.175,
+    "front": 0.056,
+    "setback_0.10": 1.158,
+    "setback_0.30": 1.043
+   },
+   "eye": {
+    "width": 1.197,
+    "front": 0.074,
+    "setback_0.20": 0.034,
+    "setback_0.30": 0.064
+   },
+   "cheek": {
+    "width": 1.206,
+    "front": 0.082,
+    "setback_0.20": 0.035,
+    "setback_0.30": 1.132
+   },
+   "mouth": {
+    "width": 1.164,
+    "front": 0.061,
+    "setback_0.20": 1.173,
+    "setback_0.30": 1.126
+   },
+   "jaw": {
+    "width": 1.295,
+    "front": 0.025,
+    "setback_0.10": 0.01,
+    "setback_0.20": 0.04,
+    "setback_0.30": 0.079
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-080__38b4d142ee7a47d8abbf0cb0815293e9_1024.glb",
+  "heads_tall": 8.548,
+  "flags": [
+   "skull depth implausible"
+  ],
+  "face": {}
+ },
+ {
+  "file": "glbs__glbs_1k__000-082__602d0ea4fb7f4b3aaf28863f96202900_1024.glb",
+  "heads_tall": 6.881,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.926,
+    "front": 0.039,
+    "setback_0.20": -0.01,
+    "setback_0.30": 0.128
+   },
+   "eye": {
+    "width": 0.86,
+    "front": 0.045,
+    "setback_0.30": 0.122
+   },
+   "cheek": {
+    "width": 0.975,
+    "front": 0.015,
+    "setback_0.10": 0.047,
+    "setback_0.20": 0.031,
+    "setback_0.30": 0.102
+   },
+   "mouth": {
+    "width": 0.822,
+    "front": 0.072,
+    "setback_0.10": 0.829,
+    "setback_0.20": 0.091,
+    "setback_0.30": 0.142
+   },
+   "jaw": {
+    "width": 0.549,
+    "front": 0.051,
+    "setback_0.10": 0.008,
+    "setback_0.20": 0.326
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-085__ba5c9e77ce7c4442818add5febb04d69_1024.glb",
+  "heads_tall": 6.859,
+  "flags": [],
+  "face": {
+   "brow": {
+    "width": 0.802,
+    "front": 0.009,
+    "setback_0.10": 0.033,
+    "setback_0.20": 0.067,
+    "setback_0.30": 0.155
+   },
+   "eye": {
+    "width": 0.811,
+    "front": -0.008,
+    "setback_0.10": 0.04,
+    "setback_0.20": 0.074,
+    "setback_0.30": 0.433
+   },
+   "cheek": {
+    "width": 0.932,
+    "front": -0.007,
+    "setback_0.10": 0.055,
+    "setback_0.20": 0.078,
+    "setback_0.30": 0.121
+   },
+   "mouth": {
+    "width": 0.73,
+    "front": 0.069,
+    "setback_0.10": 0.05,
+    "setback_0.20": 0.111,
+    "setback_0.30": 0.222
+   },
+   "jaw": {
+    "width": 0.494,
+    "front": -0.113,
+    "setback_0.10": -0.09,
+    "setback_0.20": -0.023
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_1k__000-087__faf2a9d5cb4c407ab1275a80ed0120f1_1024.glb",
+  "heads_tall": 7.143,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.479,
+    "setback_0.10": 0.055,
+    "setback_0.20": 0.056
+   },
+   "eye": {
+    "width": 0.49,
+    "setback_0.10": 0.052,
+    "setback_0.20": 0.71
+   },
+   "cheek": {
+    "width": 0.483,
+    "setback_0.10": 0.031
+   },
+   "mouth": {
+    "width": 0.505,
+    "setback_0.10": -0.106,
+    "setback_0.20": -0.305
+   },
+   "jaw": {
+    "width": 0.342,
+    "setback_0.10": 0.069
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_2k__000-017__0e89f32791b6411287922b9d62f45e3c_2048.glb",
+  "heads_tall": 4.688,
+  "flags": [
+   "heads_tall outside 5-9 (child/chibi, merged hair or bad landmark)",
+   "skull depth implausible"
+  ],
+  "face": {
+   "brow": {
+    "width": 0.33,
+    "front": 0.008,
+    "setback_0.10": 0.041
+   },
+   "eye": {
+    "width": 0.168,
+    "front": -0.029
+   },
+   "cheek": {
+    "width": 0.499,
+    "front": -0.157,
+    "setback_0.10": 0.035,
+    "setback_0.20": 0.113
+   },
+   "mouth": {
+    "width": 0.573,
+    "front": -0.036,
+    "setback_0.10": -0.001,
+    "setback_0.20": -0.016
+   },
+   "jaw": {
+    "width": 1.215,
+    "front": 0.195,
+    "setback_0.10": -0.01,
+    "setback_0.20": 0.622
+   }
+  }
+ },
+ {
+  "file": "glbs__glbs_2k__000-019__417000e4843e4ce0938a129bcb50aaab_2048.glb",
+  "heads_tall": 6.525,
+  "flags": [
+   "cranium width implausible (hair merged into the head mesh?)"
+  ],
+  "face": {
+   "eye": {
+    "width": 1.072,
+    "setback_0.10": -0.018,
+    "setback_0.20": -0.056
+   },
+   "jaw": {
+    "width": 1.047,
+    "setback_0.10": -0.343,
+    "setback_0.20": -0.373,
+    "setback_0.30": -0.287
+   }
+  }
+ }
+]
