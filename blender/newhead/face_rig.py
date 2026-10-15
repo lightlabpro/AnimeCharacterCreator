@@ -31,6 +31,8 @@ EXPRESSIONS = {
     "angry": {"PF-EyeAngry": 1, "PF-BrowAngry": 1},
     "happy": {"PF-EyeHappy": 1, "PF-BrowUp": 0.35},
 }
+LOOK_BACK = 0.2                    # q15: share of the iris look keys' push-back kept (see the look keys)
+LOOK_FWD = 0.0035                  # q15: m the iris comes forward at a full side look (the 3/4 view key bulges the white's inner half: a look toward the nose put the near iris 1.7 mm behind the white at 35 deg, 2.7 at 60)
 EYE_LIT_COLOR = (232, 197, 170)   # lit skin, sampled from the neutral render
 LID_LIFT = 0.0016          # e1: lid line above the skin (1.0 mm let the corner skin poke through the wing)
 COVER = 1                  # e1: skin-coloured lower-edge cover strip
@@ -542,11 +544,17 @@ def build_rig(ob, col, LID, off_x, tag):
         iris.shape_key_add(name="Basis")
         looks = {"PF-LookLeft": (side * 0.32, 0.0), "PF-LookRight": (-side * 0.32, 0.0),
                  "PF-LookUp": (0.0, 0.16), "PF-LookDown": (0.0, -0.14)}
+        base_co = [tuple(v.co) for v in iris.data.vertices]
         for kname, (dx, dz) in looks.items():
             vs, _ = iris_pts(dx, dz)
             sk = iris.shape_key_add(name=kname); sk.value = 0.0
             for i, v in enumerate(vs):
-                sk.data[i].co = v
+                # q15: the iris followed the curved eye surface back by up to 7 mm; added to the 3/4 view key's push-back
+                # (VW-Yaw) it went behind the skin and both irises vanished (skeptical preset, PF-LookRight 0.3 at 35 deg).
+                # Back moves are kept at LOOK_BACK of their size; forward moves stay.
+                dy = v[1] - base_co[i][1]
+                fwd = LOOK_FWD * (abs(dx) / 0.32 + 0.4 * abs(dz) / 0.16)
+                sk.data[i].co = (v[0], base_co[i][1] + (dy if dy < 0 else LOOK_BACK * dy) - fwd, v[2])
         vs, _ = iris_pts(sc=0.82)
         sk = iris.shape_key_add(name="PF-IrisSmall"); sk.value = 0.0
         for i, v in enumerate(vs):

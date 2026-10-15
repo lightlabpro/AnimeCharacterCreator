@@ -1096,6 +1096,7 @@ def run(npz, eyes_json, tag, off_x):
             rebuild_ears(ob, col, tag)
     if MOUTH_RIG:
         add_nose_keys(col, tag)                    # q14: PF-NoseSneer on the baked nose strokes
+        add_jaw_key(col, tag)                      # q15: PF-JawOpen (chin drop) on the baked head
     return ob, int((sh < 0.5).sum())
 
 
