@@ -86,6 +86,7 @@ LIP_SHADOW_SRGB = None   # q10 tried Leo's (200,145,116); q12 A/B: worse, revert
 EAR_STYLE = 2            # 2: ear paint from ear-plane coordinates: mauve bowl + a thin C line along its front-top edge
 EAR_SPLIT = 1            # ear shells moved to their own object with a Subdivision modifier (smooth rim + outline)
 EAR_SUBDIV = 2           # its render/viewport level
+EAR_REBUILD = 1          # q13: rebuild the ear as a clean MHS3 ear mesh (ear_mhs3.py); 0 = the old shell
 EAR_LINE_W = 0.028       # half width of the ear C line in the bowl field (bigger = thicker)
 
 
@@ -1083,6 +1084,10 @@ def run(npz, eyes_json, tag, off_x):
         add_id_keys(col, ob)
     if EAR_SPLIT:
         split_ears(ob, col, tag)
+        if EAR_REBUILD:                            # q13: clean MHS3 ear mesh replaces the old ear shell (ear_mhs3.py)
+            import os
+            exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "ear_mhs3.py")).read(), globals())
+            rebuild_ears(ob, col, tag)
     return ob, int((sh < 0.5).sum())
 
 

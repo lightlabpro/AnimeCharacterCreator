@@ -35,6 +35,15 @@ SKIN_SLIDE = 0              # q1 (off since q12): moved skin slides on the pre-b
                             # read MORE dented (0.56 vs 0.38) - reverted. ORBIT_FILL only acts together with it.
 SLIDE_RIM = (0.004, 0.014)  # q1: m from the lid rim: below the first value the skin keeps its own depth
 ORBIT_FILL = (1.0, 0.085, 0.10, 0.14)   # q1c: strength, brow-line / cheek-line offsets above / below the eye centre (S), region width past the outer corner (S)
+BAKE_SMOOTH = (60, 0.6, 0.007)   # q13: iterations, step, pin radius (m from the lid rim). Sammy: "the forehead looks a
+                                # bit deformed". The eye map moves skin in x/z with a box weight whose edges (above the
+                                # brow, past the outer corner) are steep; the skin keeps its depth while sliding over the
+                                # curved forehead/temple, so each steep edge became a visible ridge (plain-shaded renders,
+                                # form_q12_*: vertical temple ridges up into the forehead, lumps on the cheeks; the
+                                # unbaked mesh has none). The bake's displacement field is now relaxed (Laplacian on the
+                                # displacement, not the positions) with the lid rim pinned, so the eye opening, the eye
+                                # parts and the overall eye/chin change stay, only the steep edges spread out. Painted
+                                # face strokes get the same correction from the nearest skin. None = off.
 REPROJECT = ("RigBrow_", "RigBrowShade_")   # parts that sit on skin outside the rigid box: depth re-fitted to the skin
 EYE_PART_PREFIX = ("RigEyeWhite_", "RigIris_", "RigLidLine_", "RigLidCover_", "RigLowRim_", "RigBrow_", "RigBrowShade_")
 
@@ -181,6 +190,9 @@ def bake(col, head):
 
     def full(P, o, side):
         P = eye_map(P, side, EYE_SIZE_BAKE, EYE_SPACING_BAKE, 0.0, ES, EYE_SIZE_BAKE_Z)
+        return rest(P, o, side)
+
+    def rest(P, o, side):
         if side in (None, 0):
             P2 = lower_map(P, 1.0, CHIN_WIDE_BAKE, 0.0)
             if o == head:
@@ -242,6 +254,56 @@ def bake(col, head):
                 pull = np.where(np.isfinite(yl), np.minimum(yl - Qb[idx, 1], 0.0), 0.0) * ORBIT_FILL[0]
                 dy_head[idx] += pull * wx * wz * wl
                 print("q1c orbit fill: %d verts, max %.1f mm" % (len(idx), -1000 * (pull * wx * wz * wl).min()))
+    sm = None
+    if BAKE_SMOOTH:
+        # q13: relax the head's bake displacement (see BAKE_SMOOTH)
+        it, a, pr = BAKE_SMOOTH
+        P0 = _get(hb) if hb else _get(head.data)
+        nv = len(P0)
+        ev = np.empty(len(head.data.edges) * 2, np.int64); head.data.edges.foreach_get("vertices", ev); ev = ev.reshape(-1, 2)
+        ev = ev[~(ear[ev[:, 0]] | ear[ev[:, 1]])]
+        deg = np.bincount(ev.ravel(), minlength=nv).astype(float)
+        lidm = np.load(NPZ)["lid"].astype(bool) if "lid" in np.load(NPZ).files else np.zeros(nv, bool)
+        from mathutils.kdtree import KDTree
+        if lidm.any() and len(lidm) == nv:
+            kd = KDTree(int(lidm.sum()))
+            for i, p in zip(np.nonzero(lidm)[0], P0[lidm]):
+                kd.insert(p, int(i))
+            kd.balance()
+            dl = np.array([kd.find(p)[2] for p in P0])
+        else:
+            dl = np.full(nv, 1.0)
+        free = (~ear) & (dl > pr) & (deg > 0)
+
+        def relax(D):
+            D = D.copy()
+            for _ in range(it):
+                acc = np.zeros_like(D)
+                np.add.at(acc, ev[:, 0], D[ev[:, 1]]); np.add.at(acc, ev[:, 1], D[ev[:, 0]])
+                m = acc / np.maximum(deg, 1)[:, None]
+                D[free] += a * (m[free] - D[free])
+            return D
+        Draw = eye_map(P0, None, EYE_SIZE_BAKE, EYE_SPACING_BAKE, 0.0, ES, EYE_SIZE_BAKE_Z) - P0   # eye part only (the
+        if dy_head is not None:                                                                    # chin map stays as is)
+            Draw[:, 1] += dy_head
+        Dsm = relax(Draw)
+        kd0 = KDTree(nv)
+        for i, p in enumerate(P0):
+            kd0.insert(p, i)
+        kd0.balance()
+        sm = (relax, Dsm - Draw, kd0)
+        print("q13 bake relax: %d free verts, max change %.1f mm" % (int(free.sum()), 1000 * np.abs(Dsm - Draw).max()))
+
+    def _delta_at(P):
+        """Smoothing correction of the skin near each point (inverse-distance mean of the 6 nearest head verts)."""
+        relax_, dd, kd0 = sm
+        out = np.zeros_like(P)
+        for i, p in enumerate(P):
+            hits = kd0.find_n(p, 6)
+            w = np.array([1.0 / max(h[2], 1e-4) for h in hits]); w /= w.sum()
+            out[i] = (dd[[h[1] for h in hits]] * w[:, None]).sum(0)
+        return out
+
     for o, side in obs:
         rep = o.name.startswith(REPROJECT)
         for tgt in _blocks(o) + [o.data]:
@@ -249,6 +311,13 @@ def bake(col, head):
             Q = full(P, o, side)
             if o == head and dy_head is not None:
                 Q[:, 1] += dy_head
+            if sm is not None and o == head:
+                De = eye_map(P, None, EYE_SIZE_BAKE, EYE_SPACING_BAKE, 0.0, ES, EYE_SIZE_BAKE_Z) - P
+                if dy_head is not None:
+                    De[:, 1] += dy_head
+                Q = rest(P + sm[0](De), o, side)
+            elif sm is not None and side in (None, 0) and not rep:
+                Q = Q + _delta_at(P)
             if rep and t_new is not None:
                 off = P[:, 1] - _skin_y(t_old, P)        # how far in front of the skin it sat
                 yn = _skin_y(t_new, Q) + off

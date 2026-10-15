@@ -41,5 +41,17 @@ Open items first. Claude Code reads this at session start and moves finished ite
     Typecheck and the 50 tests pass. Screenshots: `docs/qa/newhead/ui_before_theme.png`, `ui_game_theme.png`,
     `ui_game_brow_sliders.png`. Remove the one import line to switch the theme off.
 
+- **2026-10-15 - ears are a new mesh object; eye/forehead bake changes (chat, q13).**
+  - `NEW_Ears_<tag>` is no longer a masked copy of the head mesh: `blender/newhead/ear_mhs3.py` builds it as its own
+    mesh (2 x 289 verts, 256 quads per ear before one Subdivision level, a Solidify for thickness, the head's outline
+    shell). Same materials and point attributes as the head (`shade`, `an_w`, `ear_bowl`, `ear_f`, `ear_lw`,
+    `ear_line`), custom normals (lit). Shape keys on it: only `Basis`, `ID-EarSize`, `ID-EarSize_Neg`, `ID-EarOut`
+    (same amounts as before); it has no PF-/VW- keys (the ears never moved in those). The old ear vertices stay in the
+    head mesh, hidden by its `SkinOnly` mask modifier as before. `EAR_REBUILD = 0` in apply_look.py restores the old
+    ear.
+  - The identity bake (`id_morphs.py`) now relaxes the eye map's displacement (`BAKE_SMOOTH`): base mesh shape
+    changed slightly at the temples, forehead and cheeks (max 6.5 mm); no topology or key-name change.
+  - Eye texture: the iris cross sparkles are off (`eye_tex.CROSS_SPARKLES = 0`, Sammy's request).
+
 ## Done
 (none yet)

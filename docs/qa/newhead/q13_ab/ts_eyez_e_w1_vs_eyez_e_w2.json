@@ -1,0 +1,36 @@
+{
+ "A": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_eyez_e_w1_pair.png",
+ "B": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_eyez_e_w2_pair.png",
+ "REF": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ref_eyes_pair.png",
+ "aspects": {
+  "eyes": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "clean": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "overall": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.32,
+  "B_dented": 0.27,
+  "A_artifacts": 0.745,
+  "B_artifacts": 0.66,
+  "A_adult": 0.52,
+  "B_adult": 0.53
+ }
+}

@@ -1,0 +1,71 @@
+{
+ "A": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_combo3_pair.png",
+ "B": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_combo3b_pair.png",
+ "REF": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ref_pair.png",
+ "aspects": {
+  "overall": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "head_shape": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "eyes": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "brows": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "nose_mouth": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "jaw_chin": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "ears": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "clean": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.435,
+  "B_dented": 0.445,
+  "A_artifacts": 0.58,
+  "B_artifacts": 0.555,
+  "A_adult": 0.835,
+  "B_adult": 0.82
+ }
+}

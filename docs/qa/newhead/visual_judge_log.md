@@ -386,3 +386,34 @@ the 0.10-0.19 band of the 7 verified dataset heads. The pictures (Sammy + TypeSa
 band is from 7 heads and its 0.30 hh slice crosses the eye socket. The band is not widened and the model is not bent
 to it - a fix that meets both must move the brow decals with the skin (next).
 Boards: q12_ab_single_reverts.png, q12_ab_form.png, head_q11_vs_q12.png.
+
+## q13 - forehead, eyes at 3/4 / side, ears; mesh analysed without shading (2026-10-15)
+Sammy: "the head shape still looks a bit deformed on the forehead, the eyes look off, especially on the 3/4 and side
+views. The ears look horrible." Then: remove the X marks on the iris; analyse the mesh without shading.
+New session helpers: `formshots` (Workbench studio light on a copy with the custom normals cleared - the real form)
+and `wireshots` / `wire_view` (flat grey faces + wireframe, eye parts flat-coloured, optionally with the view keys).
+- Forehead: the plain renders showed vertical ridges at the temples running up into the forehead and lumps on the
+  cheeks; the unbaked mesh had none. Cause: the identity bake's eye map moves skin in x/z with a box weight whose
+  edges are steep, and the skin keeps its depth while sliding over the curved forehead. Fix: `BAKE_SMOOTH` relaxes
+  the eye map's displacement field (Laplacian on the displacement, lid rim pinned, 60 iterations), the chin map is
+  applied after it unchanged; painted strokes get the same correction from the nearest skin.
+- Eyes: iris X marks off. View-key knobs: PUSH 0.003 / PUSH_BACK 0.006 (the outer-corner "comb" at 60 deg and the
+  highlight outside the opening are gone), WING 0.06 (shorter lid wing). SIDE_C: 0.56 won the eye close-ups
+  (eyes/clean/overall, both orders) but lost "eyes" at face scale; kept at 0.68.
+- Ears: `ear_mhs3.py` - new ear from the Leo render (outline traced off ref_leo_ear_hr, helix roll, upper crescent,
+  antihelix, "?"-shaped concha, tragus, lobe; lit normals; stand-off over the skull per vertex with a rounded
+  front-view profile). Design plot: ear_mhs3_design.png.
+TypeSafe A/B (typesafe_ab_compare.py, both orders, Leo reference pair; sanity check q12 vs q12 = tie on all 8):
+| comparison | result |
+|---|---|
+| mesh without shading, q12 vs q13 (front, 3/4, side) | q13 wins overall, head_shape, ears, clean; dented 0.60 -> 0.31, artifacts 0.81 -> 0.46 |
+| mesh without shading, q12 vs q12 + relax only | relax wins head_shape, clean |
+| ear close-ups (side, back 3/4, front), old vs new ear, ear reference | new ear wins "ears" |
+| eye close-ups 35/60/90 deg, SIDE_C 0.68 vs 0.56 | 0.56 wins eyes, clean, overall |
+| toon at face scale (front, 3/4, side), q12 vs q13 | ears: q13; eyes, brows: tie; jaw: split; overall, head_shape, nose_mouth, clean: q12 |
+Honest reading: the geometry (plain-shaded and wireframe) is clearly better and the new ears win, but in the toon
+renders at face scale TypeSafe still prefers q12 overall. Leave-one-out and add-one-in tests found no single change
+that loses on its own (each tie/split), so the remaining preference is spread over small differences in the toon
+paint (cheek and temple shadow shapes after the relax). Next: re-tune the toon shadow mask on the relaxed surface,
+the jaw/neck fold (visible in the wireframe, present before q13), then re-run the A/B.
+Boards: head_q12_vs_q13.png; results docs/qa/newhead/q13_ab/.

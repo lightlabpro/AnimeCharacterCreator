@@ -1,0 +1,36 @@
+{
+ "A": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_earz_ear0_pair.png",
+ "B": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_earz_g12_pair.png",
+ "REF": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ref_ear_pair.png",
+ "aspects": {
+  "ears": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "clean": {
+   "winner": "disagree",
+   "orders": [
+    "A",
+    "B"
+   ]
+  },
+  "overall": {
+   "winner": "disagree",
+   "orders": [
+    "A",
+    "B"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.275,
+  "B_dented": 0.255,
+  "A_artifacts": 0.53,
+  "B_artifacts": 0.49,
+  "A_adult": 0.805,
+  "B_adult": 0.82
+ }
+}

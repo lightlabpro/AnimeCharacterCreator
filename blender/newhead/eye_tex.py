@@ -20,6 +20,7 @@ LIGHT = (0.0, -0.62, 0.95, 0.45)      # light crescent ellipse
 HL = (1.02, -0.10, 0.31, 0.13)        # q3: on the viewer-right (Leo: light from the image right); highlight (iris-local; u mirrored for the viewer-right eye)
 EXT = 1.40            # texture / mesh extent around the iris (the highlight overlaps the white)
 BAND = 0.12          # q3: thinner lid shade band
+CROSS_SPARKLES = 0    # q13: Sammy asked to remove the X marks on the iris
 BROW_STROKES = 2      # p1: 2 = irregular thin hair strokes (MHS3), 1 = the old regular stripes
 
 
@@ -51,8 +52,9 @@ def iris(res=512, hl_sign=1.0, ss=3):
         ring = (np.abs(r - rr) < RING_W) & (dside > lo) & (dside < hi)
         ic = np.where(ring[..., None], _c(C_IRIS_LINE), ic)
     ic = np.where((r > 1 - RIM_W)[..., None], _c(C_IRIS_LINE), ic)
-    # q3: two small light cross sparkles in the lower half (Leo face reference)
-    for su in (-0.42, 0.42):
+    # q3: two small light cross sparkles in the lower half (Leo face reference). q13: off - Sammy: "the Xs on the iris
+    # look weird"; CROSS_SPARKLES = 1 brings them back.
+    for su in ((-0.42, 0.42) if CROSS_SPARKLES else ()):
         du, dv = U - su, V + 0.30
         near = np.hypot(du, dv) < 0.16
         cross = near & ((np.abs(du - dv) < 0.035) | (np.abs(du + dv) < 0.035))

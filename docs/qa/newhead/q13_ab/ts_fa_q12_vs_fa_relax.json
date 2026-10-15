@@ -1,0 +1,29 @@
+{
+ "A": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_fa_q12_pair.png",
+ "B": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_fa_relax_pair.png",
+ "REF": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ref_pair.png",
+ "aspects": {
+  "head_shape": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "clean": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.505,
+  "B_dented": 0.345,
+  "A_artifacts": 0.78,
+  "B_artifacts": 0.49,
+  "A_adult": 0.575,
+  "B_adult": 0.515
+ }
+}
