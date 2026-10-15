@@ -288,3 +288,37 @@ TypeSafe h4 (menu hair.json): silhouette 0.11 and colour 0.11 off, clumps 0.35, 
 a human; pick hair_lighter (applied as LIGHTNESS 1.6: median sRGB 113 -> 130 red, reference 155). Still off by
 measurement: hair half width 0.96 D vs 0.80, rounded mushroom outline vs the reference's jagged spiky one, too few
 light strokes. This is a first draft of the hair, not a match.
+
+## k-series - hair rebuilt (hair_nh.py k2-k31)
+Rebuilt the cut from the Leo render: flat leaf-shaped blade clumps on slerp paths from the crown, a fringe sheet,
+side locks, two rows of pointed back layers, an under layer in shadow; toon shading reuses the head's toon group
+(hair copy NG_ToonSkin_NewHead_Hair) with painted rim lines and highlight strokes.
+Bugs found on the way:
+- k5/k6: every clump rendered in toon shadow - faces were wound inward (shaded as back faces; found with a normals
+  render). Outward winding, no cast shadows from the hair.
+- k13/k14: dark wedges in every fringe clump - the rim-line mask used sin(pi k/RING), so a whole side of each ring
+  was "rim". Now sin(2 pi k/RING), thin thresholds, the tip point excluded.
+- k20: the fringe hung over the eyes as separate spikes: p 100 is pupil level on this skull and FRINGE_LEN ran the
+  tips further. Fringe rebuilt as a wide overlapping sheet swept from his right to his left, longest point just
+  above the upper lid (k31 measured ~0.06 D above the pupils; Leo ~0.08 D), FRINGE_LEN back to 1.03.
+- k23: the fringe arced ~4 cm off the forehead in profile; centre lift 0.040 -> 0.024.
+- k26 -> k27: a flat x-split shadow side gave a seam at the back and a black profile; now the shadow side follows a
+  painted light (front-top, from image left) by direction from the skull centre, tips stay lit. k28: hair-only
+  shadow tint (0.50,0.42,0.40) - the skin tint made the hair shadow orange-red; now deep brown ~(110,75,50).
+- k29/k30: thin strands over each fringe clump and a few flyaways over the top (k29's were too long and stuck out
+  sideways like whiskers; shortened).
+Measured (front, D = pupil line to chin): top 1.63 D incl. the two spikes (mass ~1.45; Leo 1.52 incl. strands),
+half width above the ears 0.90 D (Leo 0.80; k19 was 1.02 - our skull is 0.75 D wide at the temples, so the hair
+can only lie ~4 mm off it), lit colour (160,122,84) vs (152,112,80).
+TypeSafe (jev-1.14, pictures on, honest descriptions incl. the misses):
+| round | silhouette | clumps | colour | fringe | sides | faithful | first_fix |
+|---|---|---|---|---|---|---|---|
+| k17 | 0.145 | 0.15 | 0.15 | 0.235 | 0.825 | 0.315 | narrower_sides (applied structurally) |
+| k25 | 0.05 | 0.04 | 0.045 | 0.18 | 0.235 | 0.66 | clumps_narrower (applied: WID_SCALE 0.88 + fine strands) |
+| k28 | 0.055 | 0.04 | 0.19 | 0.185 | 0.685 | 0.615 | clumps_narrower (applied as fine strands k29) |
+| k30 | 0.175 | 0.07 | 0.20 | 0.225 | 0.725 | 0.515 | fringe_longer (applied as FRINGE_LEN 1.03, not +0.06: measured tip 0.12 D vs Leo 0.08) |
+| k31 | 0.195 | 0.085 | 0.215 | 0.235 | 0.725 | 0.445 | fringe_longer - declined: measured tip now 0.06 D, already at/below Leo's |
+Note: k17's descriptions were not faithful to the pictures (0.315); k17's p_same values are therefore weaker than
+the later rows. Still off: clumps (Leo's are many fine strands; ours a dozen big blades + strands), width 0.90 vs
+0.80 D, top outline smoother than Leo's. Sides match. The hair is much closer but TypeSafe still calls four of five
+features off - this is not a match yet.

@@ -1,6 +1,6 @@
 {
  "region": "hair",
- "note": "h-series (2026-10-15): clump hair hair_nh.py, knobs in look_knobs.json 'hair'.",
+ "note": "k-series (2026-10-15): clump hair hair_nh.py; knobs in look_knobs.json 'hair'. One step per round.",
  "corrections": [
   {
    "id": "more_volume",
@@ -9,23 +9,33 @@
   },
   {
    "id": "less_volume",
-   "description": "Make the hair lie flatter and closer to the head.",
+   "description": "Make the whole hair lie flatter and closer to the head.",
    "setting": "hair VOL_SCALE -0.15"
   },
   {
    "id": "taller_top",
    "description": "Make the top of the hair taller, rising up from the crown.",
-   "setting": "hair TOP_EXTRA +0.01"
+   "setting": "hair TOP_EXTRA +0.008"
+  },
+  {
+   "id": "narrower_sides",
+   "description": "Make the hair at the sides (temples, over the ears) lie closer to the head so the hair is less wide.",
+   "setting": "hair SIDE_SCALE -0.3"
+  },
+  {
+   "id": "wider_sides",
+   "description": "Make the hair at the sides stand out more with spikier tips.",
+   "setting": "hair SIDE_SCALE +0.3"
   },
   {
    "id": "fringe_longer",
    "description": "Make the fringe longer.",
-   "setting": "hair FRINGE_LEN +0.08"
+   "setting": "hair FRINGE_LEN +0.06"
   },
   {
    "id": "fringe_shorter",
    "description": "Make the fringe shorter.",
-   "setting": "hair FRINGE_LEN -0.08"
+   "setting": "hair FRINGE_LEN -0.06"
   },
   {
    "id": "clumps_wider",
@@ -39,13 +49,23 @@
   },
   {
    "id": "hair_lighter",
-   "description": "Make the hair colour lighter (a lighter golden brown).",
-   "setting": "hair LIGHTNESS +0.2"
+   "description": "Make the hair colour lighter.",
+   "setting": "hair LIGHTNESS +0.12"
   },
   {
    "id": "hair_darker",
    "description": "Make the hair colour darker.",
-   "setting": "hair LIGHTNESS -0.2"
+   "setting": "hair LIGHTNESS -0.12"
+  },
+  {
+   "id": "more_highlights",
+   "description": "Add more pale highlight strokes on the hair.",
+   "setting": "hair HL_SHARE +0.25"
+  },
+  {
+   "id": "fewer_highlights",
+   "description": "Use fewer pale highlight strokes.",
+   "setting": "hair HL_SHARE -0.25"
   }
  ]
 }

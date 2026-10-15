@@ -1,0 +1,27 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin bottom)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo, official render)",
+ "features": {
+  "silhouette": {
+   "reference": "Hair top 1.52 D above the pupils with two thin spikes standing up; hair half width 0.82 D above the ears; jagged outline of pointed clump tips, widest at the temples.",
+   "ours": "Hair top 1.51 D above the pupils with two small spikes at the top front; hair half width 0.99 D above the ears; the top reads as a smooth rounded cap, the pointed tips are only at the bottom edge (fringe and temples)."
+  },
+  "fringe": {
+   "reference": "About five big pointed clumps converge from the top onto the forehead; the longest central clump ends between the brows, others end at the brows; small triangles of forehead show between them.",
+   "ours": "Five big pointed clumps and two small ones hang straight down from the hairline; the longest ends at the brow line (about 0.25 D above the pupils); wide strips of forehead skin show between them."
+  },
+  "clumps": {
+   "reference": "Big flat leaf-shaped clumps with sharp pointed tips, thin dark outlines between clumps, darker brown recesses under the overlapping clumps.",
+   "ours": "Flat tan clumps with pointed tips; outlines only on the outer silhouette and a few clump edges; the top is one smooth area with few visible clump shapes; dark brown gaps show between the hanging clumps."
+  },
+  "colour": {
+   "reference": "Flat warm light brown, dominant sRGB about (152,112,80); a band of thin pale strokes about (208,172,120) across the top a third of the way down; darker brown under the fringe.",
+   "ours": "Flat warm tan, dominant sRGB about (168,128,88), almost no shadow on the hair; very few pale strokes (only on the back); dark brown gaps between clumps."
+  },
+  "sides": {
+   "reference": "Hair covers the temples down to about eye level with pointed tips, the top of the ear shows below.",
+   "ours": "Hair covers the temples down to about eye level with pointed tips, the top of the ear shows below."
+  }
+ }
+}

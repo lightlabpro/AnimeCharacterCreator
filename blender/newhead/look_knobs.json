@@ -22,6 +22,10 @@
   "NEAR_C": 0.85
  },
  "hair": {
-  "LIGHTNESS": 1.6
+  "LIGHTNESS": 0.9,
+  "SIDE_SCALE": 0.5,
+  "TOP_EXTRA": 0.0,
+  "FRINGE_LEN": 1.03,
+  "WID_SCALE": 0.88
  }
 }

@@ -1,0 +1,27 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin bottom)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo, official render)",
+ "features": {
+  "silhouette": {
+   "reference": "Hair top 1.52 D above the pupils with two thin spikes standing up; hair half width 0.82 D above the ears; jagged outline of pointed clump tips, widest at the temples.",
+   "ours": "Hair top 1.52 D above the pupils including two thin spikes standing up from the top; hair half width 1.02 D above the ears; pointed clump tips along the bottom edge and a few along the top, widest at the temples."
+  },
+  "fringe": {
+   "reference": "About five big pointed clumps converge from the top onto the forehead; the longest central clump ends between the brows (about 0.06 D above the pupils), the others at the brows; small triangles of forehead show between them.",
+   "ours": "Five big pointed clumps and two small ones converge onto the forehead; the longest ends at the brow line (about 0.25 D above the pupils); triangles of forehead show between them."
+  },
+  "clumps": {
+   "reference": "Big flat leaf-shaped clumps with sharp pointed tips, thin dark outlines on most clump edges, darker brown recesses under the overlapping clumps.",
+   "ours": "Big flat leaf-shaped clumps with sharp pointed tips, thin dark lines on some clump edges and the outer silhouette, a few darker brown recesses where clumps overlap."
+  },
+  "colour": {
+   "reference": "Flat warm light brown, dominant sRGB about (152,112,80), a darker brown shadow side; a band of thin pale strokes about (208,172,120) across the top.",
+   "ours": "Flat warm light brown, dominant sRGB about (160,120,80), very little shadow side; a band of thin pale strokes across the top front."
+  },
+  "sides": {
+   "reference": "Hair covers the temples down to about eye level with pointed tips, the top of the ear shows below.",
+   "ours": "Hair covers the temples down to about eye level with pointed tips, the top of the ear shows below."
+  }
+ }
+}

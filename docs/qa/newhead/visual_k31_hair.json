@@ -1,0 +1,27 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin bottom)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo, official render)",
+ "features": {
+  "silhouette": {
+   "reference": "Big rounded hair mass about 1.35 D above the pupils with several thin strands flying up and out above it (to about 1.52 D); hair half width about 0.80 D above the ears; the whole outline is broken into many fine pointed strand tips.",
+   "ours": "Rounded hair mass about 1.45 D above the pupils with two thin spikes standing up (to 1.63 D) and several thin strands arching up over the top; hair half width 0.90 D above the ears; pointed tips along the bottom and sides."
+  },
+  "fringe": {
+   "reference": "A wide sheet of overlapping pointed clumps swept from his right (image left) toward his left; the longest point crosses the brow line between the brows to just above the upper lid (about 0.08 D above the pupils); forehead shows in a triangle above his left eye (image right).",
+   "ours": "A wide sheet of overlapping pointed clumps with thin strands on top, swept from his right (image left) toward his left; the longest point crosses the brow line to just above the upper lid of the image-left eye (about 0.06 D above the pupils); forehead shows above both eyes, a larger triangle on the image right."
+  },
+  "clumps": {
+   "reference": "Many fine pointed strands grouped into clumps, thin dark outlines on most strand edges, darker brown recesses between the clumps, several pale highlight streaks on the fringe.",
+   "ours": "About a dozen big flat clumps, each fringe clump with a thin pointed strand lying over it, thin dark lines on many strand and clump edges, darker brown recesses at the top front and on the image-right temple, pale streaks across the top front only."
+  },
+  "colour": {
+   "reference": "Warm light brown, dominant sRGB about (152,112,80), a clearly darker brown shadow side on the image left and under the fringe, pale highlight strokes about (208,172,120).",
+   "ours": "Warm light brown, lit areas about (160,122,84); a deep brown shadow (about (110,75,50)) on the image-right temple and side lock only in this front view - most of the front is flat lit colour; pale strokes across the top front."
+  },
+  "sides": {
+   "reference": "Hair covers the temples down to about eye level with pointed tips, fuller on the image left; the top of the ear shows below.",
+   "ours": "Hair covers the temples down to about eye level with pointed tips; the image-right side is in shadow, the image-left side lit; the top of the ear shows below."
+  }
+ }
+}

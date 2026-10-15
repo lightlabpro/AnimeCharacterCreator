@@ -1,0 +1,57 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin bottom)",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "silhouette",
+   "p_same": 0.22,
+   "confidence": 0.56,
+   "p_look": 0.185,
+   "verdict": "off"
+  },
+  {
+   "feature": "colour",
+   "p_same": 0.31,
+   "confidence": 0.38,
+   "p_look": 0.315,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "fringe",
+   "p_same": 0.43,
+   "confidence": 0.14,
+   "p_look": 0.23,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "clumps",
+   "p_same": 0.85,
+   "confidence": 0.7,
+   "p_look": 0.255,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "sides",
+   "p_same": 0.855,
+   "confidence": 0.71,
+   "p_look": 0.41,
+   "verdict": "matches"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.81,
+  "confidence": 0.62,
+  "verdict": "rewrite the analysis (pictures disagree)",
+  "faithful_p": 0.24
+ },
+ "first_fix": {
+  "order_a": "narrower_sides",
+  "order_b": "narrower_sides",
+  "agree": true,
+  "tie_break": null,
+  "apply": null,
+  "setting": "hair SIDE_SCALE -0.3"
+ }
+}

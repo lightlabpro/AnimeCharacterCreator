@@ -1,0 +1,27 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin bottom)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo, official render)",
+ "features": {
+  "silhouette": {
+   "reference": "Hair top 1.52 D above the pupils with two thin spikes standing up; hair half width 0.82 D above the ears; jagged outline of pointed clump tips, widest at the temples.",
+   "ours": "Hair top 1.51 D above the pupils with two small spikes at the top front; hair half width 0.99 D above the ears; outline of pointed clump tips, widest at the temples."
+  },
+  "fringe": {
+   "reference": "About five big pointed clumps converge from the top onto the forehead; the longest central clump ends between the brows, others end at the brows; small triangles of forehead show between them.",
+   "ours": "Five big pointed clumps and two small ones converge from the top onto the forehead; the longest central clump ends at the brow line (about 0.25 D above the pupils); small triangles of forehead show between them."
+  },
+  "clumps": {
+   "reference": "Big flat leaf-shaped clumps with sharp pointed tips, thin dark outlines between clumps, darker brown recesses under the overlapping clumps.",
+   "ours": "Big flat leaf-shaped clumps with sharp pointed tips, thin dark outlines between clumps, darker brown recesses under the overlapping clumps."
+  },
+  "colour": {
+   "reference": "Flat warm light brown, dominant sRGB about (152,112,80); a band of thin pale strokes about (208,172,120) across the top a third of the way down; darker brown under the fringe.",
+   "ours": "Flat warm light brown, dominant sRGB about (168,128,88) in the light; a few thin pale strokes on some clumps; darker brown recesses."
+  },
+  "sides": {
+   "reference": "Hair covers the temples down to about eye level with pointed tips, the top of the ear shows below.",
+   "ours": "Hair covers the temples down to about eye level with pointed tips, the top of the ear shows below."
+  }
+ }
+}
