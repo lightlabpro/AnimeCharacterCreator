@@ -30,6 +30,13 @@ ASPECTS = {
     "nose_mouth": "the nose and mouth marks and the shading under them: which looks cleaner and closer to the reference",
     "jaw_chin": "the jaw and chin: which has a jaw and chin shape closer to the reference's adult male face",
     "ears": "the ears: which looks more natural for this head in the reference's style",
+    "eye_layout": "where the two eyes sit in this turned view: the spacing between them, how much skin shows between "
+                  "the far eye and the nose line and between the far eye and the face edge, and the far eye's size "
+                  "against the near eye: which matches `reference_image` more closely",
+    "ear_shape": "the ear's outline, rim, inner shapes and how it sits on the head: which looks more like the ear in "
+                 "`reference_image`",
+    "expression": "how clearly and appealingly the face shows the intended expression in the reference style (brows, "
+                  "eyes and mouth working together)",
     "clean": "drawing quality: which has fewer stray lines, broken outlines, odd shadow shapes or artifacts",
 }
 DEFECTS = {

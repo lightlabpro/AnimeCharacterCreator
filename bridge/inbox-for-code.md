@@ -53,5 +53,25 @@ Open items first. Claude Code reads this at session start and moves finished ite
     changed slightly at the temples, forehead and cheeks (max 6.5 mm); no topology or key-name change.
   - Eye texture: the iris cross sparkles are off (`eye_tex.CROSS_SPARKLES = 0`, Sammy's request).
 
+- **2026-10-15 - expression keys per face element, new mouth objects (chat, q14).**
+  Sammy asked for facial expressions with every element separate. New / changed on the n56 head (`blender/newhead`):
+  - Mouth (`mouth_rig.py`): six objects `NewMouthLine_<tag>` (top lip line), `NewMouthInside_<tag>` (dark interior),
+    `NewMouthTeeth_<tag>`, `NewMouthTongue_<tag>`, `NewMouthLower_<tag>` (lower lip line), `NewLipShadow_<tag>`; the
+    interior / teeth / tongue / lower line have zero height in the basis (closed mouth). Each carries the same keys,
+    named after `src/model/performance.ts` where the app already has the shape: `PF-SmileClosed`, `PF-SmileOpenJaw`,
+    `PF-Frown`, `PF-Smirk_L`, `PF-Smirk_R`, `PF-Pout`, `PF-VisAA`, `PF-VisOH`, `PF-VisEE`, `PF-VisWide`; new (not in the
+    app yet): `PF-MouthWide`, `PF-MouthNarrow`. The other app keys (PF-JawOpen, PF-VisMBP/Small/Mid/IH/OO/FV/L/TH/SZ,
+    PF-FrownOpen, PF-Press, PF-LipBite, PF-Grimace, PF-Snarl, PF-Disgust, PF-Surprise, PF-Cry, PF-MouthSide_*,
+    PF-Tongue*) do not exist on this head yet.
+  - Nose: `PF-NoseSneer` on `NewNoseShade_`, `NewNoseLine_`, `NewNoseHL_` (new name; the app has no nose group).
+  - Brows (per side, as in the app): `PF-BrowRaise_L/_R`, `PF-BrowLower_L/_R`, `PF-BrowInnerUp_L/_R` (each only on its
+    own brow strip `RigBrow_<tag>_L/_R` + shade). The older unsided brow keys stay (`PF-BrowUp`, `PF-BrowDown`,
+    `PF-BrowAngry`, `PF-BrowSad`); the app's `PF-BrowSad_L/_R`, `PF-BrowOuterUp_*`, `PF-BrowFurrow_*` are not built.
+  - Eyes / irises unchanged (`PF-Blink_L/_R`, `PF-EyeWide`, `PF-EyeSad`, `PF-EyeAngry`, `PF-EyeHappy`, `PF-Look*`,
+    `PF-IrisSmall`); note the app uses `PF-EyeWide_L/_R` and `PF-Squint_*` - a mapping is needed.
+  - Presets (`docs/qa/newhead/expressions.json`): neutral, blink, wink_left, smile, happy, laugh, amazed, sad, angry,
+    shout, worried, determined, skeptical, pout, talk_a, talk_o, talk_e - weight sets over the keys above.
+  - View keys: new knob `NEAR_SHIFT` (look_knobs view 0.4; FAR_GAP_IN 0.2, FAR_GAP_OUT 0.04) - same VW- key names.
+
 ## Done
 (none yet)

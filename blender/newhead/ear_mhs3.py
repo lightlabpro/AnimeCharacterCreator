@@ -30,6 +30,7 @@ EAR_THICK = 0.0030      # m
 EAR_CUP = 0.0012        # m: rim stands off more than the centre (the ear is a shallow cup, open to the side)
 EAR_FLARE_ADJ = 16.0    # deg: plane turn about the front edge (little effect: the per-vertex clearance sets the stand-off)
 EAR_SUBDIV_NEW = 1
+EAR_RIM_LINE = 9.0      # q14: rho of the inner rim line (0.855 drew it; off - TypeSafe A/B: the line read as an artifact, 0.74 vs 0.43)
 EAR_LINE_ON = 0.0      # q13: the thin line round the dark shapes drew a pale halo; off
 EAR_LIT_K = 0.85       # q13d: share of the lit direction in the ear normals
 EAR_AN_W = 0.0         # share of the head's smooth normal in the ear's shading (lit like the skin beside it)
@@ -102,20 +103,23 @@ def ear_shape(xy):
     h = np.zeros(len(xy))
     rim = _e_win(th, 35, 255, 15)                                  # helix: from the front-top over the top, down the back
     h += 0.030 * np.exp(-((rho - 0.93) / 0.07) ** 2) * rim         # helix roll (lit, outlined)
-    fos = np.exp(-((rho - 0.75) / 0.075) ** 2) * _e_win(th, 70, 175, 16)       # upper crescent (scapha / fossa)
+    fos = np.exp(-((rho - 0.73) / 0.10) ** 2) * _e_win(th, 60, 160, 16)        # q14: wider crescent under the top rim       # upper crescent (scapha / fossa)
     h -= 0.022 * fos
     anti = np.exp(-((rho - 0.56) / 0.09) ** 2) * _e_win(th, 70, 250, 25)      # antihelix ridge (lit)
     h += 0.016 * anti
     # concha: a narrow upright bowl in front of the antihelix, curving down and forward toward the lobe ("?" shape)
     def _blob(a0, b0, ra, rb):
         return np.exp(-((((a - a0) / ra) ** 2 + ((b - b0) / rb) ** 2)) ** 1.6)
-    con = np.maximum(_blob(-0.04, 0.12, 0.21, 0.36), 0.95 * _blob(0.07, -0.22, 0.14, 0.24))   # upper bowl toward the back, tail curving forward and down
+    con = np.maximum(np.maximum(_blob(-0.05, 0.12, 0.23, 0.36), 0.95 * _blob(0.10, -0.24, 0.15, 0.22)), 0.9 * _blob(0.22, -0.40, 0.10, 0.10))   # q14: bigger '?' bowl, tail to the front notch   # upper bowl toward the back, tail curving forward and down
     h -= 0.065 * con
     h += 0.022 * _blob(0.30, -0.16, 0.09, 0.12)                   # tragus
     lobe = np.clip(-(b - EAR_CENTRE[1]) - 0.55, 0, 1) / 0.45
     h += 0.012 * lobe * (1 - rho)                                   # fuller lobe
     h *= EAR_RELIEF
     dark = np.clip(np.maximum(1.25 * con, 1.15 * fos) * EAR_DARK, 0, 1)
+    # q14: thin brown line along the inside of the helix rim (Leo's ear), as the material's ear_f iso-band at 1.0
+    ear_f_rim = np.where(_e_win(th, 50, 240, 10) > 0.5, 1.0 + (rho - EAR_RIM_LINE), 0.0)
+    ear_shape.rim_line = ear_f_rim
     return a, b, h, dark, rho, th
 
 
@@ -224,7 +228,7 @@ def rebuild_ears(head, col, tag):
         faces += [tuple(base + i for i in q) for q in quads]
         dark += list(dk)
         con_edge = dk                      # the line field: 1 at the edge of the dark shapes
-        fline += list(np.clip(con_edge / 0.55, 0, 2))
+        fline += list(ear_shape.rim_line)            # q14: rim line (was the concha edge halo, off)
         for kname, f in (("ID-EarSize", lambda p: root + (p - root) * 1.15), ("ID-EarSize_Neg", lambda p: root + (p - root) * 0.87),
                          ("ID-EarOut", lambda p: root + _e_rot(p - root, up, math.radians(12.0) * side))):
             keys[kname] += [tuple(f(p)) for p in P]
@@ -259,7 +263,7 @@ def rebuild_ears(head, col, tag):
         me.materials.append(mt)
     n = len(verts)
     for nm, vals in (("shade", np.ones(n)), ("an_w", np.full(n, EAR_AN_W)), ("ear_bowl", np.array(dark)), ("ear_line", np.zeros(n)),
-                     ("ear_f", np.array(fline) * EAR_LINE_ON), ("ear_lw", np.ones(n) * 0.6)):
+                     ("ear_f", np.array(fline)), ("ear_lw", np.ones(n) * 0.6)):
         at = me.attributes.new(nm, "FLOAT", "POINT"); at.data.foreach_set("value", np.asarray(vals, np.float32))
     e = bpy.data.objects.new(name, me)
     col.objects.link(e)

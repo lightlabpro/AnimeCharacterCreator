@@ -417,3 +417,30 @@ that loses on its own (each tie/split), so the remaining preference is spread ov
 paint (cheek and temple shadow shapes after the relax). Next: re-tune the toon shadow mask on the relaxed surface,
 the jaw/neck fold (visible in the wireframe, present before q13), then re-run the A/B.
 Boards: head_q12_vs_q13.png; results docs/qa/newhead/q13_ab/.
+
+## q14 - 3/4 eye placement, ears round 2, facial expressions per element (2026-10-15)
+Sammy: "The ears are looking much better, but still need work. The 3/4 eyes positioning also needs a bit of work.
+You can start on facial expressions as well ... each element is separate."
+- 3/4 eyes: measured on Leo's 3/4 frame (ref_face) in near-eye widths: gap between the eyes 1.21 (ours 0.94 at
+  25 deg), far eye / near eye 0.79 (0.75), skin between the far eye and the nose line ~0.23 (0). New view-key knob
+  NEAR_SHIFT (near eye and brow move toward the ear) = 0.4, FAR_GAP_IN 0.2, FAR_GAP_OUT 0.04. TypeSafe A/B could not
+  separate the variants (eye_layout: the two orders disagree on 0 / 0.3 / 0.5), so the choice rests on the measurement
+  and the board (q14_board.png row 1).
+- Ears round 2: bigger "?"-shaped concha with its tail to the front notch, wider crescent under the top rim; a thin line
+  along the inner rim was tried and removed (TypeSafe A/B: artifacts 0.74 vs 0.43). New ear vs previous: ear_shape tie.
+- Expressions: mouth_rig.py (six mouth pieces with 12 keys), PF-NoseSneer, per-side brow keys (BrowRaise, BrowLower,
+  BrowInnerUp), 17 presets. Eye white / iris moved 1.5 mm behind the skin (partial lid keys showed them under the
+  lower lid; reduced, not gone). New check `typesafe_expr_check.py`: TypeSafe names the expression of each render,
+  asked in both label orders; recognised = both orders pick the intended label.
+| round | recognised | mean p_clear | change |
+|---|---|---|---|
+| expr3 | 3/13 | 0.39 | first mouth keys; TypeSafe read the neutral face and most presets as "angry" |
+| expr4 | 5/13 | 0.46 | inner brows lifted in every non-angry preset, stronger BrowSad |
+| expr5 | 7/13 | 0.59 | worried slope (inner end above the outer), bigger smirk / pout, one-sided brow lower |
+| expr6 | 7/13 | 0.59 | key names aligned with src/model/performance.ts (same shapes) |
+Recognised: smile, happy, amazed, sad, angry, shout, determined. Near misses: laugh -> happy, worried -> sad (p_clear
+0.78), pout -> sad, blink -> angry (p_clear 0.91: eyes clearly closed; the stern default brows decide the label).
+Neutral itself reads "angry": the default brows slope down toward the nose (identity look, BROW_INNER_DROP) - left as
+Sammy tuned it; the creator's brow sliders soften it. Open: partial lid-key artifacts, far brow clipping at 3/4 with
+the inner-up keys, no jaw drop with the open mouth yet.
+Boards: q14_board.png, q14_expression_sheet.png; check results q14_expression_check.json.

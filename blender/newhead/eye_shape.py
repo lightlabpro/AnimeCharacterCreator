@@ -242,7 +242,7 @@ BROW_KEYS = {
     "BrowUp": lambda t: 0.22 + 0.06 * np.sin(np.pi * t),
     "BrowDown": lambda t: -0.14 + 0 * t,
     "BrowAngry": lambda t: -0.30 * (1 - t) ** 1.5 + 0.06 * t,
-    "BrowSad": lambda t: 0.30 * (1 - t) ** 1.5 - 0.10 * t,
+    "BrowSad": lambda t: 0.44 * (1 - t) ** 1.5 - 0.12 * t,      # q14: stronger (was 0.30 / 0.10)
 }
 EYE_KEYS = ["Blink", "Wide", "Sad", "Angry", "Happy"]
 IRIS_KEYS = {"LookLeft": (-0.32, 0.0), "LookRight": (0.32, 0.0), "LookUp": (0.0, 0.16), "LookDown": (0.0, -0.14)}

@@ -44,6 +44,11 @@ BROW_SHADE_LEN = 0.30                # p5: share of the brow (from the inner end
 BROW_SHADE_DEPTH = 0.08              # p1: its depth below the brow (W2; was 0.17)
 LASH_KEYS = {"ID-LashThick": {"LASH_SCALE": 1.6}, "ID-LashThin": {"LASH_SCALE": 0.55},
              "ID-LashLong": {"WING": 0.24, "LASH_OUT": 1.25}, "ID-LashShort": {"WING": 0.09, "LASH_OUT": 0.8}}
+BROW_SIDE_KEYS = {   # q14: per-side brow keys, names as in src/model/performance.ts (PF-<name>_L only on the left brow)
+    "BrowRaise": lambda t: 0.40 + 0.12 * np.sin(np.pi * t),
+    "BrowLower": lambda t: -0.22 - 0.06 * (1 - t),
+    "BrowInnerUp": lambda t: 0.85 * (1 - t) ** 1.2 + 0.05 * t,     # worried slope: the inner end ends above the outer
+}   # q14: single-brow raise
 BROW_ID_KEYS = {"ID-BrowThick": {"thick": 1.35}, "ID-BrowThin": {"thick": 0.65},
                 "ID-BrowLong": {"length": 1.12}, "ID-BrowShort": {"length": 0.85},
                 "ID-BrowInnerThick": {"taper_in": 1.0}, "ID-BrowInnerThin": {"taper_in": 0.25}}   # q2: inner-end thickness
@@ -571,6 +576,8 @@ def build_rig(ob, col, LID, off_x, tag):
         brow_pairs, shade_pairs = {None: ES["brow_ribbon"]()}, {}
         for kname, fn in ES["BROW_KEYS"].items():
             brow_pairs["PF-" + kname] = ES["brow_ribbon"](d=fn)
+        for kname, fn in BROW_SIDE_KEYS.items():     # q14: one brow at a time (PF-BrowRaise_L only on the left brow)
+            brow_pairs["PF-" + kname + ("_L" if side > 0 else "_R")] = ES["brow_ribbon"](d=fn)
         for kname, kw in BROW_ID_KEYS.items():         # p1: brow thickness / length (creator sliders)
             brow_pairs[kname] = ES["brow_ribbon"](**kw)
 

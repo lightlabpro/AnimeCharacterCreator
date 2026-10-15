@@ -18,7 +18,8 @@ import math
 
 VIEW = dict(
     Y34=35.0,          # angle of the VW-Yaw keys (degrees)
-    NEAR_C=0.95,       # near eye: screen width / front width at Y34 (now about 1.27: the outer half faces the camera)
+    NEAR_C=0.95,
+    NEAR_SHIFT=0.0,    # q14: near eye moves this far toward the ear at Y34 (eye half-widths, screen)       # near eye: screen width / front width at Y34 (now about 1.27: the outer half faces the camera)
     FAR_GAP_IN=0.10,   # far eye: inner corner gap to the nose-bridge line (eye half-widths)
     FAR_GAP_OUT=0.12,  # far eye: outer corner gap to the cheek silhouette
     BROW_GAP_IN=0.00,  # far brow: inner tip gap to the nose-bridge line
@@ -203,7 +204,9 @@ def _maps(g, br, th, near_only):
             c = VIEW["NEAR_C"]
 
             def fe(x, z, u_ic=u_ic, c=c):
-                return _soft_lo(u_ic + c * (x - x_ic), bridge(z) + 0.5 * VIEW["FAR_GAP_IN"] * w2m, k)
+                # q14: NEAR_SHIFT moves the near eye (and brow) toward the ear in screen space - the MHS3 3/4 frame keeps
+                # the gap between the eyes at ~1.2 near-eye widths (ours was 0.94)
+                return _soft_lo(u_ic + VIEW["NEAR_SHIFT"] * w2m + c * (x - x_ic), bridge(z) + 0.5 * VIEW["FAR_GAP_IN"] * w2m, k)
             fb = fe
             ci = VIEW["IRIS_NEAR"]
             fi = (lambda x, z, fe=fe, ci=ci, x_ic=x_ic: fe(np.full(np.size(x), x_ic), z) + ci * (x - x_ic))

@@ -86,6 +86,7 @@ LIP_SHADOW_SRGB = None   # q10 tried Leo's (200,145,116); q12 A/B: worse, revert
 EAR_STYLE = 2            # 2: ear paint from ear-plane coordinates: mauve bowl + a thin C line along its front-top edge
 EAR_SPLIT = 1            # ear shells moved to their own object with a Subdivision modifier (smooth rim + outline)
 EAR_SUBDIV = 2           # its render/viewport level
+MOUTH_RIG = 1            # q14: mouth pieces + PF-Mouth* / PF-NoseSneer keys (mouth_rig.py)
 EAR_REBUILD = 1          # q13: rebuild the ear as a clean MHS3 ear mesh (ear_mhs3.py); 0 = the old shell
 EAR_LINE_W = 0.028       # half width of the ear C line in the bowl field (bigger = thicker)
 
@@ -1071,6 +1072,11 @@ def run(npz, eyes_json, tag, off_x):
     else:
         painted_eyes(ob, col, LID, off_x, tag)
     face_strokes(ob, col, off_x, tag)
+    if MOUTH_RIG:                                  # q14: mouth pieces with PF-Mouth* keys (mouth_rig.py)
+        import os
+        exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "mouth_rig.py")).read(), globals())
+        build_mouth(ob, col, off_x, tag)
+        shift_eye_parts(col)
     if EYE_RIG and VIEW_KEYS:
         exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "view_keys.py")).read(), globals())
         add_view_keys(ob, col, tag)
@@ -1088,6 +1094,8 @@ def run(npz, eyes_json, tag, off_x):
             import os
             exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "ear_mhs3.py")).read(), globals())
             rebuild_ears(ob, col, tag)
+    if MOUTH_RIG:
+        add_nose_keys(col, tag)                    # q14: PF-NoseSneer on the baked nose strokes
     return ob, int((sh < 0.5).sum())
 
 
