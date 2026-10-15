@@ -40,7 +40,7 @@ FACE_FORWARD = 2.5       # how much the face normals turn toward the viewer (big
 OUTLINE_W = 0.0015       # outline width (m)
 OUTLINE_DARK = 1.5       # outline darkness factor (1 = current colour)
 CHIN_LIT = 1.0           # 0..1: lowers where the face plane / normal blend fade out, so the chin front is lit (g7)
-LIP_SHADOW = 1.0         # short shadow stroke under the lower lip: thickness factor
+LIP_SHADOW = 1.5         # short shadow stroke under the lower lip: thickness factor (q10: 1.0 -> 1.5, Leo's is taller)
 EYE_W2 = 0.092           # painted eye half-width (H)
 EYE_DZ = 0.0             # painted eye vertical offset (H)
 EYE_DX = 0.0             # painted eye outward offset (H): + moves the eyes apart
@@ -80,6 +80,9 @@ NOSE_RETRACT = 0.07      # n11: at 3/4 toward the line's side its top retracts t
 NOSE_SHADE = 1.0         # painted lens of shadow under the nose tip (replaces the vertex-mask rectangle); 0 = off
 NOSE_TINT = 0.35         # mauve mixed into the painted nose / lip shadow (MHS3 shadows under the nose read pink-brown)
 LIP_STYLE = 2            # 2: the under-lip mark is a soft shadow lens, not a thin dark line
+NOSE_SHADE_SRGB = (206, 148, 124)   # q10: Leo nose-tip shadow (sampled), ours was the dark toon shadow
+LIP_SHADOW_W = 0.42      # q10: width x IPD (Leo's under-lip shadow is wide and soft; was 0.33)
+LIP_SHADOW_SRGB = (200, 145, 116)   # q10: Leo under-lip shadow colour (ours read darker brown 173,120,101)
 EAR_STYLE = 2            # 2: ear paint from ear-plane coordinates: mauve bowl + a thin C line along its front-top edge
 EAR_SPLIT = 1            # ear shells moved to their own object with a Subdivision modifier (smooth rim + outline)
 EAR_SUBDIV = 2           # its render/viewport level
@@ -910,7 +913,11 @@ def face_strokes(ob, col, off_x, tag):
         pts = [(cx - wd / 2 + wd * i / (n - 1), NOSE_Z - 0.006 - ht * 0.45 - 0.004 * (1 - (-1 + 2 * i / (n - 1)) ** 2))
                for i in range(n)]
         wid = [ht * (0.15 + 0.85 * math.sin(math.pi * i / (n - 1)) ** 0.7) for i in range(n)]
-        stroke("NewNoseShade", pts, wid, shade_m, lift=0.0011)
+        nose_m = shade_m
+        if NOSE_SHADE_SRGB:          # q10: Leo's under-nose shadow is a soft pink-brown, lighter than the toon shadow
+            c_ = tuple(((v / 255.0 + 0.055) / 1.055) ** 2.4 for v in NOSE_SHADE_SRGB) + (1.0,)
+            nose_m = _emission("MAT_NoseShade_" + tag, c_)
+        stroke("NewNoseShade", pts, wid, nose_m, lift=0.0011)
     if NOSE_HL:
         # p1 (Leo render): a pale elongated lens down the lit side of the bridge, no dark line there
         hl_m = _emission("MAT_PaintNoseHL_" + tag, (0.86, 0.70, 0.58, 1))
@@ -953,10 +960,14 @@ def face_strokes(ob, col, off_x, tag):
     if LIP_SHADOW > 0 and LIP_STYLE == 2:
         # n1: reference under-lip shadow: a lens 0.35 IPD wide, ~0.07 IPD tall (open mouth; less for a closed one)
         ipd = 2 * EYE_X
-        n = 13; wd, ht = 0.33 * ipd, 0.050 * ipd * LIP_SHADOW
+        n = 13; wd, ht = LIP_SHADOW_W * ipd, 0.050 * ipd * LIP_SHADOW
         pts = [(-wd / 2 + wd * i / (n - 1), MOUTH_Z - 0.040 - 0.003 * (1 - (-1 + 2 * i / (n - 1)) ** 2)) for i in range(n)]
         wid = [ht * (0.1 + 0.9 * math.sin(math.pi * i / (n - 1)) ** 0.6) for i in range(n)]
-        stroke("NewLipShadow", pts, wid, shade_m, lift=0.0006)
+        lip_m = shade_m
+        if LIP_SHADOW_SRGB:          # q10: painted flat colour measured on Leo (lighter, pinker than the toon shadow)
+            c_ = tuple(((v / 255.0 + 0.055) / 1.055) ** 2.4 for v in LIP_SHADOW_SRGB) + (1.0,)
+            lip_m = _emission("MAT_LipShadow_" + tag, c_)
+        stroke("NewLipShadow", pts, wid, lip_m, lift=0.0006)
     elif LIP_SHADOW > 0:
         n = 7
         pts = [(-0.03 + 0.06 * i / (n - 1), MOUTH_Z - 0.040 - 0.004 * (1 - (-1 + 2 * i / (n - 1)) ** 2)) for i in range(n)]

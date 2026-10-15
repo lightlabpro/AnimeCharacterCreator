@@ -24,7 +24,7 @@ EYE_SIZE_BAKE = 0.80        # eye (and brow) scale about the eye centre (x)
 EYE_SIZE_BAKE_Z = 0.92      # ... vertical (the MHS3 opening is taller for its width than n56's: h/w ~0.6)
 EYE_SPACING_BAKE = 0.89     # eye centre distance from the face centre line
 EAR_OUT_BAKE = 2.0          # q5: TypeSafe ears_closer (agreed; Leo ears lie close); was 8 deg: ears swing further off the head (MHS3 front views show the inner ear)
-CHIN_WIDE_BAKE = 0.055      # q4: TypeSafe chin_wider (agreed, measured 0.30 vs Leo 0.37 D); H: the chin front widens by this at the bottom (flatter, squarer MHS3 male chin)
+CHIN_WIDE_BAKE = 0.065      # q4, q10: TypeSafe chin_wider (agreed both orders twice; measured ~0.33 vs Leo 0.37 D); H: the chin front widens by this at the bottom (flatter, squarer MHS3 male chin)
 ID_AMOUNTS = {"EyeSize": (1.15, 0.87), "EyeSpacing": (1.08, 0.93), "EyeHeight": (0.025, -0.025),
               "MouthWidth": (1.15, 0.87), "MouthHeight": (0.02, -0.02), "JawWidth": (1.08, 0.93),
               "ChinWidth": (0.02, -0.015), "ChinLength": (0.03, -0.025), "EarSize": (1.15, 0.87), "EarOut": 12.0}

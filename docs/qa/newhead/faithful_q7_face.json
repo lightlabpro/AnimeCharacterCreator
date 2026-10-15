@@ -1,0 +1,22 @@
+{
+ "ours_eye_size": 0.46,
+ "ref_eye_size": 0.49,
+ "ours_eye_spacing": 0.56,
+ "ref_eye_spacing": 0.62,
+ "ours_iris": 0.56,
+ "ref_iris": 0.54,
+ "ours_sclera": 0.85,
+ "ref_sclera": 0.83,
+ "ours_lash_line": 0.75,
+ "ref_lash_line": 0.59,
+ "ours_brows": 0.68,
+ "ref_brows": 0.88,
+ "ours_nose_mouth": 0.85,
+ "ref_nose_mouth": 0.87,
+ "ours_jaw_chin": 0.55,
+ "ref_jaw_chin": 0.51,
+ "ours_ears": 0.66,
+ "ref_ears": 0.63,
+ "ours_shading": 0.89,
+ "ref_shading": 0.7
+}

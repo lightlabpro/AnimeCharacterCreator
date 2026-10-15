@@ -351,3 +351,12 @@ TypeSafe m4 (Leia, pictures): faithful 0.80, all features off (silhouette 0.015,
 TypeSafe says "pictures disagree" with the descriptions (faithful 0.24-0.31) in every face round, even after plain
 rewrites; a bald test head against Leo with hair kept it low. Eye size, spacing and sclera match; iris, ears need a
 human; brows, jaw/chin, nose/mouth and shading are still off. Not near-perfect yet.
+| q9 | 0.735 | 0.83 | 0.765 | 0.485 | 0.12 | 0.62 | 0.115 | 0.175 | 0.175 | nose_line_off (already off; excluded) |
+| q10 | 0.74 | 0.825 | 0.755 | 0.505 | 0.11 | 0.59 | 0.11 | 0.15 | 0.235 | chin_wider (agreed again; applied CHIN_WIDE_BAKE 0.065) |
+q8-q10 changes: brows darker (Leo median 108,80,62 / strokes 70,50,38) and more angled (BROW_INNER_DROP 0.30);
+nose and under-lip shadows painted in Leo's sampled pink-brown (206,148,124 / 200,145,116), lip shadow wider.
+Per-feature faithfulness check (typesafe_faithful_check.py, q7): every sentence 0.46-0.89 - no single description is
+contradicted; the global "pictures disagree" verdict (0.17-0.31) stays low regardless. Plateau: eye size, spacing and
+sclera match; iris, ears, lash line "need a human"; brows (Sammy's thin inner end vs Leo's thick one), jaw/chin,
+nose/mouth and shading stay "off". Final boards: head_before_after_q11.png. Face form after q11: setback at 0.30 hh
+brow 0.147, eye 0.169, cheek 0.157 (band 0.10-0.19).
