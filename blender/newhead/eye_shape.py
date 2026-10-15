@@ -16,12 +16,18 @@ EYE_W2 = 0.110       # half-width
 EYE_TOP = 1.0
 EYE_LOW = 1.0
 EYE_TILT = 0.0
-LID_TH = 0.16        # upper lid line thickness
-WING = 0.16          # r1: the line runs down the outer corner along this share of the lower lid
-WING_TH = 0.13       # its start thickness (tapers to 0)
+LID_TH = 0.16        # upper lid line thickness (opening geometry: base_curves keeps using it, the mesh is cut to it)
+# p1 (2026-10-15, Leo render): the MHS3 lash line is thin over the eye (~0.02 IPD) and only thickens toward the outer
+# corner (~0.04 IPD); the inner end tapers to a point. Drawn thickness profile (x LID_TH, along X inner -> outer):
+LASH_IN, LASH_MID, LASH_OUT = 0.22, 0.55, 0.85
+LASH_TIP = 0.10     # p4: the line fades in over this much X from the inner corner (the steep corner made an upward tick)
+LASH_SCALE = 1.0     # p1: overall drawn lash thickness (ID-LashThick / ID-LashThin keys scale this)
+WING = 0.12          # r1: the line runs down the outer corner along this share of the lower lid
+WING_TH = 0.085       # its start thickness (tapers to 0)
 LOW_RIM = 0.035      # faint warm-grey rim along the lower lid
 LID_TUCK = 0.05      # e1: the lid line's inner edge reaches this far over the opening (covers the edge chords)
-COVER_IN, COVER_OUT = 0.035, 0.03   # e1: skin-coloured cover strip over the lower edge (inside / outside the edge)
+COVER_IN, COVER_OUT = 0.035, 0.03
+COVER_REACH = 0.35   # p5: the lower-edge cover runs to X_corner - this x WING (was 1.2)   # e1: skin-coloured cover strip over the lower edge (inside / outside the edge)
 IRIS_X, IRIS_Z, IRIS_RX, IRIS_RY = -0.08, -0.10, 0.45, 0.51
 OPEN_EPS = 0.10      # the opening ends where it is this tall (the lid line covers the thin wedge beyond)
 SMOOTH = 0.055       # Gaussian sigma (W2) along the curves
@@ -39,6 +45,8 @@ BT = [0.272, 0.647, 0.661, 0.728, 0.745, 0.793, 0.833, 0.875, 0.924, 0.95, 0.924
 BB = [0.272, 0.346, 0.363, 0.426, 0.451, 0.516, 0.582, 0.647, 0.728, 0.793, 0.842, 0.865]
 BROW_THICK = 1.0
 BROW_DZ = 0.0
+BROW_TAPER_OUT = 0.55  # p5: thickness at the outer end (x the traced profile); Leo: thick inner end, thin outer
+BROW_INNER_DROP = 0.0   # p1: the inner end sits lower (Leo: the brow angles down toward the nose)
 
 
 def _sm(e0, e1, x):
@@ -135,13 +143,16 @@ def _lid_parts(dU=None, dL=None, n=400, wing=1.0):
     i0, i1 = open_range(X, U, L, eps=OPEN_EPS)
     if dU is not None:
         U = np.maximum(U + dU, L + dL); L = L + dL
-    th = LID_TH * (0.45 + 0.55 * _sm(X[i0], X[i0] + 0.25, X))
+    x0_ = X[i0]
+    prof = LASH_IN + (LASH_MID - LASH_IN) * _sm(x0_, x0_ + 0.45, X) + (LASH_OUT - LASH_MID) * _sm(0.15, 0.85, X)
+    prof = prof * (0.15 + 0.85 * _sm(x0_, x0_ + LASH_TIP, X))
+    th = LID_TH * LASH_SCALE * prof
     up = np.stack([X[i0:i1 + 1], U[i0:i1 + 1]], 1)
     xc = X[i1]; xw = xc - 2.0 * WING
     tu = th[i0:i1 + 1] * (1 - (1 - wing) * _sm(xc - 0.30, xc, X[i0:i1 + 1]))   # closed eye: the line tapers off
     j = np.nonzero((X <= xc) & (X >= xw))[0][::-1]       # outer corner -> inward along the lower edge
     lo = np.stack([X[j], L[j]], 1)
-    tl = np.interp(X[j], [xw, xc], [0.0, WING_TH]) * max(wing, 1e-3)
+    tl = np.interp(X[j], [xw, xc], [0.0, WING_TH]) * max(wing, 1e-3) * LASH_SCALE
     return up, tu, lo, tl
 
 
@@ -172,7 +183,7 @@ def lid_ribbon(dU=None, dL=None, n=400, samples=160, wing=1.0):
     nrm = np.stack([_gauss1d(nrm[:, 0], 3.0), _gauss1d(nrm[:, 1], 3.0)], 1)   # turn smoothly round the corner
     nrm /= np.maximum(np.linalg.norm(nrm, axis=1, keepdims=True), 1e-9)
     Thq = Th[:m] if wing > 1e-3 else _gauss1d(Tu, 2.0) * _sm(0, 4, np.arange(m)[::-1])   # closed: taper to 0 at the end
-    tuck = LID_TUCK * np.clip(Thq / (0.5 * LID_TH), 0, 1)  # e1: the tuck tapers with the line (no sliver where it ends)
+    tuck = LID_TUCK * np.clip(Thq / (0.5 * LID_TH * LASH_SCALE * LASH_MID), 0, 1)  # e1: the tuck tapers with the line (no sliver where it ends)
     # e2: round the hairpin at the outer corner the inner offset must stay inside the local curvature radius, or the
     # inner edge crosses itself and leaves a skin-coloured sliver inside the wing
     ang = np.unwrap(np.arctan2(d[:, 1], d[:, 0])); ds = np.maximum(np.linalg.norm(np.gradient(Pq, axis=0), axis=1), 1e-9)
@@ -202,14 +213,21 @@ def low_rim_ribbon(dU=None, dL=None, n=400, samples=60):
     return P + np.array([0, 0.02]), P - np.stack([np.zeros(samples), LOW_RIM * taper], 1)
 
 
-def brow_ribbon(samples=60, d=None):
-    """Brow as (bottom, top) pairs along its length; d(t) adds a vertical offset (expression), t 0 inner -> 1 outer."""
+def brow_ribbon(samples=60, d=None, thick=1.0, length=1.0):
+    """Brow as (bottom, top) pairs along its length; d(t) adds a vertical offset (expression), t 0 inner -> 1 outer.
+    p1: thick / length scale the strip (ID-BrowThick/Thin, ID-BrowLong/Short); length stretches the outer part."""
     X = np.linspace(BX[0], BX[-1], samples)
     T = np.interp(X, BX, BT); B = np.interp(X, BX, BB)
     T = _gauss1d(T, 1.2); B = _gauss1d(B, 1.2)
     T[0] = B[0] = (BT[0] + BB[0]) / 2
     cm = (T + B) / 2
-    T = cm + (T - cm) * BROW_THICK + BROW_DZ; B = cm + (B - cm) * BROW_THICK + BROW_DZ
+    tp = 1 - (1 - BROW_TAPER_OUT) * np.linspace(0, 1, samples) ** 1.3
+    T = cm + (T - cm) * BROW_THICK * thick * tp + BROW_DZ; B = cm + (B - cm) * BROW_THICK * thick * tp + BROW_DZ
+    if BROW_INNER_DROP:
+        tt = (X - X[0]) / (X[-1] - X[0])
+        T = T - BROW_INNER_DROP * (1 - tt) ** 1.5; B = B - BROW_INNER_DROP * (1 - tt) ** 1.5
+    if length != 1.0:
+        X = X[0] + (X - X[0]) * length
     if d is not None:
         t = (X - X[0]) / (X[-1] - X[0]); off = d(t); T = T + off; B = B + off
     return np.stack([X, B], 1), np.stack([X, T], 1)
@@ -233,7 +251,7 @@ def edge_cover_ribbon(dU=None, dL=None, n=400, samples=90, scale=1.0):
     i0, i1 = open_range(X, U, L, eps=OPEN_EPS)
     if dU is not None:
         U = np.maximum(U + dU, L + dL); L = L + dL
-    xw = X[i1] - 1.2 * WING
+    xw = X[i1] - COVER_REACH * WING                     # p5: under the (slimmer) wing up to near the corner (white specks)
     sel = (X >= X[i0] - 0.02) & (X <= xw)
     P = np.stack([X[sel], L[sel]], 1)
     seg = np.linalg.norm(np.diff(P, axis=0), axis=1); s = np.concatenate([[0], np.cumsum(seg)])

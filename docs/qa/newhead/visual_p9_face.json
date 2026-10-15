@@ -1,0 +1,39 @@
+{
+ "region": "face_p",
+ "subject": "bald head, front view, neutral expression (hair not built yet: ignore hair, compare only the face)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo, official render)",
+ "features": {
+  "eye_size": {
+   "reference": "Almond eyes, each 0.33 of the pupil-to-chin distance wide; opening height about 0.6 of its width; the iris fills most of the opening height.",
+   "ours": "Almond eyes, each 0.35 of the pupil-to-chin distance wide; visible opening height about 0.55 of its width; the iris fills most of the opening height."
+  },
+  "eye_spacing": {
+   "reference": "Pupils 0.72 of the pupil-to-chin distance apart; gap between the inner corners about 1.3 eye widths.",
+   "ours": "Pupils 0.73 of the pupil-to-chin distance apart; gap between the inner corners about 1.2 eye widths."
+  },
+  "lash_line": {
+   "reference": "A thin dark-brown line along the upper lid, about 0.02 of the pupil distance thick, thickening to about 0.04 at the outer corner where it wraps down a little; the inner end tapers.",
+   "ours": "A thin dark-brown line along the upper lid, about 0.025 of the pupil distance thick, thickening to about 0.04 at the outer corner where it wraps down a little; the inner end tapers."
+  },
+  "brows": {
+   "reference": "Thick brown brush-stroke brows with dark hair strokes, thickest at the inner end (about 0.1 of the pupil distance), angled down toward the nose, sitting low and close above the eyes, thinning toward the outer end past the outer eye corner.",
+   "ours": "Thick brown brows with thin dark diagonal hair strokes, thickest at the inner end (about 0.1 of the pupil distance), angled down toward the nose, sitting low and close above the eyes, thinning toward the outer end past the outer eye corner."
+  },
+  "nose": {
+   "reference": "No dark line in the front view; a pale elongated highlight on the bridge; a small soft pink-brown shadow under the tip 0.49 of the pupil-to-chin distance below the pupils.",
+   "ours": "No dark line in the front view; a pale elongated highlight on the bridge; a lens-shaped brown shadow under the tip 0.50 of the pupil-to-chin distance below the pupils."
+  },
+  "mouth": {
+   "reference": "A thin dark closed mouth line 0.49 of the pupil-to-chin distance wide, 0.64 below the pupils; a pink-brown soft shadow under the lower lip about 0.26 wide.",
+   "ours": "A thin dark closed mouth line 0.49 of the pupil-to-chin distance wide, 0.67 below the pupils; a brown-mauve soft shadow under the lower lip about 0.24 wide."
+  },
+  "jaw_chin": {
+   "reference": "Face half width 0.65 at 0.36 below the pupils, 0.51 at 0.68, 0.41 at 0.82, 0.29 at 0.94; chin bottom flat and squarish about 0.37 wide.",
+   "ours": "Face half width 0.66 at 0.36 below the pupils, 0.52 at 0.68, 0.40 at 0.82, 0.27 at 0.94; chin bottom rounded-square about 0.3 wide."
+  },
+  "ears": {
+   "reference": "Ears from 0.17 above the pupils to 0.44 below, standing slightly off the head, mauve inner shadow.",
+   "ours": "Ears from 0.17 above the pupils to 0.46 below, standing off the head so the inner ear shows, with a mauve inner shadow and a thin dark inner line."
+  }
+ }
+}

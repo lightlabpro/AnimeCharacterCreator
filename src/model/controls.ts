@@ -104,6 +104,7 @@ export const CONTROLS: ControlDef[] = [
   c('lid.crease', 'Lid crease', 'A visible fold above the eye.', EYE, { region: 'eyes', morph: 'ID-LidCrease' }),
   c('lid.hood', 'Hooded lid', 'The upper lid sits lower over the eye.', EYE, { region: 'eyes', morph: 'ID-LidHood' }),
   c('lash.length', 'Lash length', 'Short lashes to the left, long lashes to the right.', EYE, { bi: true, region: 'eyes', morph: 'ID-LashLong', morphNeg: 'ID-LashShort' }),
+  c('lash.thickness', 'Lash thickness', 'Thinner lash line to the left, thicker to the right.', EYE, { bi: true, region: 'eyes', morph: 'ID-LashThick', morphNeg: 'ID-LashThin' }),
 
   c('nose.bridgeHeight', 'Bridge height', 'A higher or flatter nose bridge.', NOSE, { bi: true, region: 'nose', morph: 'ID-NoseBridgeHigh', morphNeg: 'ID-NoseBridgeHigh_Neg' }),
   c('nose.bridgeWidth', 'Bridge width', 'A wider or narrower bridge.', NOSE, { bi: true, region: 'nose', morph: 'ID-NoseBridgeWide', morphNeg: 'ID-NoseBridgeWide_Neg' }),

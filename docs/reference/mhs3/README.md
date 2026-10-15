@@ -15,3 +15,9 @@ These frames back the rules in [../../shading-style-guide.md](../../shading-styl
 | 09 | `09-old-man.png` | Old face: a few thin age lines, painted stubble, white dash brows, red eyes with a bright rim ring. Spiky hair clumps with hard shadow shapes. Jagged fur collar with the only soft shadow. Quilted teal pauldron with gold pyramid studs and a stitched red emblem patch. Goggles with an orange gradient lens and a steel rim. |
 | 10 | `10-rider-armored-monster.png` | Monster head armor with etched grooves and ridge highlights, many small ivory teeth, a yellow slit-pupil eye. Dappled sunlight through leaves as bright blobs. Fleece coat with fur collar and knee pads. |
 | 11 | `11-ranger-simon.png` | Closed-eye smile as a single curved line, a mole as one dot, grey hair clumps over the eyes. Coat with tone-on-tone knotwork, dashed stitching, blue diamond rivets and a red patch. Shield with carved relief and a crisp edge highlight. |
+
+## Official character renders (added 2026-10-15)
+`MHST3-*_Render_*.webp`: official MONSTER HUNTER STORIES 3 character renders (© CAPCOM), as hosted on the Monster
+Hunter Wiki (monsterhunterwiki.org, Category:MHST3 Character Renders). Kept as measurement references only, never
+traced into meshes or textures. `MHST3-Leo_Render_001` (front, neutral mouth) is the main face reference of the
+p-series: proportions are measured in D = pupil line to chin bottom (see docs/qa/newhead/visual_judge_log.md).

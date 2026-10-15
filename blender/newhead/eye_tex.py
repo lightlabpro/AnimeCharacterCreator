@@ -20,6 +20,7 @@ LIGHT = (0.0, -0.62, 0.95, 0.45)      # light crescent ellipse
 HL = (-1.02, -0.18, 0.31, 0.13)       # highlight (iris-local; u mirrored for the viewer-right eye)
 EXT = 1.40            # texture / mesh extent around the iris (the highlight overlaps the white)
 BAND = 0.26
+BROW_STROKES = 2      # p1: 2 = irregular thin hair strokes (MHS3), 1 = the old regular stripes
 
 
 def _c(t):
@@ -77,7 +78,24 @@ def brow(BXs, Bb, Bt, res=(1024, 128), ss=2):
     UU, VV = np.meshgrid(u, v)
     X = BXs[0] + UU * (BXs[-1] - BXs[0])
     Z = np.interp(X, BXs, Bb) + VV * (np.interp(X, BXs, Bt) - np.interp(X, BXs, Bb))
-    strand = np.mod((X - 0.95 * Z) / 0.16, 1.0) < 0.30
+    if BROW_STROKES == 2:
+        # p1 (Leo render): thin dark hair strokes running from the lower inner side up and outward at a shallow angle,
+        # irregular spacing and length, plus a darker lower edge; not a regular stripe pattern
+        rng = np.random.default_rng(7)
+        ph = (X - 1.7 * (Z - np.interp(X, BXs, Bb))) / 0.11
+        ph = ph + 0.30 * np.sin(2.3 * X + 0.7) + 0.18 * np.sin(5.1 * X)
+        k = np.floor(ph).astype(int)
+        jit = rng.random(4096)
+        duty = 0.10 + 0.12 * jit[np.mod(k, 4096)]
+        on = np.mod(ph, 1.0) < duty
+        # strokes start and stop at different heights (brush hairs, not full-height bars)
+        lo_ = 0.55 * jit[np.mod(k * 7 + 3, 4096)]
+        hi_ = 0.65 + 0.35 * jit[np.mod(k * 13 + 5, 4096)]
+        on &= (VV > lo_ * 0.6) & (VV < hi_)
+        edge = VV < 0.10 + 0.05 * np.sin(9.0 * UU)
+        strand = on | edge
+    else:
+        strand = np.mod((X - 0.95 * Z) / 0.16, 1.0) < 0.30
     col = np.where(strand[..., None], _c(C_BROW_DARK), _c(C_BROW))
     return _down(col, np.ones(UU.shape), res[0], ss, res[1])
 

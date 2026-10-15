@@ -39,6 +39,25 @@ EYE_DEPTH = 0.0020        # eye white behind the face surface (m); the iris sits
 LID_KEYS = {"Blink": "PF-Blink", "Wide": "PF-EyeWide", "Sad": "PF-EyeSad", "Angry": "PF-EyeAngry", "Happy": "PF-EyeHappy"}
 
 
+BROW_SHADE_COLOR = (200, 150, 122)   # p1: warm skin shadow under the brow's inner end (was pink 176,128,112)
+BROW_SHADE_LEN = 0.30                # p5: share of the brow (from the inner end) with the shadow (Leo: a short wedge)
+BROW_SHADE_DEPTH = 0.08              # p1: its depth below the brow (W2; was 0.17)
+LASH_KEYS = {"ID-LashThick": {"LASH_SCALE": 1.6}, "ID-LashThin": {"LASH_SCALE": 0.55},
+             "ID-LashLong": {"WING": 0.24, "LASH_OUT": 1.25}, "ID-LashShort": {"WING": 0.09, "LASH_OUT": 0.8}}
+BROW_ID_KEYS = {"ID-BrowThick": {"thick": 1.35}, "ID-BrowThin": {"thick": 0.65},
+                "ID-BrowLong": {"length": 1.12}, "ID-BrowShort": {"length": 0.85}}
+
+
+def _es_with(over, fn, *a, **k):
+    """p1: call an eye_shape function with some of its globals temporarily changed (ID- identity keys)."""
+    old = {n: ES[n] for n in over}
+    ES.update(over)
+    try:
+        return fn(*a, **k)
+    finally:
+        ES.update(old)
+
+
 def _lin(c):
     c = np.asarray(c, float) / 255.0
     return tuple(np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)) + (1.0,)
@@ -406,7 +425,7 @@ def build_rig(ob, col, LID, off_x, tag):
     line_m = _emission("MAT_RigLidLine_" + tag, _lin((84, 64, 48)))
     rim_m = _emission("MAT_RigLowRim_" + tag, _lin((196, 186, 168)))
     cover_m = _emission("MAT_RigLidCover_" + tag, _lin(EYE_LIT_COLOR))
-    shade_m = _emission("MAT_RigBrowShade_" + tag, _lin((176, 128, 112)))
+    shade_m = _emission("MAT_RigBrowShade_" + tag, _lin(BROW_SHADE_COLOR))
     # textures
     X0, X1, Z0, Z1 = -1.30, 1.35, -1.10, 0.85   # e1: room for the grown plate
     scl = _image("IMG_RigSclera_" + tag, ET["sclera"](X0, X1, Z0, Z1, Xg, U))
@@ -534,6 +553,8 @@ def build_rig(ob, col, LID, off_x, tag):
             dU, dL = ES["expression_offsets"](name, Xg, U, L)
             lid_pairs[kname] = ES["lid_ribbon"](dU, dL, wing=0.0 if name == "Blink" else 1.0)[:2]
             rim_pairs[kname] = ES["low_rim_ribbon"](dU, dL)
+        for kname, over in LASH_KEYS.items():          # p1: lash thickness / length (creator sliders)
+            lid_pairs[kname] = _es_with(over, ES["lid_ribbon"])[:2]
         made.append(_rig_strip("RigLidLine_" + sfx, lid_pairs, surf, side, line_m, col, off_x, LID_LIFT, key_skin=key_skin_for(side)))
         # e1: skin-coloured cover over the lower edge (hides the stepped mesh edge), same keys
         cov_pairs = {None: ES["edge_cover_ribbon"]()}
@@ -549,12 +570,14 @@ def build_rig(ob, col, LID, off_x, tag):
         brow_pairs, shade_pairs = {None: ES["brow_ribbon"]()}, {}
         for kname, fn in ES["BROW_KEYS"].items():
             brow_pairs["PF-" + kname] = ES["brow_ribbon"](d=fn)
+        for kname, kw in BROW_ID_KEYS.items():         # p1: brow thickness / length (creator sliders)
+            brow_pairs[kname] = ES["brow_ribbon"](**kw)
 
         def shade_of(pair):
             bot, _ = pair
             n = len(bot); t = np.linspace(0, 1, n)
-            k = int(n * 0.45)
-            sb = bot[:k].copy(); depth = 0.17 * np.sin(np.pi * np.clip(t[:k] / 0.45, 0, 1)) ** 0.7
+            k = int(n * BROW_SHADE_LEN)
+            sb = bot[:k].copy(); depth = BROW_SHADE_DEPTH * np.sin(np.pi * np.clip(t[:k] / BROW_SHADE_LEN, 0, 1)) ** 0.7
             lower = sb - np.stack([np.zeros(k) - 0.02, depth], 1)
             return sb + np.array([0.0, 0.02]), lower
         shade_pairs = {k: shade_of(v) for k, v in brow_pairs.items()}
@@ -571,11 +594,12 @@ def build_rig(ob, col, LID, off_x, tag):
 
 
 def set_expression(col, name, weights=None):
-    """Set every PF- key in the collection to the expression's weights (others to 0)."""
+    """Set every PF- key in the collection to the expression's weights (other PF- keys to 0; ID-/VW- untouched)."""
     w = EXPRESSIONS.get(name, {}) if weights is None else weights
     for o in col.objects:
         ks = o.data.shape_keys if o.type == "MESH" else None
         if not ks:
             continue
         for kb in ks.key_blocks[1:]:
-            kb.value = float(w.get(kb.name, 0.0))
+            if kb.name.startswith("PF-"):              # p1: identity (ID-) and view (VW-) keys are not expressions
+                kb.value = float(w.get(kb.name, 0.0))

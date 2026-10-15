@@ -32,7 +32,7 @@ NOSE_LINE_LEN = 1.15      # its length (1 = from under the brow to the nose tip)
 NOSE_LINE_X = 0.012        # extra offset toward the shadow side (H)
 NOSTRIL = 1.0            # nostril mark on the shadow side: size factor
 MOUTH_LINE = 1.0         # painted mouth line: thickness factor
-MOUTH_LINE_W = 1.6       # its width relative to the mouth opening
+MOUTH_LINE_W = 1.40      # its width relative to the mouth opening (p1: 1.6 -> 1.4, MHS3 mouth 0.49 D wide)
 EAR_CUT_X = 1.0          # s2: |x| where the head normal field starts handing over to the mesh normal (ears)
 SKIN_SOFT = 0.002        # s4: toon terminator softness for the head (shared NG_ToonSkin uses 0.012)
 PIXEL_NORMAL = 1         # s1: the face normal field evaluated per pixel in the shader (clean toon terminator)
@@ -71,6 +71,10 @@ EAR_BOWL = 0.0           # grows (+) / shrinks (-) the forced concha shadow
 NOSE_STYLE = 2           # 2: one curved stroke from under the brow's inner end, thin/broken middle, heavy hooked tip
 NOSE_SIDE = -1           # n1: the line on the lit (-x, viewer's left) side, the shadow lens reaching to the shadow side,
                          # as in the reference (face turned to the viewer's left, line on the far side, lens toward the near side)
+ID_MORPHS = 1            # p1: id_morphs.py (bake + ID- keys)
+NOSE_LINE_TOP = 0.40      # p1: head z where the nose line starts (Leo front: no line up the bridge, only near the tip)
+NOSE_HL = 1.0            # p1: pale highlight lens on the nose bridge (Leo render), 0 = off
+NOSE_FRONT_HIDE = 1      # p8: nose line hidden in the front view, shown by the yaw / side keys
 NOSE_VIEW = 1            # n11: own view keys for the nose strokes (stroke_view_keys)
 NOSE_RETRACT = 0.07      # n11: at 3/4 toward the line's side its top retracts to EYE_Z - this (H)
 NOSE_SHADE = 1.0         # painted lens of shadow under the nose tip (replaces the vertex-mask rectangle); 0 = off
@@ -907,12 +911,18 @@ def face_strokes(ob, col, off_x, tag):
                for i in range(n)]
         wid = [ht * (0.15 + 0.85 * math.sin(math.pi * i / (n - 1)) ** 0.7) for i in range(n)]
         stroke("NewNoseShade", pts, wid, shade_m, lift=0.0011)
+    if NOSE_HL:
+        # p1 (Leo render): a pale elongated lens down the lit side of the bridge, no dark line there
+        hl_m = _emission("MAT_PaintNoseHL_" + tag, (0.86, 0.70, 0.58, 1))
+        n = 11; z0_, z1_ = 0.415, 0.300
+        pts = [(-0.010 + 0.004 * (i / (n - 1)), z0_ + (z1_ - z0_) * i / (n - 1)) for i in range(n)]
+        wid = [0.024 * NOSE_HL * math.sin(math.pi * (0.04 + 0.92 * i / (n - 1))) ** 0.8 * (0.75 + 0.25 * i / (n - 1)) for i in range(n)]
+        stroke("NewNoseHL", pts, wid, hl_m, lift=0.0007)
     if NOSE_LINE > 0 and NOSE_STYLE == 2:
         # n1: reference: starts under the brow's inner end, bends in toward the bridge, runs down thin (nearly broken
         # in the middle), heavy at the bottom where it hooks in under the tip into the top of the shadow lens
-        ctrl = [(0.058, EYE_Z + 0.015), (0.054, EYE_Z - 0.035), (0.047, EYE_Z - 0.085),   # n7b: TypeSafe nose_line_start_higher (n6 had moved it below the eye: the far eye view key slid onto it)
-                
-                (0.042, (EYE_Z + NOSE_Z) / 2), (0.040, NOSE_Z + 0.012), (0.034, NOSE_Z - 0.002), (0.018, NOSE_Z - 0.008)]
+        ctrl = [(0.048, NOSE_LINE_TOP), (0.046, NOSE_LINE_TOP - 0.04), (0.043, NOSE_LINE_TOP - 0.085),
+                (0.040, NOSE_Z + 0.012), (0.034, NOSE_Z - 0.002), (0.018, NOSE_Z - 0.008)]   # p1: from NOSE_LINE_TOP only
         n = 26; pts = []
         for i in range(n):
             t = i / (n - 1) * (len(ctrl) - 1); k = min(int(t), len(ctrl) - 2); f = t - k
@@ -964,6 +974,15 @@ def stroke_view_keys(col, tag):
     far = "L" if NOSE_SIDE < 0 else "R"
     near = "R" if far == "L" else "L"
     zcut = O + (EYE_Z - NOSE_RETRACT) * S
+    hl = col.objects.get("NewNoseHL_" + tag)
+    if hl is not None:                              # p3: the bridge highlight folds away toward the profile views
+        co = np.array([v.co[:] for v in hl.data.vertices])
+        rows = co.reshape(-1, 2, 3); mid = rows.mean(1, keepdims=True)
+        flat = (mid + (rows - mid) * 0.0).reshape(-1, 3)
+        hl.shape_key_add(name="Basis")
+        for base in ("VW-Side_L", "VW-Side_R"):
+            kb = hl.shape_key_add(name=base); kb.value = 0.0
+            kb.data.foreach_set("co", flat.astype(np.float32).ravel())
     for nm in ("NewNoseLine_", "NewNoseShade_"):
         o = col.objects.get(nm + tag)
         if o is None:
@@ -978,9 +997,16 @@ def stroke_view_keys(col, tag):
             k = next((i for i in range(len(rows)) if rows[i, :, 2].mean() <= zcut), 0)
             r2 = rows.copy(); r2[:k] = rows[k]
             ret = r2.reshape(-1, 3)
-        for kind, arr in ((far, ret),):            # n12: the mirror keys were dropped - blending -x to +x swept the
-                                                    # strokes through the nose (hidden at 20 deg); toward the other side
-                                                    # the line simply stays where it is (the near side)
+        keys = [(far, ret)]                         # n12: no mirror keys (the blend swept the strokes through the nose)
+        if nm == "NewNoseLine_" and NOSE_FRONT_HIDE:
+            # p8 (TypeSafe nose_line_off, Leo front: no dark line on the nose): the line has zero width in the front
+            # view and grows in with the yaw / side keys (both sides)
+            rows = co.reshape(-1, 2, 3); mid = rows.mean(1, keepdims=True)
+            flat = np.repeat(mid, 2, 1).reshape(-1, 3)
+            o.data.shape_keys.key_blocks[0].data.foreach_set("co", flat.astype(np.float32).ravel())
+            me.vertices.foreach_set("co", flat.astype(np.float32).ravel())
+            keys = [(far, ret), (near, co)]
+        for kind, arr in keys:
             for base in ("VW-Yaw_", "VW-Side_"):
                 kb = o.shape_key_add(name=base + kind); kb.value = 0.0
                 kb.data.foreach_set("co", arr.astype(np.float32).ravel())
@@ -1040,6 +1066,10 @@ def run(npz, eyes_json, tag, off_x):
         bpy.app.driver_namespace["set_view"] = set_view
         if NOSE_VIEW:
             stroke_view_keys(col, tag)
+    if ID_MORPHS:                                  # p1: baked default proportions + the creator's ID- keys
+        exec(open(os.path.join(os.path.dirname(eyes_json), "..", "..", "..", "blender", "newhead", "id_morphs.py")).read(), globals())
+        bake(col, ob)
+        add_id_keys(col, ob)
     if EAR_SPLIT:
         split_ears(ob, col, tag)
     return ob, int((sh < 0.5).sum())

@@ -115,11 +115,11 @@ def ears(name, expr=None):
     return shots(name, [("side", 90, 0.14, 0.0, 1.60), ("34b", 135, 0.18, 0.0, 1.60), ("front", 0, 0.30, 0, 1.60)], expr)
 
 
-def zoom(name, exprs=("neutral", "blink", "wink_left", "amazed", "sad", "angry", "happy"), yaws=(0,), ortho=0.075):
+def zoom(name, exprs=("neutral", "blink", "wink_left", "amazed", "sad", "angry", "happy"), yaws=(0,), ortho=0.065, dx=0.0485):
     out = []
     for e in exprs:
         for y in yaws:
-            out += shots(name, [("%s_y%03d" % (e, y % 360), y, ortho, 0.0545, 1.612)], e, res=900)
+            out += shots(name, [("%s_y%03d" % (e, y % 360), y, ortho, dx, 1.612)], e, res=900)
     return out
 
 

@@ -1,0 +1,106 @@
+{
+ "region": "face_p",
+ "note": "p-series (2026-10-15): proportions measured in D = pupil line to chin bottom on the MHS3 Leo render. Each step is one knob change, then re-render, bands and judge again.",
+ "corrections": [
+  {
+   "id": "eyes_bigger",
+   "description": "Make both eyes bigger (wider and taller).",
+   "setting": "id_morphs.py EYE_SIZE_BAKE +0.03"
+  },
+  {
+   "id": "eyes_smaller",
+   "description": "Make both eyes smaller.",
+   "setting": "id_morphs.py EYE_SIZE_BAKE -0.03"
+  },
+  {
+   "id": "eyes_taller",
+   "description": "Make the eye openings taller (rounder) without changing their width.",
+   "setting": "id_morphs.py EYE_SIZE_BAKE_Z +0.04"
+  },
+  {
+   "id": "eyes_closer",
+   "description": "Move the eyes closer together.",
+   "setting": "id_morphs.py EYE_SPACING_BAKE -0.02"
+  },
+  {
+   "id": "eyes_apart",
+   "description": "Move the eyes further apart.",
+   "setting": "id_morphs.py EYE_SPACING_BAKE +0.02"
+  },
+  {
+   "id": "lash_thicker",
+   "description": "Make the dark upper lash line thicker.",
+   "setting": "eye_shape.py LASH_MID +0.1, LASH_OUT +0.1"
+  },
+  {
+   "id": "lash_thinner",
+   "description": "Make the dark upper lash line thinner.",
+   "setting": "eye_shape.py LASH_MID -0.1"
+  },
+  {
+   "id": "brows_thicker",
+   "description": "Make the eyebrows thicker.",
+   "setting": "look_knobs paint BROW_THICK +0.15"
+  },
+  {
+   "id": "brows_thinner",
+   "description": "Make the eyebrows thinner.",
+   "setting": "look_knobs paint BROW_THICK -0.15"
+  },
+  {
+   "id": "brows_lower",
+   "description": "Move the eyebrows lower, closer to the eyes.",
+   "setting": "look_knobs paint BROW_DZ -0.05"
+  },
+  {
+   "id": "brows_higher",
+   "description": "Move the eyebrows higher above the eyes.",
+   "setting": "look_knobs paint BROW_DZ +0.05"
+  },
+  {
+   "id": "brows_more_angled",
+   "description": "Angle the eyebrows more steeply down toward the nose.",
+   "setting": "look_knobs paint BROW_INNER_DROP +0.05"
+  },
+  {
+   "id": "mouth_wider",
+   "description": "Make the mouth line wider.",
+   "setting": "apply_look.py MOUTH_LINE_W +0.1"
+  },
+  {
+   "id": "mouth_narrower",
+   "description": "Make the mouth line narrower.",
+   "setting": "apply_look.py MOUTH_LINE_W -0.1"
+  },
+  {
+   "id": "lip_shadow_bigger",
+   "description": "Make the soft shadow under the lower lip bigger.",
+   "setting": "apply_look.py LIP_SHADOW +0.3"
+  },
+  {
+   "id": "chin_wider",
+   "description": "Make the chin and lower jaw wider and squarer.",
+   "setting": "id_morphs.py CHIN_WIDE_BAKE +0.01"
+  },
+  {
+   "id": "chin_narrower",
+   "description": "Make the chin narrower and more pointed.",
+   "setting": "id_morphs.py CHIN_WIDE_BAKE -0.01"
+  },
+  {
+   "id": "nose_highlight_smaller",
+   "description": "Make the pale highlight on the nose bridge smaller.",
+   "setting": "apply_look.py NOSE_HL -0.3"
+  },
+  {
+   "id": "nose_line_shorter",
+   "description": "Make the dark line on the side of the nose shorter.",
+   "setting": "apply_look.py NOSE_LINE_TOP -0.04"
+  },
+  {
+   "id": "nose_line_off",
+   "description": "Remove the dark line on the side of the nose in the front view.",
+   "setting": "apply_look.py NOSE_LINE 0 (front)"
+  }
+ ]
+}

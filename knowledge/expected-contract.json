@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-05",
+  "generated": "2026-10-15",
   "note": "Names the app drives at runtime. A pack missing a name means that control does nothing on that pack.",
   "pack_json_required": [
     "id",
@@ -145,6 +145,8 @@
     "ID-JawWidth_Neg",
     "ID-LashLong",
     "ID-LashShort",
+    "ID-LashThick",
+    "ID-LashThin",
     "ID-LidCrease",
     "ID-LidHood",
     "ID-LipLower",
@@ -655,6 +657,15 @@
       "bipolar": true,
       "shape_key": "ID-LashLong",
       "shape_key_negative": "ID-LashShort",
+      "bone_property": null,
+      "bodies": "HUM"
+    },
+    {
+      "id": "lash.thickness",
+      "label": "Lash thickness",
+      "bipolar": true,
+      "shape_key": "ID-LashThick",
+      "shape_key_negative": "ID-LashThin",
       "bone_property": null,
       "bodies": "HUM"
     },
@@ -1750,8 +1761,8 @@
     }
   ],
   "counts": {
-    "sliders": 143,
-    "identity_shape_keys": 169,
+    "sliders": 144,
+    "identity_shape_keys": 171,
     "performance_shape_keys": 59,
     "sockets": 30,
     "documented_sockets": 38
