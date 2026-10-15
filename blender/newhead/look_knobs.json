@@ -20,5 +20,8 @@
   "FAR_GAP_OUT": 0.12,
   "IRIS_FAR": 0.77,
   "NEAR_C": 0.85
+ },
+ "hair": {
+  "LIGHTNESS": 1.6
  }
 }

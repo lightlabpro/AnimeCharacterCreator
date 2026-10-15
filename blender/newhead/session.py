@@ -63,6 +63,9 @@ def shots(name, views, expr=None, tag="n56", view_keys=True, res=700):
     sc = bpy.context.scene
     c = col(tag); h = head(tag)
     keep = set(c.all_objects)
+    for hc in bpy.data.collections:                      # h-series: the hair pieces render with the head
+        if hc.name.startswith("NEW_HAIR_") and hc.name.endswith("_" + tag) and not hc.hide_render:
+            keep |= set(hc.all_objects)
     hidden = [o for o in sc.objects if o.type in ("MESH", "CURVE", "EMPTY") and o not in keep and not o.hide_render]
     for o in hidden:
         o.hide_render = True
@@ -127,6 +130,13 @@ def sweep(name, yaws=(0, 12, 30, 50, 70, 90), expr=None):
     return shots(name, [("y%03d" % (y % 360), y, 0.26, 0, 1.575) for y in yaws], expr, res=600)
 
 
+def hair(style="leo", tag="n56"):
+    """h-series: build the clump hair (blender/newhead/hair_nh.py) on the current (baked) head."""
+    g = {"__name__": "hair_nh", "HAIR_PATH": os.path.join(NH, "hair_nh.py")}
+    exec(open(os.path.join(NH, "hair_nh.py")).read(), g)
+    return g["build_hair"](style, tag, OFF_X)
+
+
 def knobs(update):
     p = os.path.join(NH, "look_knobs.json")
     k = json.load(open(p)) if os.path.exists(p) else {}
@@ -174,7 +184,7 @@ def audit(prefix, out, exprs=("neutral", "blink", "wink_left", "amazed", "sad", 
     return _py(a)
 
 
-for _f in (audit, col, head, apply, shots, look, face, eyes, nose, ears, zoom, sweep, knobs, judge, box, set_state):
+for _f in (hair, audit, col, head, apply, shots, look, face, eyes, nose, ears, zoom, sweep, knobs, judge, box, set_state):
     ns[_f.__name__] = _f
 ns["Q"], ns["NH"], ns["R"] = Q, NH, R
 print("session helpers ready")

@@ -254,3 +254,37 @@ TypeSafe (menus nose_mouth.json / ears.json updated, images on):
   0.20), nose_shadow 0.20, under_lip 0.17 off (reference has a darker top edge and a pinker tone); mouth_line 0.01 is
   not comparable (the reference mouth is open).
 Boards: board_n13_face_sweep.png (-35..90 deg), board_n13_expressions.png, board_n13_nose_ear.png.
+
+## p-series - face proportions from the official MHS3 renders (id_morphs.py, eye_shape.py, face_rig.py)
+New references (docs/reference/mhs3/MHST3-*_Render_*.webp; Leo front render = main face reference). Measured in
+D = pupil line to chin bottom (independent of skull and hair), Leo render and the game frame agree:
+eye width 0.32-0.34 D, pupil distance 0.70-0.73 D, mouth 0.64 D below the pupils and 0.49 D wide, nose bottom
+0.49 D, chin flat (~0.37 D wide). n56 measured eye width 0.43 D and pupil distance 0.82 D, a pointed chin.
+- bake (all shape keys mapped through the same map, mesh topology unchanged): eyes x0.80 wide / x0.92 tall about
+  their centres, eye centres x0.89 from the centre line, brows move with the eyes and are re-fitted to the skin,
+  chin front +0.045 H spread (neck excluded), ears 8 deg further out; short falloff past the outer eye corner so
+  the cheek silhouette at 20-35 deg does not dent (p2 did). Bands: all inside; topology quad_aspect_p95 3.16 -> 5.10
+  (stretched quads past the outer eye corner; flat-shaded, not visible).
+- lashes: drawn thickness profile LASH_IN/MID/OUT 0.22/0.55/0.85 x LID_TH (thin over the eye ~0.025 pupil distances,
+  ~0.04 at the outer corner), the inner tip fades in (no upward tick), slimmer wing (WING 0.12, WING_TH 0.085), the
+  lower-edge cover reaches the corner. The opening geometry is unchanged (base_curves keeps LID_TH).
+- brows: irregular hair strokes (BROW_STROKES 2), thickness taper to 0.55 at the outer end, inner end lower
+  (BROW_INNER_DROP 0.13), short warm under-brow shade (no pink band).
+- nose: no dark line in the front view (zero width, grows in with the yaw / side keys), pale bridge highlight.
+- ID- keys for the creator on every mesh they move: ID-EyeSize/Spacing/Height(_Neg), ID-MouthWidth/Height(_Neg),
+  ID-JawWidth/ChinWidth/ChinLength(_Neg), ID-EarSize(_Neg), ID-EarOut, ID-LashThick/Thin/Long/Short,
+  ID-BrowThick/Thin/Long/Short (slider sheet board_p11_id_sliders.png). set_expression only touches PF- keys now.
+- app: lash.thickness slider (ID-LashThick / ID-LashThin), contract re-exported, typecheck + 50 tests pass.
+TypeSafe (menu face_p.json, pictures on): p8 picked nose_line_off (applied; agrees with the render); p9: eye_size
+0.71, eye_spacing 0.76, lash_line 0.81 match; brows 0.60, mouth 0.42, nose 0.42 (from 0.06), jaw_chin 0.31 need a
+human; ears 0.29 off; pick brows_more_angled (applied, agrees with the render).
+
+## h-series - hair started (hair_nh.py)
+Clump hair fitted to the baked scalp: lens-section tubes along skull-hugging paths, cap shell, NG_ToonHair,
+pieces Hair_Front_leo (SOC-HairFront) / Hair_Back_leo (SOC-HairBack) + Hair_Cap_leo, keys ID-HairVolume /
+ID-HairWidth / ID-HairLength (+_Neg). Iterations h1 (flat helmet, comb stripes) -> h4 (volume, big fringe clumps,
+covered crown, narrower sides) -> h6 (denser top, lighter colour).
+TypeSafe h4 (menu hair.json): silhouette 0.11 and colour 0.11 off, clumps 0.35, sides_back 0.49, fringe 0.55 need
+a human; pick hair_lighter (applied as LIGHTNESS 1.6: median sRGB 113 -> 130 red, reference 155). Still off by
+measurement: hair half width 0.96 D vs 0.80, rounded mushroom outline vs the reference's jagged spiky one, too few
+light strokes. This is a first draft of the hair, not a match.

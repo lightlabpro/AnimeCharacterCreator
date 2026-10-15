@@ -1,0 +1,27 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin)",
+ "reference_style": "Monster Hunter Stories 3 (MHS3) anime toon style, adult male (Leo, official render)",
+ "features": {
+  "silhouette": {
+   "reference": "Hair mass top 1.35 D above the pupils with a few spikes to 1.5 D standing up from the crown; hair half width 0.80 D at the temples; jagged pointed outline.",
+   "ours": "Hair top 1.40 D above the pupils, a rounded mass with small spikes at the crown; hair half width 0.96 D at the temples; outline rounded with pointed tips at the bottom."
+  },
+  "fringe": {
+   "reference": "A few big pointed clumps fall from the top over the forehead; the longest central clumps reach the brows and touch the top of the eyes (about 0.06 D above the pupils), swept slightly to one side, overlapping.",
+   "ours": "Six big pointed clumps plus two short ones fall over the forehead; the longest reach the brows and the top of the eyes (about 0.0-0.1 D above the pupils), swept slightly to one side, overlapping."
+  },
+  "clumps": {
+   "reference": "Chunky flat clumps with pointed tips and thin dark lines between them; clumps are wide (about 0.25 D) on top.",
+   "ours": "Chunky clumps with pointed tips and dark lines between them; clumps about 0.3 D wide on top, many parallel clumps visible on the sides."
+  },
+  "colour": {
+   "reference": "Warm light brown, median sRGB (155,118,82), lights up to (202,164,131); a few sharp pale highlight strokes on the top; darker brown under the fringe.",
+   "ours": "Warm brown, median sRGB (113,81,57), lights up to (187,141,111) at the clump tips; light vertical streaks on several clumps; dark brown under the fringe."
+  },
+  "sides_back": {
+   "reference": "Sides stop above the ears; short pointed layers at the back.",
+   "ours": "Sides stop above the ears; short pointed layers at the back ending at about ear-bottom level."
+  }
+ }
+}

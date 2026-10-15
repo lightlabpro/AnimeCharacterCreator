@@ -1,0 +1,57 @@
+{
+ "region": "hair",
+ "subject": "short layered male hair, front view (D = pupil line to chin)",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "silhouette",
+   "p_same": 0.11,
+   "confidence": 0.78,
+   "p_look": 0.18,
+   "verdict": "off"
+  },
+  {
+   "feature": "colour",
+   "p_same": 0.11,
+   "confidence": 0.78,
+   "p_look": 0.35,
+   "verdict": "off"
+  },
+  {
+   "feature": "clumps",
+   "p_same": 0.345,
+   "confidence": 0.31,
+   "p_look": 0.295,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "sides_back",
+   "p_same": 0.485,
+   "confidence": 0.03,
+   "p_look": 0.485,
+   "verdict": "needs a human"
+  },
+  {
+   "feature": "fringe",
+   "p_same": 0.55,
+   "confidence": 0.1,
+   "p_look": 0.295,
+   "verdict": "needs a human"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.875,
+  "confidence": 0.75,
+  "verdict": "usable",
+  "faithful_p": 0.59
+ },
+ "first_fix": {
+  "order_a": "hair_lighter",
+  "order_b": "hair_lighter",
+  "agree": true,
+  "tie_break": null,
+  "apply": "hair_lighter",
+  "setting": "hair LIGHTNESS +0.2"
+ }
+}

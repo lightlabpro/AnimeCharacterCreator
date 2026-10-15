@@ -1,0 +1,51 @@
+{
+ "region": "hair",
+ "note": "h-series (2026-10-15): clump hair hair_nh.py, knobs in look_knobs.json 'hair'.",
+ "corrections": [
+  {
+   "id": "more_volume",
+   "description": "Give the whole hair more volume (stand further off the head).",
+   "setting": "hair VOL_SCALE +0.15"
+  },
+  {
+   "id": "less_volume",
+   "description": "Make the hair lie flatter and closer to the head.",
+   "setting": "hair VOL_SCALE -0.15"
+  },
+  {
+   "id": "taller_top",
+   "description": "Make the top of the hair taller, rising up from the crown.",
+   "setting": "hair TOP_EXTRA +0.01"
+  },
+  {
+   "id": "fringe_longer",
+   "description": "Make the fringe longer.",
+   "setting": "hair FRINGE_LEN +0.08"
+  },
+  {
+   "id": "fringe_shorter",
+   "description": "Make the fringe shorter.",
+   "setting": "hair FRINGE_LEN -0.08"
+  },
+  {
+   "id": "clumps_wider",
+   "description": "Make the hair clumps wider (fewer, chunkier shapes).",
+   "setting": "hair WID_SCALE +0.12"
+  },
+  {
+   "id": "clumps_narrower",
+   "description": "Make the hair clumps narrower.",
+   "setting": "hair WID_SCALE -0.12"
+  },
+  {
+   "id": "hair_lighter",
+   "description": "Make the hair colour lighter (a lighter golden brown).",
+   "setting": "hair LIGHTNESS +0.2"
+  },
+  {
+   "id": "hair_darker",
+   "description": "Make the hair colour darker.",
+   "setting": "hair LIGHTNESS -0.2"
+  }
+ ]
+}
