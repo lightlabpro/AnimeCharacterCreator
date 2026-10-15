@@ -24,7 +24,10 @@ EYE_SIZE_BAKE = 0.80        # eye (and brow) scale about the eye centre (x)
 EYE_SIZE_BAKE_Z = 0.92      # ... vertical (the MHS3 opening is taller for its width than n56's: h/w ~0.6)
 EYE_SPACING_BAKE = 0.89     # eye centre distance from the face centre line
 EAR_OUT_BAKE = 2.0          # q5: TypeSafe ears_closer (agreed; Leo ears lie close); was 8 deg: ears swing further off the head (MHS3 front views show the inner ear)
-CHIN_WIDE_BAKE = 0.065      # q4, q10: TypeSafe chin_wider (agreed both orders twice; measured ~0.33 vs Leo 0.37 D); H: the chin front widens by this at the bottom (flatter, squarer MHS3 male chin)
+JAW_SX_BAKE = 1.0           # q15: lower-face width scale (lower_map jaw weight: full below the cheekbones)
+JAW_TAPER = 0.14             # q15: cheek-to-jaw taper (x scale, peak between nose and mouth, 0 at the chin and the eye line, face front only). Section judge + overlay on Leo: our face was ~0.13 D/side wider at nose height, ~0.08 at the mouth, same at the chin
+JAW_NECK_SMOOTH = (40, 0.5, -0.53)   # q15: Taubin iterations, lambda, mu on the jaw/neck junction ring (_jaw_neck_smooth)
+CHIN_WIDE_BAKE = 0.045      # q15: 0.065 -> 0.045 (with JAW_TAPER; section judge kept asking 'rounder chin', the flat chin bottom had corners); q4, q10: TypeSafe chin_wider (agreed both orders twice; measured ~0.33 vs Leo 0.37 D); H: the chin front widens by this at the bottom (flatter, squarer MHS3 male chin)
 ID_AMOUNTS = {"EyeSize": (1.15, 0.87), "EyeSpacing": (1.08, 0.93), "EyeHeight": (0.025, -0.025),
               "MouthWidth": (1.15, 0.87), "MouthHeight": (0.02, -0.02), "JawWidth": (1.08, 0.93),
               "ChinWidth": (0.02, -0.015), "ChinLength": (0.03, -0.025), "EarSize": (1.15, 0.87), "EarOut": 12.0}
@@ -118,6 +121,18 @@ def lower_map(P, jaw_sx, chin_b, chin_dz):
     return out
 
 
+def taper_map(P, k):
+    """q15: narrow the lower cheeks and jaw sides (not the chin tip, not the eye line, not the neck or the back)."""
+    if not k:
+        return P
+    zh = (P[:, 2] - O) / S
+    ra = np.hypot(P[:, 0] / S / 0.20, (P[:, 1] / S - NECK_Y) / (0.20 * 0.92))
+    w = smooth(0.0, 0.16, zh) * smooth(0.46, 0.17, zh) * smooth(0.07, -0.01, P[:, 1]) * smooth(1.05, 1.25, ra)   # t1/t2 (0.34 top, mask at the ear line) cut a ledge at nose height
+    out = P.copy()
+    out[:, 0] *= 1 - k * w
+    return out
+
+
 def ear_map(P, ear, size, out_deg):
     out = P.copy()
     for side in (1, -1):
@@ -194,12 +209,14 @@ def bake(col, head):
 
     def rest(P, o, side):
         if side in (None, 0):
-            P2 = lower_map(P, 1.0, CHIN_WIDE_BAKE, 0.0)
+            P2 = taper_map(lower_map(P, JAW_SX_BAKE, CHIN_WIDE_BAKE, 0.0), JAW_TAPER)
             if o == head:
                 P2[ear] = P[ear]
                 if EAR_OUT_BAKE:
                     P2 = ear_map(P2, ear, 1.0, EAR_OUT_BAKE)
             P = P2
+        elif JAW_TAPER:
+            P = taper_map(P, JAW_TAPER)                  # eye parts follow the cheek taper (its top fades through the eye line)
         return P
     obs = _objects(col)
     obs.sort(key=lambda t: t[0] != head)                 # head first (the re-projection needs its new surface)
@@ -326,6 +343,35 @@ def bake(col, head):
         o.data.update()
         if o == head:
             t_new = _tree(_get(hb) if hb else _get(head.data), head)
+    if JAW_NECK_SMOOTH:
+        _jaw_neck_smooth(head, ear)
+
+
+def _jaw_neck_smooth(head, ear):
+    """q15: Taubin-smooth the jaw underside / neck junction ring (a fold and notch below the jaw angle showed as a
+    stray toon line at 3/4 and side, already in the un-baked mesh). Same offset on every shape key."""
+    it, lam, mu = JAW_NECK_SMOOTH
+    bl = _blocks(head)
+    B = _get(bl[0]) if bl else _get(head.data)
+    nv = len(B)
+    ev = np.empty(len(head.data.edges) * 2, np.int64); head.data.edges.foreach_get("vertices", ev); ev = ev.reshape(-1, 2)
+    ev = ev[~(ear[ev[:, 0]] | ear[ev[:, 1]])]
+    deg = np.maximum(np.bincount(ev.ravel(), minlength=nv), 1).astype(float)[:, None]
+    zh = (B[:, 2] - O) / S
+    ra = np.hypot(B[:, 0] / S / 0.20, (B[:, 1] / S - NECK_Y) / (0.20 * 0.92))
+    w = (smooth(-0.10, -0.04, zh) * smooth(0.22, 0.13, zh) * smooth(0.75, 0.95, ra) * smooth(1.8, 1.5, ra))[:, None]
+    w[ear] = 0.0
+    P = B.copy()
+    for _ in range(it):
+        for f in (lam, mu):
+            acc = np.zeros_like(P)
+            np.add.at(acc, ev[:, 0], P[ev[:, 1]]); np.add.at(acc, ev[:, 1], P[ev[:, 0]])
+            P += f * w * (acc / deg - P)
+    d = P - B
+    for tgt in (bl if bl else [head.data]):
+        _set(tgt, _get(tgt) + d)
+    head.data.update()
+    print("q15 jaw-neck smooth: %d verts, max %.1f mm" % (int((w[:, 0] > 0.01).sum()), 1000 * np.linalg.norm(d, axis=1).max()))
 
 
 def add_id_keys(col, head):
