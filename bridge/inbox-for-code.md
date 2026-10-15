@@ -73,5 +73,19 @@ Open items first. Claude Code reads this at session start and moves finished ite
     shout, worried, determined, skeptical, pout, talk_a, talk_o, talk_e - weight sets over the keys above.
   - View keys: new knob `NEAR_SHIFT` (look_knobs view 0.4; FAR_GAP_IN 0.2, FAR_GAP_OUT 0.04) - same VW- key names.
 
+- **2026-10-15 - PF-JawOpen, lower-face bake, mouth layers (chat, q15).**
+  On the n56 head (`blender/newhead`):
+  - New key `PF-JawOpen` (the app's name): on `NEW_Head_<tag>` the skin below the mouth line turns down and back about
+    a hinge under the ear (chin drop ~10 mm at 1.0; `mouth_rig.JAW_THETA`), and on the six mouth objects the matching
+    painted opening. Presets now use it: happy 0.35, laugh 0.6, amazed 0.5, shout 0.7 (`expressions.json`); determined
+    gained `PF-SmileClosed` 0.3.
+  - `PF-VisWide` changed shape (squarer, taller); teeth band slightly taller with tapered ends; mouth layers sit at new
+    offsets off the skin (`MOUTH_LIFT`). Same object and key names otherwise.
+  - Iris look keys (`PF-LookLeft/Right/Up/Down`) now keep the iris in front of the eye white at 3/4 (it vanished
+    behind it with a look toward the nose); same names, slightly different vertex positions.
+  - Identity bake (`id_morphs.py`): lower face narrower between cheek and jaw (`JAW_TAPER`), rounder chin
+    (`CHIN_WIDE_BAKE` 0.045), smoothed jaw/neck junction (`JAW_NECK_SMOOTH`). Base mesh shape only, no topology or
+    key-name change.
+
 ## Done
 (none yet)

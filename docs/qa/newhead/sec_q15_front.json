@@ -1,0 +1,55 @@
+{
+ "ours": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\newhead\\face_q15_front.png",
+ "ref": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\newhead\\ref_leo_face.png",
+ "sections": {
+  "brows": {
+   "p_same": 0.225,
+   "issue": "more angled down toward the nose",
+   "orders": [
+    "more angled down toward the nose",
+    "more angled down toward the nose"
+   ]
+  },
+  "eyes": {
+   "p_same": 0.455,
+   "issue": null,
+   "orders": [
+    "taller opening",
+    "thicker upper lid line"
+   ]
+  },
+  "nose": {
+   "p_same": 0.105,
+   "issue": null,
+   "orders": [
+    "longer",
+    "wider shadow under the tip"
+   ]
+  },
+  "mouth": {
+   "p_same": 0.325,
+   "issue": "thinner lip line",
+   "orders": [
+    "thinner lip line",
+    "thinner lip line"
+   ]
+  },
+  "jaw_chin": {
+   "p_same": 0.47,
+   "issue": null,
+   "orders": [
+    "rounder chin",
+    "softer jaw corner"
+   ]
+  },
+  "lower_face": {
+   "p_same": 0.43,
+   "issue": "more curved jaw line",
+   "orders": [
+    "more curved jaw line",
+    "more curved jaw line"
+   ]
+  }
+ },
+ "mean_p_same": 0.335
+}

@@ -51,14 +51,14 @@ MOUTH_EXPRESSIONS = {
     # q14b: the default brows slope down toward the nose (identity: BROW_INNER_DROP), so TypeSafe read the neutral face
     # and most presets as "angry"; every non-angry preset now lifts the inner brow ends (PF-BrowInnerUp)
     "smile": {"PF-SmileClosed": 1, "PF-BrowInnerUp_L": 0.6, "PF-BrowInnerUp_R": 0.6, "PF-BrowUp": 0.2},
-    "happy": {"PF-EyeHappy": 1, "PF-BrowInnerUp_L": 0.7, "PF-BrowInnerUp_R": 0.7, "PF-BrowUp": 0.4, "PF-SmileOpenJaw": 1},
+    "happy": {"PF-EyeHappy": 1, "PF-BrowInnerUp_L": 0.7, "PF-BrowInnerUp_R": 0.7, "PF-BrowUp": 0.4, "PF-SmileOpenJaw": 1, "PF-JawOpen": 0.35},   # q15: + JawOpen (TypeSafe: smile/happy split -> happy both orders)
     "laugh": {"PF-Blink_L": 1, "PF-Blink_R": 1, "PF-BrowInnerUp_L": 0.8, "PF-BrowInnerUp_R": 0.8, "PF-BrowUp": 0.6, "PF-SmileOpenJaw": 1, "PF-VisAA": 0.2, "PF-JawOpen": 0.6},
     "amazed": {"PF-EyeWide": 1, "PF-BrowUp": 1, "PF-BrowInnerUp_L": 0.4, "PF-BrowInnerUp_R": 0.4, "PF-IrisSmall": 1, "PF-VisOH": 0.8, "PF-JawOpen": 0.5},
     "sad": {"PF-EyeSad": 1, "PF-BrowSad": 1, "PF-BrowInnerUp_L": 0.5, "PF-BrowInnerUp_R": 0.5, "PF-LookDown": 0.4, "PF-Frown": 1},
     "angry": {"PF-EyeAngry": 1, "PF-BrowAngry": 1, "PF-Frown": 0.6, "PF-NoseSneer": 0.5},
     "shout": {"PF-EyeAngry": 1, "PF-BrowAngry": 1, "PF-VisWide": 0.8, "PF-JawOpen": 0.7, "PF-NoseSneer": 0.4},
     "worried": {"PF-BrowInnerUp_L": 1, "PF-BrowInnerUp_R": 1, "PF-BrowSad": 0.5, "PF-EyeSad": 0.6, "PF-EyeWide": 0.3, "PF-Frown": 0.7, "PF-MouthNarrow": 0.4},
-    "determined": {"PF-BrowAngry": 0.4, "PF-EyeAngry": 0.3, "PF-Smirk_L": 1, "PF-BrowRaise_R": 0.3},
+    "determined": {"PF-BrowAngry": 0.4, "PF-EyeAngry": 0.3, "PF-Smirk_L": 1, "PF-BrowRaise_R": 0.3, "PF-SmileClosed": 0.3},   # q15: + SmileClosed (determined both orders)
     "skeptical": {"PF-BrowRaise_L": 1, "PF-BrowLower_R": 1, "PF-Smirk_R": 0.8, "PF-LookRight": 0.3},
     "pout": {"PF-Pout": 1, "PF-BrowSad": 0.6, "PF-BrowInnerUp_L": 0.5, "PF-BrowInnerUp_R": 0.5},
     "blink": {"PF-Blink_L": 1, "PF-Blink_R": 1, "PF-BrowInnerUp_L": 0.3, "PF-BrowInnerUp_R": 0.3},

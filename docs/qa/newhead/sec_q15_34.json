@@ -1,0 +1,55 @@
+{
+ "ours": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\newhead\\face_q15_34.png",
+ "ref": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\newhead\\ref_face.png",
+ "sections": {
+  "brows": {
+   "p_same": 0.49,
+   "issue": "more angled down toward the nose",
+   "orders": [
+    "more angled down toward the nose",
+    "more angled down toward the nose"
+   ]
+  },
+  "eyes": {
+   "p_same": 0.285,
+   "issue": "flatter opening",
+   "orders": [
+    "flatter opening",
+    "flatter opening"
+   ]
+  },
+  "nose": {
+   "p_same": 0.33,
+   "issue": "longer",
+   "orders": [
+    "longer",
+    "longer"
+   ]
+  },
+  "mouth": {
+   "p_same": 0.22,
+   "issue": "wider",
+   "orders": [
+    "wider",
+    "wider"
+   ]
+  },
+  "jaw_chin": {
+   "p_same": 0.43,
+   "issue": "rounder chin",
+   "orders": [
+    "rounder chin",
+    "rounder chin"
+   ]
+  },
+  "lower_face": {
+   "p_same": 0.405,
+   "issue": "fuller cheeks",
+   "orders": [
+    "fuller cheeks",
+    "fuller cheeks"
+   ]
+  }
+ },
+ "mean_p_same": 0.36
+}

@@ -444,3 +444,38 @@ Neutral itself reads "angry": the default brows slope down toward the nose (iden
 Sammy tuned it; the creator's brow sliders soften it. Open: partial lid-key artifacts, far brow clipping at 3/4 with
 the inner-up keys, no jaw drop with the open mouth yet.
 Boards: q14_board.png, q14_expression_sheet.png; check results q14_expression_check.json.
+
+## q15 (2026-10-15) - lower face, teeth and mouth, open items; section-by-section judging
+Sammy: "check the lower part shape of the face, it looks a bit off, also check the teeth and general shape of face
+elements and expressions ... subdivide face into sections for analysis and comparison with references."
+- New `typesafe_section_judge.py`: both images cut into the same sections from four landmarks (face centre, eye line,
+  mouth line, chin; boxes in units of eye-to-chin D) - brows, eyes, nose, mouth, jaw_chin, lower_face; per section a
+  yes/no "looks like the reference" (p_same) and the biggest difference from a per-section menu, asked in both option
+  orders (counted only when they agree). Repeat runs on unchanged sections move p_same by about +-0.03, so smaller
+  differences are noise.
+- Lower face: an outline overlay on Leo at the same landmarks showed ours ~0.13 D per side wider at nose height,
+  ~0.08 at the mouth, the same at the chin; the section judge kept asking for a "rounder chin" and a "more curved jaw
+  line". Tried: uniform jaw x scale (j1 0.88 / j2 0.82: j2 gave a V chin, p_same jaw_chin 0.375), a cheek-to-jaw taper
+  (t1/t2 cut a ledge at nose height; t3/t4 with long fades), a rounder chin alone (r1/r2), and the taper with a
+  rounder chin (c1). TypeSafe A/B could not separate any of them (overall / head_shape / jaw_chin: tie or the orders
+  disagree; section p_same within noise), so the choice rests on the overlay: c1 follows Leo's face edge from the
+  cheek to the chin (JAW_TAPER 0.14, CHIN_WIDE_BAKE 0.065 -> 0.045). A fold under the jaw angle (already in the
+  un-baked mesh) drew a stray toon line at 3/4 and side: Taubin smoothing of the jaw/neck ring (JAW_NECK_SMOOTH 40).
+- Teeth / mouth: white spikes at the teeth band ends (hard cut at |u| 0.8 -> smooth taper), jagged tongue and teeth
+  edges (the mouth layers took per-point skin hits that jumped between the lip groove and the lip; now one smoothed
+  depth field for every layer and wider layer offsets), shout was a flat lens (squarer, taller PF-VisWide). New
+  PF-JawOpen (chin drop on the head + matching painted opening).
+- Open items: the skeptical preset lost both irises at 3/4 - the look key pushed the iris back along the curved eye and
+  the 3/4 view key bulges the white's inner half; the iris ended up 1.7 mm (35 deg) / 2.7 mm (60 deg) behind the white.
+  Look keys keep 20 % of the push-back and come 3.5 mm forward at a full side look: occluded iris samples 56/59 ->
+  0-2/59 (all looks, 0/+-35/60 deg). The far brow at 3/4 ends at the face edge like Leo's (not clipped).
+- Expressions (13 labels as q14): recognised 7/13, mean p_clear 0.59 -> 0.63. happy needed JawOpen 0.35 (the taller
+  teeth made it read "smile" in one order) and determined SmileClosed 0.3; tried and dropped: a skeptical without the
+  lowered brow (p_clear 0.05), a worried without BrowSad/EyeSad (one order "worried", p_clear lower).
+- Final, q14 -> q15 (section p_same, front / 3/4): mean 0.322 -> 0.335 / 0.344 -> 0.360 (within noise); A/B front+3/4
+  pair: clean -> q15 (both orders), dented 0.435 -> 0.38, artifacts 0.715 -> 0.67, other aspects tie / disagree.
+  Still asked for, not changed: brows "more angled down toward the nose" (Sammy's identity setting), nose "wider
+  shadow under the tip" (a 25 % wider shadow did not move it: p_same 0.10 -> 0.10), eyes "taller / flatter opening"
+  (orders disagree).
+Boards: q15_board.png, q15_lower_face.png, q15_mouth.png, q15_expression_sheet.png, q15_expression_sheet_34.png;
+check results q15_expression_check.json, sec_q15_front.json, sec_q15_34.json.
