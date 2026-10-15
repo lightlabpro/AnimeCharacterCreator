@@ -30,7 +30,9 @@ ID_AMOUNTS = {"EyeSize": (1.15, 0.87), "EyeSpacing": (1.08, 0.93), "EyeHeight": 
               "ChinWidth": (0.02, -0.015), "ChinLength": (0.03, -0.025), "EarSize": (1.15, 0.87), "EarOut": 12.0}
 
 OUT_FALL = 0.42             # eye map falloff past the outer eye corner (W2)
-SKIN_SLIDE = 1              # q1: moved skin slides on the pre-bake surface (no dent beside the eyes)
+SKIN_SLIDE = 0              # q1 (off since q12): moved skin slides on the pre-bake surface. q12 A/B with TypeSafe pictures (both
+                            # orders) and Sammy: it clipped the near brow at 3/4, left a floating brow piece and stray marks, and
+                            # read MORE dented (0.56 vs 0.38) - reverted. ORBIT_FILL only acts together with it.
 SLIDE_RIM = (0.004, 0.014)  # q1: m from the lid rim: below the first value the skin keeps its own depth
 ORBIT_FILL = (1.0, 0.085, 0.10, 0.14)   # q1c: strength, brow-line / cheek-line offsets above / below the eye centre (S), region width past the outer corner (S)
 REPROJECT = ("RigBrow_", "RigBrowShade_")   # parts that sit on skin outside the rigid box: depth re-fitted to the skin

@@ -360,3 +360,29 @@ contradicted; the global "pictures disagree" verdict (0.17-0.31) stays low regar
 sclera match; iris, ears, lash line "need a human"; brows (Sammy's thin inner end vs Leo's thick one), jaw/chin,
 nose/mouth and shading stay "off". Final boards: head_before_after_q11.png. Face form after q11: setback at 0.30 hh
 brow 0.147, eye 0.169, cheek 0.157 (band 0.10-0.19).
+
+## q12 - A/B regression check after Sammy: "the head looks worse now ... a step back" (2026-10-15)
+New tool `blender/tools/typesafe_ab_compare.py`: TypeSafe sees two renders of the same head (same camera, light) plus
+the Leo reference (front + 3/4 pair) and picks the better one per aspect; asked twice with the pictures swapped and
+the options reversed, a winner counts only when both orders agree. Each variant = q11 with ONE change rolled back
+(scripts copied to `_ab/<variant>/`, same npz), bald, front + 3/4.
+| B vs A = q11 | overall | head_shape | eyes | brows | nose_mouth | jaw_chin | ears | clean | dented A/B | artifacts A/B |
+|---|---|---|---|---|---|---|---|---|---|---|
+| morning (73fe301) | B | B | ? | B | B | B | ? | B | 0.48/0.46 | 0.88/0.73 |
+| skin slide + orbit fill off | B | B | B | B | B | B | ? | B | 0.56/0.38 | 0.92/0.65 |
+| chin 0.065 -> 0.045 | = | = | = | = | ? | = | = | ? | 0.44/0.45 | 0.70/0.73 |
+| ears 2 -> 8 deg | ? | = | = | = | = | = | ? | ? | - | - |
+| q10 nose/lip shading off | B | = | = | = | ? | = | = | ? | - | - |
+| q8 brow drop/colour off | B | = | = | ? | ? | = | = | ? | - | - |
+| combo (all three B rows) | B | B | B | B | B | B | ? | B | 0.52/0.39 | 0.92/0.64 |
+(? = the two orders disagree, = = tie.) Combo vs morning: nose_mouth B, clean B, the rest tie/disagree. With the Leo
+hair (q11h vs q12h): brows B, jaw_chin B, the rest disagree. ORBIT_FILL without the slide changes < 0.02 % of pixels.
+Cause: the skin slide moved the brow-ridge skin under the brow decals, so at 3/4 the near brow was clipped, a brow
+piece floated off the outer end and stray marks appeared in the side view - the very "pushed in" look it was meant to
+fix. Applied (q12): SKIN_SLIDE 0, LIP_SHADOW 1.0 / W 0.33 / toon colours, BROW_INNER_DROP 0.13, brow colours 122,95,71
+/ 92,66,45. Kept: q3 MHS3 eyes, thin inner brow + slider, chin 0.065, ears 2 deg (A/B ties).
+Band conflict, stated openly: without the slide the face_study setback at 0.30 hh is brow 0.212 / cheek 0.228, above
+the 0.10-0.19 band of the 7 verified dataset heads. The pictures (Sammy + TypeSafe both orders) prefer it anyway; the
+band is from 7 heads and its 0.30 hh slice crosses the eye socket. The band is not widened and the model is not bent
+to it - a fix that meets both must move the brow decals with the skin (next).
+Boards: q12_ab_single_reverts.png, q12_ab_form.png, head_q11_vs_q12.png.

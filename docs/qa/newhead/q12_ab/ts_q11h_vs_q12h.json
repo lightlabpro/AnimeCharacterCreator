@@ -1,0 +1,71 @@
+{
+ "A": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_q11h_pair.png",
+ "B": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ab_q12h_pair.png",
+ "REF": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\_ab\\ref_pair.png",
+ "aspects": {
+  "overall": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  },
+  "head_shape": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  },
+  "eyes": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  },
+  "brows": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "nose_mouth": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  },
+  "jaw_chin": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "ears": {
+   "winner": "disagree",
+   "orders": [
+    "tie",
+    "B"
+   ]
+  },
+  "clean": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.425,
+  "B_dented": 0.445,
+  "A_artifacts": 0.745,
+  "B_artifacts": 0.71,
+  "A_adult": 0.8,
+  "B_adult": 0.8
+ }
+}

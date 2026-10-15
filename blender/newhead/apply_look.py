@@ -40,7 +40,7 @@ FACE_FORWARD = 2.5       # how much the face normals turn toward the viewer (big
 OUTLINE_W = 0.0015       # outline width (m)
 OUTLINE_DARK = 1.5       # outline darkness factor (1 = current colour)
 CHIN_LIT = 1.0           # 0..1: lowers where the face plane / normal blend fade out, so the chin front is lit (g7)
-LIP_SHADOW = 1.5         # short shadow stroke under the lower lip: thickness factor (q10: 1.0 -> 1.5, Leo's is taller)
+LIP_SHADOW = 1.0         # short shadow stroke under the lower lip: thickness factor (q10 tried 1.5; q12 A/B: worse, reverted)
 EYE_W2 = 0.092           # painted eye half-width (H)
 EYE_DZ = 0.0             # painted eye vertical offset (H)
 EYE_DX = 0.0             # painted eye outward offset (H): + moves the eyes apart
@@ -80,9 +80,9 @@ NOSE_RETRACT = 0.07      # n11: at 3/4 toward the line's side its top retracts t
 NOSE_SHADE = 1.0         # painted lens of shadow under the nose tip (replaces the vertex-mask rectangle); 0 = off
 NOSE_TINT = 0.35         # mauve mixed into the painted nose / lip shadow (MHS3 shadows under the nose read pink-brown)
 LIP_STYLE = 2            # 2: the under-lip mark is a soft shadow lens, not a thin dark line
-NOSE_SHADE_SRGB = (206, 148, 124)   # q10: Leo nose-tip shadow (sampled), ours was the dark toon shadow
-LIP_SHADOW_W = 0.42      # q10: width x IPD (Leo's under-lip shadow is wide and soft; was 0.33)
-LIP_SHADOW_SRGB = (200, 145, 116)   # q10: Leo under-lip shadow colour (ours read darker brown 173,120,101)
+NOSE_SHADE_SRGB = None   # q10 tried Leo's sampled (206,148,124); q12 A/B: the toon shadow looked better, reverted
+LIP_SHADOW_W = 0.33      # width x IPD (q10 tried 0.42; q12 A/B: worse, reverted)
+LIP_SHADOW_SRGB = None   # q10 tried Leo's (200,145,116); q12 A/B: worse, reverted
 EAR_STYLE = 2            # 2: ear paint from ear-plane coordinates: mauve bowl + a thin C line along its front-top edge
 EAR_SPLIT = 1            # ear shells moved to their own object with a Subdivision modifier (smooth rim + outline)
 EAR_SUBDIV = 2           # its render/viewport level
