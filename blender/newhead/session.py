@@ -187,4 +187,152 @@ def audit(prefix, out, exprs=("neutral", "blink", "wink_left", "amazed", "sad", 
 for _f in (hair, audit, col, head, apply, shots, look, face, eyes, nose, ears, zoom, sweep, knobs, judge, box, set_state):
     ns[_f.__name__] = _f
 ns["Q"], ns["NH"], ns["R"] = Q, NH, R
+# ---- q12/q13 helpers: A/B variants, plain-shaded form renders, wireframe renders ----
+import contextlib
+import io
+import shutil
+
+AB = os.path.join(R, "_ab")
+
+
+def ab_build(v, patches=(), base="now"):
+    """Rebuild the head from a patched copy of the scripts in _ab/<v>/ (patches: [(file, old, new)], each old must
+    occur once). base="morning" overlays _ab/morning_src/. Hair is hidden. Returns (seconds, log tail)."""
+    import time
+    root = os.path.join(AB, v); bn = os.path.join(root, "blender", "newhead"); dq = os.path.join(root, "docs", "qa", "newhead")
+    os.makedirs(bn, exist_ok=True); os.makedirs(dq, exist_ok=True)
+    for f in os.listdir(NH):
+        if f.endswith((".py", ".json", ".npz")):
+            shutil.copy(os.path.join(NH, f), bn)
+    if base == "morning":
+        src = os.path.join(AB, "morning_src")
+        for f in os.listdir(src):
+            shutil.copy(os.path.join(src, f), bn)
+    for f in ("new_head_n56.npz", "new_head_n56_eyes.json"):
+        shutil.copy(os.path.join(Q, f), dq)
+    for fn, old, new in patches:
+        p_ = os.path.join(bn, fn); t = open(p_, encoding="utf-8").read()
+        assert t.count(old) == 1, (v, fn, old, t.count(old))
+        open(p_, "w", encoding="utf-8").write(t.replace(old, new))
+    for c in bpy.data.collections:
+        if c.name.startswith(("NEW_HAIR_", "HAIR_")):
+            c.hide_render = True
+    g = {"NPZ": os.path.join(dq, "new_head_n56.npz"), "EYES": os.path.join(dq, "new_head_n56_eyes.json"),
+         "TAG": "n56", "OFF_X": OFF_X, "__name__": "apply_look"}
+    t0 = time.time(); buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        exec(open(os.path.join(bn, "apply_look.py"), encoding="utf-8").read(), g)
+    c = col("n56"); c.hide_render = False; c.hide_viewport = False
+    ns["LOOK_G"] = g
+    for o in bpy.data.objects:
+        if o.name.startswith(("Hair_", "HAIR_")):
+            o.hide_render = True
+    return time.time() - t0, buf.getvalue()[-600:]
+
+
+def _tmp_copies(tag, parts):
+    c = col(tag); dg = bpy.context.evaluated_depsgraph_get(); out = []
+    srcs = [head(tag)] + [o for o in c.objects if o.name.startswith("NEW_Ears")]
+    if parts:
+        srcs += [o for o in c.objects if o.name.startswith(("RigEyeWhite_", "RigIris_", "RigLidLine_", "RigBrow_"))]
+    for o in srcs:
+        me = bpy.data.meshes.new_from_object(o.evaluated_get(dg))
+        t = bpy.data.objects.new("TMP_" + o.name, me); t.matrix_world = o.matrix_world; c.objects.link(t)
+        out.append((o, t))
+    return out
+
+
+def _plain_render(name, views, res, tag, mode, parts):
+    sc = bpy.context.scene; c = col(tag); sh = sc.display.shading; eng = sc.render.engine
+    old = (sh.light, sh.color_type, tuple(sh.single_color), sh.show_cavity)
+    hc = [x for x in bpy.data.collections if x.name.startswith(("NEW_HAIR_", "HAIR_")) and not x.hide_render]
+    for x in hc:
+        x.hide_render = True
+    hid = [o for o in c.all_objects if not o.hide_render]
+    for o in hid:
+        o.hide_render = True
+    tmp = []
+    for o, t in _tmp_copies(tag, parts):
+        tmp.append(t)
+        if mode == "form":
+            with bpy.context.temp_override(object=t, active_object=t, selected_objects=[t]):
+                try:
+                    bpy.ops.mesh.customdata_custom_splitnormals_clear()
+                except Exception:
+                    pass
+            for p_ in t.data.polygons:
+                p_.use_smooth = True
+        elif o.name.startswith(("NEW_Head", "NEW_Ears")):
+            t.color = (0.78, 0.78, 0.78, 1)
+            w = bpy.data.objects.new("TMP_w_" + o.name, t.data); w.matrix_world = o.matrix_world; c.objects.link(w)
+            m = w.modifiers.new("wf", "WIREFRAME"); m.thickness = 0.00025; m.use_replace = True
+            w.color = (0.08, 0.08, 0.1, 1); tmp.append(w)
+        else:
+            t.color = (0.3, 0.6, 0.3, 1) if o.name.startswith("RigIris_") else (
+                (0.95, 0.95, 0.95, 1) if o.name.startswith("RigEyeWhite_") else (0.35, 0.22, 0.15, 1))
+    sc.render.engine = "BLENDER_WORKBENCH"
+    if mode == "form":
+        sh.light = "STUDIO"; sh.color_type = "SINGLE"; sh.single_color = (0.8, 0.8, 0.8)
+    else:
+        sh.light = "FLAT"; sh.color_type = "OBJECT"
+    sh.show_cavity = False
+    try:
+        return shots(name, views, res=res, view_keys=False)
+    finally:
+        sc.render.engine = eng
+        for o in hid:
+            o.hide_render = False
+        for x in hc:
+            x.hide_render = False
+        meshes = {t.data for t in tmp}
+        for t in tmp:
+            bpy.data.objects.remove(t)
+        for me in meshes:
+            if me.users == 0:
+                bpy.data.meshes.remove(me)
+        sh.light, sh.color_type = old[0], old[1]; sh.single_color = old[2]; sh.show_cavity = old[3]
+
+
+def formshots(name, views, res=600, tag="n56"):
+    """q13: the real form - Workbench studio light, custom normals cleared, no toon paint, no outline shell."""
+    return _plain_render(name, views, res, tag, "form", False)
+
+
+def wireshots(name, views, res=900, tag="n56", parts=True):
+    """q13: flat grey faces + wireframe (eye white / iris / lid / brow flat-coloured) - see every face."""
+    return _plain_render(name, views, res, tag, "wire", parts)
+
+
+def wire_view(name, yaw, ortho, dx, cz, res=900, tag="n56"):
+    """Wireframe with the view keys set for this yaw (how the eye parts actually deform off-front)."""
+    c = col(tag); set_state(c, None, yaw); bpy.context.view_layer.update()
+    try:
+        return wireshots(name, [("y%03d" % yaw, yaw, ortho, dx, cz)], res=res, tag=tag)
+    finally:
+        set_state(c, None, 0.0)
+
+
+def mk(out, prefix, sfx):
+    """Side-by-side pair _ab/ab_<out>_pair.png from docs/qa/newhead/<prefix>_<sfx>.png (600 px each)."""
+    code = ("import sys\nfrom PIL import Image\nQ, AB, out, prefix = sys.argv[1:5]\nsfx = sys.argv[5:]\n"
+            "b = Image.new('RGB', (600 * len(sfx), 600), 'white')\n"
+            "for j, s in enumerate(sfx):\n    b.paste(Image.open(Q + '/%s_%s.png' % (prefix, s)).convert('RGB').resize((600, 600)), (j * 600, 0))\n"
+            "b.save(AB + '/ab_%s_pair.png' % out)\n")
+    os.makedirs(AB, exist_ok=True)
+    pth = os.path.join(AB, "mkpair2.py"); open(pth, "w").write(code)
+    return _py([pth, Q, AB, out, prefix] + list(sfx))
+
+
+def ab2(a, b, ref="ref_pair", aspects=None):
+    """TypeSafe A/B (typesafe_ab_compare.py) of _ab/ab_<a>_pair.png vs ab_<b>_pair.png against _ab/<ref>.png."""
+    out = os.path.join(AB, "ts_%s_vs_%s.json" % (a, b))
+    args = [os.path.join(TOOLS, "typesafe_ab_compare.py"), out, "A=" + os.path.join(AB, "ab_%s_pair.png" % a),
+            "B=" + os.path.join(AB, "ab_%s_pair.png" % b), "REF=" + os.path.join(AB, ref + ".png")]
+    if aspects:
+        args += ["--aspects", aspects]
+    return _py(args, timeout=300)
+
+
+for _f in (ab_build, formshots, wireshots, wire_view, mk, ab2):
+    ns[_f.__name__] = _f
 print("session helpers ready")
