@@ -1,3 +1,9 @@
 {
-  "packs": []
+  "packs": [
+    {
+      "id": "head_mhs3_n56",
+      "library": "humanoid",
+      "folder": "humanoid/bodies/adult/head_mhs3_n56"
+    }
+  ]
 }

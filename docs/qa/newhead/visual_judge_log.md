@@ -508,3 +508,34 @@ the 3/4 ... look like buckteeth, and ... in 3/4 [happy, laugh, amazed, shout, po
   only on the PC).
 Boards: q16_board.png, q16_mouth_34.png (q15 row / q16 row / pout + talk_e + happy), q16_expression_sheet.png,
 q16_expression_sheet_34.png; checks q16_expression_check_34.json, q16_expression_check_front.json.
+
+## q17 (2026-10-15) - mouth matched to MHS3 references; head exported into the creator
+Sammy: "The mouth needs a lot of work. Find references from mhs3 and try to match the mouth on them ... upload the model
+to the tool ... make sure the elements are separated so the tool can tweak them precisely."
+- References: Sammy supplied MHS3 frames with open mouths; six square face crops with landmarks are in
+  docs/reference/mhs3/mouth/ (README). New judge section `mouth_open` in typesafe_section_judge.py (opening shape,
+  teeth band, interior, tongue, outline, corners, lower-lip shade). Pairs judged: happy / shout vs Eleanor's open
+  laugh (m02) and the kid's smile (m07), laugh vs the closed-eye laugh (m08), talk_a / talk_e at 3/4 vs Eleanor talking
+  at 3/4 (m01, m03).
+- What the references share and ours lacked: a flat top edge and a deep round bowl (ours: a crescent with upturned,
+  tapered corners), no dark line along the bottom edge, a thinner top line when open, a brown-maroon interior
+  (96,56,56 sRGB) and a salmon tongue (210,115,95), a thin teeth band, talking mouths open as a real lens.
+- Rounds (mean p_same of the six pairs): q16 0.191; d1/d2 profile + flat top 0.218 / 0.228; e1/e2 superellipse
+  0.212 / 0.206 (flat-bottomed boxes); f1/f2 deeper ellipse 0.255 / 0.265; g1/g2 sine-spaced samples + bigger tongue
+  0.282 / 0.279; h1/h2 bowl profile (D 0.95-1.2) 0.289 / 0.297; i1 (D open 0.080 width 0.90, tongue cap 0.36) 0.309;
+  final 0.300. TypeSafe kept naming "rounder bottom edge" as the biggest remaining difference in every pair.
+- A/B against the MHS3 crops (both orders), q16 vs q17: "expression" -> q17 for happy, laugh, shout and talk_e;
+  "nose_mouth" orders disagree; "clean" tie.
+- The flat top made the shout read "happy" (shout front happy/determined, p_clear 0.56 -> 0.28): the shout (S shape)
+  keeps its downturned corners -> shout/shout again (0.445 front, 0.58 3/4).
+- Recognition (13 labels): front 7/13, mean p_clear 0.627 -> 0.636; 3/4 7/13, 0.660 -> 0.672. happy 0.65 -> 0.76,
+  laugh 0.38 -> 0.58 (still read as "happy"); amazed 0.74 -> 0.60.
+- Creator: `export_head_pack.py` writes library/humanoid/bodies/adult/head_mhs3_n56 (23 meshes: CHR_Head, CHR_Ears and
+  every face element per side, each with its own ID-/PF- keys; flat-colour "_emiss" materials for the painted parts,
+  lit skin; DEF-Head + 10 SOC- sockets; VW- keys left out; app-name aliases PF-BrowRaise/Lower/Furrow, PF-Squint,
+  PF-LidUpperDown, PF-VisSmall/Mid/IH/OO, PF-Surprise). check_pack: 2 FAIL by design (height / origin: a head is not a
+  full body), orphan-key warnings for keys the app does not drive yet. New scripts/e2e_head_pack.cjs in the real app
+  (headless): import, apply as body, 23 element meshes, 4 identity sliders and 5 performance keys move the right
+  element, face captures: E2E OK. The skin's bent Blender normals drew pink shadow blotches in the app: the export
+  clears them (smooth normals) -> clean toon shading (q17_app_head.png).
+Boards: q17_mouth_refs.png, q17_app_head.png, q17_expression_sheet.png, q17_expression_sheet_34.png.

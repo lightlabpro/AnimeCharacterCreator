@@ -1,0 +1,8 @@
+{
+  "id": "head_mhs3_n56",
+  "display_name": "MHS3 head n56 (test, head only)",
+  "library": "humanoid",
+  "slot": "body_adult",
+  "socket": "SOC-Neck",
+  "notes": "Head only (q17 test pack): every face element is its own mesh (CHR_*), ID-/PF- keys per element."
+}

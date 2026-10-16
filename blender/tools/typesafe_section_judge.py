@@ -30,6 +30,7 @@ BOXES = {
     "mouth": (0.42, ("m", -0.14), ("m", 0.18)),
     "jaw_chin": (0.80, ("m", -0.22), ("c", 0.08)),
     "lower_face": (1.00, ("e", 0.05), ("c", 0.10)),
+    "mouth_open": (0.42, ("m", -0.16), ("m", 0.22)),      # q17: open-mouth style (teeth, interior, tongue, outline)
 }
 MENUS = {
     "brows": ["thicker", "thinner", "longer", "shorter", "more angled down toward the nose", "flatter", "higher",
@@ -42,12 +43,17 @@ MENUS = {
               "smaller under-lip shadow"],
     "jaw_chin": ["narrower jaw", "wider jaw", "longer chin", "shorter chin", "pointier chin", "rounder chin",
                  "more angular jaw corner", "softer jaw corner"],
+    "mouth_open": ["open wider (taller opening)", "less open", "wider mouth", "narrower mouth", "rounder bottom edge (D shape)",
+                   "straighter top edge", "thinner upper teeth band", "thicker upper teeth band", "bigger tongue",
+                   "smaller tongue", "darker mouth interior", "lighter mouth interior", "no dark line along the bottom edge",
+                   "heavier dark line along the top edge", "softer, rounder mouth corners", "lower lip shade closer under the mouth"],
     "lower_face": ["narrower lower face", "wider lower face", "longer lower face", "shorter lower face",
                    "fuller cheeks", "flatter cheeks", "straighter jaw line", "more curved jaw line"],
 }
 WHAT = {"brows": "eyebrows", "eyes": "eyes (opening, iris, lid line)", "nose": "nose (bridge highlight, tip shadow)",
         "mouth": "mouth (lip line and the shadow under the lower lip)", "jaw_chin": "jaw and chin",
-        "lower_face": "lower half of the face: cheeks, jaw line and chin outline"}
+        "lower_face": "lower half of the face: cheeks, jaw line and chin outline",
+        "mouth_open": "open mouth (its outline, the opening shape, upper teeth, dark interior, tongue and the lip shade under it)"}
 
 
 def crop(path, lm, sec, size):

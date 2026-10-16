@@ -93,5 +93,25 @@ Open items first. Claude Code reads this at session start and moves finished ite
   `PF-VisAA` (wider), `PF-VisWide` (less boxy), teeth band thinner in every open key, `PF-EyeHappy` (lower lid higher).
   Preset `pout` now Pout + Frown 0.5 + EyeAngry 0.3 + LookLeft 0.4 + BrowInnerUp 0.5 (expressions.json). No new keys.
 
+- **2026-10-15 - first head pack for the app: head_mhs3_n56 (chat, q17).**
+  `library/humanoid/bodies/adult/head_mhs3_n56/` (+ manifest entry), exported by `blender/newhead/export_head_pack.py`.
+  Head only, applied as the body (the procedural body hides). Every face element is its own mesh so the app can tweak it:
+  CHR_Head, CHR_Ears, CHR_EyeWhite_L/R, CHR_Iris_L/R, CHR_LidLine_L/R, CHR_LidCover_L/R, CHR_Brow_L/R,
+  CHR_BrowShade_L/R, CHR_NoseShade, CHR_NoseHighlight, CHR_NoseLine, CHR_MouthLine, CHR_MouthInside, CHR_TeethUpper,
+  CHR_Tongue, CHR_MouthLower, CHR_LipShadow. Painted parts use flat materials named `*_emiss` (black base + emissive),
+  skin is `Skin_n56`. Armature CHR_Armature with DEF-Head; sockets SOC-HeadTop, HairScalp, HairFront, HairSide_L/R,
+  HairBack, Ear_L/R, Eyewear, Neck. `node scripts/e2e_head_pack.cjs --pack <lib>` passes (sliders eye.size,
+  mouth.width, jaw.width, ear.size; PF-Blink_L, PF-SmileOpenJaw, PF-VisAA, PF-JawOpen, PF-BrowInnerUp_L).
+  Asks for the app side:
+  - keys the head has that the app does not drive (check_pack orphan warnings): PF-EyeHappy, PF-EyeSad, PF-EyeAngry,
+    PF-EyeWide is driven; PF-Look{Left,Right,Up,Down} (gaze), PF-IrisSmall, PF-NoseSneer, PF-MouthWide, PF-MouthNarrow,
+    PF-BrowUp/Down/Angry (aliased in the export to PF-BrowRaise/Lower/Furrow), PF-EyeHappy -> PF-Squint and PF-EyeSad ->
+    PF-LidUpperDown are aliased too. Gaze through the PF-Look keys would let the creator move the painted irises.
+  - camera-angle keys (VW-Yaw_L/R, VW-Side_L/R: eyes / brows reshaped for 3/4 and side) exist in Blender but are not
+    exported; the app would need to set them from the view yaw (weights in blender/newhead/view_keys.view_weights).
+  - check_pack treats bodies/ packs as full bodies (height, origin at the feet): a head-only test pack fails those two
+    by design. A "head" slot or a check exemption would make this explicit.
+  - new mouth objects / colours: interior (96,56,56), tongue (210,115,95) sRGB, teeth band thinner (see q17 log).
+
 ## Done
 (none yet)
