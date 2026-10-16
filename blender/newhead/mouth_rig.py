@@ -22,8 +22,9 @@ import json
 import os
 
 MOUTH_N = 25           # samples across the mouth
-MOUTH_TEETH_H = 0.013  # H: upper teeth band height (capped at 45% of the opening); q15 0.011 -> 0.013
-MOUTH_LIFT = dict(inside=0.0010, tongue=0.0015, teeth=0.0019, lower=0.0023, line=0.0026)   # q15: m off the skin per layer (was 0.0013 / 0.0015 / 0.0016 / 0.0018 / 0.0020: the layers z-fought into jagged tongue and teeth edges)
+MOUTH_TEETH_H = 0.009  # H: upper teeth band height (capped at MOUTH_TEETH_CAP of the opening); q16 0.013 -> 0.009 (Sammy: buckteeth at 3/4)
+MOUTH_TEETH_CAP = 0.30
+MOUTH_LIFT = dict(inside=0.0010, tongue=0.0015, teeth=0.0019, lower=0.0023, line=0.0026)   # q16: halving them brought the jagged tongue edge back   # q15: m off the skin per layer (was 0.0013 / 0.0015 / 0.0016 / 0.0018 / 0.0020: the layers z-fought into jagged tongue and teeth edges)
 MOUTH_TONGUE_H = 0.013  # H: tongue height (capped at 40% of the opening)
 C_INSIDE = (0.20, 0.035, 0.035, 1)
 C_TEETH = (0.88, 0.86, 0.82, 1)
@@ -37,15 +38,15 @@ MOUTH_KEYS = {
     "PF-Smirk_R": dict(corner_r=0.030, corner_l=-0.006),
     "PF-MouthWide": dict(width=1.18),
     "PF-MouthNarrow": dict(width=0.80),
-    "PF-Pout": dict(width=0.55, mid=0.007, corner=-0.012, open=0.006, shape="O"),
-    "PF-VisAA": dict(width=0.86, open=0.050, up=0.003, shape="A"),
+    "PF-Pout": dict(width=0.55, mid=0.007, corner=-0.012, open=0.006, shape="O", shadow_up=0.010, shadow_w=0.8, shadow_h=1.2),   # q16: small pucker + raised fuller lip shadow (TypeSafe p_clear 0.57, first "pout" vote)   # q16: closed, small, pushed-out lower lip (was a small open O that read sad)
+    "PF-VisAA": dict(width=0.98, open=0.050, up=0.003, shape="A"),   # q16: 0.86 -> 0.98 (section judge at 3/4 vs Leo talking: "wider")
     "PF-VisOH": dict(width=0.46, open=0.042, up=0.010, shape="O"),
     "PF-VisEE": dict(width=1.10, open=0.022, corner=0.004, shape="E"),
     "PF-SmileOpenJaw": dict(width=1.02, open=0.044, corner=0.014, up=-0.002, shape="D"),
     "PF-JawOpen": dict(width=0.97, open=0.032, shape="A"),   # q15: the painted opening of the jaw drop (add_jaw_key moves the chin)
     "PF-VisWide": dict(width=0.92, open=0.074, corner=-0.006, up=0.010, shape="S"),   # q15: was a flat lens (A, 0.064): squarer, taller shout
 }
-_PROFILE = {"A": 0.6, "O": 0.5, "E": 0.22, "D": 0.85, "S": 0.3}
+_PROFILE = {"A": 0.6, "O": 0.5, "E": 0.22, "D": 0.85, "S": 0.45}   # q16: S 0.3 -> 0.45 (box-like square ends at 3/4)
 
 MOUTH_EXPRESSIONS = {
     # q14b: the default brows slope down toward the nose (identity: BROW_INNER_DROP), so TypeSafe read the neutral face
@@ -60,7 +61,7 @@ MOUTH_EXPRESSIONS = {
     "worried": {"PF-BrowInnerUp_L": 1, "PF-BrowInnerUp_R": 1, "PF-BrowSad": 0.5, "PF-EyeSad": 0.6, "PF-EyeWide": 0.3, "PF-Frown": 0.7, "PF-MouthNarrow": 0.4},
     "determined": {"PF-BrowAngry": 0.4, "PF-EyeAngry": 0.3, "PF-Smirk_L": 1, "PF-BrowRaise_R": 0.3, "PF-SmileClosed": 0.3},   # q15: + SmileClosed (determined both orders)
     "skeptical": {"PF-BrowRaise_L": 1, "PF-BrowLower_R": 1, "PF-Smirk_R": 0.8, "PF-LookRight": 0.3},
-    "pout": {"PF-Pout": 1, "PF-BrowSad": 0.6, "PF-BrowInnerUp_L": 0.5, "PF-BrowInnerUp_R": 0.5},
+    "pout": {"PF-Pout": 1, "PF-Frown": 0.5, "PF-EyeAngry": 0.3, "PF-LookLeft": 0.4, "PF-BrowInnerUp_L": 0.5, "PF-BrowInnerUp_R": 0.5},   # q16: sulky, eyes aside
     "blink": {"PF-Blink_L": 1, "PF-Blink_R": 1, "PF-BrowInnerUp_L": 0.3, "PF-BrowInnerUp_R": 0.3},
     "talk_a": {"PF-VisAA": 0.6},
     "talk_o": {"PF-VisOH": 0.7},
@@ -76,6 +77,7 @@ def mouth_shape(p):
     z_up = MOUTH_Z + 0.004 - 0.010 * u ** 2                         # the closed line (as before)
     z_up = z_up + p.get("corner", 0.0) * np.abs(u) ** 3 + p.get("mid", 0.0) * (1 - u ** 2) + p.get("up", 0.0) * (1 - u ** 2)
     z_up = z_up + p.get("corner_l", 0.0) * np.clip(u, 0, 1) ** 3 + p.get("corner_r", 0.0) * np.clip(-u, 0, 1) ** 3
+    z_up = z_up + p.get("flat", 0.0) * 0.010 * u ** 2                 # q16: 1 cancels the closed line's downward curve
     op = p.get("open", 0.0)
     prof = (1 - u ** 2) ** _PROFILE.get(p.get("shape", "A"), 0.6)
     if p.get("shape") == "D":                                        # open smile: flat top, round deep bottom
@@ -147,20 +149,25 @@ def build_mouth(ob, col, off_x, tag):
         out["NewMouthInside"] = rows_of(list(zip(x, zu)), list(zip(x, zl)), MOUTH_LIFT["inside"])
         uu = np.abs(np.linspace(-1, 1, MOUTH_N))
         # q15: smooth end taper (the hard cut at |u| 0.8 left white spikes at the band ends); the top sits just under the lip line
-        th = np.minimum(MOUTH_TEETH_H, 0.45 * gap) * np.clip(1 - (uu / 0.86) ** 4, 0, 1) ** 0.5
+        th = np.minimum(MOUTH_TEETH_H, MOUTH_TEETH_CAP * gap) * np.clip(1 - (uu / 0.88) ** 2, 0, 1) ** 0.5   # q16: rounded band ends
         tt0 = zu - np.minimum(0.0015, 0.2 * gap)
         out["NewMouthTeeth"] = rows_of(list(zip(x, tt0)), list(zip(x, tt0 - th)), MOUTH_LIFT["teeth"])
         tg = np.minimum(MOUTH_TONGUE_H, 0.40 * gap) * np.clip(1 - np.linspace(-1, 1, MOUTH_N) ** 2 / 0.55, 0, 1)
         tb = zl + np.minimum(0.0012, 0.15 * gap)                       # q15: inset from the inside edge (no shared edge)
         out["NewMouthTongue"] = rows_of(list(zip(x, tb + tg)), list(zip(x, tb)), MOUTH_LIFT["tongue"])
         lw = 0.0032 * np.clip(p.get("open", 0.0) / 0.02, 0, 1) * (0.2 + 0.8 * s)
-        out["NewMouthLower"] = line_rows(x, zl, lw, MOUTH_LIFT["lower"])
+        zlw = zl
+        if p.get("lip"):                                               # q16: closed-mouth lower lip (pout): a short arc under the line
+            lw = 0.0026 * np.clip(1 - (uu / 0.7) ** 2, 0, 1) ** 0.7
+            zlw = float(zu[MOUTH_N // 2]) - p["lip"] * (0.35 + 0.65 * (1 - uu ** 2))   # a "u" under the line, deepest in the middle
+        out["NewMouthLower"] = line_rows(x, zlw, lw, MOUTH_LIFT["lower"])
         # under-lip shadow: same lens as LIP_SHADOW (apply_look face_strokes), following the lower edge down
         ipd = 2 * EYE_X; wd, ht = LIP_SHADOW_W * ipd, 0.050 * ipd * LIP_SHADOW
         n = MOUTH_N; tt = np.linspace(-1, 1, n)
         drop = float(np.max(gap))
-        sx = wd / 2 * tt; sz = MOUTH_Z - 0.040 - drop * 0.9 - 0.003 * (1 - tt ** 2)
-        sw = ht * (0.1 + 0.9 * np.sin(np.pi * (tt + 1) / 2) ** 0.6)
+        sx = wd / 2 * tt * p.get("shadow_w", 1.0)
+        sz = MOUTH_Z - 0.040 + p.get("shadow_up", 0.0) - drop * 0.9 - 0.003 * (1 - tt ** 2)
+        sw = ht * p.get("shadow_h", 1.0) * (0.1 + 0.9 * np.sin(np.pi * (tt + 1) / 2) ** 0.6)   # q16: pout raises a fuller, shorter lip shadow
         out["NewLipShadow"] = line_rows(sx, sz, sw, 0.0006)
         return out
 
@@ -216,6 +223,38 @@ def shift_eye_parts(col, dy=0.0015):
 JAW_THETA = 0.10       # q15: PF-JawOpen hinge rotation (rad) of the skin below the mouth line
 
 
+MOUTH_YAW_SHIFT = 0.0   # q16: off - TypeSafe recognition at 3/4 fell with 0.003 (determined 0.725 -> 0.43, happy 0.62 -> 0.59); was   # q16: m the mouth pieces move toward the far cheek at 3/4 (VW-Yaw keys; Leo 3/4: far / near half of the
+                          # mouth from the nose tip 45 / 65 px, ours 35 / 75)
+
+
+def add_mouth_view_keys(col, tag, shift=MOUTH_YAW_SHIFT):
+    """q16: VW-Yaw_L / VW-Yaw_R on the mouth pieces and the lip shadow (set_view drives them by name with the head's)."""
+    if not shift:
+        return
+    from mathutils.bvhtree import BVHTree
+    head = col.objects.get("NEW_Head_" + tag)
+    hk = head.data.shape_keys.key_blocks[0]
+    HP = np.empty(len(hk.data) * 3, np.float32); hk.data.foreach_get("co", HP); HP = HP.reshape(-1, 3)
+    tree = BVHTree.FromPolygons([tuple(v) for v in HP], [tuple(f.vertices) for f in head.data.polygons])
+
+    def skin_y(p_):                                   # front-most skin within +-3 mm (the lip groove does not count)
+        ys = [h[0].y for dz in (0.0, -0.0015, 0.0015, -0.003, 0.003)
+              for h in [tree.ray_cast(Vector((float(p_[0]), -1.0, float(p_[2]) + dz)), Vector((0, 1, 0)))] if h[0] is not None]
+        return min(ys) if ys else float(p_[1])
+    for nm in ("NewMouthLine", "NewMouthInside", "NewMouthTeeth", "NewMouthTongue", "NewMouthLower", "NewLipShadow"):
+        o = col.objects.get(nm + "_" + tag)
+        if o is None or not o.data.shape_keys:
+            continue
+        kb0 = o.data.shape_keys.key_blocks[0]
+        P = np.empty(len(kb0.data) * 3, np.float32); kb0.data.foreach_get("co", P); P = P.reshape(-1, 3)
+        for kname, sgn in (("VW-Yaw_L", -1.0), ("VW-Yaw_R", 1.0)):     # VW-Yaw_L is the camera on the character's left
+            far = np.clip(sgn * P[:, 0], 0, None)                     # distance out on the far side
+            Q = P.copy(); Q[:, 0] += sgn * shift * (1 - 0.7 * smooth(0.010, 0.026, far))   # the far corner stays inside the cheek line
+            Q[:, 1] += np.array([skin_y(q) - skin_y(p_) for p_, q in zip(P, Q)])   # keep the height over the skin
+            kb = o.shape_key_add(name=kname, from_mix=False); kb.value = 0.0
+            kb.data.foreach_set("co", Q.ravel())
+
+
 def add_jaw_key(col, tag, theta=JAW_THETA):
     """q15: PF-JawOpen on the head - the skin below the mouth line turns down and back about a hinge under the ear
     (0 at the mouth line and at the neck); the mouth strips carry the matching painted opening (MOUTH_KEYS)."""
@@ -236,6 +275,7 @@ def add_jaw_key(col, tag, theta=JAW_THETA):
     kb = head.shape_key_add(name="PF-JawOpen", from_mix=False); kb.value = 0.0
     kb.data.foreach_set("co", Q.astype(np.float32).ravel())
     print("q15 PF-JawOpen: %d verts, chin drop %.1f mm" % (int((w > 0.01).sum()), 1000 * (P[:, 2] - Q[:, 2]).max()))
+    add_mouth_view_keys(col, tag)
 
 
 def add_nose_keys(col, tag, up=0.0020, widen=1.14):

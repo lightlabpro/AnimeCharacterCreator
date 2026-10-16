@@ -102,7 +102,7 @@ def expression_offsets(name, X, U, L):
     if name == "Angry":
         return (0.12 * X - 0.10) * w, 0.06 * w
     if name == "Happy":
-        return -0.06 * w, 0.32 * w
+        return -0.06 * w, 0.42 * w                       # q16: 0.32 -> 0.42 (thinner smiling crescent; the iris half under the arc read as a squint)
     return 0 * X, 0 * X
 
 

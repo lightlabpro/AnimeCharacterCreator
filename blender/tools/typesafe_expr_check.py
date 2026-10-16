@@ -28,12 +28,14 @@ DESC = {
 
 def main():
     out = sys.argv[1]
-    items = [a.split("=", 1) for a in sys.argv[2:] if "=" in a and not a.startswith("--")]
-    labels = sorted({k for k, _ in items} | {"neutral"})
+    items = [a.split("=", 1) for a in sys.argv[2:] if "=" in a and not a.startswith("--") and "," not in a.split("=")[0]]
+    arg = lambda n: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else None
+    labels = sorted(set(arg("--labels").split(",")) if arg("--labels") else ({k.split("@")[0] for k, _ in items} | {"neutral"}))
     crit = {k: "The face shows %s." % DESC.get(k, k) for k in labels}
     crit["unclear"] = "The expression is unclear or does not match any of these."
     res = {"items": {}}
-    for lab, path in items:
+    for key, path in items:
+        lab = key.split("@")[0]               # "pout@p1=..." scores variant p1 of pout
         pid = "img-" + uuid.uuid4().hex
         picks = []
         for order in (0, 1):
@@ -45,9 +47,9 @@ def main():
                   "clear": {"type": "noul", "instructions": "Look at `face_image`. Does the face clearly show %s?" % DESC.get(lab, lab)}}
             r = ask(MODEL, {"face_image": pid}, qs, {pid: image_asset(path)}, True, False)["answers"]
             picks.append((r["which"].get("choice"), float(r["clear"]["noul"])))
-        res["items"][lab] = {"picks": [p[0] for p in picks], "recognised": picks[0][0] == picks[1][0] == lab,
+        res["items"][key] = {"picks": [p[0] for p in picks], "recognised": picks[0][0] == picks[1][0] == lab,
                              "p_clear": round((picks[0][1] + picks[1][1]) / 2, 3)}
-        print(lab, res["items"][lab])
+        print(key, res["items"][key])
     n = len(res["items"]); k = sum(v["recognised"] for v in res["items"].values())
     res["recognition_rate"] = round(k / max(n, 1), 3)
     res["mean_p_clear"] = round(sum(v["p_clear"] for v in res["items"].values()) / max(n, 1), 3)

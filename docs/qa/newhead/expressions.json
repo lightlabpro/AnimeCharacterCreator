@@ -88,7 +88,9 @@
  },
  "pout": {
   "PF-Pout": 1,
-  "PF-BrowSad": 0.6,
+  "PF-Frown": 0.5,
+  "PF-EyeAngry": 0.3,
+  "PF-LookLeft": 0.4,
   "PF-BrowInnerUp_L": 0.5,
   "PF-BrowInnerUp_R": 0.5
  },

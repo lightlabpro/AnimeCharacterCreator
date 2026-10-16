@@ -1,0 +1,110 @@
+{
+ "items": {
+  "neutral": {
+   "picks": [
+    "angry",
+    "angry"
+   ],
+   "recognised": false,
+   "p_clear": 0.45
+  },
+  "smile": {
+   "picks": [
+    "smile",
+    "smile"
+   ],
+   "recognised": true,
+   "p_clear": 0.775
+  },
+  "happy": {
+   "picks": [
+    "happy",
+    "happy"
+   ],
+   "recognised": true,
+   "p_clear": 0.61
+  },
+  "laugh": {
+   "picks": [
+    "happy",
+    "happy"
+   ],
+   "recognised": false,
+   "p_clear": 0.42
+  },
+  "amazed": {
+   "picks": [
+    "amazed",
+    "amazed"
+   ],
+   "recognised": true,
+   "p_clear": 0.7
+  },
+  "sad": {
+   "picks": [
+    "sad",
+    "sad"
+   ],
+   "recognised": true,
+   "p_clear": 0.895
+  },
+  "angry": {
+   "picks": [
+    "angry",
+    "angry"
+   ],
+   "recognised": true,
+   "p_clear": 0.75
+  },
+  "shout": {
+   "picks": [
+    "shout",
+    "shout"
+   ],
+   "recognised": true,
+   "p_clear": 0.61
+  },
+  "worried": {
+   "picks": [
+    "sad",
+    "sad"
+   ],
+   "recognised": false,
+   "p_clear": 0.85
+  },
+  "determined": {
+   "picks": [
+    "determined",
+    "determined"
+   ],
+   "recognised": true,
+   "p_clear": 0.715
+  },
+  "skeptical": {
+   "picks": [
+    "sad",
+    "sad"
+   ],
+   "recognised": false,
+   "p_clear": 0.345
+  },
+  "pout": {
+   "picks": [
+    "sad",
+    "sad"
+   ],
+   "recognised": false,
+   "p_clear": 0.56
+  },
+  "blink": {
+   "picks": [
+    "sad",
+    "sad"
+   ],
+   "recognised": false,
+   "p_clear": 0.9
+  }
+ },
+ "recognition_rate": 0.538,
+ "mean_p_clear": 0.66
+}

@@ -87,5 +87,11 @@ Open items first. Claude Code reads this at session start and moves finished ite
     (`CHIN_WIDE_BAKE` 0.045), smoothed jaw/neck junction (`JAW_NECK_SMOOTH`). Base mesh shape only, no topology or
     key-name change.
 
+- **2026-10-15 - ear default size, mouth key shapes (chat, q16).**
+  n56 head: the rebuilt ear is ~15 % smaller by default (`ear_mhs3.EAR_H_SCALE` 0.90; ID-EarSize / _Neg unchanged, so the
+  creator's ear slider range starts smaller). Changed shapes, same names: `PF-Pout` (small pucker + raised lip shadow),
+  `PF-VisAA` (wider), `PF-VisWide` (less boxy), teeth band thinner in every open key, `PF-EyeHappy` (lower lid higher).
+  Preset `pout` now Pout + Frown 0.5 + EyeAngry 0.3 + LookLeft 0.4 + BrowInnerUp 0.5 (expressions.json). No new keys.
+
 ## Done
 (none yet)

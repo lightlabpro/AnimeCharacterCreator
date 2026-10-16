@@ -23,7 +23,7 @@ import bpy
 import numpy as np
 
 EAR_N = 16              # grid cells per side (front face): 256 quads per ear before the Subdivision level
-EAR_H_SCALE = 1.06      # new height / old ear height
+EAR_H_SCALE = 0.90      # new height / old ear height (q16 1.06 -> 0.90: at 3/4 ours 0.59 D tall vs Leo 0.49 D; Sammy: too big, the creator scales it)
 EAR_WH = 0.52           # width / height
 EAR_FWD = 0.0           # move the ear forward (+) / back (-) along the head, x height
 EAR_THICK = 0.0030      # m

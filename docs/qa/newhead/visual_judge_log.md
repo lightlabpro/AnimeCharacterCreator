@@ -479,3 +479,32 @@ elements and expressions ... subdivide face into sections for analysis and compa
   (orders disagree).
 Boards: q15_board.png, q15_lower_face.png, q15_mouth.png, q15_expression_sheet.png, q15_expression_sheet_34.png;
 check results q15_expression_check.json, sec_q15_front.json, sec_q15_34.json.
+
+## q16 (2026-10-15) - ears, pout, teeth at 3/4, 3/4 expressions
+Sammy: "The ears look too big (the creator will tweak size and shape), the pout expression can be reworked, the teeth on
+the 3/4 ... look like buckteeth, and ... in 3/4 [happy, laugh, amazed, shout, pout, talk_a/o/e] look not that great."
+- Ears: at 3/4 ours were 0.59 eye-to-chin units tall vs Leo 0.49; `EAR_H_SCALE` 1.06 -> 0.90 (ID-EarSize keys unchanged
+  for the creator). Front+3/4 A/B q15 vs q16: clean -> q16 (both orders), artifacts 0.745 -> 0.66; ears / overall: the
+  orders disagree.
+- Teeth: band 0.013 -> 0.009 H, capped at 30 % of the opening (was 45 %), rounded ends - a thin strip under the lip line
+  instead of a tall slab. Halving the layer offsets to cut 3/4 parallax brought the jagged tongue edge back, so they
+  stay.
+- Shout: S profile 0.3 -> 0.45 (the far end read as a box at 3/4). talk_a (PF-VisAA) wider 0.86 -> 0.98 (section judge
+  at 3/4 against Leo's talking mouth: "wider").
+- Happy eyes: lower lid rises 0.32 -> 0.42 (thinner smiling crescent).
+- Mouth placement at 3/4: tried VW-Yaw keys on the mouth pieces shifting them 3-4 mm toward the far cheek (Leo's far /
+  near mouth halves 45 / 65 px from the nose tip, ours 35 / 75), with the depth re-read from the skin. TypeSafe 3/4
+  recognition fell (determined 0.725 -> 0.43, happy 0.62 -> 0.59), so the shift is off (`MOUTH_YAW_SHIFT = 0`).
+- Pout: TypeSafe never picked "pout" for the old preset (sad / worried). Tried closed mouths with a lower-lip arc (p1-p3),
+  four brow / eye sets, an arched mouth with a raised lip shadow: all read "neutral" (p_clear 0.27-0.52). Chosen: the
+  small pucker (old shape) + a raised, fuller lip shadow + sulky eyes (Frown 0.5, EyeAngry 0.3, LookLeft 0.4, inner brows
+  up 0.5): front "pout" in one order (first time), p_clear 0.58.
+- Recognition (13 labels): 3/4 7/13, mean p_clear 0.665 (q15) -> 0.660; front 7/13, 0.632 -> 0.627 - unchanged within
+  noise; pout front sad/sad -> pout/neutral. Per-expression 3/4 A/B q15 vs q16 ("expression", "nose_mouth", "clean"):
+  ties or the orders disagree for all eight, so the teeth / shout / talk changes rest on the renders, not on TypeSafe.
+- Tooling: `typesafe_expr_check.py` takes `label@variant=image` and `--labels` (score variants against a fixed label
+  set); `session.py` persists `sec` and the landmarks. A headless Blender build (bpy 5.0.1 in the cloud with a stub
+  NG_ToonSkin) reproduces the strokes and geometry for previews when Blender is closed (no TypeSafe there: the key is
+  only on the PC).
+Boards: q16_board.png, q16_mouth_34.png (q15 row / q16 row / pout + talk_e + happy), q16_expression_sheet.png,
+q16_expression_sheet_34.png; checks q16_expression_check_34.json, q16_expression_check_front.json.

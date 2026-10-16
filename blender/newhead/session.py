@@ -333,6 +333,16 @@ def ab2(a, b, ref="ref_pair", aspects=None):
     return _py(args, timeout=300)
 
 
-for _f in (ab_build, formshots, wireshots, wire_view, mk, ab2):
+def sec(out, ours, ref, lo, lr, sections=None):
+    """q15: TypeSafe section judge (typesafe_section_judge.py) of docs/qa/newhead/<ours> vs <ref>; lo / lr landmark strings."""
+    args = [os.path.join(TOOLS, "typesafe_section_judge.py"), os.path.join(Q, out), os.path.join(Q, ours), os.path.join(Q, ref),
+            "--lm-ours", lo, "--lm-ref", lr]
+    if sections:
+        args += ["--sections", sections]
+    return _py(args, timeout=600)
+
+
+ns["LM"] = {"ourf": "300,205,412,512", "reff": "300,185,428,548", "our34": "195,205,412,512", "ref34": "200,210,432,548"}
+for _f in (ab_build, formshots, wireshots, wire_view, mk, ab2, sec):
     ns[_f.__name__] = _f
 print("session helpers ready")
