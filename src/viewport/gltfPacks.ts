@@ -188,6 +188,40 @@ function performanceDriver(root: THREE.Object3D) {
   };
 }
 
+/** Weights of the VW- camera-angle keys for a camera yaw in degrees (+ = toward the character's left). Mirrors
+ * blender/newhead/view_keys.py view_weights (Y34 = 35): VW-Yaw_* peaks at 35 degrees, VW-Side_* at 90. */
+export function viewKeyWeights(yawDeg: number, y34 = 35): Record<string, number> {
+  const sm = (e0: number, e1: number, x: number) => { const t = Math.min(Math.max((x - e0) / (e1 - e0), 0), 1); return t * t * (3 - 2 * t); };
+  const a = Math.abs(yawDeg);
+  const sd = yawDeg >= 0 ? 'L' : 'R';
+  let w34 = a <= y34 ? sm(0, y34, a) : 1 - sm(y34, 90, a);
+  const ws = a <= y34 ? 0 : a <= 90 ? sm(y34, 90, a) : 1 - sm(90, 150, a);
+  if (a > 90) w34 = 0;
+  const w: Record<string, number> = { 'VW-Yaw_L': 0, 'VW-Yaw_R': 0, 'VW-Side_L': 0, 'VW-Side_R': 0 };
+  w[`VW-Yaw_${sd}`] = w34;
+  w[`VW-Side_${sd}`] = ws;
+  return w;
+}
+
+/** Head packs carry VW- keys that reshape the painted face for 3/4 and side views (anime drawing, not perspective).
+ * They are set per mesh right before it draws, from the camera's yaw around the pack, so every camera (viewport,
+ * thumbnails, captures) gets its own weights. */
+function viewKeyDriver(root: THREE.Object3D) {
+  const tmp = new THREE.Vector3();
+  root.traverse((o) => {
+    const mesh = o as THREE.Mesh;
+    if (!mesh.isMesh || !mesh.morphTargetDictionary || !mesh.morphTargetInfluences) return;
+    const map = Object.entries(mesh.morphTargetDictionary).filter(([k]) => k.startsWith('VW-'));
+    if (!map.length) return;
+    mesh.onBeforeRender = (_r, _s, camera) => {
+      tmp.setFromMatrixPosition(camera.matrixWorld);
+      root.worldToLocal(tmp);
+      const w = viewKeyWeights((Math.atan2(tmp.x, tmp.z) * 180) / Math.PI);
+      for (const [k, i] of map) mesh.morphTargetInfluences![i] = w[k] ?? 0;
+    };
+  });
+}
+
 function findSocket(root: THREE.Object3D): THREE.Object3D | null {
   let found: THREE.Object3D | null = null;
   root.traverse((o) => {
@@ -261,6 +295,7 @@ export async function attachPacks(rig: Rig, packs: Map<string, ImportedPack>, is
         applyPackPose(scene, gltf.animations, pose);
         const drive = performanceDriver(scene);
         rig.addUpdater((f) => drive(f.w));
+        viewKeyDriver(scene);
         result.loaded.push(bodyPack.id);
       }).catch((e: unknown) => {
         result.failed.push({ id: bodyPack.id, reason: e instanceof Error ? e.message : String(e) });

@@ -113,5 +113,20 @@ Open items first. Claude Code reads this at session start and moves finished ite
     by design. A "head" slot or a check exemption would make this explicit.
   - new mouth objects / colours: interior (96,56,56), tongue (210,115,95) sRGB, teeth band thinner (see q17 log).
 
+- **2026-10-15 - app now drives the VW- view keys; head pack q18 (chat, q18).**
+  Sammy: "the model looks weird on the tool, like the perspective is not right". Cause: the head is drawn with
+  camera-angle keys (VW-Yaw_L/R, VW-Side_L/R: the skull silhouette, far eye and brows redrawn for 3/4 and side, up to
+  53 mm) that the pack left out and the app never set, so the creator showed the uncorrected 3/4.
+  App change made from the chat side (please review): `src/viewport/gltfPacks.ts` - `viewKeyWeights(yawDeg)` (port of
+  blender/newhead/view_keys.view_weights, Y34 = 35) and `viewKeyDriver(scene)`, called in attachPacks after the
+  performance driver; each mesh with VW- targets sets them in `onBeforeRender` from the camera position in the pack's
+  local frame (yaw = atan2(x, z)), so viewport, thumbnails and captureViews each get their own weights. Test
+  `tests/viewKeys.test.ts`. typecheck / test / build pass; e2e_head_pack OK. No contract names changed (VW- is a new
+  prefix the app only reads from packs that carry it; please add it to the contract if you keep it).
+  Pack changes, same names: CHR_NoseShade / CHR_LipShadow flat colour (173,119,100) sRGB (the export used to take only
+  the mauve tint of the Blender shade group: purple blobs in the app); CHR_Tongue fills the bottom of the opening up to a
+  soft arc; teeth band narrower; open lens/shout corners rounded; open-mouth lip shadow closer and narrower.
+  Still app-side: the skin shadow tint on the neck reads pink-mauve next to Blender's warm brown (toon skin shadow colour).
+
 ## Done
 (none yet)

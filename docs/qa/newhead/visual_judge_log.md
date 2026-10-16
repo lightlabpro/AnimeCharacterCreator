@@ -539,3 +539,28 @@ to the tool ... make sure the elements are separated so the tool can tweak them 
   element, face captures: E2E OK. The skin's bent Blender normals drew pink shadow blotches in the app: the export
   clears them (smooth normals) -> clean toon shading (q17_app_head.png).
 Boards: q17_mouth_refs.png, q17_app_head.png, q17_expression_sheet.png, q17_expression_sheet_34.png.
+
+## q18 (2026-10-15) - "perspective" in the creator, mouth and tongue again
+Sammy: "The mouth still looks weird and so does the tongue. Also, the model looks weird on the tool, like the
+perspective is not right."
+- Perspective: the head's 3/4 look depends on the camera-angle keys (VW-Yaw/Side: skull silhouette, far eye and brows
+  redrawn, up to 53 mm). The pack left them out and the app never set them, so the creator showed the raw 3D 3/4 (far
+  eye sliced by the cheek). The pack now carries them and the app sets them per mesh from the camera yaw
+  (gltfPacks.ts viewKeyWeights / viewKeyDriver, same curve as view_keys.view_weights). Also found: the nose and lip
+  shadows exported as the mauve tint of the Blender shade group (purple blobs in the app); now the rendered colour
+  (173,119,100). Board q18_app_head.png (q17 pack vs now, front / 3/4, neutral / smile / talk). e2e_head_pack OK.
+- Mouth / tongue (mouth_rig.py): tongue now fills the bottom of the opening up to a soft arc (MOUTH_TONGUE_MODE 1,
+  FRAC 0.40, DROOP 0.25) instead of a band (q17) or a floating hump (k1); teeth band narrower (MOUTH_TEETH_W 0.75);
+  lens / shout corners curl down a little (MOUTH_CORNER_DIP 0.007; the open smile D keeps its corners up:
+  MOUTH_CORNER_DIP_D 0 - with the dip laugh read "sad" at 3/4); open-mouth lip shadow closer and narrower
+  (MOUTH_SHADOW_OPEN 1). Tried and dropped: superellipse corners (1.7 / 2.4: boxes), rounder profiles (A/D 0.6-0.75),
+  taller open smile (kb6: a wide box).
+- TypeSafe mouth_open vs the six MHS3 pairs (mean p_same): k1 0.278, b2 0.271, kb4 0.271, kb5 0.271, kb6 0.273,
+  final 0.251. Flat within ~0.02 noise, final slightly lower; every pair still names "rounder bottom edge (D shape)".
+  The judge does not separate these variants, so the final choice rests on the side-by-side with the references
+  (q18_mouth_refs.png) and Sammy's tongue note - not on a TypeSafe win.
+- Recognition (same framing, labels without talk): final front happy 0.75, laugh -> happy (0.455), shout 0.505;
+  3/4 happy 0.63, laugh -> happy (0.395), shout 0.57. k1 front: happy 0.84, laugh -> happy 0.585, shout 0.39. Laugh
+  still reads as "happy" (as in q17); with the smile corner dip it read "sad" at 3/4, hence the D exemption.
+- Process note: device_commit_files from a reused staging path wrote an older copy; stage every upload under a new path.
+Boards: q18_app_head.png, q18_mouth_refs.png.

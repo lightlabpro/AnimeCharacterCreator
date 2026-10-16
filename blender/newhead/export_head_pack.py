@@ -33,6 +33,9 @@ PACK_ID = "head_mhs3_" + TAG
 DISPLAY = "MHS3 head %s (test, head only)" % TAG
 FOLDER = os.path.join(R, "library", "humanoid", "bodies", "adult", PACK_ID)
 SKIN_SRGB = (232, 197, 170)
+SHADE_SRGB = (173, 119, 100)   # q18: the painted nose / lip shadow as Blender renders it (toon shadow + NOSE_TINT, sampled
+                               # on q17_expression_sheet); the shade material is a node group, and the old lookup took only
+                               # its mauve tint, so the app drew a purple nose blob
 CLEAR_NORMALS = True
 
 NAMES = [  # (prefix of the scene object, export name, material kind, colour fallback sRGB)
@@ -69,12 +72,36 @@ SOCKETS = {  # name: (x, y, z) in head units above the chin (S = 0.262 m), y for
 S, O = 0.262, 1.4826
 
 
+FACE_NORMALS = True
+EXPORT_VIEW_KEYS = True   # q18: VW-Yaw_L/R, VW-Side_L/R ride along for the app to drive from the camera yaw (inbox item); the app ignores them until then
+FACE_FORWARD, CHIN_LIT = 2.5, 1.0        # apply_look.py values
+
+
+def _sm(e0, e1, x):
+    t = np.clip((x - e0) / (e1 - e0), 0, 1)
+    return t * t * (3 - 2 * t)
+
+
+def _face_normals(Ph):
+    """apply_look._target_normals: the ellipsoid normal pushed toward the viewer on the face plane (head units)."""
+    y, z = Ph[:, 1], Ph[:, 2]
+    c, r = np.array([0.0, -0.02, 0.47]), np.array([0.40, 0.46, 0.56])
+    pe = (Ph - c) / r ** 2
+    pe /= np.linalg.norm(pe, axis=1, keepdims=True)
+    lo = 0.07 * CHIN_LIT
+    face = _sm(0.0, -0.25, y) * _sm(0.05 - lo, 0.15 - lo, z) * (1 - _sm(0.62, 0.75, z))
+    pe = pe + np.array([0.0, -FACE_FORWARD, 0.0]) * face[:, None]
+    return pe / np.linalg.norm(pe, axis=1, keepdims=True)
+
+
 def _lin(c):
     return tuple(((v / 255.0 + 0.055) / 1.055) ** 2.4 for v in c)
 
 
 def _emission_of(mat, fallback):
     """The flat colour a painted material shows: its Emission colour, else its base colour, else the fallback."""
+    if mat and mat.name.startswith("MAT_PaintShade"):
+        return _lin(SHADE_SRGB), None
     if mat and mat.node_tree:
         for n in mat.node_tree.nodes:
             if n.type == "EMISSION" and not n.inputs["Color"].is_linked:
@@ -173,7 +200,15 @@ def build():
         cp.location = ob.location - off
         if ename == "CHR_Head":
             print("dropped %d masked ear-shell verts" % _drop_masked(cp))
-        if kind == "skin" and CLEAR_NORMALS and cp.data.has_custom_normals:
+        if ename == "CHR_Head" and FACE_NORMALS:
+            # q18: the Blender look shades the face with an analytic normal field (head ellipsoid, face plane turned
+            # toward the viewer: apply_look._target_normals) evaluated per pixel. Baked here as custom normals, so the
+            # app's toon light gives the same clean MHS3 shadow (only at the far edge) instead of shading the raw form
+            co = np.empty(len(cp.data.vertices) * 3, np.float32); cp.data.vertices.foreach_get("co", co); co = co.reshape(-1, 3)
+            Ph = np.stack([co[:, 0] / S, co[:, 1] / S, (co[:, 2] - O) / S], 1)
+            nn = _face_normals(Ph)
+            cp.data.normals_split_custom_set_from_vertices([tuple(v) for v in nn])
+        elif kind == "skin" and CLEAR_NORMALS and cp.data.has_custom_normals:
             # the Blender look bends the skin normals toward a lit direction for its own toon pass; the app lights the
             # real form, and those bent normals drew pink shadow blotches at the temples and the neck
             with bpy.context.temp_override(object=cp, active_object=cp, selected_objects=[cp]):
@@ -192,7 +227,7 @@ def build():
                     kb = cp.shape_key_add(name=app, from_mix=False); kb.data.foreach_set("co", base + f * (d - base))
         if ks:                                            # VW- keys out, every key at 0
             for kb in list(ks.key_blocks[1:]):
-                if kb.name.startswith("VW-"):
+                if kb.name.startswith("VW-") and not EXPORT_VIEW_KEYS:
                     cp.shape_key_remove(kb)
                 else:
                     kb.value = 0.0

@@ -26,7 +26,16 @@ MOUTH_TEETH_H = 0.007  # H: upper teeth band height (capped at MOUTH_TEETH_CAP o
 MOUTH_TEETH_CAP = 0.30
 MOUTH_LIFT = dict(inside=0.0010, tongue=0.0015, teeth=0.0019, lower=0.0023, line=0.0026)   # q16: halving them brought the jagged tongue edge back   # q15: m off the skin per layer (was 0.0013 / 0.0015 / 0.0016 / 0.0018 / 0.0020: the layers z-fought into jagged tongue and teeth edges)
 MOUTH_TONGUE_H = 0.030  # H: tongue height (capped at MOUTH_TONGUE_CAP of the opening)
-MOUTH_TONGUE_CAP = 0.36
+MOUTH_TONGUE_CAP = 0.40
+MOUTH_TONGUE_W = 0.62      # q18: half-width of the tongue hump (share of the mouth half-width)
+MOUTH_TONGUE_INSET = 0.10  # q18: lift of the tongue off the bottom edge (share of the opening)
+MOUTH_TONGUE_MODE = 1      # q18b: 1 = the tongue fills the bottom of the bowl up to a gentle arc (MHS3 m02 / m08), 0 = the k1 hump
+MOUTH_TONGUE_FRAC = 0.40   # q18b: arc height at the centre (share of the centre opening)
+MOUTH_TONGUE_DROOP = 0.25  # q18b: how far the arc falls toward the corners (share of the centre opening at |u| = 1)
+MOUTH_TEETH_W = 0.75       # q18b: teeth band half-width (share of the mouth half-width; was 0.88); MHS3 front laughs show little or no teeth
+MOUTH_CORNER_DIP = 0.007   # q18b: the open top edge curls down at the ends (H at full open) - rounded corners, no flared tips
+MOUTH_CORNER_DIP_D = 0.0   # q18b: the same for the open smile (D); 0.007 made laugh read "sad" at 3/4 (TypeSafe)
+MOUTH_SHADOW_OPEN = 1.0    # q18b: an open mouth pulls the under-lip shadow up toward its bottom edge and narrows it (MHS3: short, close)
 MOUTH_U_SINE = 1       # q17: 1 = sample the mouth width sine-spaced (dense at the corners: no straight end segments)
 
 
@@ -49,7 +58,7 @@ MOUTH_KEYS = {
     "PF-VisAA": dict(width=0.86, open=0.080, up=0.003, shape="A"),   # q16: 0.86 -> 0.98 (section judge at 3/4 vs Leo talking: "wider")
     "PF-VisOH": dict(width=0.46, open=0.042, up=0.010, shape="O"),
     "PF-VisEE": dict(width=0.98, open=0.065, corner=0.004, shape="E"),
-    "PF-SmileOpenJaw": dict(width=0.90, open=0.080, corner=0.0, up=-0.002, shape="D"),
+    "PF-SmileOpenJaw": dict(width=0.95, open=0.068, corner=0.0, up=-0.002, shape="D"),
     "PF-JawOpen": dict(width=0.97, open=0.032, shape="A"),   # q15: the painted opening of the jaw drop (add_jaw_key moves the chin)
     "PF-VisWide": dict(width=0.92, open=0.074, corner=-0.006, up=0.010, shape="S"),   # q15: was a flat lens (A, 0.064): squarer, taller shout
 }
@@ -99,6 +108,8 @@ def mouth_shape(p):
         z_up = z_up + MOUTH_D_BULGE * (1 - u ** 2) * (op / 0.044)
     if p.get("shape") != "S":                                        # q17: the shout keeps its downturned corners
         z_up = z_up + MOUTH_TOP_FLAT * 0.010 * u ** 2 * min(1.0, op / 0.03)
+    dip = MOUTH_CORNER_DIP_D if p.get("shape") == "D" else MOUTH_CORNER_DIP      # q18b: smiles keep their corners up
+    z_up = z_up - dip * np.abs(u) ** 6 * min(1.0, op / 0.03)
     z_lo = z_up - op * prof
     return x, z_up, z_lo
 
@@ -167,11 +178,20 @@ def build_mouth(ob, col, off_x, tag):
         out["NewMouthInside"] = rows_of(list(zip(x, zu)), list(zip(x, zl)), MOUTH_LIFT["inside"])
         uu = np.abs(_mu())
         # q15: smooth end taper (the hard cut at |u| 0.8 left white spikes at the band ends); the top sits just under the lip line
-        th = np.minimum(MOUTH_TEETH_H, MOUTH_TEETH_CAP * gap) * np.clip(1 - (uu / 0.88) ** 2, 0, 1) ** 0.5   # q16: rounded band ends
+        th = np.minimum(MOUTH_TEETH_H, MOUTH_TEETH_CAP * gap) * np.clip(1 - (uu / MOUTH_TEETH_W) ** 2, 0, 1) ** 0.5   # q16: rounded band ends
         tt0 = zu - np.minimum(0.0015, 0.2 * gap)
         out["NewMouthTeeth"] = rows_of(list(zip(x, tt0)), list(zip(x, tt0 - th)), MOUTH_LIFT["teeth"])
-        tg = np.minimum(MOUTH_TONGUE_H, MOUTH_TONGUE_CAP * gap) * np.clip(1 - _mu() ** 2 / 0.55, 0, 1)
-        tb = zl + np.minimum(0.0012, 0.15 * gap)                       # q15: inset from the inside edge (no shared edge)
+        uu_t = np.abs(_mu()) / MOUTH_TONGUE_W
+        hump = np.sqrt(np.clip(1 - uu_t ** 2, 0, 1))                   # q18: a rounded hump in the middle (MHS3), not a band
+        tg = np.minimum(MOUTH_TONGUE_H, MOUTH_TONGUE_CAP * gap) * hump
+        # q18: the tongue sits inside the opening - the dark interior shows below and beside it
+        tb = zl + np.minimum(0.0012, 0.15 * gap) + MOUTH_TONGUE_INSET * gap * hump
+        if MOUTH_TONGUE_MODE == 1:                                     # q18b: bottom of the bowl filled up to a soft arc
+            g0 = float(gap[MOUTH_N // 2]); z0 = float(zl[MOUTH_N // 2])
+            tb = zl + np.minimum(0.0008, 0.10 * gap)
+            ttop = z0 + g0 * (MOUTH_TONGUE_FRAC - MOUTH_TONGUE_DROOP * _mu() ** 2)
+            ttop = np.minimum(ttop, zu - 0.35 * gap)                   # never over the teeth / upper interior
+            tg = np.maximum(ttop - tb, 0.0)
         out["NewMouthTongue"] = rows_of(list(zip(x, tb + tg)), list(zip(x, tb)), MOUTH_LIFT["tongue"])
         lw = 0.0032 * MOUTH_LOWER_OPEN * np.clip(p.get("open", 0.0) / 0.02, 0, 1) * (0.2 + 0.8 * s)
         zlw = zl
@@ -183,8 +203,9 @@ def build_mouth(ob, col, off_x, tag):
         ipd = 2 * EYE_X; wd, ht = LIP_SHADOW_W * ipd, 0.050 * ipd * LIP_SHADOW
         n = MOUTH_N; tt = np.linspace(-1, 1, n)
         drop = float(np.max(gap))
-        sx = wd / 2 * tt * p.get("shadow_w", 1.0)
-        sz = MOUTH_Z - 0.040 + p.get("shadow_up", 0.0) - drop * 0.9 - 0.003 * (1 - tt ** 2)
+        fo = MOUTH_SHADOW_OPEN * min(1.0, drop / 0.06)
+        sx = wd / 2 * tt * p.get("shadow_w", 1.0) * (1 - 0.35 * fo)
+        sz = MOUTH_Z - 0.040 + p.get("shadow_up", 0.0) - drop * 0.9 + 0.016 * fo - 0.003 * (1 - tt ** 2)
         sw = ht * p.get("shadow_h", 1.0) * (0.1 + 0.9 * np.sin(np.pi * (tt + 1) / 2) ** 0.6)   # q16: pout raises a fuller, shorter lip shadow
         out["NewLipShadow"] = line_rows(sx, sz, sw, 0.0006)
         return out
