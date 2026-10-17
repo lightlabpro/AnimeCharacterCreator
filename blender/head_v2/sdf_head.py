@@ -45,11 +45,11 @@ SECT = knob("SECT", [
     [0.30,  0.3625, 0.400, 0.450, 2.4, 2.25],
     [0.35,  0.3675, 0.405, 0.448, 2.6, 2.25],
     [0.40,  0.3670, 0.408, 0.438, 2.9, 2.25],
-    [0.45,  0.3630, 0.402, 0.418, 3.0, 2.25],
-    [0.50,  0.3570, 0.394, 0.395, 2.8, 2.2],
-    [0.55,  0.3520, 0.393, 0.365, 2.20, 2.2],
-    [0.60,  0.3480, 0.393, 0.330, 2.00, 2.2],
-    [0.65,  0.3400, 0.390, 0.300, 2.00, 2.2],
+    [0.45,  0.3630, 0.402, 0.418, 3.3, 2.25],   # q23 TypeSafe face_flatter_front: NF +0.3 at h .45-.65
+    [0.50,  0.3570, 0.394, 0.395, 3.1, 2.2],
+    [0.55,  0.3520, 0.393, 0.365, 2.50, 2.2],
+    [0.60,  0.3480, 0.393, 0.330, 2.30, 2.2],
+    [0.65,  0.3400, 0.390, 0.300, 2.30, 2.2],
     [0.70,  0.3230, 0.386, 0.280, 2.00, 2.2],
     [0.75,  0.3100, 0.382, 0.270, 2.00, 2.2],
     [0.80,  0.2720, 0.376, 0.270, 2.00, 2.2],   # q23: jaw_wider tried (v3b-v3e) and reverted: picture A/B vs Leo preferred v3a
@@ -137,7 +137,7 @@ def loft(p):
 
 # Ear: between the eye tops and the nose bottom (AnimeOutline ears; Leo), about 1/4 of the face tall, set back of the
 # middle of the head depth, flared out ~18 degrees and leaned back ~12 degrees. Rim (helix) kept, inside recessed.
-EAR = knob("EAR", dict(c=(0.0, 0.080, 0.520), a=0.072, b=0.130, top_flare=0.30, t=0.032, flare=8.0, lean=12.0,   # q23 TypeSafe ears_smaller_higher x2
+EAR = knob("EAR", dict(c=(0.0, 0.080, 0.540), a=0.072, b=0.145, top_flare=0.30, t=0.032, flare=14.0, lean=12.0,   # q23: second ears_smaller_higher (v3r) reverted - A/B cleaner v3q, ear hid fully (Leo shows his)
                        recess=0.010, k=0.018, x_in=0.012))
 
 
