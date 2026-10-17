@@ -77,7 +77,7 @@ LIPS = knob("LIPS", dict(line=0.800, up_h=0.783, up_rh=0.020, up_w=0.130, up_A=0
                          lo_h=0.822, lo_rh=0.020, lo_w=0.105, lo_A=0.005, groove_A=-0.0015, groove_rh=0.005))
 CHIN = knob("CHIN", dict(h=0.94, rx=0.11, rh=0.05, A=0.008, labial_h=0.870, labial_A=0.0))
 JAW = knob("JAW", dict(gonion=(0.075, 0.800), chin=(-0.300, 1.000), k=0.050))   # (y, h) points of the jaw line
-NECK = knob("NECK", dict(c=(0.0, 0.100), rx=0.160, ry=0.180, h0=0.62, h1=1.40, k=0.065))
+NECK = knob("NECK", dict(c=(0.0, 0.100), rx=0.180, ry=0.200, h0=0.62, h1=1.40, k=0.065))   # q23 TypeSafe neck_thicker (+0.02)
 
 
 def to_h(z):

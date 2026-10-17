@@ -1,0 +1,85 @@
+{
+ "region": "face_v2",
+ "subject": "front view of an adult male anime head (toon shaded, hair on) compared with the official MHS3 render of Leo, framed so the distance D from the pupil line to the chin bottom is 300 px in both pictures",
+ "model": "jev-1.14.0",
+ "images": true,
+ "features": [
+  {
+   "feature": "neck",
+   "p_same": 0.01,
+   "confidence": 0.98,
+   "p_look": 0.065,
+   "verdict": "off"
+  },
+  {
+   "feature": "jaw_corner_and_chin",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "p_look": 0.125,
+   "verdict": "off"
+  },
+  {
+   "feature": "outline",
+   "p_same": 0.02,
+   "confidence": 0.96,
+   "p_look": 0.085,
+   "verdict": "off"
+  },
+  {
+   "feature": "cheek_and_face_planes",
+   "p_same": 0.03,
+   "confidence": 0.94,
+   "p_look": 0.115,
+   "verdict": "off"
+  },
+  {
+   "feature": "eyes",
+   "p_same": 0.05,
+   "confidence": 0.9,
+   "p_look": 0.14,
+   "verdict": "off"
+  },
+  {
+   "feature": "lower_face_width",
+   "p_same": 0.06,
+   "confidence": 0.88,
+   "p_look": 0.185,
+   "verdict": "off"
+  },
+  {
+   "feature": "hair_framing",
+   "p_same": 0.12,
+   "confidence": 0.76,
+   "p_look": 0.14,
+   "verdict": "off"
+  },
+  {
+   "feature": "nose_and_mouth",
+   "p_same": 0.18,
+   "confidence": 0.64,
+   "p_look": 0.155,
+   "verdict": "off"
+  },
+  {
+   "feature": "ears",
+   "p_same": 0.335,
+   "confidence": 0.33,
+   "p_look": 0.175,
+   "verdict": "needs a human"
+  }
+ ],
+ "analysis": {
+  "p_yes": 0.805,
+  "confidence": 0.61,
+  "verdict": "usable",
+  "faithful_p": 0.54
+ },
+ "first_fix": {
+  "order_a": "chin_wider_flatter",
+  "order_b": "chin_wider_flatter",
+  "agree": true,
+  "tie_break": null,
+  "apply": "chin_wider_flatter",
+  "setting": "sdf_head.py SECT half width +0.04 at h 0.97-1.0"
+ }
+}

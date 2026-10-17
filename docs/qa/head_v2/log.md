@@ -50,4 +50,21 @@ references from mhs3 as target look. remember to use typesafe".
     measurement includes Leo's cheek shadow / sideburn area. Jaw reverted to v3a, ears kept (v3f).
   - v3f (jaw items excluded): face_rounder (both) -> applied (v3g); picture A/B v3f vs v3g: tie (no visible change).
   - v3g (menu + hair_fit_lower_wider, brows_lower_angled, iris_bigger): hair_fit_lower_wider (both) -> applied in
-    pc_v2 (scale 0.90, 4 mm lower). Render v3h pending: Sammy's Blender stopped responding.
+    pc_v2 (scale 0.90, 4 mm lower).
+  - Blender froze / crashed twice on v3h: attach_hair iterated src.all_objects while linking copies (Blender 5.2
+    crash in Collection_all_objects_next, from the crash log). Fixed with list(...); hair copies now render-only.
+    PC calls now run in bpy.app.timers / threads so a long step never blocks the add-on.
+  - v3h: picture A/B v3g vs v3h tie (hair kept). Judge: chin_wider_flatter (both).
+  - v3i: menu setting (h 1.00 half width +0.04) had no visible effect (tip hidden by the neck join). v3j: chin rows
+    h .90 +0.02, .95 +0.04 -> broad rounded chin. Judge lower_face_width 0.06 -> 0.47, jaw_chin 0.02 -> 0.08;
+    A/B inconclusive (orders disagree), v3j cleaner in both. Judge: face_shadow_smaller (both).
+  - v3k: menu setting (face push 2.5 -> 3.2) moved ~500 px; even 8.0 only ~1200. Far-cheek band narrowed with the
+    analytic ellipsoid x radius instead (0.40 -> 0.50 H). cheek_and_face_planes 0.03 -> 0.12; A/B tie.
+    Judge: brows_lower_angled (both).
+  - v3l: brows 1 step (eyes 0.045 -> 0.075; asked again); v3m: 2 more steps (eyes 0.105). A/B: artifacts up -> a
+    skin patch through the right brow (brow lift 0.32 mm vs crease 0.30 mm z-fight); brow lift -> 0.48 mm.
+  - v3n: iris_bigger (radii x1.15): eyes 0.105 -> 0.205; A/B clean -> v3n (both orders).
+  - v3o: outline_thicker (0.0009 -> 0.0016): outline 0.03 -> 0.11; A/B tie.
+  - v3p: brows 1 more step (x4 total): brows now as close to the lash as Leo's at the same framing
+    (eyes_vs board); judge still picks brows_lower_angled with faithful_p 0.36 -> excluded (lower would sit on the
+    lid). Next pick: neck_thicker (both) -> v3q (NECK rx/ry +0.02).
