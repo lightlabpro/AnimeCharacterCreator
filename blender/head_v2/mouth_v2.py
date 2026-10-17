@@ -214,7 +214,8 @@ def jaw_weights(head):
     # corners: near the line the lower lip follows the jaw less toward the corners -> a bowl / lens opening, not a
     # box (MHS3 open mouths); a little below the line the full jaw weight returns
     u = np.clip(ax / MW, 0, 1)
-    taper = np.clip((1 - u ** 2) / 0.45, 0, 1) ** 0.8
+    taper = np.clip((1 - u ** 2) / 0.85, 0, 1) ** 1.1   # q25: lens-shaped opening (was /0.45: steep corner walls,
+    #                                                     skin stretched into the corners read as fangs)
     below = np.clip((h - lh) / 0.07, 0, 1)
     below = below * below * (3 - 2 * below)
     near_mouth = ax < MW * 1.05
