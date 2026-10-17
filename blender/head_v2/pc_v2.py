@@ -107,7 +107,7 @@ def add_blush(m):
     L(mix.outputs[0], out.inputs["Surface"])
 
 
-BLUSH = globals().get("BLUSH", 0.30)                       # resting blush (MHS3 faces carry a faint one)
+BLUSH = globals().get("BLUSH", 0.12)                       # resting blush; q27: 0.30 read childish beside Leo (none visible)
 BLUSH_RGB = (236, 140, 132)
 BLUSH_X, BLUSH_DH, BLUSH_RX, BLUSH_RZ = 0.42, 0.24, 0.13, 0.055   # D units: centre |x|, below eye line, radii
 
@@ -221,6 +221,7 @@ def shots(name, expr="neutral", views=(("front", 0), ("34", 35), ("side", 90)), 
     sc.render.resolution_x = sc.render.resolution_y = res
     os.makedirs(Q, exist_ok=True)
     out = []
+    lights = mhs3_lights()
     try:
         set_expr(col, expr)
         for label, yaw in views:
@@ -233,6 +234,7 @@ def shots(name, expr="neutral", views=(("front", 0), ("34", 35), ("side", 90)), 
             bpy.ops.render.render(write_still=True)
             out.append(sc.render.filepath)
     finally:
+        lights()
         set_expr(col, "neutral")
         sc.camera = old_cam
         sc.render.resolution_x, sc.render.resolution_y, sc.render.filepath = old
@@ -241,6 +243,102 @@ def shots(name, expr="neutral", views=(("front", 0), ("34", 35), ("side", 90)), 
         for o in hidden:
             o.hide_render = False
     return out
+
+
+# q27 TypeSafe first_fix face_side_shadow (v5f vs Leo, both menu orders): the face rendered as one flat colour. The scene's
+# KeySun came from the front-left almost straight on, FillSun lit the other side from behind (summed into the same
+# toon diffuse, so no side ever fell under the threshold) and neither cast shadows (no hair shadow on the forehead).
+# MHS3 Leo: key from the viewer's right, above and in front -> a broad shadow down the left cheek, a hard cast shadow
+# of the fringe on the forehead. The board lights are set only while rendering and restored afterwards.
+KEY_FROM = globals().get("KEY_FROM", (0.72, -0.50, 0.48))   # q27: k2 of 3 tried gave the outer-cheek band (Leo)
+#   # direction TO the light (x right on the front view, -y front)
+KEY_ANGLE = globals().get("KEY_ANGLE", 0.5)                  # sun angle in degrees (hard edged cast shadows)
+FILL_ENERGY = globals().get("FILL_ENERGY", 0.0)
+
+
+def mhs3_lights():
+    """Set the MHS3 board lighting; returns a function that restores the scene."""
+    sc = bpy.context.scene
+    key = sc.objects.get("KeySun"); fill = sc.objects.get("FillSun")
+    saved = []
+    if key is not None:
+        saved.append((key, key.rotation_euler.copy(), key.data.use_shadow, key.data.angle))
+        d = Vector(KEY_FROM).normalized()
+        key.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
+        key.data.use_shadow = True; key.data.angle = math.radians(KEY_ANGLE)
+    fe = None
+    if fill is not None:
+        fe = fill.data.energy; fill.data.energy = FILL_ENERGY
+    om = bpy.data.materials.get("MAT_Outline_NewHead_n56")
+    ob = None
+    if om is not None and hasattr(om, "use_backface_culling_shadow"):
+        ob = om.use_backface_culling_shadow; om.use_backface_culling_shadow = True   # the hull must not shadow the face
+
+    def restore():
+        for o, r, sh, an in saved:
+            o.rotation_euler = r; o.data.use_shadow = sh; o.data.angle = an
+        if fill is not None and fe is not None:
+            fill.data.energy = fe
+        if ob is not None:
+            om.use_backface_culling_shadow = ob
+    return restore
+
+
+FRINGE_SHADOW = globals().get("FRINGE_SHADOW", True)
+FRINGE_FROM = globals().get("FRINGE_FROM", (0.30, -0.45, 1.0))   # steep: the painted MHS3 band under the fringe
+FRINGE_REACH = globals().get("FRINGE_REACH", 0.05)                # metres from the skin to the hair along the ray
+FRINGE_LOW = globals().get("FRINGE_LOW", 0.40)                    # lowest shadowed point, H below the skull top
+FRINGE_BLUR = globals().get("FRINGE_BLUR", 6)
+
+
+def bake_fringe_shadow(col):
+    """q27 (TypeSafe face_side_shadow; Leo has a hard darker band across the forehead under the fringe): the fringe
+    hugs the forehead, so a real sun shadow barely shows - MHS3 paints it. Bake it into the head's forced-shadow
+    attribute 'shade' (NG_ToonSurface: < ~0.42 forced shadow, < ~0.1 the deeper tint): from every front-facing head
+    vertex cast a ray toward FRINGE_FROM; a hit on the hair within FRINGE_REACH puts the vertex in shadow."""
+    from mathutils.bvhtree import BVHTree
+    head = next(o for o in col.objects if o.name.startswith("V2_Head_"))
+    hair = [o for o in col.objects if o.name.startswith("Hair_")]
+    if not hair:
+        return 0
+    verts, polys = [], []
+    dg = bpy.context.evaluated_depsgraph_get()
+    for o in hair:
+        ev = o.evaluated_get(dg); me = ev.to_mesh()
+        off = len(verts); mw = o.matrix_world
+        verts += [mw @ v.co for v in me.vertices]
+        polys += [[off + i for i in p.vertices] for p in me.polygons]
+        ev.to_mesh_clear()
+    bvh = BVHTree.FromPolygons(verts, polys)
+    me = head.data
+    att = me.attributes.get("shade")
+    if att is None:
+        att = me.attributes.new("shade", "FLOAT", "POINT")
+        for d in att.data:
+            d.value = 1.0
+    L = Vector(FRINGE_FROM).normalized()
+    mw = head.matrix_world
+    zmin = ZT - FRINGE_LOW * H                            # forehead / temples only (q27c: side hair spotted the cheek)
+    hitv = [0.0] * len(me.vertices)
+    for v in me.vertices:
+        nw = (mw.to_3x3() @ v.normal).normalized()
+        if nw.y > -0.2 or nw.dot(L) <= 0.0 or (mw @ v.co).z < zmin:
+            continue
+        p = mw @ v.co + nw * 0.0006
+        if bvh.ray_cast(p, L, FRINGE_REACH)[0] is not None:
+            hitv[v.index] = 1.0
+    # q27c: per-vertex hits stair-stepped the edge -> blur over the mesh, then threshold softly in the shader
+    nb = [[] for _ in me.vertices]
+    for e in me.edges:
+        a, b = e.vertices; nb[a].append(b); nb[b].append(a)
+    for _ in range(FRINGE_BLUR):
+        hitv = [0.5 * h + 0.5 * (sum(hitv[j] for j in nb[i]) / len(nb[i]) if nb[i] else h) for i, h in enumerate(hitv)]
+    n = 0
+    for d, h in zip(att.data, hitv):
+        if h > 0.0:
+            d.value = min(d.value, 1.0 - 0.75 * min(1.0, 2.0 * h)); n += int(h > 0.5)
+    me.update()
+    return n
 
 
 def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 TypeSafe hair_fit_lower_wider
@@ -252,13 +350,18 @@ def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 Typ
     if src is None:
         return 0
     c0 = Vector((2.4, 0.0, 1.4826 + 0.5 * 0.262)); c1 = Vector((0.0, 0.006, ZT - 0.5 * H + dz))
-    M = Matrix.Translation(c1) @ Matrix.Scale(k, 4) @ Matrix.Translation(-c0)
+    # q27 TypeSafe first_fix hair_fuller (v6g vs Leo, both orders): Leo's hair rises ~1.07 D above the pupils with
+    # full volume, ours 0.79 D hugging the skull -> extra height / width about the skull middle
+    sz, sxy = globals().get("HAIR_SZ", 1.0), globals().get("HAIR_SXY", 1.0)
+    Sm = Matrix.Diagonal((k * sxy, k * sxy, k * sz, 1.0))
+    M = Matrix.Translation(c1) @ Sm @ Matrix.Translation(-c0)
     n = 0
     for o in list(src.all_objects):   # snapshot: linking copies while iterating crashed Blender 5.2 (Collection_all_objects_next)
         if o.type != "MESH":
             continue
         cp = o.copy(); cp.data = o.data.copy(); cp.name = o.name.replace(src_tag, TAG) + "_v2"
         cp.matrix_world = M @ o.matrix_world
+        cp.visible_shadow = True                          # q27: MHS3 fringe casts a hard shadow on the forehead
         cp.hide_render = False; cp.hide_viewport = True   # render-only: showing ~all hair copies in the viewport froze Blender (q23)
         col.objects.link(cp); n += 1
     return n
@@ -287,6 +390,8 @@ col = import_blend()
 shade(col)
 if globals().get("HAIR", "leo"):
     print("hair objects:", attach_hair(col, globals().get("HAIR", "leo"), k=globals().get("HAIR_K", 0.90), dz=globals().get("HAIR_DZ", -0.004)))
+if globals().get("HAIR", "leo") and FRINGE_SHADOW:
+    print("fringe shadow verts:", bake_fringe_shadow(col))
 col.hide_render = True                     # n56 renders stay as they were
 bpy.app.driver_namespace["v2"] = {"shots": shots, "set_expr": set_expr, "col": col, "gate_shots": gate_shots}
 print("v2 imported:", len(col.objects), "objects")

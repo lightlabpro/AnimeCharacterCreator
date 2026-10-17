@@ -38,7 +38,7 @@ LIFT = dict(sclera=0.00030, sclera_shade=0.00040, iris=0.00050, iris_top=0.00060
             highlight=0.00090, lash=0.00100, lash_low=0.00090, crease=0.00035, brow=0.00045, mouth=0.00055,
             nose_shade=0.00045, lip_shade=0.00040, nose_hl=0.00050, ear_in=0.00035, ear_line=0.00045)
 
-UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.30), (0.50, 0.34), (0.70, 0.32), (0.88, 0.22), (1.0, 0.06)]
+UPPER = [(0.0, 0.02), (0.10, 0.19), (0.30, 0.295), (0.50, 0.31), (0.70, 0.285), (0.88, 0.19), (1.0, 0.06)]   # q27: Leo's upper lid is flatter and slants down outward (was an arch peaking 0.34 mid)
 LOWER = [(1.0, 0.06), (0.90, -0.10), (0.70, -0.20), (0.50, -0.23), (0.30, -0.20), (0.12, -0.10), (0.0, 0.02)]
 
 
@@ -99,8 +99,9 @@ def eye_shapes(side):
 
 def brow_shape(side):
     # world (x, h) in H units: thick inner end low and close to the eye top, rising outward, tapering (Leo)
-    top = [(0.044, 0.355), (0.111, 0.328), (0.200, 0.315), (0.289, 0.321), (0.353, 0.341)]
-    bot = [(0.357, 0.349), (0.289, 0.343), (0.200, 0.347), (0.111, 0.365), (0.050, 0.391)]
+    # q27: lowered onto the lash (Leo: brow-to-pupil 0.08 D inner / 0.12 D mid; ours was 0.10 / 0.18 D), inner end lowest
+    top = [(0.044, 0.368), (0.111, 0.346), (0.200, 0.334), (0.289, 0.336), (0.353, 0.353)]
+    bot = [(0.357, 0.361), (0.289, 0.360), (0.200, 0.365), (0.111, 0.381), (0.050, 0.401)]
     P = np.vstack([smooth_curve(top, 24), smooth_curve(bot, 24)])
     P[:, 0] *= side
     return Polygon(P).buffer(0)
@@ -303,6 +304,12 @@ def build():
     nb = _NB                                                # nose bottom
     ns_ = Polygon(smooth_curve([(-0.040, nb - 0.004), (-0.012, nb - 0.016), (0.020, nb - 0.018), (0.042, nb - 0.006),
                                 (0.030, nb + 0.004), (-0.030, nb + 0.004)], 30)).buffer(0)
+    # q27 (TypeSafe nose "off"; Leo): a soft shadow down the shadow side (-x, the key light is from +x) of the lower
+    # bridge into the under-tip shape - one piece, no new mesh name
+    side_sh = Polygon(smooth_curve([(-0.010, nb - 0.075), (-0.024, nb - 0.050), (-0.036, nb - 0.020), (-0.030, nb - 0.006),
+                                    (-0.014, nb - 0.014), (-0.006, nb - 0.045)], 30)).buffer(0)
+    # v6f: joined into the under-tip piece it drew a hard dark wedge (one flat colour): TypeSafe dented 0.36 -> 0.65 -> off
+    # ns_ = ns_.union(side_sh).buffer(0.0008).buffer(-0.0008)
     xy, f = tri_poly(ns_, 0.00002)
     pieces["V2NoseShade"] = (project(xy, LIFT["nose_shade"]), f, COL["nose_shade"])
     my = EYE_H + 0.64 * D
@@ -310,7 +317,10 @@ def build():
                                (0.0, my + 0.062), (-0.050, my + 0.058)], 30)).buffer(0)
     xy, f = tri_poly(ls, 0.00002)
     pieces["V2LipShade"] = (project(xy, LIFT["lip_shade"]), f, COL["lip_shade"])
-    hl = Polygon(smooth_curve([(-0.012, 0.51), (-0.004, 0.505), (-0.006, 0.645), (-0.022, 0.665), (-0.020, 0.58)], 30)).buffer(0)
+    # q27: Leo's bridge highlight is a broad pale wedge on the LIT side (+x), eye line to near the tip - not a thin
+    # centre stripe on the shadow side
+    hl = Polygon(smooth_curve([(0.004, 0.505), (0.014, 0.515), (0.026, 0.600), (0.028, 0.650), (0.016, 0.668),
+                               (0.006, 0.640), (0.002, 0.560)], 30)).buffer(0)
     xy, f = tri_poly(hl, 0.00002)
     pieces["V2NoseHL"] = (project(xy, LIFT["nose_hl"]), f, COL["nose_hl"])
     # mouth line (Leo: a thin dark-brown line, a touch heavier in the middle, ends fading), drawn just above the

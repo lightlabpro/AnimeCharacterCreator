@@ -46,6 +46,8 @@ ASPECTS = {
                    "lip, a dark recess, the tongue set back inside) rather than flat bands of colour",
     "upper_lip": "the mouth in the turned and side views: which shows a believable upper lip (a lip form over the opening "
                  "that sits forward of the lower lip) rather than a face with no upper lip",
+    "face_shading": "the shading on the face and neck (shadow shapes under the fringe, along the side of the face and under the "
+                    "jaw, their colour and edges): which is closer to how `reference_image` is shaded",
     "clean": "drawing quality: which has fewer stray lines, broken outlines, odd shadow shapes or artifacts",
 }
 DEFECTS = {

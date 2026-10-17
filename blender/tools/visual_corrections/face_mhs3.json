@@ -1,0 +1,46 @@
+{
+ "region": "face_mhs3",
+ "note": "q27: gaps measured on v5f vs Leo at equal D. Geometry steps need a rebuild (sdf_head SECT / ears / face_paint); shading steps are pc_v2 skin material knobs.",
+ "corrections": [
+  {
+   "id": "chin_broader_rounder",
+   "description": "Widen the chin and lower jaw so the outline turns at a soft jaw corner near the mouth line and ends in a broad rounded chin (~0.5 D wide), not a V.",
+   "setting": "sdf_head.py SECT half width +0.03..0.05 at h 0.88-0.98, chin bottom flatter"
+  },
+  {
+   "id": "ears_higher_shorter",
+   "description": "Move the ears up and shorten them so the bottom sits about 0.38 D below the pupils, and tuck them closer to the head.",
+   "setting": "sdf_head ear centre h -0.03, ear length x0.80, ear flare -30%"
+  },
+  {
+   "id": "brows_lower_angled",
+   "description": "Lower the brows onto the upper lash (brow-to-pupil gap 0.16 -> 0.09 D) and angle them down toward the nose.",
+   "setting": "face_paint brow_shape h +0.04 D, inner end +0.02 D lower"
+  },
+  {
+   "id": "iris_fill_opening",
+   "description": "Make the iris fill the height of the eye opening, touching the lower lid, with sclera only at the sides.",
+   "setting": "face_paint iris radius y x1.12, iris centre h +0.02 E"
+  },
+  {
+   "id": "nose_side_plane",
+   "description": "Replace the thin centre nose stripe by a broad pale highlight on the lit side of the bridge and a small soft shadow on the other side.",
+   "setting": "face_paint V2NoseHL polygon widened and offset to the lit side; add nose side shade"
+  },
+  {
+   "id": "face_side_shadow",
+   "description": "Add painted soft-edged shadows: a band under the fringe across the forehead and a broad shadow down the far side of the face, warm orange-brown.",
+   "setting": "pc_v2 skin: forced-shadow mask (fringe band + side), ELL_A / light direction"
+  },
+  {
+   "id": "hair_fuller",
+   "description": "Give the hair more volume on top (rise ~1.05 D above the pupils) and broader, fewer fringe clumps.",
+   "setting": "hair pack scale z 1.12 above the crown, fringe clump width x1.4"
+  },
+  {
+   "id": "neck_narrower_shadow",
+   "description": "Narrow the neck to well under the jaw width and keep it in shadow.",
+   "setting": "sdf_head neck radius x0.85"
+  }
+ ]
+}

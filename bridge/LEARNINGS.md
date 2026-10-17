@@ -141,3 +141,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: blender/tools/typesafe_face_gate.py, .claude/skills/face-gate/SKILL.md, docs/qa/head_v2/gate/v4l/face_gate.json
 - status: confirmed (gate runs); fixes for v5a in progress
 - use: Chat: after any head/face piece or expression change, render gate_shots and run the gate before showing Sammy; blush needs a mask or a new piece (inbox item if a new mesh name)
+
+## 2026-10-17 [code] q27: board lighting was the flat-face cause; device commit can serve a stale copy
+- finding: The v2 boards rendered the face as one flat colour because KeySun came almost straight from the front and FillSun lit the other side into the same toon diffuse (summed, so nothing fell under the threshold), with no shadows; MHS3 lights from one side with a hard fringe shadow. pc_v2 now sets render-only MHS3 lights and bakes the under-fringe band into the forced-shadow attribute 'shade'. Raising the SDF jaw plane also trims the side widths (measure_v2 caught a lower face under dataset p10). Re-committing a file from the same staged path to the PC wrote an older copy while reporting success: stage each new version under a fresh path and check the PC file before running.
+- evidence: docs/qa/head_v2/log.md q27, docs/qa/head_v2/q27/judge_v6g.json, gate/v6g/face_gate.json
+- status: confirmed
+- use: Light boards with mhs3_lights; re-measure widths after any jaw change; unique staging paths for PC syncs

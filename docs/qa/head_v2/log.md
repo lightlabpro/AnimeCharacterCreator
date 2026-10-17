@@ -133,3 +133,27 @@ references from mhs3 as target look. remember to use typesafe".
   task, not a face-piece one). Open book items: surprise small irises (needs an iris key; PF-Surprise is a mouth alias in
   the contract), crying tears, adult lower-lip line, head layout rules (brow band, ear position) on the v2 skull.
 - Board: docs/qa/head_v2/gate/boards/q26_v4l_vs_v5f.png
+
+## q27 (2026-10-17) - "iterate until the model looks like the mhs3" (standing goal, CLAUDE.md + memory)
+- Measured v5f vs Leo at equal D (pupil line to chin): eye / nose / mouth heights matched; brows 0.16 D above the pupil
+  (Leo 0.08), ear bottom 0.48 D (Leo 0.38), chin a narrow V (Leo ~0.5 D rounded), neck wider than the chin.
+- TypeSafe judge (face_mhs3.json menu, images): all 8 features off; first_fix face_side_shadow (both orders).
+  Cause: board KeySun from the front-left, FillSun lighting the other side into the same toon diffuse, no shadows.
+  pc_v2.mhs3_lights (render-only): key from the viewer's right / above / front (3 directions tried, k2 kept), fill 0,
+  hair casts shadows; bake_fringe_shadow writes the MHS3 under-fringe band into the forced-shadow attribute 'shade'
+  (ray cast toward a steep light, blurred, forehead / temples only).
+- Head (sdf_head): jaw line gonion (0.075, 0.80) -> (0.05, 0.72) (long "boat" jaw in 3/4 / side); neck slimmer and
+  forward with a softer join (notch, dented 0.57 -> 0.39-0.52); ears up and Leo-sized. Chin: dataset-median widths
+  (v6c) read square ("dented" 0.33 -> 0.50, TypeSafe preferred v6b) -> kept v6b, just under dataset p10 at 0.85-0.95 H
+  (deliberate MHS3-look deviation). A/B (same lighting) v6e vs v5f geometry: front B overall + ears, 3/4 B ears, side A.
+- Face (face_paint): upper lid flatter, slanting down outward; brows lowered onto the lash (0.07 / 0.09 D);
+  nose highlight a wedge on the lit side; a joined nose side shadow drew a hard dark wedge (dented 0.65) -> removed;
+  resting blush 0.30 -> 0.12.
+- Judge v6g vs Leo: still all off but up: brows 0.01 -> 0.22, chin/jaw 0.01 -> 0.19, ears 0.02 -> 0.14, eyes
+  0.08 -> 0.12; first_fix hair_fuller. Scaling the n56 hair (1.12 / 1.20 tall) only stretched the thin spikes
+  (artifacts 0.61 -> 0.82) -> off. The hair needs a rebuild as MHS3 chunky clumps.
+- Face gate v6g: FAIL - 23 rule failures (v5f 25), 55 look failures, 0 regressions; front and laugh beat v5f in both
+  orders; front same_style 0.23 -> 0.33.
+- Board: docs/qa/head_v2/gate/boards/q27_v5f_vs_v6g.png
+- Next (biggest gaps per TypeSafe): hair rebuild (chunky clumps, painted light planes), face shading quality (soft
+  painted edges, rim), eye size 0.33 -> 0.31 D and iris detail, side-view jaw/neck shadow edge.

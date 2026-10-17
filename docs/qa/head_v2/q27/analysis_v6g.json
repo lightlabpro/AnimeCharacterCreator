@@ -1,0 +1,39 @@
+{
+ "region": "face_mhs3",
+ "subject": "front view of an adult male anime head (toon shaded, hair on) compared with the official MHS3 render of Leo, both framed so the distance D from the pupil line to the chin bottom is 303 px and the pupils sit at the same place",
+ "reference_style": "Monster Hunter Stories 3 official character render (Leo): semi-realistic anime, toon colours with soft painted shadow shapes, thin dark-brown outlines",
+ "features": {
+  "chin_and_jaw": {
+   "reference": "The face outline runs down from the cheekbone with a convex curve, turns at a soft jaw corner level with the mouth, and ends in a broad rounded chin about 0.5 D wide at 0.95 D below the pupils.",
+   "ours": "The face outline runs down from below the ears with a gently convex curve and ends in a rounded chin about 0.45 D wide at 0.95 D below the pupils; no distinct jaw corner."
+  },
+  "ears": {
+   "reference": "The ears are behind the cheeks, top at brow height, bottom at about 0.38 D below the pupils; mostly a shadowed inner shape.",
+   "ours": "The ears show at both sides, top a little above the pupil line, bottom at about 0.41 D below the pupils, mostly hidden behind side hair on one side."
+  },
+  "brows": {
+   "reference": "Thick dark-brown brows angled down toward the nose, the inner end lowest and almost touching the upper lash line; the gap from the brow's lower edge to the pupil is about 0.08 D.",
+   "ours": "Thick brown brows lying low on the upper lash, gap from the brow's lower edge to the pupil about 0.07 D at the inner end and 0.09 D at the middle, nearly horizontal with the inner end slightly lower."
+  },
+  "eyes": {
+   "reference": "Eye opening about 0.31 D wide and 0.55 as tall as wide, the heavy dark upper lash slanting down to the outer corner; the green iris fills the height of the opening, its top cut by the lash and its bottom touching the lower lid; grey-white sclera only at the sides.",
+   "ours": "Eye opening about 0.33 D wide and 0.60 as tall as wide, upper lid flatter and slanting a little down to the outer corner where a short upturned wing sits; the green iris fills most of the height, cut by the lash at the top, with white sclera at both sides."
+  },
+  "nose": {
+   "reference": "A broad pale highlight patch down the lit side of the nose bridge from the eye line to near the tip, a short soft shadow on the other side and a small orange-brown shape under the tip.",
+   "ours": "A narrow pale highlight down the lit side of the nose bridge from the eye line to 0.4 D, then a small orange-brown oval under the tip; no side shadow."
+  },
+  "face_shading": {
+   "reference": "Painted soft-edged shadows: a darker band under the fringe across the forehead, a broad shadow down one side of the face and under the cheekbone, warm orange-brown shadow colour; a pale rim on the other cheek.",
+   "ours": "Hard-edged painted-looking shadows: a jagged darker band under the fringe across the forehead, a shadow band down the outer cheek on the left side of the picture, warm orange-brown shadow colour; a faint pink blush on the cheeks."
+  },
+  "hair_volume": {
+   "reference": "The hair rises about 1.07 D above the pupil line with full rounded volume, broad clumps with many thin painted light streaks and dark lines; the fringe falls in a few broad pointed clumps to the brows.",
+   "ours": "The hair rises about 0.79 D above the pupil line and sits close to the skull, made of many thin straight spikes in two flat browns; the fringe is several thin spikes hanging over the eyes."
+  },
+  "neck": {
+   "reference": "The neck is mostly hidden by a high collar; where it shows it is in shadow and narrower than the jaw.",
+   "ours": "A bare neck column about 0.52 D wide, darker than the face, narrower than the jaw."
+  }
+ }
+}
