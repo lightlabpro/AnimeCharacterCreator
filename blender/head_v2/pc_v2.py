@@ -107,7 +107,7 @@ def shade(col):
                 dt.use_loop_data = True; dt.data_types_loops = {"CUSTOM_NORMAL"}
                 dt.loop_mapping = "POLYINTERP_NEAREST"; dt.vertex_group = "smooth_n"
             o.data.materials.append(outline)
-            sm = o.modifiers.new("Outline", "SOLIDIFY"); sm.thickness = 0.0009; sm.offset = 1.0
+            sm = o.modifiers.new("Outline", "SOLIDIFY"); sm.thickness = 0.0016; sm.offset = 1.0   # q23 TypeSafe outline_thicker (0.0009)
             sm.use_flip_normals = True; sm.use_rim = False; sm.material_offset = len(o.data.materials) - 1
             o.data.name = "V2_Head_" + TAG; o.name = "V2_Head_" + TAG
         else:
