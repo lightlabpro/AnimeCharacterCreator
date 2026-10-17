@@ -34,7 +34,7 @@ COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 
            nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
            ear_in=(214, 160, 146), ear_line=(166, 112, 100))
 LIFT = dict(sclera=0.00030, sclera_shade=0.00034, iris=0.00038, iris_top=0.00042, iris_rim=0.00044, pupil=0.00046,
-            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00048, mouth=0.00030,
+            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00048, mouth=0.00050,
             nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028, ear_in=0.00030, ear_line=0.00034)
 
 UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.30), (0.50, 0.34), (0.70, 0.32), (0.88, 0.22), (1.0, 0.06)]
@@ -304,8 +304,10 @@ def build():
     # geometry slit so it rides on the upper lip; it hides the slit's uneven rim when the mouth is closed
     import mouth_v2_line as ML
     xs = np.linspace(-0.97, 0.97, 60)
-    top = [(u * ML.MW, ML.line(u * ML.MW) - 0.0040 - 0.0035 * (1 - u * u)) for u in xs]
-    bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.0010 * (1 - u * u) ** 0.5) for u in xs[::-1]]
+    # q23: ends kept at least ~0.0045 H thick (sub-pixel ends rendered as dots) and the line lifted to 0.50 mm
+    # (at 0.30 mm it z-fought the skin slit and broke up)
+    top = [(u * ML.MW, ML.line(u * ML.MW) - 0.0035 - 0.0035 * (1 - u * u)) for u in xs]
+    bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.0010 + 0.0008 * (1 - u * u) ** 0.5) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)
     pieces["V2MouthLine"] = (project(xy, LIFT["mouth"]), f, COL["mouth"])
     return pieces

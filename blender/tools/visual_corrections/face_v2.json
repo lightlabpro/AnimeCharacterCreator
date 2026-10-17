@@ -66,6 +66,31 @@
    "id": "iris_bigger",
    "description": "Make the iris larger inside the eye so less white shows.",
    "setting": "face_paint_v2.py iris radii x1.15"
+  },
+  {
+   "id": "eye_opening_narrower",
+   "description": "Make the eye opening less tall: flatten the upper lid so the lash sits lower over the iris, the eye reading narrower and more determined.",
+   "setting": "face_paint_v2.py UPPER lid heights x0.85 (middle points)"
+  },
+  {
+   "id": "cheek_shadow_softer",
+   "description": "Soften the edge of the shadow band on the far cheek so it fades instead of ending in a hard line.",
+   "setting": "pc_v2.py skin toon boundary softness x2"
+  },
+  {
+   "id": "nose_side_shadow",
+   "description": "Add a soft warm shadow along the far side of the nose bridge, from below the eye to the nose tip.",
+   "setting": "face_paint_v2.py add nose side shade piece"
+  },
+  {
+   "id": "ear_inner_lines",
+   "description": "Draw the inner ear forms with darker interior lines like the reference.",
+   "setting": "face_paint_v2.py ear line width x1.6, darker colour"
+  },
+  {
+   "id": "mouth_shorter",
+   "description": "Make the mouth line shorter.",
+   "setting": "mouth_v2_line.py MW x0.85"
   }
  ]
 }
