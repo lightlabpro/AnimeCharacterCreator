@@ -1,0 +1,15 @@
+[
+ {"id": "mk_silhouette", "page": 29, "rule": "Design for a strong, iconic silhouette first; details embellish the design but do not determine it."},
+ {"id": "mk_three_seconds", "page": 29, "rule": "A design should be understandable within three seconds."},
+ {"id": "mk_squint", "page": 69, "rule": "Squint to see only major shapes and values; if those read correctly the design works."},
+ {"id": "mk_thumbnail_check", "page": 221, "rule": "View the work at postage-stamp size to expose composition, design and value errors hidden by detail."},
+ {"id": "mk_flip_check", "page": 89, "rule": "Flip the image horizontally or view it in a mirror to spot perspective and proportion errors."},
+ {"id": "mk_restraint", "page": 64, "rule": "Small alterations to familiar forms create convincing designs; restraint is often the secret."},
+ {"id": "mk_readable_head", "page": 71, "rule": "Keep a creature readable by giving it a recognisable head; that gives it personality."},
+ {"id": "mk_dark_pushes", "page": 77, "rule": "Darker shadow tones push lighter shapes forward; add darks where shapes read confusingly."},
+ {"id": "mk_negative_shapes", "page": 103, "rule": "Negative shapes around a form create its silhouette and are as important as the positive shapes."},
+ {"id": "mk_edge_focus", "page": 179, "rule": "Keep edges sharpest at the focal point and softer elsewhere; vary edge quality."},
+ {"id": "mk_head_first", "page": 171, "rule": "Define details in order of visual interest, usually starting at the head."},
+ {"id": "mk_line_material", "page": 67, "rule": "Line quality suggests material: quick hard strokes for hard surfaces, gentle slower strokes for soft organic forms."},
+ {"id": "mk_foreground_light", "page": 36, "rule": "Keeping the nearest part lighter while darkening the rest pulls the eye forward and adds dimension."}
+]
