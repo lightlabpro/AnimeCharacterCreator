@@ -199,6 +199,15 @@ def mark_corner_bridges(head):
         vs = set(p.vertices)
         if (vs & up and vs & lo) or vs <= rim:
             p.material_index = 2; n += 1
+            # rest shape: pull their off-seam vertices onto the line (+-0.0012 H) so the dark faces are hairlines
+            # when closed (the toon skin uses the smooth analytic normal here, so the tiny move does not shade)
+            for vi in vs - rim:
+                v = me.vertices[vi]
+                x = v.co.x / V.H; h = (V.ZT - v.co.z) / V.H
+                lh = float(MO.line_h(max(-MO.MW, min(MO.MW, x))))
+                d = h - lh
+                if abs(d) > 0.0012:
+                    v.co.z = V.ZT - (lh + (0.0012 if d > 0 else -0.0012)) * V.H
     print("corner bridge faces -> lip inner:", n)
 
 
