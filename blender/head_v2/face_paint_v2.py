@@ -32,7 +32,7 @@ COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 
            iris_rim=(40, 86, 48), pupil=(24, 52, 30), highlight=(255, 255, 255), lash=(58, 34, 26),
            lash_low=(128, 84, 66), crease=(186, 128, 106), brow=(104, 70, 44), mouth=(84, 44, 38),
            nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
-           ear_in=(214, 160, 146), ear_line=(166, 112, 100))
+           ear_in=(214, 160, 146), ear_line=(128, 80, 70))
 LIFT = dict(sclera=0.00030, sclera_shade=0.00034, iris=0.00038, iris_top=0.00042, iris_rim=0.00044, pupil=0.00046,
             highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00048, mouth=0.00050,
             nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028, ear_in=0.00030, ear_line=0.00034)
@@ -191,7 +191,7 @@ def ear_shapes():
     a, b = e["a"], e["b"]
     t = np.linspace(np.radians(200), np.radians(-60), 40)        # C-shaped rim line: front-top, over, down the back
     rim = np.stack([cy + 0.62 * a * np.cos(t) * 1.15, ch - 0.70 * b * np.sin(t)], -1)
-    line = LineString(rim).buffer(0.0038, cap_style=1)
+    line = LineString(rim).buffer(0.0061, cap_style=1)   # q24 TypeSafe ear_inner_lines (0.0038 x1.6)
     inner = affinity.scale(Point((cy - 0.010, ch + 0.020)).buffer(1.0, 48), 0.30 * a, 0.30 * b)
     return line, inner
 
@@ -290,6 +290,11 @@ def build():
     nb = _NB                                                # nose bottom
     ns_ = Polygon(smooth_curve([(-0.040, nb - 0.004), (-0.012, nb - 0.016), (0.020, nb - 0.018), (0.042, nb - 0.006),
                                 (0.030, nb + 0.004), (-0.030, nb + 0.004)], 30)).buffer(0)
+    # q24 TypeSafe nose_side_shadow: a narrow soft shade down the shadow side (+x; the bridge highlight is on -x) of the
+    # bridge, from below the eye to the tip, merged into the same piece so the pack keeps its mesh names
+    side = Polygon(smooth_curve([(0.010, 0.500), (0.020, 0.505), (0.030, 0.600), (0.034, nb - 0.010), (0.022, nb - 0.014),
+                                 (0.016, 0.600), (0.008, 0.520)], 30)).buffer(0)
+    ns_ = ns_.union(side).buffer(0)
     xy, f = tri_poly(ns_, 0.00002)
     pieces["V2NoseShade"] = (project(xy, LIFT["nose_shade"]), f, COL["nose_shade"])
     my = EYE_H + 0.64 * D
