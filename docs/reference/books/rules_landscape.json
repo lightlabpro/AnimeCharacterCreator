@@ -1,0 +1,5 @@
+[
+ {"id": "ls_cast_darkest", "page": 18, "rule": "A cast shadow is darkest right next to the object casting it and grows paler as it moves away."},
+ {"id": "ls_round_gradation", "page": 22, "rule": "On rounded forms the tones run light, halftone, shadow, then reflected light inside the shadow edge."},
+ {"id": "ls_aerial", "page": 13, "rule": "Nearer forms are darker, higher in contrast and more detailed; distant forms paler and simpler."}
+]
