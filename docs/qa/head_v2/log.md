@@ -81,3 +81,18 @@ references from mhs3 as target look. remember to use typesafe".
     0.03 -> 0.14, jaw/chin 0.02 -> 0.11, ears 0.34 -> 0.32, nose_mouth 0.18 -> 0.24.
   - Pack head_mhs3_v2 re-exported from v3s (same 36 meshes); e2e_head_pack E2E OK (board v3s_app_board.png, no hair in the
     head-only pack). Boards: hq_34 (v3h vs v3q 3/4), v3s vs Leo.
+
+## q24 (2026-10-17) - "keep iterating" + VRoid as reference + hair as a tweakable shader
+- VRoid Studio 2.10 on Sammy's PC studied (reference only, no VRoid meshes used): hair = groups of strands drawn on
+  guide sheets around the head; per strand Width / Thickness ratio / Twist / Cross section / Curve, texture Highlight
+  Position; Look tab = outline width per part, Rim light Intensity / Concentration, Shading Area / Hardness / Softness.
+  Sample model downloads failed inside VRoid (connection), VRM export not done yet.
+- Hair shader in the app (src/viewport/hairShader.ts, GLSL - the app is WebGL; HLSL port shaders/hair/AnimeHair.hlsl):
+  shared uniforms, live sliders (Material tab > Hair shader). Head-space ring reads as one band across clumps.
+- Face loop (menu +5 items: eye_opening_narrower, cheek_shadow_softer, nose_side_shadow, ear_inner_lines, mouth_shorter):
+  - v3u: mouth line fix (lift 0.50 mm, min end thickness - ends rendered as dots): nose_mouth 0.24 -> 0.39; A/B tie.
+  - v3v: cheek_shadow_softer: menu x2 invisible; SKIN_SOFT 0.03 in a v2 copy of the skin group: cheek planes 0.13 -> 0.60.
+  - v3w: eye_opening_narrower (upper lid middle x0.85): A/B tie, closer to Leo by eye; eyes 0.27 -> 0.23 (noise).
+  - v3x: ear_inner_lines (line x1.6, darker): ears 0.21 -> 0.37; A/B tie.
+  - v3y: nose_side_shadow: A/B v3x wins nose_mouth + clean (both orders), judge 0.415 -> 0.285 -> reverted.
+  - v3x judge first_fix: none (both orders). Pack head_mhs3_v2 re-exported from v3x (same 36 meshes); e2e E2E OK.

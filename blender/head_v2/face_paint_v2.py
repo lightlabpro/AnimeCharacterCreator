@@ -290,11 +290,7 @@ def build():
     nb = _NB                                                # nose bottom
     ns_ = Polygon(smooth_curve([(-0.040, nb - 0.004), (-0.012, nb - 0.016), (0.020, nb - 0.018), (0.042, nb - 0.006),
                                 (0.030, nb + 0.004), (-0.030, nb + 0.004)], 30)).buffer(0)
-    # q24 TypeSafe nose_side_shadow: a narrow soft shade down the shadow side (+x; the bridge highlight is on -x) of the
-    # bridge, from below the eye to the tip, merged into the same piece so the pack keeps its mesh names
-    side = Polygon(smooth_curve([(0.010, 0.500), (0.020, 0.505), (0.030, 0.600), (0.034, nb - 0.010), (0.022, nb - 0.014),
-                                 (0.016, 0.600), (0.008, 0.520)], 30)).buffer(0)
-    ns_ = ns_.union(side).buffer(0)
+    # q24: nose_side_shadow tried (v3y) - A/B v3x wins nose_mouth + clean (both orders), judge .415 -> .285: reverted
     xy, f = tri_poly(ns_, 0.00002)
     pieces["V2NoseShade"] = (project(xy, LIFT["nose_shade"]), f, COL["nose_shade"])
     my = EYE_H + 0.64 * D
