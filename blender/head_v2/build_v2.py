@@ -191,7 +191,7 @@ def mark_corner_bridges(head):
     for vi in rim:
         c = me.vertices[vi].co
         x = c.x / V.H; h = (V.ZT - c.z) / V.H
-        (up if h < float(MO.line_h(np.clip(x, -MO.MW, MO.MW))) else lo).add(vi)
+        (up if h < float(MO.line_h(max(-MO.MW, min(MO.MW, x)))) else lo).add(vi)
     n = 0
     for p in me.polygons:
         if p.material_index != 0:
