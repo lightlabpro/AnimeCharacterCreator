@@ -1,0 +1,8 @@
+[
+ {"id": "mp_line_hierarchy", "page": 227, "rule": "Use a line-weight hierarchy: the thickest lines for the main outer boundaries, medium lines for major forms, the thinnest for detail."},
+ {"id": "mp_contrast_focus", "page": 235, "rule": "Contrast draws the eye, and it is strongest where the darkest darks sit closest to the lightest lights."},
+ {"id": "mp_no_pure_black", "page": 237, "rule": "Never use pure black unmixed in painting; pure blacks look unnatural and too dark."},
+ {"id": "mp_lightest_sparingly", "page": 239, "rule": "Apply the lightest lights sparingly, in small spots."},
+ {"id": "mp_base_dark_light", "page": 235, "rule": "Paint base tones first, then darks, then highlights, keeping shadows and highlights from overpowering the base tone."},
+ {"id": "mp_one_side_shading", "page": 47, "rule": "Shade repeated forms on one consistent side to keep a uniform light direction."}
+]
