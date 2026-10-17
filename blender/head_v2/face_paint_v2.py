@@ -34,7 +34,7 @@ COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 
            nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
            ear_in=(214, 160, 146), ear_line=(166, 112, 100))
 LIFT = dict(sclera=0.00030, sclera_shade=0.00034, iris=0.00038, iris_top=0.00042, iris_rim=0.00044, pupil=0.00046,
-            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00032, mouth=0.00030,
+            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00048, mouth=0.00030,
             nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028, ear_in=0.00030, ear_line=0.00034)
 
 UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.30), (0.50, 0.34), (0.70, 0.32), (0.88, 0.22), (1.0, 0.06)]
@@ -70,7 +70,7 @@ def eye_shapes(side):
     shade_edge = up - np.array([0, 0.11]) * np.array([[1, 1]])
     sh["sclera_shade"] = Polygon(np.vstack([up, shade_edge[::-1]])).buffer(0).intersection(sclera)
     # iris: on the world side the light comes from, the highlight; iris centre a touch toward the nose
-    ic = (0.47, 0.03); irx, irz = 0.27, 0.33
+    ic = (0.47, 0.03); irx, irz = 0.31, 0.38   # q23 TypeSafe iris_bigger (x1.15)
     iris = affinity.scale(Point(ic).buffer(1.0, 64), irx, irz)
     sh["iris"] = iris.intersection(sclera)
     sh["iris_top"] = iris.intersection(Polygon([(-1, 0.13), (2, 0.13), (2, 1), (-1, 1)])).intersection(sclera)
