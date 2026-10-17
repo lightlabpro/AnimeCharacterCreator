@@ -161,5 +161,10 @@ Open items first. Claude Code reads this at session start and moves finished ite
   e2e_head_pack --id head_mhs3_v2: E2E OK (36 meshes). check_pack: same two head-only fails as n56 (height, feet),
   WARN 80k triangles (budget 18-28k: to reduce). typecheck / test / build pass.
 
+- 2026-10-17 head_mhs3_v2 re-exported (q23 reference-match loop vs MHS3 Leo, TypeSafe judge + picture A/B): same 36
+  CHR_ meshes and keys, no new names - geometry and face pieces changed (rounder broader chin, flatter face front, thicker
+  neck, lower angled brows, bigger iris, brow layer lift). e2e_head_pack --id head_mhs3_v2: E2E OK. Blender-only shading
+  changes (wider analytic ellipsoid, thicker outline) are in pc_v2.py, not in the pack's normals.
+
 ## Done
 (none yet)

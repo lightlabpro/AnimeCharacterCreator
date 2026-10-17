@@ -68,3 +68,16 @@ references from mhs3 as target look. remember to use typesafe".
   - v3p: brows 1 more step (x4 total): brows now as close to the lash as Leo's at the same framing
     (eyes_vs board); judge still picks brows_lower_angled with faithful_p 0.36 -> excluded (lower would sit on the
     lid). Next pick: neck_thicker (both) -> v3q (NECK rx/ry +0.02).
+  - v3q: neck_thicker -> neck still 0.01 (Leo's neck is under his collar; no geometry can match) - neck items dropped.
+  - v3r: ears_smaller_higher again: ears 0.28 -> 0.33 but the A/B called v3q cleaner (artifacts 0.61 vs 0.71) and the
+    ear vanished behind the hair (Leo's near ear shows) -> reverted.
+  - v3s: face_flatter_front (NF +0.3 at h .45-.65): A/B v3s wins nose_mouth and clean (both orders) -> kept.
+  - v3t: eyes_bigger (0.33 -> 0.36 D) on trial: picture A/B tie; Leo measures 0.32 D -> reverted (picture tie, the
+    measurement decides).
+  - Menu exhausted (every face_v2 item applied or rejected with a reason). Still "off": nose_and_mouth (mouth line breaks
+    into dots at the ends), hair_framing (n56 Leo hair: many thin spikes vs Leo's few broad clumps), cheek planes, neck
+    (collar). These need new menu items / fixes, not more of the same knobs.
+  - Judge scores v3h -> v3s: lower_face_width 0.06 -> 0.49, eyes 0.05 -> 0.24, outline 0.02 -> 0.10, cheek planes
+    0.03 -> 0.14, jaw/chin 0.02 -> 0.11, ears 0.34 -> 0.32, nose_mouth 0.18 -> 0.24.
+  - Pack head_mhs3_v2 re-exported from v3s (same 36 meshes); e2e_head_pack E2E OK (board v3s_app_board.png, no hair in the
+    head-only pack). Boards: hq_34 (v3h vs v3q 3/4), v3s vs Leo.
