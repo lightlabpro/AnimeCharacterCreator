@@ -183,7 +183,7 @@ def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 Typ
     c0 = Vector((2.4, 0.0, 1.4826 + 0.5 * 0.262)); c1 = Vector((0.0, 0.006, ZT - 0.5 * H + dz))
     M = Matrix.Translation(c1) @ Matrix.Scale(k, 4) @ Matrix.Translation(-c0)
     n = 0
-    for o in src.all_objects:
+    for o in list(src.all_objects):   # snapshot: linking copies while iterating crashed Blender 5.2 (Collection_all_objects_next)
         if o.type != "MESH":
             continue
         cp = o.copy(); cp.data = o.data.copy(); cp.name = o.name.replace(src_tag, TAG) + "_v2"
