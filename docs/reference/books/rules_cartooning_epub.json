@@ -1,0 +1,11 @@
+[
+ {"id": "ct_features_low_young", "page": 19, "rule": "Features placed low on the head and gathered together read younger and cuter; raising the eye line makes a face read adult."},
+ {"id": "ct_jaw_half", "page": 95, "rule": "On a teen face the jaw (eyes to chin) grows to about half the face; on children it is shorter. A longer lower face reads older."},
+ {"id": "ct_eye_four", "page": 51, "rule": "Both eyes share the same tilt, the same shape, the same level, and equal distance from the nose and from the face edge."},
+ {"id": "ct_top_lid_dark", "page": 47, "rule": "The top eyelid is always darker and heavier than the bottom one."},
+ {"id": "ct_oval_perspective", "page": 170, "rule": "A round eye becomes an oval only where perspective demands it (head tilted or turned); the pupil on a tall-oval eye stays a circle."},
+ {"id": "ct_female_upper_lip", "page": 71, "rule": "On a pretty young face the top lip is horizontal or curves slightly down; the smile curve is carried by the bottom lip and small upturned creases at the corners."},
+ {"id": "ct_open_teeth", "page": 63, "rule": "In an open-mouth smile, the more teeth that show, the more intense the laughter reads."},
+ {"id": "ct_small_features", "page": 26, "rule": "Nose, mouth and ears stay small so the eyes dominate the face."},
+ {"id": "ct_planes", "page": 129, "rule": "A few clear head planes look sharp; too many planes make the head needlessly complicated."}
+]
