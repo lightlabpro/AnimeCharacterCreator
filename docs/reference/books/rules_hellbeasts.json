@@ -1,0 +1,13 @@
+[
+ {"id": "hb_teeth_wrap", "page": 101, "rule": "The teeth sit on the maxilla and mandible, which form a rounded surface; the teeth wrap around it and the line where upper and lower teeth meet follows that curve rather than a flat horizontal."},
+ {"id": "hb_upper_lip_shadow", "page": 195, "rule": "The upper lip recedes into the skull from top to bottom, so under light from above it falls into shadow."},
+ {"id": "hb_few_lines_young", "page": 195, "rule": "Construct a young, beautiful face with as few lines as possible; extraneous lines read as wrinkles and age the subject."},
+ {"id": "hb_nose_one_line", "page": 195, "rule": "On a beautiful face the nose can be a single line defining the lower edge of the nostrils and tip."},
+ {"id": "hb_cast_shadow_edge", "page": 38, "rule": "A cast shadow starts with a dark, hard edge next to the object casting it and softens as it moves away."},
+ {"id": "hb_sphere_values", "page": 38, "rule": "A lit sphere shows highlight, light, halftone, core shadow (the darkest area) and reflected light on the shadow side."},
+ {"id": "hb_cast_pushes_back", "page": 41, "rule": "A shadow cast from one form onto another pushes the receiving form back in space."},
+ {"id": "hb_age_gravity", "page": 231, "rule": "Age shows as gravity on the face: sagging cheeks and jowls, shadow under cheekbones and jaw, sunken sockets and droopy lids."},
+ {"id": "hb_asymmetry_chaos", "page": 61, "rule": "Asymmetry suggests chaos; symmetry suits calm or orderly characters."},
+ {"id": "hb_near_larger", "page": 118, "rule": "A limb nearer the viewer is drawn larger than normal, with overlapping diagonals, so it comes out of the picture plane."},
+ {"id": "hb_fold_types", "page": 76, "rule": "Drapery follows five fold types - single-point hanging, dual-point hanging, compression, zigzag, spiral - each set by its support points, the form beneath and gravity."}
+]
