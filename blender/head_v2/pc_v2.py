@@ -136,10 +136,13 @@ EXPR = {
     # the app's e2e presets (scripts/e2e_head_pack.cjs) and a few readable expressions
     "smile_open": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.35}, "talk_aa": {"PF-VisAA": 0.8},
     "blink": {"PF-Blink_L": 1.0, "PF-Blink_R": 1.0},
-    "happy": {"PF-SmileClosed": 1.0, "PF-Squint": 0.45, "PF-BrowRaise": 0.3},
-    "laugh": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.3, "PF-Squint": 0.7, "PF-BrowRaise": 0.4},
-    "angry": {"PF-BrowFurrow": 1.0, "PF-Frown": 0.6, "PF-LidUpperDown": 0.2},
-    "sad": {"PF-BrowSad": 1.0, "PF-Frown": 0.5, "PF-LidUpperDown": 0.3},
+    # q26 presets from the book rules (face gate): happy = closed smile, cheeks up, eyes narrowed into curves;
+    # laugh = open D smile, eyes closed into upward arcs; angry = brows down hard, lids lowered, teeth bared;
+    # sad = brows rising to the centre, heavy lids, small frown; surprised = eyes wide, brows up, small round mouth
+    "happy": {"PF-SmileClosed": 1.0, "PF-Squint": 0.8, "PF-LidLowerUp": 0.6, "PF-BrowRaise": 0.3},
+    "laugh": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.45, "PF-LidLowerUp": 1.0, "PF-Blink_L": 0.55, "PF-Blink_R": 0.55, "PF-BrowRaise": 0.5},
+    "angry": {"PF-BrowFurrow": 1.0, "PF-BrowLower": 0.7, "PF-LidUpperDown": 0.45, "PF-Squint": 0.4, "PF-VisEE": 0.7, "PF-Frown": 0.3},
+    "sad": {"PF-BrowSad": 1.0, "PF-BrowInnerUp": 0.6, "PF-Frown": 0.8, "PF-LidUpperDown": 0.5},
     "surprised": {"PF-EyeWide": 1.0, "PF-BrowRaise": 1.0, "PF-VisOH": 0.8},
     "talk_oh": {"PF-VisOH": 0.9}, "talk_ee": {"PF-VisEE": 0.9},
 }

@@ -92,7 +92,7 @@ def eye_shapes(side):
     tl = 0.022 * np.clip((lo_part[:, 0] - 0.30) / 0.4, 0.2, 1)
     sh["lash_low"] = Polygon(np.vstack([lo_part, (lo_part - np.stack([np.zeros_like(tl), tl], -1))[::-1]])).buffer(0)
     # crease (double eyelid) above the lash
-    cr = up[(up[:, 0] > 0.18) & (up[:, 0] < 0.92)] + np.array([0, 0.17])
+    cr = up[(up[:, 0] > 0.08) & (up[:, 0] < 0.60)] + np.array([0, 0.15])   # q26: fold over the inner part only (Crilley p.15-ish rule)
     sh["crease"] = LineString(cr).buffer(0.008, cap_style=1)
     return sh
 

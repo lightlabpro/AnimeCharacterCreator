@@ -45,7 +45,7 @@ LOOK_ELEMENTS = {
     "face_shading": "the face shading (toon shadow shapes, edges, colours) and the outline",
 }
 PASS, FAIL = 0.6, 0.4
-BATCH = 24
+BATCH = 12
 
 
 def verdict(p):
@@ -97,15 +97,25 @@ def pass_rules(rules, renders, only, skip=()):
             chunk = rs[s:s + BATCH]
             state = {"render": aid, "subject": "a render of a 3D anime character head in a toon style (Monster "
                      "Hunter Stories 3 look); judge only what the picture shows"}
-            qs = {r["id"]: {"type": "noul", "instructions": (
-                "Look at the picture `render`. Anime/manga drawing rule from a book: \"%s\" Question: %s"
-                % (r["rule"], r["check"]))} for r in chunk}
+            qs = {}
+            for r in chunk:
+                qs[r["id"]] = {"type": "noul", "instructions": (
+                    "Look at the picture `render`. Anime/manga drawing rule from a book: \"%s\" Question: %s"
+                    % (r["rule"], r["check"]))}
+                # q26: rules that cannot be judged from this picture (feature hidden, motion / body / other head
+                # type, wrong expression) are "not applicable", never a pass or a fail
+                qs["app_" + r["id"]] = {"type": "noul", "instructions": (
+                    "Can the following rule be judged from the picture `render` at all - is the feature it talks about "
+                    "visible, and does the rule apply to this kind of picture (a still head render, this expression, "
+                    "this head type; not motion, not the body, not a different character type)? Rule: \"%s\""
+                    % r["rule"])}
             ans = ask(MODEL, state, qs, assets, True, False)["answers"]
             for r in chunk:
-                p = ans[r["id"]]["noul"]
+                p = ans[r["id"]]["noul"]; pa = ans["app_" + r["id"]]["noul"]
+                v = verdict(p) if pa >= 0.5 else "not applicable"
                 out.append({"id": r["id"], "element": r["element"], "book": r["book"], "page": r.get("page"),
-                            "render": os.path.basename(img), "p_yes": round(p, 3), "verdict": verdict(p),
-                            "rule": r["rule"]})
+                            "render": os.path.basename(img), "p_yes": round(p, 3), "p_applicable": round(pa, 3),
+                            "verdict": v, "rule": r["rule"]})
     return out
 
 
@@ -184,7 +194,7 @@ def main():
     summ = {}
     for r in rep["rules"]:
         e = r["element"]
-        s = summ.setdefault(e, {"pass": 0, "fail": 0, "uncertain": 0, "not measured": 0, "failed_rules": []})
+        s = summ.setdefault(e, {"pass": 0, "fail": 0, "uncertain": 0, "not measured": 0, "not applicable": 0, "failed_rules": []})
         s[r["verdict"]] += 1
         if r["verdict"] == "fail":
             s["failed_rules"].append(r["id"])
