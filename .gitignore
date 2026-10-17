@@ -5,3 +5,6 @@ __pycache__/
 bpyenv/
 dist/
 node_modules/
+
+# local e2e / capture output (scripts/e2e_head_pack.cjs --out work/..., capture_views.cjs)
+work/
