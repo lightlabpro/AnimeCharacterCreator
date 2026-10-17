@@ -1,0 +1,8 @@
+[
+ {"id": "gn_eye_wrap", "page": 68, "rule": "Eyelid lines wrap the eyeball sphere: they look straight only near the centre facing the viewer and curve more and more toward the eyeball's edge, especially in profile and near-profile views."},
+ {"id": "gn_far_eye", "page": 69, "rule": "In three-quarter view the far eye is a little shorter than the near eye, its far corner is blunted, and it sits behind the nose bridge; it must not be pushed out toward the cheek edge."},
+ {"id": "gn_near_corner", "page": 69, "rule": "In three-quarter view the near corner of the near eye keeps nearly its full length and point."},
+ {"id": "gn_quasimodo", "page": 68, "rule": "Features drawn each from a different viewing direction make the face look monstrous; all features must follow one head angle."},
+ {"id": "gn_profile_mistakes", "page": 70, "rule": "Common profile errors: dropped ears, sloping forehead, heavy brow, overly deep-set eye, pupil not centred in the iris, nostril pushed back onto the face."},
+ {"id": "gn_smooth_contour", "page": 70, "rule": "The cheek-to-jaw contour is usually subtle and smooth, especially on women and in frontal views."}
+]
