@@ -95,9 +95,11 @@ def eye_shapes(side):
     hl2 = affinity.scale(Point((ic[0] - side * 0.10, ic[1] - 0.13)).buffer(1.0, 24), 0.032, 0.026)   # q25: small second catchlight
     sh["highlight"] = hl.union(hl2).intersection(sclera)
     # upper lash: thick along the top, thickest at the outer third, short wing past the outer corner
-    t = 0.050 + 0.050 * np.clip((up[:, 0] - 0.1) / 0.65, 0, 1) * (1 - np.clip((up[:, 0] - 0.85) / 0.15, 0, 1) * 0.4)
+    # q30 (Sammy: 'the eyes look egyptian'): the lash ends just past the outer corner and tapers there (the q29 wing ran
+    # 13% past the corner like eyeliner)
+    t = 0.055 + 0.050 * np.clip((up[:, 0] - 0.1) / 0.55, 0, 1) * (1 - np.clip((up[:, 0] - 0.80) / 0.20, 0, 1) * 0.85)
     outer = up + np.stack([np.zeros_like(t), t], -1)
-    wing = np.array([[1.13, 0.05]])     # q29: MHS3 lash wing runs outward / slightly down, not flicked up
+    wing = np.array([[1.025, 0.07]])
     sh["lash"] = Polygon(np.vstack([up, wing, outer[::-1]])).buffer(0)
     # lower lid line, outer two thirds, tapering
     lo_part = lo[lo[:, 0] > 0.30]
@@ -341,8 +343,8 @@ def build():
     xy, f = tri_poly(ns_, 0.00002)
     pieces["V2NoseShade"] = (project(xy, LIFT["nose_shade"]), f, COL["nose_shade"])
     my = EYE_H + 0.64 * D
-    ls = Polygon(smooth_curve([(-0.060, my + 0.045), (0.0, my + 0.040), (0.060, my + 0.045), (0.050, my + 0.058),
-                               (0.0, my + 0.062), (-0.050, my + 0.058)], 30)).buffer(0)
+    ls = Polygon(smooth_curve([(-0.066, my + 0.043), (0.0, my + 0.038), (0.066, my + 0.043), (0.054, my + 0.062),
+                               (0.0, my + 0.068), (-0.054, my + 0.062)], 30)).buffer(0)
     xy, f = tri_poly(ls, 0.00002)
     pieces["V2LipShade"] = (project(xy, LIFT["lip_shade"]), f, COL["lip_shade"])
     # q27: Leo's bridge highlight is a broad pale wedge on the LIT side (+x), eye line to near the tip - not a thin
@@ -360,8 +362,8 @@ def build():
     # q25: drawn-line shape - heavier in the middle third, tapering to rounded ends (was an even bar)
     def th(u):
         au = abs(u)
-        corner = 0.0028 * np.exp(-((au - 0.95) / 0.045) ** 2)       # q25: small rounded corner accents (cover the
-        return 0.0034 + 0.0042 * (1 - np.clip(au, 0, 1) ** 2) ** 1.5 + corner   # dark corner bridge faces at rest)
+        corner = 0.0034 * np.exp(-((au - 0.95) / 0.045) ** 2)       # q25: small rounded corner accents (cover the
+        return 0.0056 + 0.0072 * (1 - np.clip(au, 0, 1) ** 2) ** 1.5 + corner   # q30 Sammy: 'the mouth looks too thin' (x1.7)   # dark corner bridge faces at rest)
     top = [(u * ML.MW, ML.line(u * ML.MW) - 0.42 * th(u) - 0.0010) for u in xs]
     bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.58 * th(u) - 0.0010) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)

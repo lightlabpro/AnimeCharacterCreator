@@ -32,31 +32,31 @@ def knob(name, value):
 
 # ---- head mass: sections (h = 0 skull top .. 1 chin, fractions of H) -------------------------------------------
 # W half width, F front depth, B back depth (from y = 0), NF / NB superellipse exponents of the front / back half.
-SECT = knob("SECT", [   # q28: back depth below the ears 0.27 -> 0.12-0.25 (the lower skull flared past the neck like a skirt); top shortened front-to-back (depth at 0.1 H 0.65 -> ~0.59, dataset 0.55-0.58), lower back fuller (depth at 0.5 H 0.72 -> ~0.82, dataset 0.81-0.97)
+SECT = knob("SECT", [   # q30: cranium +0.025-0.03 H half-width, forehead top back 0.02, crown fuller (5 dataset heads, clay silhouette medians); q28: back depth below the ears 0.27 -> 0.12-0.25 (the lower skull flared past the neck like a skirt); top shortened front-to-back (depth at 0.1 H 0.65 -> ~0.59, dataset 0.55-0.58), lower back fuller (depth at 0.5 H 0.72 -> ~0.82, dataset 0.81-0.97)
     # h     W      F      B      NF    NB
     [0.00,  0.000, 0.000, 0.000, 2.2, 2.2],
-    [0.01,  0.0880, 0.1056, 0.1178, 2.2, 2.2],
-    [0.02,  0.1236, 0.1487, 0.1659, 2.2, 2.2],
-    [0.05,  0.1920, 0.2000, 0.2250, 2.2, 2.2],
-    [0.10,  0.2615, 0.2720, 0.3150, 2.25, 2.2],
-    [0.15,  0.3065, 0.3350, 0.3850, 2.3, 2.2],
-    [0.20,  0.3345, 0.3620, 0.4200, 2.35, 2.25],
-    [0.25,  0.3530, 0.395, 0.445, 2.4, 2.25],
-    [0.30,  0.3625, 0.400, 0.450, 2.4, 2.25],
-    [0.35,  0.3675, 0.405, 0.448, 2.45, 2.25],    # q28: NF 2.6-3.0 -> 2.4-2.5 at the eyes (a boxy section drew a band across the face)
-    [0.40,  0.3670, 0.408, 0.438, 2.5, 2.25],
-    [0.45,  0.3630, 0.4020, 0.4300, 2.5, 2.25],
-    [0.50,  0.3570, 0.3940, 0.4250, 2.45, 2.2],
-    [0.55,  0.3520, 0.3930, 0.4100, 2.4, 2.2],
+    [0.01,  0.0980, 0.0996, 0.1258, 2.2, 2.2],
+    [0.02,  0.1386, 0.1387, 0.1739, 2.2, 2.2],
+    [0.05,  0.2220, 0.1780, 0.2450, 2.2, 2.2],
+    [0.10,  0.2915, 0.2470, 0.3270, 2.25, 2.2],
+    [0.15,  0.3345, 0.3110, 0.3850, 2.3, 2.2],
+    [0.20,  0.3605, 0.3460, 0.4120, 2.35, 2.25],
+    [0.25,  0.3790, 0.3790, 0.4330, 2.4, 2.25],
+    [0.30,  0.3885, 0.3940, 0.4440, 2.4, 2.25],
+    [0.35,  0.3915, 0.4050, 0.4480, 2.45, 2.25],    # q28: NF 2.6-3.0 -> 2.4-2.5 at the eyes (a boxy section drew a band across the face)
+    [0.40,  0.3830, 0.4080, 0.4380, 2.5, 2.25],
+    [0.45,  0.3770, 0.4020, 0.4300, 2.5, 2.25],
+    [0.50,  0.3680, 0.3940, 0.4250, 2.45, 2.2],
+    [0.55,  0.3580, 0.3930, 0.4100, 2.4, 2.2],
     [0.60,  0.3480, 0.3930, 0.3850, 2.3, 2.2],
     [0.65,  0.3400, 0.3900, 0.3500, 2.3, 2.2],
     [0.70,  0.3170, 0.3860, 0.3000, 2.3, 2.2],
-    [0.75,  0.2980, 0.3820, 0.2500, 2.3, 2.2],
-    [0.80,  0.2650, 0.376, 0.1850, 2.3, 2.2],
-    [0.85,  0.2360, 0.364, 0.1450, 2.4, 2.2],      # q27 v6b: TypeSafe preferred this rounder chin over v5f's V (front) and over
-    [0.90,  0.2000, 0.350, 0.1250, 2.6, 2.2],      #   v6c's dataset-median widths (square chin, "dented" 0.33 -> 0.50); sits just
-    [0.95,  0.1600, 0.330, 0.1200, 2.9, 2.2],      #   under the dataset p10 at 0.85-0.95 H - a deliberate MHS3-look deviation
-    [1.00,  0.1000, 0.295, 0.1200, 3.0, 2.2],
+    [0.75,  0.2980, 0.3820, 0.2620, 2.3, 2.2],
+    [0.80,  0.2650, 0.376, 0.2180, 2.3, 2.2],
+    [0.85,  0.2360, 0.364, 0.1920, 2.4, 2.2],      # q27 v6b: TypeSafe preferred this rounder chin over v5f's V (front) and over
+    [0.90,  0.2000, 0.350, 0.1780, 2.6, 2.2],      #   v6c's dataset-median widths (square chin, "dented" 0.33 -> 0.50); sits just
+    [0.95,  0.1760, 0.3300, 0.1720, 2.9, 2.2],      #   under the dataset p10 at 0.85-0.95 H - a deliberate MHS3-look deviation
+    [1.00,  0.1120, 0.2950, 0.1700, 3.0, 2.2],
     [1.03,  0.0000, 0.000, 0.000, 2.4, 2.2],
 ])
 
@@ -76,8 +76,8 @@ MUZZLE = knob("MUZZLE", dict(h=0.790, rx=0.185, rh=0.095, A=0.004))
 LIPS = knob("LIPS", dict(line=0.800, up_h=0.783, up_rh=0.020, up_w=0.130, up_A=0.0022, bow=0.0,
                          lo_h=0.822, lo_rh=0.020, lo_w=0.105, lo_A=0.0028, groove_A=-0.0008, groove_rh=0.005))
 CHIN = knob("CHIN", dict(h=0.94, rx=0.11, rh=0.05, A=0.008, labial_h=0.870, labial_A=0.0))
-JAW = knob("JAW", dict(gonion=(0.050, 0.720), chin=(-0.290, 1.000), k=0.060, back_h=0.74, back_slope=0.45))   # q28: underside behind the jaw slopes down into the neck (a flat cut left a shelf)   # q27: was (0.075, 0.80) - a long low "boat" jaw in 3/4 and side; MHS3 jaw rises steeply to the ear   # (y, h) points of the jaw line
-NECK = knob("NECK", dict(c=(0.0, 0.070), rx=0.140, ry=0.185, h0=0.62, h1=1.40, k=0.100))   # q27: slimmer, under the jaw; v6e: forward + softer join (v6d notch at the jaw/neck, TypeSafe dented 0.57)
+JAW = knob("JAW", dict(gonion=(0.050, 0.720), chin=(-0.290, 1.000), k=0.100, back_h=0.88, back_slope=0.20))   # q30: the lower back now tapers in SECT; the trim only near chin height (ledge at the nape)   # q28: underside behind the jaw slopes down into the neck (a flat cut left a shelf)   # q27: was (0.075, 0.80) - a long low "boat" jaw in 3/4 and side; MHS3 jaw rises steeply to the ear   # (y, h) points of the jaw line
+NECK = knob("NECK", dict(c=(0.0, 0.085), rx=0.128, ry=0.125, h0=0.62, h1=1.40, k=0.130))   # q30: neck front was AHEAD of the head centre (Sammy: malformed side view); dataset necks sit back under the skull   # q27: slimmer, under the jaw; v6e: forward + softer join (v6d notch at the jaw/neck, TypeSafe dented 0.57)
 
 
 def to_h(z):
@@ -149,11 +149,18 @@ def front_y(x, h):
     return -F * (1 - u ** n) ** (1.0 / n)
 
 
+BACK_TAPER = knob("BACK_TAPER", ([0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0], [1.0, 0.988, 0.956, 0.909, 0.852, 0.79, 0.728, 0.671, 0.624, 0.592, 0.58, 0.58]))   # smoothstep 1 -> 0.58 over h 0.45-0.95 (a linear ramp creased at its start)
+
+
 def loft(p):
     hs, (fW, fF, fB, fNF, fNB) = _interp()
     x, y, h = p[..., 0], p[..., 1], p[..., 2]
     hc = np.clip(h, hs[0], hs[-1])
     W = np.maximum(fW(hc), 1e-4); F = np.maximum(fF(hc), 1e-4); B = np.maximum(fB(hc), 1e-4)
+    # q30: below the occiput the back half narrows into the neck (dataset heads); the jaw keeps the full width in front
+    kb = np.interp(hc, BACK_TAPER[0], BACK_TAPER[1])
+    u = np.clip(y / np.maximum(B, 1e-4) * 1.6, 0, 1); u = u * u * (3 - 2 * u)
+    W = np.where(y > 0, W * (1 - (1 - kb) * u), W)
     n = np.where(y < 0, fNF(hc), fNB(hc))
     D = np.where(y < 0, F, B)
     rn = (np.abs(x / W) ** n + np.abs(y / D) ** n) ** (1.0 / n)
@@ -165,8 +172,8 @@ def loft(p):
 
 # Ear: between the eye tops and the nose bottom (AnimeOutline ears; Leo), about 1/4 of the face tall, set back of the
 # middle of the head depth, flared out ~18 degrees and leaned back ~12 degrees. Rim (helix) kept, inside recessed.
-EAR = knob("EAR", dict(c=(0.0, 0.070, 0.515), a=0.072, b=0.150, top_flare=0.30, t=0.030, flare=24.0, lean=12.0,   # q27: Leo ear top at the brow, bottom 0.38 D under the pupils, 0.56 D tall, clear of the head
-                       recess=0.010, k=0.018, x_in=0.008))
+EAR = knob("EAR", dict(c=(0.0, 0.060, 0.525), a=0.060, b=0.128, top_flare=0.35, t=0.026, flare=14.0, lean=14.0,   # q30: Sammy "the ears look bad" - smaller, closer to the head (dataset ears), eye-to-nose level
+                       recess=0.014, k=0.016, x_in=0.012))
 
 
 def ear_sdf(p, side):

@@ -8,7 +8,7 @@ import numpy as np
 EYE_H = 0.445
 D = 1.0 - EYE_H
 MY = EYE_H + 0.64 * D          # mouth line
-MW = 0.35 * D / 2      # q26: books want the neutral mouth about one eye width (E = 0.33 D); v5a 0.41 D still failed
+MW = 0.40 * D / 2      # q30: Sammy 'mouth too thin' + Leo 0.45-0.49 D; 0.35 D (books) boxed the open mouth
                                # shorter than the gap between the eyes; was 0.49 D from Leo)
 NB = EYE_H + 0.49 * D          # nose bottom
 CURVE = 0.006
