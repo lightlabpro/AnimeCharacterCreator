@@ -46,3 +46,16 @@ own (HW = head width, EH = eye height).
 Sources: animeoutline.com (male head and face; side-view face; mouths; side-view mouths; teeth; 3/4 male face;
 shading in different lighting), biorust.com/tutorials/face-proportions-anime, dessindigo.com (three-quarter face),
 tips.clip-studio.com/en-us/articles/8004 (side profile).
+
+## Ears (q20 follow-up, AnimeOutline "How to Draw Anime & Manga Ears" and "Female Face 3/4 View")
+- Anime ears sit lower than real ears: standard method places them between the head's horizontal midline and a
+  line halfway from that midline to the chin; chibi/stylised places them lower still.
+- Profile: ear behind the head's vertical midline with a small gap; side view is where the rim, opening and inner
+  split read best.
+- Detail level follows style: semi-realistic = rim + one bump + opening; simplified = outline + rim + bump.
+  Our MHS3-style ear should be the semi-realistic set, not full anatomy.
+- 3/4 female face: ear between the top of the eyes and the bottom of the nose, about a quarter of the face tall.
+- 3/4: the far eye, far brow and far side of the lips are drawn vertically shorter than the near ones (in addition
+  to narrower), and compress more the further the head turns.
+- Vertical spacing: nose halfway between the eye tops and the chin; bottom lip halfway between nose base and
+  chin, top lip just above. A lower face that reads "stretched down" breaks this halving.
