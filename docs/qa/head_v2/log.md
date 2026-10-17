@@ -197,3 +197,29 @@ references from mhs3 as target look. remember to use typesafe".
 - Face gate v7k vs v7a: front, 3/4, laugh, talk better in both orders, 0 regressions; front same_style 0.34 -> 0.43;
   look failures 56 -> 50; rule failures 27 (24, within noise). Still FAIL.
 - Board: docs/qa/head_v2/gate/boards/q29_style.png
+
+## q30 (2026-10-17) - "this looks horrible ... fix the head shape ... ears ... eyes look egyptian ... mouth too thin"
+- Head driven by the measured dimensions of 5 dataset heads (v8b within about +-0.02 H of the medians at most
+  heights); smaller, closer ears; lash ends at the eye corner; mouth 1.7x thicker, 0.40 D wide; neck set back under
+  the skull. Blender was disconnected, so these were checked on clay and dims only (board q30_clay_shape).
+
+## q31 (2026-10-17) - "you can even use the reference as a base model and rework it so it looks like mhs3"
+- Base: dataset head "Autumn Girl" by Aryzus (CC BY 4.0, credit in docs/reference/ATTRIBUTION.md), re-proportioned to
+  the dataset medians and resampled to an SDF grid (blender/head_v3/base_head.py -> base_grid_d60.npz, 3.6 MB).
+- Hybrid (sdf_head.sdf_hybrid, on by default; HEAD_BASE= empty gives the procedural head): face front and ears from
+  the base; skull, back of the head, jaw sides and neck from our measured head (the base's back was cut flat, 0.08 H
+  short of the median); our smooth front closes the base's eye sockets; face front 6% less forward.
+- Measured on the renders (D = pupil to chin): face width at the mouth 1.12 D (Leo 0.97), 0.81 D at 0.8 D (Leo 0.69)
+  -> lower face narrowed (x 0.90 from h 0.58 to 0.78) = h6. This puts chin widths under the dataset band
+  (width 0.85-0.95 LOW): the MHS3 match and the dataset bands disagree here; flagged, not hidden.
+- TypeSafe A/B (both orders must agree), q31/*.json:
+  - h6 vs v8b (old procedural): h6 wins overall in front, 3/4 and side; head_shape and ears in all three; clean in
+    front; artifacts 0.82 -> 0.57 (front). v8b still wins nose_mouth in front.
+  - h6 vs h5 (before narrowing): h6 wins overall, nose_mouth and clean in front and 3/4.
+  - h7 (base nose half replaced by our small nose): lost to h6 -> reverted.
+  - h8/h9 (base ear moved down x1.3 and re-seated, for the book rule "ear from eyelid to nose bottom"): the ear/cheek
+    crease drew a jagged outline; lost to h6 in every view (artifacts 0.39 -> 0.87) -> off (BASE_BLEND ear_seat_mode).
+- Face gate h6 vs v8b: both FAIL, 21 rule failures each, MHS3-look failures 50 vs 51, same laugh regression vs v4l.
+  New for h6: ear position rules (mg13_ear_eyelid_to_nose, cr_ear_position) and cr_profile_face_line; cleared:
+  aa_highlight_protruding, mg13_median_matches_contour, cr_lash_lines_tilt_center.
+- Boards: q31/board_v8b_h6.png, board_h5_h6.png, board_h6_h8.png, clay_h5.png.

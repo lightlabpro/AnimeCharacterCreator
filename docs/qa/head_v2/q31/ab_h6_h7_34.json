@@ -1,0 +1,120 @@
+{
+ "A": "docs/qa/head_v2/gate/q31_h6/34.png",
+ "B": "docs/qa/head_v2/gate/q31_h7/34.png",
+ "REF": "docs/reference/mhs3/face_eleanor_front.png",
+ "aspects": {
+  "overall": {
+   "winner": "disagree",
+   "orders": [
+    "tie",
+    "A"
+   ]
+  },
+  "head_shape": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "eyes": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "brows": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "nose_mouth": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  },
+  "jaw_chin": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "ears": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "eye_layout": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "ear_shape": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "expression": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "profile_eye": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "mouth_depth": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "upper_lip": {
+   "winner": "disagree",
+   "orders": [
+    "A",
+    "B"
+   ]
+  },
+  "face_shading": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "clean": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.335,
+  "B_dented": 0.31,
+  "A_artifacts": 0.49,
+  "B_artifacts": 0.455,
+  "A_adult": 0.77,
+  "B_adult": 0.785
+ }
+}

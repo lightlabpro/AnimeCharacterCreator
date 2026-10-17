@@ -17,6 +17,7 @@ Run with the system python (numpy, scipy, scikit-image): python3 sdf_head.py OUT
 Coordinates: metres, z up, -y is the face front, x = character's left. H = head height (skull top to chin).
 """
 import json
+import os
 import sys
 
 import numpy as np
@@ -236,8 +237,109 @@ def relief(x, h):
     return R
 
 
+# q31: hybrid head (Sammy: "you can even use the reference as a base model and rework it so it looks like mhs3").
+# BASE = a reworked dataset head SDF grid (head_v3/base_head.py: CC BY "Autumn Girl" by Aryzus, re-proportioned to the
+# dataset medians, eye sockets filled, smoothed). The skull above the brow stays our measured loft (dataset medians,
+# smooth); face, ears, jaw and neck come from the base, blended across BASE_BLEND (which also hides the source's
+# skull-shell seam). BASE None = the old all-procedural head.
+_BASE_DEF = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "head_v3", "base_grid_d60.npz")
+BASE = knob("BASE", os.environ.get("HEAD_BASE", _BASE_DEF if os.path.exists(_BASE_DEF) else "") or None)   # HEAD_BASE= (empty) -> procedural
+if BASE:                                          # the base's own ears (measured on the reworked mesh): painted ear pieces follow
+    EAR = P["EAR"] = dict(EAR, c=(0.0, -0.060, 0.500), a=0.050, b=0.090)
+BASE_BLEND = knob("BASE_BLEND", dict(face_y=-0.05, face_dy=0.10, h0=0.28, h1=0.44, chin_h=0.97, side_x=0.30,
+                                      ear_box=((0.33, 0.62), (-0.17, 0.05), (0.40, 0.63)), ear_seat_mode=False,
+                                      # q31 h8/h9: ear moved down x1.3 and re-seated (face gate: eyelid -> nose bottom) drew a
+                                      # jagged outline in the ear/cheek crease; TypeSafe A/B preferred the h6 ear in all views
+                                      ear_side=(0.394, 0.344), ear_seat=0.016, ear_cut=0.006, ear_k=0.03, ear_r=(0.085, 0.135),
+                                      ear_move=((-0.060, 0.500), (-0.060, 0.565), 1.30),
+                                      front_scale=0.94,
+                                      eye_c=(0.18, 0.47), eye_r=(0.21, 0.15),
+                                      jaw_narrow=(0.58, 0.78, 0.90), nose=(0.53, 0.75, 0.09, 0.0)))
+# jaw_narrow: x scale 1 -> 0.90 over h 0.58-0.78 (Leo 0.97 D wide at the mouth, h5 1.12 D; TypeSafe A/B h6 > h5).
+# nose: h0, h1, half-width, share of our small nose (q31 h7: 0.5 lost the TypeSafe A/B to 0).
+
+
+def _base_interp():
+    if "base" not in _CACHE:
+        from scipy.interpolate import RegularGridInterpolator
+        g = np.load(BASE)
+        _CACHE["base"] = RegularGridInterpolator((g["xs"], g["ys"], g["hs"]), g["D"].astype(np.float32),
+                                                 bounds_error=False, fill_value=0.2)
+    return _CACHE["base"]
+
+
+def _sstep(t):
+    t = np.clip(t, 0, 1)
+    return t * t * (3 - 2 * t)
+
+
+def _box(v, lo, hi, soft):
+    return _sstep((v - lo) / soft) * (1 - _sstep((v - hi) / soft))
+
+
+def _our_side(h):
+    """half-width of our head (no ears) along the ear line y = ear target y, by bisection, cached on an h table."""
+    if "side" not in _CACHE:
+        ty = BASE_BLEND.get("ear_move", ((0, 0), (0, -0.06), 1))[1][0]
+        hh = np.linspace(0.30, 0.85, 56)
+        lo, hi = np.full_like(hh, 0.15), np.full_like(hh, 0.65)
+        for _ in range(30):
+            mid = (lo + hi) / 2
+            dm = sdf_proc(np.stack([mid, np.full_like(hh, ty), hh], -1), ears=False)
+            lo, hi = np.where(dm < 0, mid, lo), np.where(dm < 0, hi, mid)
+        _CACHE["side"] = (hh, (lo + hi) / 2)
+    hh, w = _CACHE["side"]
+    return np.interp(h, hh, w)
+
+
+def sdf_hybrid(p):
+    """q31 v2: the base head (reworked dataset mesh) gives only the face front and the ears. Our measured head gives
+    skull, back of the head, jaw sides and neck (clay: the base's back was cut flat, 0.08 H short of the dataset
+    median), and fills the base's eye sockets (eyes are painted pieces: the face must be closed there)."""
+    b = BASE_BLEND
+    h0j, h1j, sj = b.get("jaw_narrow", (0.6, 0.8, 1.0))
+    sx = 1 - (1 - sj) * _sstep((p[..., 2] - h0j) / (h1j - h0j))
+    p = np.stack([p[..., 0] / sx, p[..., 1], p[..., 2]], -1)
+    x, y, h = p[..., 0], p[..., 1], p[..., 2]
+    q = p.copy()
+    q[..., 1] = np.where(y < 0, y / b["front_scale"], y)            # face less forward (a flatter MHS3 front)
+    db = _base_interp()(q.reshape(-1, 3)).reshape(p.shape[:-1]) * np.where(y < 0, b["front_scale"], 1.0)
+    dp = sdf_proc(p, ears=False)
+    face = _sstep((b["face_y"] - y) / b["face_dy"]) * _sstep((h - b["h0"]) / (b["h1"] - b["h0"])) \
+        * (1 - _sstep((h - b["chin_h"]) / 0.09)) * (1 - _sstep((np.abs(x) - b["side_x"]) / 0.08))
+    ex, eh = b["eye_c"]; rx, rh = b["eye_r"]
+    m = (1 - _sstep(np.hypot((np.abs(x) - ex) / rx, (h - eh) / rh) - 0.5)) * _sstep(-y / 0.1)
+    face = face * (1 - m)                                            # sockets closed with our smooth front
+    n0, n1, nw, nk = b.get("nose", (0.5, 0.75, 0.1, 0.0))            # q31 TypeSafe nose_mouth: the base nose is long/sharp
+    face = face * (1 - nk * _box(h, n0, n1, 0.04) * (1 - _sstep(np.abs(x) / nw)))
+    d = dp * (1 - face) + db * face
+    (x0, x1), (y0, y1), (h0, h1) = b["ear_box"]
+    ear = _box(np.abs(x), x0, x1, 0.03) * _box(y, y0, y1, 0.03) * _box(h, h0, h1, 0.03)
+    if not b.get("ear_seat_mode"):                                   # h6: the base ear with the base side around it
+        return smin(d, db + (1 - ear) * 0.2, 0.012) * sx
+    # the base ear alone (the base's head side cut away: x_side), scaled about its centre, moved down and re-seated on
+    # our head side (moving the whole base side with it left a plate with a flat top - clay h8a)
+    (sy, sh), (ty, th), es = b["ear_move"]
+    hsrc = sh + (h - th) / es
+    xs0, xs1 = b["ear_side"]
+    x_side = xs0 + (xs1 - xs0) * np.clip((hsrc - 0.40) / 0.20, 0, 1.2)
+    ax = np.abs(x) - (_our_side(h) - x_side) - b["ear_seat"]
+    qe = np.stack([ax, sy + (y - ty) / es, hsrc], -1)
+    de = _base_interp()(qe.reshape(-1, 3)).reshape(p.shape[:-1])
+    de = smax(de, x_side + b["ear_cut"] - ax, 0.006) * es
+    ry, rh = b["ear_r"]                                              # nothing of the base but the ear itself
+    de = np.maximum(de, (np.hypot((y - ty) / ry, (h - th) / rh) - 1.0) * min(ry, rh))
+    return smin(d, de + (1 - ear) * 0.2, b["ear_k"]) * sx
+
+
 def sdf(p):
     """p: (..., 3) in H units with the third component h (down)."""
+    if BASE:
+        return sdf_hybrid(p)
+    return sdf_proc(p)
+
+
+def sdf_proc(p, ears=True):
     d = loft(p)
     # jaw line: keep the half-space above the plane through the jaw angle and the chin bottom (side view)
     (yg, hg), (yc, hc) = JAW["gonion"], JAW["chin"]
@@ -263,7 +365,7 @@ def sdf(p):
     neck = (np.linalg.norm(q, axis=-1) - 1.0) * min(NECK["rx"], NECK["ry"])
     neck = np.maximum(neck, np.maximum(NECK["h0"] - p[..., 2], p[..., 2] - NECK["h1"]))
     d = smin(d, neck, NECK["k"])
-    for side in (1, -1):
+    for side in (1, -1) if ears else ():
         d = smin(d, ear_sdf(p, side), EAR["k"])
     return d
 
@@ -288,6 +390,8 @@ def build(vox=0.0012):
 if __name__ == "__main__":
     out = sys.argv[1]
     vox = float(sys.argv[sys.argv.index("--vox") + 1]) if "--vox" in sys.argv else 0.0012
+    if "--base" in sys.argv:
+        P["BASE"] = BASE = sys.argv[sys.argv.index("--base") + 1]
     if "--knobs" in sys.argv:
         P.update(json.load(open(sys.argv[sys.argv.index("--knobs") + 1])))
     v, f = build(vox)

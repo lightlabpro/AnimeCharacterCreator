@@ -166,5 +166,11 @@ Open items first. Claude Code reads this at session start and moves finished ite
   neck, lower angled brows, bigger iris, brow layer lift). e2e_head_pack --id head_mhs3_v2: E2E OK. Blender-only shading
   changes (wider analytic ellipsoid, thicker outline) are in pc_v2.py, not in the pack's normals.
 
+- 2026-10-17 (q31) head v2 geometry now blends in a CC BY 4.0 dataset head ("Autumn Girl" by Aryzus, Sketchfab):
+  face front and ears come from it (blender/head_v3/base_grid_d60.npz), skull/back/neck stay ours. Same CHR_ mesh
+  names, keys and face layout (pupil line h 0.445) - no contract change, not re-exported yet. New requirement: the credit
+  in docs/reference/ATTRIBUTION.md must ship with any pack or app build that contains this head (credits screen or
+  pack metadata). HEAD_BASE= (empty) when building gives the old all-procedural head.
+
 ## Done
 (none yet)
