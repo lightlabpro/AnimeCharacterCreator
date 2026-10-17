@@ -186,9 +186,8 @@ EXPR = {
     "happy": {"PF-SmileOpenJaw": 0.6, "PF-JawOpen": 0.12, "PF-Squeeze": 0.45, "PF-LidLowerUp": 0.7, "PF-BrowRaise": 0.35,
               "_blush": 0.55},
     "laugh": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.45, "PF-Squeeze": 1.0, "PF-BrowRaise": 0.5, "_blush": 0.75},
-    "angry": {"PF-BrowFurrow": 1.0, "PF-BrowLower": 0.8, "PF-LidUpperDown": 0.40, "PF-Squint": 0.4, "PF-VisEE": 1.0,
-              "PF-JawOpen": 0.18, "PF-Frown": 0.4},
-    "sad": {"PF-BrowSad": 1.0, "PF-BrowInnerUp": 0.5, "PF-Frown": 0.8, "PF-LidUpperDown": 0.55},
+    "angry": {"PF-BrowFurrow": 1.0, "PF-BrowLower": 0.8, "PF-LidUpperDown": 0.40, "PF-Squint": 0.45, "PF-Grimace": 1.0},
+    "sad": {"PF-BrowSad": 1.0, "PF-BrowInnerUp": 0.5, "PF-Frown": 0.8, "PF-LidUpperDown": 0.85},   # irises tucked under the lids
     "surprised": {"PF-EyeWide": 1.0, "PF-BrowRaise": 1.0, "PF-VisOH": 0.8},
     "talk_oh": {"PF-VisOH": 0.9}, "talk_ee": {"PF-VisEE": 0.9},
 }

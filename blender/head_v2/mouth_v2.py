@@ -276,6 +276,9 @@ MOUTH_KEYS = {
     "PF-VisOH": dict(jaw=0.42, round=1.0),
     "PF-VisEE": dict(jaw=0.16, wide=1.0, smile=0.15),
     "PF-Pout": dict(round=0.7),
+    # q26 face gate: angry needs bared, gritted teeth (books: "teeth bared"; MHS3 ref m06 Leo grit) - contract PF-Grimace
+    "PF-Grimace": dict(jaw=0.04, wide=0.8, frown=0.5, bare=1.0),   # v5d: an open jaw read as talking (tongue); Leo's grit = lips
+                                                                 # pulled apart around clenched teeth, corners down
     "PF-Smirk_L": dict(smile=0.9, side=1),
     "PF-Smirk_R": dict(smile=0.9, side=-1),
 }
@@ -320,6 +323,18 @@ def _mouth_offsets(co, smile=0.0, frown=0.0, wide=0.0, round=0.0, side=0):
     return d
 
 
+def _lip_bare(co, jaw_w):
+    """q26 grimace: lips pulled apart with the jaw closed (clenched teeth show). Upper lip (jaw weight < 0.5) up, lower lip
+    down, strongest at the mouth line, fading out past the corners and away from the line."""
+    x = co.x / H; h = (ZT - co.z) / H; y = co.y / H
+    if y > -0.18:
+        return Vector()
+    band = math.exp(-((h - MY) / 0.035) ** 2)
+    across = max(0.0, 1.0 - (abs(x) / (MW * 1.08)) ** 4)
+    up = 1.0 if jaw_w < 0.5 else -1.15
+    return Vector((0.0, 0.0, up * 0.0140 * band * across * H))
+
+
 def add_mouth_keys(head, lower_parts):
     """PF- mouth keys on the head (and the jaw part on the lower teeth / tongue)."""
     if head.data.shape_keys is None:
@@ -328,12 +343,22 @@ def add_mouth_keys(head, lower_parts):
         frac = prm.get("jaw", 0.0)
         pos, R, pivot = _jaw_positions(head, frac)
         k = head.shape_key_add(name=name); k.value = 0.0
+        bare = prm.get("bare", 0.0)
+        jw = jaw_weights(head) if bare else None
         for i, v in enumerate(head.data.vertices):
             k.data[i].co = pos[i] + _mouth_offsets(v.co, prm.get("smile", 0), prm.get("frown", 0), prm.get("wide", 0),
                                                    prm.get("round", 0), prm.get("side", 0))
+            if bare:
+                k.data[i].co += _lip_bare(v.co, float(jw[i])) * bare
         for ob in lower_parts:
             if ob.data.shape_keys is None:
                 ob.shape_key_add(name="Basis")
             kk = ob.shape_key_add(name=name); kk.value = 0.0
+            # grimace: clenched - lower teeth up against the upper ones, tongue down and back out of sight
+            lift = Vector()
+            if bare and ob.name.startswith("V2TeethLower"):
+                lift = Vector((0.0, 0.0, 0.0032 * bare))
+            elif bare and ob.name.startswith("V2Tongue"):
+                lift = Vector((0.0, 0.004 * bare, -0.005 * bare))
             for i, v in enumerate(ob.data.vertices):
-                kk.data[i].co = pivot + R @ (v.co - pivot)
+                kk.data[i].co = pivot + R @ (v.co - pivot) + lift

@@ -51,5 +51,11 @@ failure, and `gate.verdict`. Feed it to the `character-gate` skill: `run_gate.py
   `--prev` baseline, not the last judged one).
 - Use the `reference-match-judge` skill (`typesafe_visual_judge.py` with `--images`) when one element is off and you need TypeSafe
   to pick the correction from a menu; the face gate tells you which element, the judge tells you how to fix it.
+- **TypeSafe noise (measured q26, v5c/v5d/v5f):** on unchanged renders a rule's p moves by ~0.02 on average, 0.05 at the
+  90th percentile, up to 0.12; 5-7 of ~108 view rules flip verdict between runs. A change of a few rule failures between
+  two runs is noise - judge a fix by the rules on the element you changed and by the both-order no-regression check, and
+  never re-run until a borderline item passes.
+- A missing render or reference makes that MHS3-look view "not measured" and the gate "unknown" at best (q26 bug: missing
+  refs were skipped silently).
 - Never mark the work done with gate.verdict "fail", or with elements only "uncertain" / "not measured" without saying
   so to Sammy.

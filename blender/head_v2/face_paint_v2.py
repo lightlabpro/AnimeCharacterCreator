@@ -236,9 +236,14 @@ def eye_key_uw(name, uw, key):
         out[:, 1] = w + (l1 - l0)
     elif name == "crease":
         out[:, 1] = w + 0.55 * (u1 - u0)
-    else:
+    elif name.startswith("sclera"):
         t = np.clip((w - l0) / np.maximum(u0 - l0, 1e-6), 0, 1)
         out[:, 1] = l1 + t * (u1 - l1)
+    else:
+        # q26 face gate (cr_expr_sad_iris_tucked 0.04): the books tuck the iris UNDER the lid - it is cut by the lid,
+        # not squashed between the lids. Iris / pupil / highlights keep their shape and are clamped to the new opening
+        # (flattened along the lid line); when the lids open wider they stay put (the sclera fills the opening).
+        out[:, 1] = np.clip(w, np.minimum(l1, u1), np.maximum(l1, u1))
     return out
 
 
@@ -311,12 +316,13 @@ def build():
     # mouth line (Leo: a thin dark-brown line, a touch heavier in the middle, ends fading), drawn just above the
     # geometry slit so it rides on the upper lip; it hides the slit's uneven rim when the mouth is closed
     import mouth_v2_line as ML
-    xs = np.linspace(-1.03, 1.03, 64)   # q25: just past the slit corners (dark cavity wedges showed at the ends)
+    xs = np.linspace(-1.0, 1.0, 64)     # q25: past the slit corners (1.03); v5b (MW 0.35 D): the ends curled off the open
+                                        # mouth as hooks -> ends at the corners, smaller accents
     # mouth-line fix (q24): ends kept >= ~0.0045 H thick (sub-pixel ends rendered as dots), lifted to 0.50 mm
     # q25: drawn-line shape - heavier in the middle third, tapering to rounded ends (was an even bar)
     def th(u):
         au = abs(u)
-        corner = 0.0048 * np.exp(-((au - 0.97) / 0.045) ** 2)       # q25: small rounded corner accents (cover the
+        corner = 0.0028 * np.exp(-((au - 0.95) / 0.045) ** 2)       # q25: small rounded corner accents (cover the
         return 0.0034 + 0.0042 * (1 - np.clip(au, 0, 1) ** 2) ** 1.5 + corner   # dark corner bridge faces at rest)
     top = [(u * ML.MW, ML.line(u * ML.MW) - 0.42 * th(u) - 0.0010) for u in xs]
     bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.58 * th(u) - 0.0010) for u in xs[::-1]]

@@ -117,3 +117,19 @@ references from mhs3 as target look. remember to use typesafe".
   laugh / happy, contract blush_strength as a skin shader mask (resting 0.30, happy 0.55, laugh 0.75), neutral mouth
   0.35 D (one eye width), lid fold inner 40%, angry shows teeth. Blush is Blender-shader only so far: the app / pack
   needs the same mask in its skin shader before export.
+- v5b gate: 24 rule failures; mg13_cheek_blush 0.17 -> 0.97, cr_expr_joy_closed_arcs 0.04 -> 0.83, laugh same_expression
+  0.89, happy 0.81. Narrowing the cavity to 0.35 D made the open mouths boxy with hooked line ends.
+- v5c: line ends trimmed (1.03 -> 1.0, smaller corner accents), first PF-Grimace (open jaw) -> angry read as talking (0.36).
+- v5d: iris / pupil / highlights clamped to the lids instead of squashed between them (books: iris tucked under the lid).
+- v5e/v5f: PF-Grimace rebuilt as a real grit - lips pulled apart with the jaw closed (new 'bare' term, jaw weights pick the
+  lip), lower teeth raised to meet the upper, tongue dropped: angry same_expression 0.49 -> 0.79, angry beats v4l in both
+  orders.
+- v5f gate: FAIL - 25 rule failures (44 at v4l), 57 MHS3-look failures (laugh / talk / angry now measured), 1 regression:
+  laugh, v4l preferred in both orders against Eleanor's open-eyed laugh (m02); the books and MHS3 m08 want closed ^ eyes,
+  and v4l's laugh mouth is wider (0.41 D cavity). Sammy decides.
+- TypeSafe noise measured on unchanged renders: mean |dp| 0.02, p90 0.05, max 0.12, 5-7 of 108 verdict flips per run, so
+  21 vs 25 rule failures between v5d and v5f is noise (front render unchanged). Written into the face-gate skill.
+- Still failing everywhere: MHS3 look ~0.2 per element (flat cel vs MHS3's painted shading / hair detail - a shading
+  task, not a face-piece one). Open book items: surprise small irises (needs an iris key; PF-Surprise is a mouth alias in
+  the contract), crying tears, adult lower-lip line, head layout rules (brow band, ear position) on the v2 skull.
+- Board: docs/qa/head_v2/gate/boards/q26_v4l_vs_v5f.png
