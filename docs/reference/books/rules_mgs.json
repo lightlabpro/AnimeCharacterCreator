@@ -1,0 +1,5 @@
+[
+ {"id": "mg_far_eye_inside", "page": 151, "rule": "In a 3/4 face the far eye is shorter than the near eye but stays fully inside the face contour, with the nose bridge between it and the cheek edge."},
+ {"id": "mg_profile_wedge", "page": 108, "rule": "In profile the brow ridge sits forward of the eye and the eye is a short wedge set back from it."},
+ {"id": "mg_few_lines", "page": 151, "rule": "A face can be built from a few strokes plus shadow shapes; extra lines make it static."}
+]
