@@ -139,5 +139,13 @@ Open items first. Claude Code reads this at session start and moves finished ite
   Please add the names to the contract / expected-contract.json if you keep them. e2e_head_pack passes (27 meshes).
   Mouth is also lower and wider and the lips are pushed forward in the head mesh (same names).
 
+- **2026-10-16 - VW- view keys now also on the mouth strips; far eye shorter in 3/4 (chat, q21).**
+  No new meshes, no renamed ones. CHR_TeethUpper, CHR_TeethShade, CHR_MouthDeep, CHR_Tongue and CHR_MouthThroat now
+  carry VW-Yaw_L/R and VW-Side_L/R (the app already drives VW- on any mesh that has them): in a turned view the teeth and
+  tongue slide in from the far mouth corner (teeth 15%, tongue 8% of the mouth half-width at 35 degrees) so the dark
+  inside of the far cheek shows - parallax for "the teeth and tongue look flat". The far eye, brow and the skin around
+  them are 15% shorter vertically in VW-Yaw (far side only). Pack re-exported (27 meshes); typecheck / test / build pass,
+  e2e_head_pack OK. Knobs: blender/newhead/look_knobs.json view.FAR_V / MOUTH_TEETH_D / MOUTH_TONGUE_D.
+
 ## Done
 (none yet)

@@ -601,3 +601,27 @@ PDF in the Drawing folder with Claude and TypeSafe, and research anime face draw
 - Books: Claude read (text + every page image) 14 of 32 so far; TypeSafe read all 32 books (run_q20a.log, 0 errors)
   and checks every Claude rule against its page (run_q20b). Remaining Claude reads continue.
 Boards: q20_board.png (before / after: front, 3/4, side, mouth close-ups, eyes), q20_app_talk_aa_face*.png.
+
+## q21 (2026-10-16) - mouth depth in turned views, shorter far eye
+
+Sammy (q20): "fix the teeth and tongue, they look too flat and 2d (no depth)", "the eyes look elongated (like Egyptian
+drawings)". Rules used: teeth wrap the curved jaw (Pavelec p101, TypeSafe 0.96), the open mouth reads deep
+(ct_open_teeth 0.98); in 3/4 the far eye, brow and lip side are drawn shorter (AnimeOutline 3/4 female face, gn_far_eye
+0.85, Borgman p114/p120).
+- view_keys.py: new `_mouth_coords` - the strips behind the lips (teeth, teeth shade, deep, tongue, throat) get VW- keys
+  that slide them in from the far corner, ramp (1-q^2) on the mouth half-width, near corner fixed. First try (per-layer
+  ramps + front-ray y re-projection, tongue 25%) tore the tongue into shards and pushed a tongue tip past the near
+  corner (q21_a). Fixed: one shared ramp, no y re-projection, tongue 8% (25% leaves a hard vertical cut, q21_d).
+- view_keys.py: FAR_V - the far eye (white, iris, lids, brow) and the skin around it scale vertically about the eye
+  centre in VW-Yaw (0.85). Off for the side keys.
+- look_knobs.json view: FAR_V 0.85, MOUTH_TEETH_D 0.15, MOUTH_TONGUE_D 0.08.
+- TypeSafe A/B (typesafe_ab_compare.py, both orders): mouth close-up 3/4 happy, base vs final: mouth_depth B
+  (nose_mouth disagree; artifacts 0.665 -> 0.71, small rise); base vs tongue 25%: A on mouth_depth and nose_mouth
+  (rejected). Whole head 3/4 + side: mouth_depth / profile_eye / eye_layout / overall tie, nose_mouth disagree - the
+  change is too small to show at head scale.
+- NOT fixed yet: the profile eye is still closer to a narrowed almond than a wedge; the 3/4 near eye is still long.
+  The side-view mouth strips still extend past the jaw line under the lower lip (there before q21).
+- Pack re-exported (27 meshes, VW- keys on 5 mouth meshes; inbox item), typecheck / test / build pass, e2e_head_pack OK.
+- Books: TypeSafe rule check of the second 18 books done (run_q20c, 0 errors, 127 rules): notes_typesafe_rulecheck_q20c.md.
+Boards: q21_board.png (neutral / happy / talk x front / 3/4 / side), q21_mouth_board.png (base / final / tongue 25%),
+q21_eyes_board.png (far eye before / after), q21_app_smile_open_34.png.

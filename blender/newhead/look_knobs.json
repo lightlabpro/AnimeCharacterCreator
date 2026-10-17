@@ -25,7 +25,10 @@
   "IRIS_FAR": 0.77,
   "NEAR_C": 0.85,
   "NEAR_SHIFT": 0.4,
-  "IRIS_SIDE": 0.5
+  "IRIS_SIDE": 0.5,
+  "FAR_V": 0.85,
+  "MOUTH_TEETH_D": 0.15,
+  "MOUTH_TONGUE_D": 0.08
  },
  "hair": {
   "LIGHTNESS": 0.9,

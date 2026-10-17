@@ -35,11 +35,22 @@ VIEW = dict(
     R_IN=0.14, R_OUT=0.6, R_V=0.45, R_UP=0.8,   # skin falloff around the eye+brow box (eye half-widths)
     LIT_MM=0.0010, LIT_Y=-0.060, PUSH=0.0015, VIEW_LIT=1, MIN_SLOPE=0.35, BOX_FADE=0.3, FIT_DEPTH=0, PUSH_BACK=0.0035, SKIP=("NewNose", "NewMouth", "NewLip"), COLUMN=1,     # v2: skin moved this far (m) by a view key is drawn fully lit (eye_lit)
     Y_FACE=-0.075, Y_SIDE=-0.035,    # v2: skin moves fully in front of Y_FACE (m), not at all behind Y_SIDE (temple, ear)
+    FAR_V=1.0,         # q21: far eye (3/4): vertical scale about the eye centre for the far eye, its brow and the skin
+                       # around them - AnimeOutline 3/4 face: "far eye, eyebrow and side of the lips ... vertically shorter";
+                       # Cooney (graphic novel p69): far eye shorter. 1 = off
+    MOUTH_TEETH_D=0.0, # q21: mouth depth at Y34 - the teeth band shrinks in from the far corner by this share of the mouth
+                       # half-width (layers behind the lips move toward the near side in a turned view; the near end stays
+                       # under the near corner, the far side shows the dark interior). Pavelec p101: the teeth wrap a rounded
+                       # arch. 0 = off
+    MOUTH_TONGUE_D=0.0,  # q21: the same for the tongue / throat (deeper, so more)
+    MOUTH_SIDE_X=1.5,  # q21: profile keys use this multiple of the Y34 mouth depth
 )
 for _k, _v in EYE_VIEW.items():
     if _k in VIEW:
         VIEW[_k] = _v
 VIEW_KEYS_NAMES = ("VW-Yaw_L", "VW-Yaw_R", "VW-Side_L", "VW-Side_R")
+MOUTH_LAYERS = {"NewMouthTeeth": "TEETH", "NewMouthTeethShade": "TEETH", "NewMouthDeep": "TEETH",
+                "NewMouthTongue": "TONGUE", "NewMouthThroat": "TONGUE"}
 
 
 def _sm1(e0, e1, x):
@@ -311,14 +322,27 @@ def _key_coords(objs, g, th, mirror, near_only):
         if not w.any():
             continue
         xn = np.where(w > 0, x + (xt - x) * (1.0 if role == "skin" else w), x)
+        z0 = z
+        if VIEW["FAR_V"] != 1.0 and not near_only:
+            # q21: far eye drawn shorter: eye parts and brow of the far side, and the far-side skin in the eye box
+            ze_ = O + ES["EYE_Z0"] * S
+            if role in ("eye", "iris", "brow"):
+                wv = ((w > 0) & (s_obj == -1)).astype(float)
+            else:
+                xr_ = -x if mirror else x
+                wv = _box_w(xr_, z) * (x < 0) * (off < 0.012)
+            if wv.any():
+                z = z + wv * (ze_ + VIEW["FAR_V"] * (z - ze_) - z)
+                w = np.where(wv > 0, np.maximum(w, 1e-6), w)
+                xn = np.where(wv > 0, np.where(w > 1e-6, xn, x), xn)
         yn = np.where(w > 0, gg.y(xn, z) + off, y)
         if w.any():
             # v11: inside the eye box the depth follows the smooth face fit (the opening filled), so the slid skin edge,
             # eye white, iris and lid strips keep their layer offsets exactly (the real skin's bumps made the lower
             # edge of the white notched)
             xr0 = -x if mirror else x; xr1 = -xn if mirror else xn
-            yf0 = _fit_y(g.surfs, xr0, z); yf1 = _fit_y(g.surfs, xr1, z)
-            b = _box_w(xr0, z) * (w > 0) * max(VIEW["FIT_DEPTH"], VIEW["COLUMN"])
+            yf0 = _fit_y(g.surfs, xr0, z0); yf1 = _fit_y(g.surfs, xr1, z)
+            b = _box_w(xr0, z0) * (w > 0) * max(VIEW["FIT_DEPTH"], VIEW["COLUMN"])
             if role in ("eye", "iris", "brow") and VIEW["COLUMN"]:
                 b = (w > 0).astype(float)
             yn = np.where(b > 0, b * (yf1 + (y - yf0)) + (1 - b) * yn, yn)
@@ -394,6 +418,40 @@ def _zref(role):
     return ze + 0.75 * w2m if role == "brow" else ze
 
 
+def _mouth_coords(col, tree, th, mirror):
+    """q21: mouth depth for one view key - layers behind the lips (teeth, tongue, ...) shrink in from the far corner.
+    Offsets per vertex in the basis; the expression keys (same vertices) add them on top."""
+    if not (VIEW["MOUTH_TEETH_D"] or VIEW["MOUTH_TONGUE_D"]):
+        return {}
+    inside = next((o for o in col.objects if o.name.startswith("NewMouthInside")), None)
+    if inside is None:
+        return {}
+    hw = float(np.abs(_basis(inside)[:, 0]).max())
+    scale = math.sin(th) / math.sin(math.radians(VIEW["Y34"]))
+    if th > math.radians(60):
+        scale = VIEW["MOUTH_SIDE_X"]
+    res = {}
+    for o in col.objects:
+        if o.type != "MESH":
+            continue
+        kind = next((v for k, v in MOUTH_LAYERS.items() if o.name.startswith(k + "_")), None)
+        if kind is None:
+            continue
+        A = VIEW["MOUTH_%s_D" % kind] * scale
+        if not A:
+            continue
+        B = _basis(o)
+        sgn = -1.0 if mirror else 1.0                     # +1: the near side is +x
+        # q21b: one ramp for every layer, measured on the mouth half-width (per-layer ramps slid the layers apart and
+        # tore the tongue into shards), and no front-ray y re-projection (it pushed strips through each other).
+        u = sgn * B[:, 0] / hw
+        q = np.clip((u + 1.0) / 2.0, 0, 1)                # 0 at the far corner, 1 at the near corner
+        xn = B[:, 0] + sgn * A * hw * (1 - q * q)
+        yn = B[:, 1].copy()
+        res[o.name] = (o, np.stack([xn, yn, B[:, 2]], 1))
+    return res
+
+
 def add_view_keys(ob, col, tag):
     from mathutils.bvhtree import BVHTree
     bm = bmesh.new(); bm.from_mesh(ob.data); tree = BVHTree.FromBMesh(bm); bm.free()
@@ -406,6 +464,7 @@ def add_view_keys(ob, col, tag):
     for kname, th, mirror, near_only in (("VW-Yaw_L", th34, False, False), ("VW-Yaw_R", th34, True, False),
                                          ("VW-Side_L", th90, False, True), ("VW-Side_R", th90, True, True)):
         res = _key_coords(objs, g, th, mirror, near_only)
+        res.update(_mouth_coords(col, tree, th, mirror))
         for name, (o, co) in res.items():
             if o.data.shape_keys is None:
                 o.shape_key_add(name="Basis")
