@@ -1,0 +1,9 @@
+[
+ {"id": "r_value_form", "page": 19, "rule": "A value change reads as a form change."},
+ {"id": "r_123", "page": 53, "rule": "A strong 1-2-3 read: top lightest, light-facing side mid value, shadow side darkest, with the light placed high and to one side."},
+ {"id": "r_core_shadow", "page": 66, "rule": "The core shadow is a dark band starting at the terminator and lightening onto the shadow side as reflected light increases."},
+ {"id": "r_occlusion", "page": 68, "rule": "Occlusion shadows are darkest where surfaces meet and in cavities and crevices, where less reflected light reaches."},
+ {"id": "r_upper_lip_cylinder", "page": 141, "rule": "The upper lip is one long, thin wrapping cylinder (with its own core shadow and cast shadow)."},
+ {"id": "r_edge_softness", "page": 87, "rule": "A cast shadow edge is sharper the closer the casting edge is to the surface receiving the shadow."},
+ {"id": "r_eye_highlight", "page": 207, "rule": "An eye reads as a reflective sphere: map the environment as a reflection on it, or use a single reflective highlight."}
+]

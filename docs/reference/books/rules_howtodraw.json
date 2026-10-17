@@ -1,0 +1,8 @@
+[
+ {"id": "h_minor_axis", "page": 71, "rule": "The minor axis of an ellipse points along the axis perpendicular to the circle's surface, like the axle of a wheel."},
+ {"id": "h_ellipse_order", "page": 73, "rule": "To draw a circle in perspective get the minor axis right first, then the degree of the ellipse."},
+ {"id": "h_silhouette_tangent", "page": 86, "rule": "The silhouette line is drawn tangent to all the section lines of the volume."},
+ {"id": "h_overlap_weight", "page": 100, "rule": "Where one line overlaps another, the overlapping foreground line is drawn thicker."},
+ {"id": "h_atmos", "page": 104, "rule": "Linear perspective, occlusion and atmospheric perspective (lower contrast with distance) are the depth cues that translate to drawing."},
+ {"id": "h_50mm", "page": 22, "rule": "A 60 degree cone of vision, close to a 50mm lens, gives an acceptable, natural-looking amount of distortion."}
+]
