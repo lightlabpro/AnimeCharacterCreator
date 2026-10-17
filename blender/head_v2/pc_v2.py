@@ -188,7 +188,7 @@ def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 Typ
             continue
         cp = o.copy(); cp.data = o.data.copy(); cp.name = o.name.replace(src_tag, TAG) + "_v2"
         cp.matrix_world = M @ o.matrix_world
-        cp.hide_render = False; cp.hide_viewport = False
+        cp.hide_render = False; cp.hide_viewport = True   # render-only: showing ~all hair copies in the viewport froze Blender (q23)
         col.objects.link(cp); n += 1
     return n
 
