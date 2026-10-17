@@ -49,7 +49,7 @@ def identity_keys(head, eyes, ears_pieces):
     jw = np.clip((h - 0.62) / 0.15, 0, 1) * np.clip((1.02 - h) / 0.05, 0, 1) * (1 - np.clip((y - 0.05) / 0.1, 0, 1))
     c2 = co.copy(); c2[:, 0] *= 1 + 0.10 * jw; add("ID-JawWidth", c2)
     c2 = co.copy(); c2[:, 0] *= 1 - 0.08 * jw; add("ID-JawWidth_Neg", c2)
-    ec_y, ec_h = 0.080, 0.540                      # sdf_head.EAR centre (y, h) - bpy has no scipy to import it
+    ec_y, ec_h = 0.080, 0.560                      # sdf_head.EAR centre (y, h) - bpy has no scipy to import it
     ear = (np.abs(x) > 0.33) * np.exp(-(((h - ec_h) / 0.20) ** 2 + ((y - ec_y) / 0.14) ** 2))
     root = np.stack([np.sign(x) * 0.34 * V.H, np.full_like(x, (ec_y + 0.0) * V.H),
                      np.full_like(x, V.ZT - ec_h * V.H)], 1)

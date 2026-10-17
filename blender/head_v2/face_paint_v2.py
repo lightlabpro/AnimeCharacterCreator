@@ -26,18 +26,18 @@ import sdf_head as S
 
 H = S.H
 from mouth_v2_line import EYE_H, D, NB as _NB  # one face layout for every script
-E = 0.33 * D             # eye width (q23: eyes_bigger 0.36 tried in v3t - picture A/B tie; Leo measures 0.32 D, kept)
+E = 0.33 * D             # eye width
 CX = 0.36 * D            # eye centre |x|
 COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 98), iris_top=(56, 118, 66),
            iris_rim=(40, 86, 48), pupil=(24, 52, 30), highlight=(255, 255, 255), lash=(58, 34, 26),
            lash_low=(128, 84, 66), crease=(186, 128, 106), brow=(104, 70, 44), mouth=(84, 44, 38),
            nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
-           ear_in=(214, 160, 146), ear_line=(128, 80, 70))
+           ear_in=(214, 160, 146), ear_line=(166, 112, 100))
 LIFT = dict(sclera=0.00030, sclera_shade=0.00034, iris=0.00038, iris_top=0.00042, iris_rim=0.00044, pupil=0.00046,
-            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00048, mouth=0.00050,
+            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00032, mouth=0.00050,
             nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028, ear_in=0.00030, ear_line=0.00034)
 
-UPPER = [(0.0, 0.02), (0.1, 0.145), (0.3, 0.255), (0.5, 0.289), (0.7, 0.272), (0.88, 0.187), (1.0, 0.06)]   # q24 TypeSafe eye_opening_narrower (middle x0.85)
+UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.30), (0.50, 0.34), (0.70, 0.32), (0.88, 0.22), (1.0, 0.06)]
 LOWER = [(1.0, 0.06), (0.90, -0.10), (0.70, -0.20), (0.50, -0.23), (0.30, -0.20), (0.12, -0.10), (0.0, 0.02)]
 
 
@@ -70,7 +70,7 @@ def eye_shapes(side):
     shade_edge = up - np.array([0, 0.11]) * np.array([[1, 1]])
     sh["sclera_shade"] = Polygon(np.vstack([up, shade_edge[::-1]])).buffer(0).intersection(sclera)
     # iris: on the world side the light comes from, the highlight; iris centre a touch toward the nose
-    ic = (0.47, 0.03); irx, irz = 0.31, 0.38   # q23 TypeSafe iris_bigger (x1.15)
+    ic = (0.47, 0.03); irx, irz = 0.27, 0.33
     iris = affinity.scale(Point(ic).buffer(1.0, 64), irx, irz)
     sh["iris"] = iris.intersection(sclera)
     sh["iris_top"] = iris.intersection(Polygon([(-1, 0.13), (2, 0.13), (2, 1), (-1, 1)])).intersection(sclera)
@@ -97,8 +97,8 @@ def eye_shapes(side):
 
 def brow_shape(side):
     # world (x, h) in H units: thick inner end low and close to the eye top, rising outward, tapering (Leo)
-    top = [(0.044, 0.403), (0.111, 0.369), (0.200, 0.347), (0.289, 0.344), (0.353, 0.357)]   # q23 TypeSafe brows_lower_angled x4
-    bot = [(0.357, 0.365), (0.289, 0.366), (0.200, 0.379), (0.111, 0.406), (0.050, 0.439)]
+    top = [(0.044, 0.355), (0.111, 0.328), (0.200, 0.315), (0.289, 0.321), (0.353, 0.341)]
+    bot = [(0.357, 0.349), (0.289, 0.343), (0.200, 0.347), (0.111, 0.365), (0.050, 0.391)]
     P = np.vstack([smooth_curve(top, 24), smooth_curve(bot, 24)])
     P[:, 0] *= side
     return Polygon(P).buffer(0)
@@ -191,7 +191,7 @@ def ear_shapes():
     a, b = e["a"], e["b"]
     t = np.linspace(np.radians(200), np.radians(-60), 40)        # C-shaped rim line: front-top, over, down the back
     rim = np.stack([cy + 0.62 * a * np.cos(t) * 1.15, ch - 0.70 * b * np.sin(t)], -1)
-    line = LineString(rim).buffer(0.0061, cap_style=1)   # q24 TypeSafe ear_inner_lines (0.0038 x1.6)
+    line = LineString(rim).buffer(0.0038, cap_style=1)
     inner = affinity.scale(Point((cy - 0.010, ch + 0.020)).buffer(1.0, 48), 0.30 * a, 0.30 * b)
     return line, inner
 
@@ -290,7 +290,6 @@ def build():
     nb = _NB                                                # nose bottom
     ns_ = Polygon(smooth_curve([(-0.040, nb - 0.004), (-0.012, nb - 0.016), (0.020, nb - 0.018), (0.042, nb - 0.006),
                                 (0.030, nb + 0.004), (-0.030, nb + 0.004)], 30)).buffer(0)
-    # q24: nose_side_shadow tried (v3y) - A/B v3x wins nose_mouth + clean (both orders), judge .415 -> .285: reverted
     xy, f = tri_poly(ns_, 0.00002)
     pieces["V2NoseShade"] = (project(xy, LIFT["nose_shade"]), f, COL["nose_shade"])
     my = EYE_H + 0.64 * D
@@ -305,8 +304,7 @@ def build():
     # geometry slit so it rides on the upper lip; it hides the slit's uneven rim when the mouth is closed
     import mouth_v2_line as ML
     xs = np.linspace(-0.97, 0.97, 60)
-    # q23: ends kept at least ~0.0045 H thick (sub-pixel ends rendered as dots) and the line lifted to 0.50 mm
-    # (at 0.30 mm it z-fought the skin slit and broke up)
+    # mouth-line fix (q24): ends kept >= ~0.0045 H thick (sub-pixel ends rendered as dots), lifted to 0.50 mm
     top = [(u * ML.MW, ML.line(u * ML.MW) - 0.0035 - 0.0035 * (1 - u * u)) for u in xs]
     bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.0010 + 0.0008 * (1 - u * u) ** 0.5) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)

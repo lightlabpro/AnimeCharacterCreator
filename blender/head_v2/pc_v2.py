@@ -70,8 +70,10 @@ def skin_mat():
     return m
 
 
-ELL_A = 0.50
-SKIN_SOFT = 0.03
+# shading knobs, overridable from the exec globals (q24: A = v2 look used 0.0009 / 0.40 / 0.002)
+OUTLINE_T = globals().get("OUTLINE_T", 0.0016)
+ELL_A = globals().get("ELL_A", 0.50)
+SKIN_SOFT = globals().get("SKIN_SOFT", 0.03)
 
 
 def import_blend():
@@ -116,7 +118,7 @@ def shade(col):
                 dt.use_loop_data = True; dt.data_types_loops = {"CUSTOM_NORMAL"}
                 dt.loop_mapping = "POLYINTERP_NEAREST"; dt.vertex_group = "smooth_n"
             o.data.materials.append(outline)
-            sm = o.modifiers.new("Outline", "SOLIDIFY"); sm.thickness = 0.0016; sm.offset = 1.0   # q23 TypeSafe outline_thicker (0.0009)
+            sm = o.modifiers.new("Outline", "SOLIDIFY"); sm.thickness = OUTLINE_T; sm.offset = 1.0   # q23 outline_thicker 0.0009 -> 0.0016
             sm.use_flip_normals = True; sm.use_rim = False; sm.material_offset = len(o.data.materials) - 1
             o.data.name = "V2_Head_" + TAG; o.name = "V2_Head_" + TAG
         else:
