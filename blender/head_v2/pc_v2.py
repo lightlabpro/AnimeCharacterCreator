@@ -64,6 +64,14 @@ def skin_mat():
         surf = next((n for n in grp.node_tree.nodes if n.type == "GROUP" and n.node_tree.name.startswith("NG_ToonSurface")), None)
         if surf is not None:
             surf.inputs["Softness"].default_value = SKIN_SOFT
+            # q29 TypeSafe first_fix skin_soft_shadows (v7b vs Leo, both orders): MHS3's face shadows are painted with soft
+            # edges; ours were razor hard, and the baked fringe band a jagged hard edge. v2 gets its own surface group
+            # with a wider forced-shadow ramp (the 'shade' mask edge 0.45 +- 0.03 -> +- MASK_SOFT)
+            surf.node_tree = surf.node_tree.copy(); surf.node_tree.name = "NG_ToonSurface_" + TAG
+            for n in surf.node_tree.nodes:
+                if n.type == "MATH" and len(n.inputs) > 1 and abs(n.inputs[0].default_value - 0.45) < 1e-4 \
+                        and abs(n.inputs[1].default_value - 0.03) < 1e-4:
+                    n.inputs[1].default_value = MASK_SOFT
     add_blush(m)
     nd = m.node_tree.nodes.get("Math.005")
     if nd and nd.operation == "DIVIDE" and abs(nd.inputs[1].default_value - 0.16) < 1e-4:
@@ -116,6 +124,7 @@ BLUSH_X, BLUSH_DH, BLUSH_RX, BLUSH_RZ = 0.42, 0.24, 0.13, 0.055   # D units: cen
 OUTLINE_T = globals().get("OUTLINE_T", 0.0016)
 ELL_A = globals().get("ELL_A", 0.50)
 SKIN_SOFT = globals().get("SKIN_SOFT", 0.03)
+MASK_SOFT = globals().get("MASK_SOFT", 0.03)
 
 
 def import_blend():
@@ -367,6 +376,106 @@ def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 Typ
     return n
 
 
+HAIR_HL_BAND = globals().get("HAIR_HL_BAND", (0.12, 0.55))
+HAIR_STROKES = globals().get("HAIR_STROKES", (4.0, 1.3, 0.09))    # u / v frequency, width; v7e (7, 15) drew diagonal zebra hatching
+HAIR_PLANE = globals().get("HAIR_PLANE", 0.45)                     # strength of the lighter third tone
+
+
+def hair_paint(m):
+    """q29 TypeSafe first_fix hair_painted_streaks (v7d vs Leo, both orders + tie-break): Leo's hair carries many thin
+    pale painted streaks and three tones; hair_nh's strokes were a few wide stripes in a narrow band (u*3 + v*9, 0.22).
+    Thinner, denser strokes over a longer band, plus a soft lighter plane on the lit side of each clump."""
+    if m is None or not m.use_nodes:
+        return
+    nt = m.node_tree
+    fu, fv, wd = HAIR_STROKES
+    for n in nt.nodes:
+        if n.type != "MATH":
+            continue
+        a = n.inputs[1].default_value if len(n.inputs) > 1 else None
+        if n.operation == "MULTIPLY" and a is not None and abs(a - 3.0) < 1e-6:
+            n.inputs[1].default_value = fu
+        elif n.operation == "MULTIPLY" and a is not None and abs(a - 9.0) < 1e-6:
+            n.inputs[1].default_value = fv
+        elif n.operation == "LESS_THAN" and a is not None and abs(a - 0.22) < 1e-6:
+            n.inputs[1].default_value = wd
+    out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
+    src = out.inputs["Surface"].links[0].from_socket
+    uv = nt.nodes.new("ShaderNodeUVMap"); sep = nt.nodes.new("ShaderNodeSeparateXYZ"); nt.links.new(uv.outputs[0], sep.inputs[0])
+    ash = next((n for n in nt.nodes if n.type == "ATTRIBUTE" and n.attribute_name == "hair_shade"), None)
+    mr = nt.nodes.new("ShaderNodeMapRange"); mr.interpolation_type = "SMOOTHSTEP"
+    nt.links.new(sep.outputs[1], mr.inputs["Value"])
+    mr.inputs["From Min"].default_value = 0.05; mr.inputs["From Max"].default_value = 0.30
+    mr2 = nt.nodes.new("ShaderNodeMapRange"); mr2.interpolation_type = "SMOOTHSTEP"
+    nt.links.new(sep.outputs[1], mr2.inputs["Value"])
+    mr2.inputs["From Min"].default_value = 0.70; mr2.inputs["From Max"].default_value = 0.35
+    across = nt.nodes.new("ShaderNodeMath"); across.operation = "SINE"              # strongest across the clump middle
+    mu = nt.nodes.new("ShaderNodeMath"); mu.operation = "MULTIPLY"; mu.inputs[1].default_value = math.pi
+    nt.links.new(sep.outputs[0], mu.inputs[0]); nt.links.new(mu.outputs[0], across.inputs[0])
+    f1 = nt.nodes.new("ShaderNodeMath"); f1.operation = "MULTIPLY"; nt.links.new(mr.outputs[0], f1.inputs[0]); nt.links.new(mr2.outputs[0], f1.inputs[1])
+    f2 = nt.nodes.new("ShaderNodeMath"); f2.operation = "MULTIPLY"; nt.links.new(f1.outputs[0], f2.inputs[0]); nt.links.new(across.outputs[0], f2.inputs[1])
+    f3 = nt.nodes.new("ShaderNodeMath"); f3.operation = "MULTIPLY"; f3.use_clamp = True
+    nt.links.new(f2.outputs[0], f3.inputs[0])
+    if ash is not None:
+        nt.links.new(ash.outputs["Fac"], f3.inputs[1])
+    else:
+        f3.inputs[1].default_value = 1.0
+    f4 = nt.nodes.new("ShaderNodeMath"); f4.operation = "MULTIPLY"; f4.inputs[1].default_value = HAIR_PLANE
+    nt.links.new(f3.outputs[0], f4.inputs[0])
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = tuple(lin(c) for c in (196, 156, 108)) + (1.0,)
+    mx = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(f4.outputs[0], mx.inputs[0]); nt.links.new(src, mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
+    nt.links.new(mx.outputs[0], out.inputs["Surface"])
+
+
+def build_fitted_hair(col, style="leo"):
+    """q29: the boards wore the n56 hair moved and scaled onto v2 (attach_hair), built for another skull - gaps, a
+    shell off the scalp and blotchy fringe shadows. Rebuild the hair with blender/newhead/hair_nh.py ON the v2 skull:
+    a temporary copy of the v2 head is scaled to the n56 head size / chin height (hair_nh's clump sizes and offsets
+    are tuned in metres for it), the clumps are fitted to that scalp by ray casts, then mapped back onto v2."""
+    from mathutils import Matrix
+    head = next(o for o in col.objects if o.name.startswith("V2_Head_"))
+    me = head.data
+    kb = me.shape_keys.key_blocks[0] if me.shape_keys else None
+    co = [kb.data[i].co.copy() if kb else v.co.copy() for i, v in enumerate(me.vertices)]
+    top = max(c.z for c in co)
+    chin = min(c.z for c in co if abs(c.x) < 0.006 and c.y < -0.03 and c.z < top - 0.15)
+    Hh = top - chin
+    s = 0.262 / Hh
+    A = Matrix.Translation((0, 0, 1.4826)) @ Matrix.Diagonal((s, s, s, 1)) @ Matrix.Translation((0, 0, -chin))
+    tmp_me = bpy.data.meshes.new("NEW_Head_fit")
+    tmp_me.from_pydata([tuple(A @ c) for c in co], [], [tuple(p_.vertices) for p_ in me.polygons]); tmp_me.update()
+    tmp = bpy.data.objects.new("NEW_Head_fit", tmp_me)
+    tcol = bpy.data.collections.get("NEW_HEAD_fit") or bpy.data.collections.new("NEW_HEAD_fit")
+    if tcol.name not in bpy.context.scene.collection.children:
+        bpy.context.scene.collection.children.link(tcol)
+    for o in list(tcol.objects):
+        bpy.data.objects.remove(o)
+    tcol.objects.link(tmp)
+    hp = os.path.join(R, "blender", "newhead", "hair_nh.py")
+    g = {"__name__": "hair_nh", "HAIR_PATH": hp}
+    exec(open(hp, encoding="utf-8").read(), g)
+    g["HAIR_CAST"] = 0                                    # v2 bakes its own fringe band (bake_fringe_shadow)
+    g["HL_BAND"] = HAIR_HL_BAND
+    hcol, made = g["build_hair"](style, tag="fit", off_x=0.0)
+    hair_paint(bpy.data.materials.get("MAT_Hair_" + style))
+    om = bpy.data.materials.get("MAT_Outline_NewHead_n56")
+    Ainv = A.inverted()
+    n = 0
+    for o in made:
+        o.matrix_world = Ainv @ o.matrix_world
+        if om is not None and not any(m_.type == "SOLIDIFY" for m_ in o.modifiers):
+            g["_outline"](o, om)
+            for m_ in o.modifiers:
+                if m_.type == "SOLIDIFY":
+                    m_.thickness = m_.thickness / s
+        o.name = o.name + "_v2"; o.visible_shadow = True
+        o.hide_render = False; o.hide_viewport = True
+        hcol.objects.unlink(o); col.objects.link(o); n += 1
+    bpy.data.objects.remove(tmp)
+    return n
+
+
 GATE_EXPR = ("happy", "laugh", "angry", "sad", "surprised", "talk_aa", "smile_open", "blink")
 
 
@@ -388,7 +497,9 @@ def gate_shots(tag, exprs=GATE_EXPR, res=800):
 
 col = import_blend()
 shade(col)
-if globals().get("HAIR", "leo"):
+if globals().get("HAIR_FIT", True) and globals().get("HAIR", "leo"):
+    print("fitted hair objects:", build_fitted_hair(col, globals().get("HAIR", "leo")))
+elif globals().get("HAIR", "leo"):
     print("hair objects:", attach_hair(col, globals().get("HAIR", "leo"), k=globals().get("HAIR_K", 0.90), dz=globals().get("HAIR_DZ", -0.004)))
 if globals().get("HAIR", "leo") and FRINGE_SHADOW:
     print("fringe shadow verts:", bake_fringe_shadow(col))

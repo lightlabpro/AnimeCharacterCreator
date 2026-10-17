@@ -28,9 +28,11 @@ H = S.H
 from mouth_v2_line import EYE_H, D, NB as _NB  # one face layout for every script
 E = 0.33 * D             # eye width
 CX = 0.36 * D            # eye centre |x|
-COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 98), iris_top=(56, 118, 66),
-           iris_rim=(40, 86, 48), pupil=(24, 52, 30), highlight=(255, 255, 255), lash=(58, 34, 26),
-           lash_low=(128, 84, 66), crease=(186, 128, 106), brow=(104, 70, 44), mouth=(84, 44, 38),
+# q29 TypeSafe (v7b vs Leo: eyes 0.01 'sticker' look): grey-white sclera, muted iris with a broad dark top band, darker
+# brows; v7d (eye crops vs Leo): Leo's iris is LIGHT - pale green, brightest at the bottom, a darker upper half, thin rim
+COL = dict(sclera=(228, 228, 233), sclera_shade=(178, 178, 192), iris=(150, 196, 128), iris_top=(86, 132, 82),
+           iris_rim=(40, 74, 46), pupil=(22, 40, 26), highlight=(255, 255, 255), lash=(50, 30, 22),
+           lash_low=(120, 80, 62), crease=(186, 128, 106), brow=(80, 52, 34), mouth=(84, 44, 38),
            nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
            ear_in=(214, 160, 146), ear_line=(166, 112, 100))
 # q25: layers 0.05-0.1 mm apart (0.02-0.04 mm z-fought in EEVEE: mottled iris / sclera, specks in the nose shade)
@@ -38,8 +40,8 @@ LIFT = dict(sclera=0.00030, sclera_shade=0.00040, iris=0.00050, iris_top=0.00060
             highlight=0.00090, lash=0.00100, lash_low=0.00090, crease=0.00035, brow=0.00045, mouth=0.00055,
             nose_shade=0.00045, lip_shade=0.00040, nose_hl=0.00050, ear_in=0.00035, ear_line=0.00045)
 
-UPPER = [(0.0, 0.02), (0.10, 0.19), (0.30, 0.295), (0.50, 0.31), (0.70, 0.285), (0.88, 0.19), (1.0, 0.06)]   # q27: Leo's upper lid is flatter and slants down outward (was an arch peaking 0.34 mid)
-LOWER = [(1.0, 0.06), (0.90, -0.10), (0.70, -0.20), (0.50, -0.23), (0.30, -0.20), (0.12, -0.10), (0.0, 0.02)]
+UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.270), (0.50, 0.285), (0.70, 0.265), (0.88, 0.18), (1.0, 0.06)]   # q29 TypeSafe eye_narrower_almond   # q27: Leo's upper lid is flatter and slants down outward (was an arch peaking 0.34 mid)
+LOWER = [(1.0, 0.06), (0.90, -0.08), (0.70, -0.17), (0.50, -0.195), (0.30, -0.17), (0.12, -0.085), (0.0, 0.02)]   # q29: flatter lower lid (almond)
 
 
 def smooth_curve(pts, n=40):
@@ -68,24 +70,34 @@ def eye_shapes(side):
     sclera = Polygon(np.vstack([up, lo[1:-1]]))
     sh = {}
     sh["sclera"] = sclera
-    shade_edge = up - np.array([0, 0.11]) * np.array([[1, 1]])
+    shade_edge = up - np.array([0, 0.19]) * np.array([[1, 1]])   # q29: deeper lid shadow band (Leo)
     sh["sclera_shade"] = Polygon(np.vstack([up, shade_edge[::-1]])).buffer(0).intersection(sclera)
     # iris: on the world side the light comes from, the highlight; iris centre a touch toward the nose
     ic = (0.47, 0.03); irx, irz = 0.27, 0.33
     iris = affinity.scale(Point(ic).buffer(1.0, 64), irx, irz)
     sh["iris"] = iris.intersection(sclera)
-    sh["iris_top"] = iris.intersection(Polygon([(-1, 0.13), (2, 0.13), (2, 1), (-1, 1)])).intersection(sclera)
-    rim = iris.difference(affinity.scale(Point(ic).buffer(1.0, 64), irx * 0.86, irz * 0.88))
-    sh["iris_rim"] = rim.intersection(sclera)
+    sh["iris_top"] = iris.intersection(Polygon([(-1, 0.00), (2, 0.00), (2, 1), (-1, 1)])).intersection(sclera)   # q29 v7d: darker upper half, light lower half
+    rim = iris.difference(affinity.scale(Point(ic).buffer(1.0, 64), irx * 0.91, irz * 0.92))   # q29: thinner rim line
+    # q29 TypeSafe first_fix iris_painted (v7f vs Leo, both orders): MHS3 irises carry a thin inner ring round the
+    # pupil and fine radial lines - drawn into the rim piece (same dark colour, no new mesh name)
+    ring_in = affinity.scale(Point(ic).buffer(1.0, 64), irx * 0.56, irz * 0.56).difference(
+        affinity.scale(Point(ic).buffer(1.0, 64), irx * 0.50, irz * 0.50))
+    spokes = []
+    for ang in np.radians([208, 236, 262, 290, 318, 342]):
+        a0 = (ic[0] + np.cos(ang) * irx * 0.62, ic[1] + np.sin(ang) * irz * 0.62)
+        a1 = (ic[0] + np.cos(ang) * irx * 0.86, ic[1] + np.sin(ang) * irz * 0.86)
+        spokes.append(LineString([a0, a1]).buffer(0.0035, cap_style=1))   # v7g 0.006 read as a wheel
+    rim = unary_union([rim, ring_in] + spokes)
+    sh["iris_rim"] = rim.intersection(iris).intersection(sclera)
     sh["pupil"] = affinity.scale(Point((ic[0], ic[1] + 0.02)).buffer(1.0, 48), 0.085, 0.14).intersection(sclera)
     hx = ic[0] + side * 0.11                                  # same world side (+x) in both eyes
     hl = affinity.rotate(affinity.scale(Point((hx, ic[1] + 0.12)).buffer(1.0, 32), 0.075, 0.032), 20)
     hl2 = affinity.scale(Point((ic[0] - side * 0.10, ic[1] - 0.13)).buffer(1.0, 24), 0.032, 0.026)   # q25: small second catchlight
     sh["highlight"] = hl.union(hl2).intersection(sclera)
     # upper lash: thick along the top, thickest at the outer third, short wing past the outer corner
-    t = 0.060 + 0.060 * np.clip((up[:, 0] - 0.1) / 0.65, 0, 1) * (1 - np.clip((up[:, 0] - 0.85) / 0.15, 0, 1) * 0.4)
+    t = 0.050 + 0.050 * np.clip((up[:, 0] - 0.1) / 0.65, 0, 1) * (1 - np.clip((up[:, 0] - 0.85) / 0.15, 0, 1) * 0.4)
     outer = up + np.stack([np.zeros_like(t), t], -1)
-    wing = np.array([[1.10, 0.09]])
+    wing = np.array([[1.13, 0.05]])     # q29: MHS3 lash wing runs outward / slightly down, not flicked up
     sh["lash"] = Polygon(np.vstack([up, wing, outer[::-1]])).buffer(0)
     # lower lid line, outer two thirds, tapering
     lo_part = lo[lo[:, 0] > 0.30]
@@ -97,14 +109,30 @@ def eye_shapes(side):
     return sh
 
 
+BROW_HATCH = True
+
+
 def brow_shape(side):
     # world (x, h) in H units: thick inner end low and close to the eye top, rising outward, tapering (Leo)
     # q27: lowered onto the lash (Leo: brow-to-pupil 0.08 D inner / 0.12 D mid; ours was 0.10 / 0.18 D), inner end lowest
-    top = [(0.044, 0.368), (0.111, 0.346), (0.200, 0.334), (0.289, 0.336), (0.353, 0.353)]
-    bot = [(0.357, 0.361), (0.289, 0.360), (0.200, 0.365), (0.111, 0.381), (0.050, 0.401)]
+    # q29 v7d (eye crops vs Leo): the stern MHS3 brow - inner end drops steeply toward the nose onto the lash, outer end
+    # higher and thinner (was nearly horizontal)
+    top = [(0.044, 0.386), (0.111, 0.357), (0.200, 0.334), (0.289, 0.325), (0.353, 0.336)]
+    bot = [(0.357, 0.344), (0.289, 0.349), (0.200, 0.362), (0.111, 0.391), (0.050, 0.418)]
     P = np.vstack([smooth_curve(top, 24), smooth_curve(bot, 24)])
-    P[:, 0] *= side
-    return Polygon(P).buffer(0)
+    shape = Polygon(P).buffer(0)
+    if BROW_HATCH:
+        # q29 TypeSafe first_fix brows_brush_strokes (v7h vs Leo, both orders + tie-break): MHS3 brows are drawn as
+        # brush strokes - a solid lower edge plus slanted hatch strokes, tapering out at the outer end
+        # v7j: v7i's comb (sparse steep strokes) -> a solid lower band and dense hair-like strokes leaning along the brow,
+        # feathering only the top edge
+        B = smooth_curve(bot, 24)[::-1]                         # inner -> outer along the lower edge
+        edge = LineString(B).buffer(0.013, cap_style=1)
+        strokes = [edge]
+        for x0 in np.arange(0.040, 0.350, 0.0085):
+            strokes.append(LineString([(x0, 0.43), (x0 + 0.075, 0.30)]).buffer(0.0034, cap_style=1))
+        shape = unary_union(strokes).intersection(shape).buffer(0)
+    return affinity.scale(shape, side, 1.0, origin=(0, 0)).buffer(0)      # may be a MultiPolygon: tri_poly takes both
 
 
 def tri_poly(poly, max_area):

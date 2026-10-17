@@ -1,0 +1,27 @@
+{
+ "region": "face_mhs3_style",
+ "subject": "front view of an adult male anime head (toon shaded, hair on) compared with the official MHS3 render of Leo, framed to the same pupil line and chin",
+ "reference_style": "Monster Hunter Stories 3 official character render (Leo): semi-realistic anime, toon colours with soft painted shading, fine painted detail in eyes and hair, thin dark-brown outlines",
+ "features": {
+  "eyes": {
+   "reference": "Narrow almond eye openings; the grey-white sclera is shaded grey under the upper lid; the muted green iris has a dark band across its top, fine radial lines and lighter rings, a dark pupil and two small white highlights; a heavy dark-brown upper lash line.",
+   "ours": "Rounder eye openings with a large area of pure white sclera; a flat saturated green iris with a dark green rim and a dark pupil, two white highlights, no grey shading under the lid and no texture in the iris; dark upper lash line with an upturned wing."
+  },
+  "brows": {
+   "reference": "Brows drawn as dark-brown brush strokes with a hatched texture, angled down toward the nose, the inner ends almost touching the lash line.",
+   "ours": "Brows are flat solid brown bars of even colour, nearly horizontal, sitting just above the lashes."
+  },
+  "hair": {
+   "reference": "Full hair mass in broad clumps with many thin pale painted streaks and dark lines between clumps, three or more tones from dark brown to light gold.",
+   "ours": "Hair in chunky clumps in two flat browns with a few pale strokes on top and thin dark lines at the clump edges."
+  },
+  "skin_shading": {
+   "reference": "Warm skin with soft painted shadow shapes: under the fringe, down the far side of the face and under the cheekbone, under the nose and lower lip; a broad pale highlight on the nose bridge.",
+   "ours": "Flat peach skin with a hard-edged jagged shadow band under the fringe and a straight shadow along one side of the face; a thin pale highlight stripe on the nose; faint pink blush ovals."
+  },
+  "outline": {
+   "reference": "Thin dark-brown outlines that vary a little in thickness, darker under the jaw.",
+   "ours": "Thin even dark-brown outline around the face."
+  }
+ }
+}

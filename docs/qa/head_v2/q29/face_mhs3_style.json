@@ -1,0 +1,41 @@
+{
+ "region": "face_mhs3_style",
+ "note": "q29: style-level fixes (painted detail).",
+ "corrections": [
+  {
+   "id": "iris_painted",
+   "description": "Paint the iris like MHS3: muted colour, a dark band across the top, fine radial lines and lighter rings.",
+   "setting": "face_paint iris pieces / iris texture"
+  },
+  {
+   "id": "sclera_grey_lid_shadow",
+   "description": "Tint the sclera grey-white and add a grey shadow band under the upper lid.",
+   "setting": "face_paint COL sclera / sclera_shade"
+  },
+  {
+   "id": "eye_narrower_almond",
+   "description": "Make the eye opening a narrower almond (less white showing).",
+   "setting": "face_paint UPPER/LOWER"
+  },
+  {
+   "id": "brows_brush_strokes",
+   "description": "Draw the brows as darker brush strokes with hatching, angled down to the nose.",
+   "setting": "face_paint brow pieces"
+  },
+  {
+   "id": "hair_painted_streaks",
+   "description": "Add many thin pale painted streaks and a third, lighter tone to the hair clumps.",
+   "setting": "hair material streaks"
+  },
+  {
+   "id": "skin_soft_shadows",
+   "description": "Soften the face shadow edges and add the small painted shadows (under the nose and lower lip, cheekbone).",
+   "setting": "skin shader softness / painted masks"
+  },
+  {
+   "id": "outline_weight",
+   "description": "Vary the outline weight, heavier under the jaw.",
+   "setting": "outline vertex weights"
+  }
+ ]
+}

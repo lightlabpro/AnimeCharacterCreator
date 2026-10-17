@@ -176,3 +176,24 @@ references from mhs3 as target look. remember to use typesafe".
 - Toon v7a vs v6g: side wins every aspect (dented 0.51 -> 0.32, artifacts 0.85 -> 0.53); front / 3/4 undecided
   (toon hides form). Face gate v7a: FAIL as before (24 rule failures, within noise of 23), 0 regressions.
 - Board: docs/qa/head_v2/gate/boards/q28_clay_validation.png
+
+## q29 (2026-10-17) - "keep validating and improving the model, it looks very amateur"
+- Hair rebuilt on the v2 skull (pc_v2.build_fitted_hair): hair_nh.py run on a temporary copy of the v2 head scaled to
+  the n56 size it is tuned for, clumps ray-fitted to that scalp, then mapped back (was the n56 hair moved and scaled
+  onto v2). A/B vs the moved hair: undecided (both orders disagree).
+- Style menu (face_mhs3_style.json), TypeSafe reference-match judge vs Leo after each step (feature scores words /
+  pictures):
+  - first_fix skin_soft_shadows: softer terminator + wider forced-shadow ramp (MASK_SOFT) - A/B undecided at two
+    strengths, so not adopted (knobs stay available).
+  - eyes (crops vs Leo showed my first iris change went the wrong way): grey-white sclera, deeper lid shadow, light
+    muted iris with a darker upper half, thinner rim, inner ring + fine radial lines, thinner lash with an outward
+    wing, narrower almond opening: eyes 0.01 / 0.07 -> 0.18 / 0.205.
+  - hair_painted_streaks: thin pale streaks along the clumps (a first try drew diagonal zebra hatching) + a soft lighter
+    third tone: hair 0.045 / 0.105 -> 0.21 / 0.23.
+  - brows_brush_strokes: solid lower stroke + dense feathered hair strokes (a first try read as a comb), stern slant:
+    brows 0.02 / 0.11 -> 0.37 / 0.26.
+  - Lowest now: skin_shading 0.02 / 0.06; outline 0.13 / 0.22.
+- The A/B tool kept answering "disagree" on small eye changes (position bias); absolute judge scores were used instead.
+- Face gate v7k vs v7a: front, 3/4, laugh, talk better in both orders, 0 regressions; front same_style 0.34 -> 0.43;
+  look failures 56 -> 50; rule failures 27 (24, within noise). Still FAIL.
+- Board: docs/qa/head_v2/gate/boards/q29_style.png
