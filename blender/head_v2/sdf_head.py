@@ -137,7 +137,7 @@ def loft(p):
 
 # Ear: between the eye tops and the nose bottom (AnimeOutline ears; Leo), about 1/4 of the face tall, set back of the
 # middle of the head depth, flared out ~18 degrees and leaned back ~12 degrees. Rim (helix) kept, inside recessed.
-EAR = knob("EAR", dict(c=(0.0, 0.080, 0.540), a=0.072, b=0.145, top_flare=0.30, t=0.032, flare=14.0, lean=12.0,
+EAR = knob("EAR", dict(c=(0.0, 0.080, 0.520), a=0.072, b=0.130, top_flare=0.30, t=0.032, flare=8.0, lean=12.0,   # q23 TypeSafe ears_smaller_higher x2
                        recess=0.010, k=0.018, x_in=0.012))
 
 
