@@ -309,7 +309,7 @@ def build():
     # mouth-line fix (q24): ends kept >= ~0.0045 H thick (sub-pixel ends rendered as dots), lifted to 0.50 mm
     # q25: drawn-line shape - heavier in the middle third, tapering to rounded ends (was an even bar)
     def th(u):
-        return 0.0027 + 0.0050 * (1 - np.clip(abs(u), 0, 1) ** 2) ** 1.5
+        return 0.0036 + 0.0042 * (1 - np.clip(abs(u), 0, 1) ** 2) ** 1.5   # q25 ends 0.0036: cover corner flecks
     top = [(u * ML.MW, ML.line(u * ML.MW) - 0.30 * th(u) - 0.0012) for u in xs]
     bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.70 * th(u) - 0.0012) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)

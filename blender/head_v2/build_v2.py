@@ -175,6 +175,33 @@ def set_toon_normals(head, ell_mix=0.90):
     prox.hide_render = True
 
 
+def mark_corner_bridges(head):
+    """q25: skin faces at the slit corners that bridge the upper and lower lip rim (or lie wholly on the rim) get the
+    lip-inner material. Closed they are slivers under the mouth line; opened (smile_open) they stretched into light
+    'fang' wedges at the corners."""
+    me = head.data
+    skin_v, cav_v = set(), set()
+    for p in me.polygons:
+        if p.material_index == 0:
+            skin_v.update(p.vertices)
+        elif p.material_index in (1, 2):
+            cav_v.update(p.vertices)
+    rim = skin_v & cav_v
+    up, lo = set(), set()
+    for vi in rim:
+        c = me.vertices[vi].co
+        x = c.x / V.H; h = (V.ZT - c.z) / V.H
+        (up if h < float(MO.line_h(np.clip(x, -MO.MW, MO.MW))) else lo).add(vi)
+    n = 0
+    for p in me.polygons:
+        if p.material_index != 0:
+            continue
+        vs = set(p.vertices)
+        if (vs & up and vs & lo) or vs <= rim:
+            p.material_index = 2; n += 1
+    print("corner bridge faces -> lip inner:", n)
+
+
 def main():
     head_npz, paint_npz, prefix = sys.argv[1], sys.argv[2], sys.argv[3]
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -187,6 +214,7 @@ def main():
     head.data.materials.append(flat_mat("V2_MouthCavity", (92, 40, 42)))
     head.data.materials.append(flat_mat("V2_LipInner", (70, 34, 32)))       # reads as the mouth line when closed
     tree = MO.build_mouth(head, spacing)
+    mark_corner_bridges(head)
     top, bot, tg = MO.build_teeth_tongue(tree)
     top.data.materials.append(flat_mat("V2_Teeth", (246, 246, 250)))
     bot.data.materials.append(top.data.materials[0])
