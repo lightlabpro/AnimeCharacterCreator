@@ -1,0 +1,13 @@
+[
+ {"id": "pe_eye_level", "page": 33, "rule": "The eye level is a straight horizontal line; objects above it are seen from below and objects below it are seen from above."},
+ {"id": "pe_parallel_converge", "page": 45, "rule": "A set of parallel lines receding from the viewer converges to one vanishing point on the eye level; lines parallel to the picture plane do not converge."},
+ {"id": "pe_wide_vps", "page": 67, "rule": "Keep the two vanishing points far apart; closely spaced vanishing points produce warped perspective in which square forms look distorted."},
+ {"id": "pe_narrow_field", "page": 109, "rule": "Do not include too wide a field of view; forms toward the edge of a wide view become misshapen and distorted."},
+ {"id": "pe_ellipse_t", "page": 144, "rule": "A circle in perspective is an ellipse whose long axis is always at right angles to the axis of the cylinder or disc, whatever its tilt."},
+ {"id": "pe_verticals", "page": 63, "rule": "In normal two-point perspective vertical lines are drawn vertical, with no vanishing point."},
+ {"id": "pe_shade_edge", "page": 181, "rule": "Shade on a curved surface is darkest along the edge nearest the light, because reflected light brightens the rest of the shade side."},
+ {"id": "pe_shade_rule", "page": 175, "rule": "Darken the parts of an object that face away from the light source."},
+ {"id": "pe_shadow_persp", "page": 177, "rule": "Cast shadows follow perspective: parallel edges cast parallel shadows that converge to the same vanishing points."},
+ {"id": "pe_box_irregular", "page": 120, "rule": "Draw an irregular object by first fitting it inside a box drawn in correct perspective."},
+ {"id": "pe_diagonal_center", "page": 125, "rule": "The intersection of a rectangle's diagonals locates its true perspective centre."}
+]
