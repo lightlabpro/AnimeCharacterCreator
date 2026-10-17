@@ -54,7 +54,15 @@ def skin_mat():
                     i.default_value = H
                 elif abs(i.default_value - 1.4826) < 1e-4:
                     i.default_value = ZT - H
+    # q23 TypeSafe face_shadow_smaller: the menu's push 2.5 -> 3.2 moved ~500 px (8.0 only ~1200), so the far-cheek band
+    # is narrowed with the analytic ellipsoid's x radius instead (n56 a 0.40 -> 0.50 H; x / a^2 in the 'Math.005' divide)
+    nd = m.node_tree.nodes.get("Math.005")
+    if nd and nd.operation == "DIVIDE" and abs(nd.inputs[1].default_value - 0.16) < 1e-4:
+        nd.inputs[1].default_value = ELL_A * ELL_A
     return m
+
+
+ELL_A = 0.50
 
 
 def import_blend():

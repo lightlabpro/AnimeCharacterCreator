@@ -97,8 +97,8 @@ def eye_shapes(side):
 
 def brow_shape(side):
     # world (x, h) in H units: thick inner end low and close to the eye top, rising outward, tapering (Leo)
-    top = [(0.044, 0.355), (0.111, 0.328), (0.200, 0.315), (0.289, 0.321), (0.353, 0.341)]
-    bot = [(0.357, 0.349), (0.289, 0.343), (0.200, 0.347), (0.111, 0.365), (0.050, 0.391)]
+    top = [(0.044, 0.367), (0.111, 0.338), (0.200, 0.323), (0.289, 0.327), (0.353, 0.345)]   # q23 TypeSafe brows_lower_angled
+    bot = [(0.357, 0.353), (0.289, 0.349), (0.200, 0.355), (0.111, 0.375), (0.050, 0.403)]
     P = np.vstack([smooth_curve(top, 24), smooth_curve(bot, 24)])
     P[:, 0] *= side
     return Polygon(P).buffer(0)
