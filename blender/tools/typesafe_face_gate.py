@@ -22,7 +22,8 @@ Three TypeSafe passes, all with pictures (jev-1.14 images feature); TypeSafe ans
 
 Verdict per item: pass p >= 0.6, fail p <= 0.4, otherwise "uncertain" (never counted as a pass). The gate passes
 only when no element has a failed rule or a failed MHS3-look question, and nothing regressed. Missing renders are
-reported as "not measured" (never a pass). A missing key stops the run: no judgment is faked.
+reported as "not measured" (never a pass); a missing render or reference for an MHS3-look view makes the
+gate "unknown" at best. A missing key stops the run: no judgment is faked.
 """
 import json
 import os
@@ -128,6 +129,8 @@ def pass_look(renders, refs, only):
             continue
         for ref in ref_list:
             if not os.path.exists(ref):
+                # q26 fix: a missing reference was skipped silently, so laugh / talk / angry were never compared
+                out.append({"view": view, "ref": ref, "verdict": "not measured", "why": "reference image missing"})
                 continue
             ao, ar = "ours-" + uuid.uuid4().hex, "ref-" + uuid.uuid4().hex
             assets = {ao: image_asset(img), ar: image_asset(ref)}
@@ -199,16 +202,18 @@ def main():
         if r["verdict"] == "fail":
             s["failed_rules"].append(r["id"])
     look_fail = [x for x in rep["look"] if x.get("verdict") == "fail"]
+    look_nm = [x for x in rep["look"] if x.get("verdict") == "not measured"]
     regress = [x for x in rep.get("no_regression", []) if x["result"] == "prev"]
     rep["summary"] = summ
     rep["gate"] = {"rule_failures": sum(s["fail"] for s in summ.values()), "look_failures": len(look_fail),
-                   "regressions": len(regress),
-                   "verdict": "pass" if not look_fail and not regress and all(s["fail"] == 0 for s in summ.values())
-                   else "fail"}
+                   "regressions": len(regress), "look_not_measured": len(look_nm),
+                   "verdict": "fail" if look_fail or regress or any(s["fail"] for s in summ.values())
+                   else ("unknown" if look_nm else "pass")}
     json.dump(rep, open(out_path, "w"), indent=1)
     print(json.dumps({"gate": rep["gate"], "summary": {k: {kk: vv for kk, vv in v.items() if kk != "failed_rules"}
                                                          for k, v in summ.items()},
                       "look_fail": [(x["view"], x["question"], x["p_yes"]) for x in look_fail],
+                      "look_not_measured": [(x["view"], x.get("ref"), x.get("why")) for x in look_nm],
                       "regressions": regress}, indent=1))
 
 

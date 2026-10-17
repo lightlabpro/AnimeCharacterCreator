@@ -8,7 +8,7 @@ import numpy as np
 EYE_H = 0.445
 D = 1.0 - EYE_H
 MY = EYE_H + 0.64 * D          # mouth line
-MW = 0.41 * D / 2              # mouth half width (q26 face gate: books want the neutral mouth about one eye wide,
+MW = 0.35 * D / 2      # q26: books want the neutral mouth about one eye width (E = 0.33 D); v5a 0.41 D still failed
                                # shorter than the gap between the eyes; was 0.49 D from Leo)
 NB = EYE_H + 0.49 * D          # nose bottom
 CURVE = 0.006

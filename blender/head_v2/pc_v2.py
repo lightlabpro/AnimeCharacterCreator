@@ -64,10 +64,52 @@ def skin_mat():
         surf = next((n for n in grp.node_tree.nodes if n.type == "GROUP" and n.node_tree.name.startswith("NG_ToonSurface")), None)
         if surf is not None:
             surf.inputs["Softness"].default_value = SKIN_SOFT
+    add_blush(m)
     nd = m.node_tree.nodes.get("Math.005")
     if nd and nd.operation == "DIVIDE" and abs(nd.inputs[1].default_value - 0.16) < 1e-4:
         nd.inputs[1].default_value = ELL_A * ELL_A
     return m
+
+
+def add_blush(m):
+    """q26 books (Manga Guide 13 'finished faces carry a soft pink blush on the cheeks just under the eyes'; Crilley joy
+    blush): the contract's blush_strength as a mask in the skin shader (CLAUDE_BUILD_PROMPT 'IDENTITY SURFACE': shader
+    parameters, not extra textures). Two soft ellipses under the outer half of each eye, front-facing only, mixed over
+    the toon skin as a flat pink; the value node 'BlushStrength' is the parameter (set_expr raises it for happy/laugh)."""
+    EYE_H = 0.445; D = 1.0 - EYE_H                        # mouth_v2_line.py layout (pupil line, pupil-to-chin)
+    nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
+    out = next(n for n in nt.nodes if n.type == "OUTPUT_MATERIAL")
+    src = out.inputs["Surface"].links[0].from_socket
+    geo = N("ShaderNodeNewGeometry"); sep = N("ShaderNodeSeparateXYZ"); L(geo.outputs["Position"], sep.inputs[0])
+    sepn = N("ShaderNodeSeparateXYZ"); L(geo.outputs["Normal"], sepn.inputs[0])
+    def mth(op, a, b=None, clamp=False):
+        n = N("ShaderNodeMath"); n.operation = op; n.use_clamp = clamp
+        for i, v in enumerate((a, b)):
+            if v is None:
+                continue
+            if isinstance(v, (int, float)):
+                n.inputs[i].default_value = v
+            else:
+                L(v, n.inputs[i])
+        return n.outputs[0]
+    cx, cz = BLUSH_X * D * H, ZT - (EYE_H + BLUSH_DH * D) * H
+    dx = mth("DIVIDE", mth("SUBTRACT", mth("ABSOLUTE", sep.outputs["X"]), cx), BLUSH_RX * D * H)
+    dz = mth("DIVIDE", mth("SUBTRACT", sep.outputs["Z"], cz), BLUSH_RZ * D * H)
+    r2 = mth("ADD", mth("MULTIPLY", dx, dx), mth("MULTIPLY", dz, dz))
+    mr = N("ShaderNodeMapRange"); mr.interpolation_type = "SMOOTHSTEP"
+    L(r2, mr.inputs["Value"]); mr.inputs["From Min"].default_value = 0.15; mr.inputs["From Max"].default_value = 1.0
+    mr.inputs["To Min"].default_value = 1.0; mr.inputs["To Max"].default_value = 0.0
+    front = mth("MULTIPLY", mth("SUBTRACT", mth("MULTIPLY", sepn.outputs["Y"], -1.0), 0.25), 2.5, clamp=True)
+    bv = N("ShaderNodeValue"); bv.name = bv.label = "BlushStrength"; bv.outputs[0].default_value = BLUSH
+    fac = mth("MULTIPLY", mth("MULTIPLY", mr.outputs[0], front), bv.outputs[0], clamp=True)
+    em = N("ShaderNodeEmission"); em.inputs["Color"].default_value = tuple(lin(c) for c in BLUSH_RGB) + (1.0,)
+    mix = N("ShaderNodeMixShader"); L(fac, mix.inputs[0]); L(src, mix.inputs[1]); L(em.outputs[0], mix.inputs[2])
+    L(mix.outputs[0], out.inputs["Surface"])
+
+
+BLUSH = globals().get("BLUSH", 0.30)                       # resting blush (MHS3 faces carry a faint one)
+BLUSH_RGB = (236, 140, 132)
+BLUSH_X, BLUSH_DH, BLUSH_RX, BLUSH_RZ = 0.42, 0.24, 0.13, 0.055   # D units: centre |x|, below eye line, radii
 
 
 # shading knobs, overridable from the exec globals (q24: A = v2 look used 0.0009 / 0.40 / 0.002)
@@ -139,10 +181,14 @@ EXPR = {
     # q26 presets from the book rules (face gate): happy = closed smile, cheeks up, eyes narrowed into curves;
     # laugh = open D smile, eyes closed into upward arcs; angry = brows down hard, lids lowered, teeth bared;
     # sad = brows rising to the centre, heavy lids, small frown; surprised = eyes wide, brows up, small round mouth
-    "happy": {"PF-SmileClosed": 1.0, "PF-Squint": 0.8, "PF-LidLowerUp": 0.6, "PF-BrowRaise": 0.3},
-    "laugh": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.45, "PF-LidLowerUp": 1.0, "PF-Blink_L": 0.55, "PF-Blink_R": 0.55, "PF-BrowRaise": 0.5},
-    "angry": {"PF-BrowFurrow": 1.0, "PF-BrowLower": 0.7, "PF-LidUpperDown": 0.45, "PF-Squint": 0.4, "PF-VisEE": 0.7, "PF-Frown": 0.3},
-    "sad": {"PF-BrowSad": 1.0, "PF-BrowInnerUp": 0.6, "PF-Frown": 0.8, "PF-LidUpperDown": 0.5},
+    # v5b (gate on v5a): happy regressed vs v4l and failed "open smile, eyes narrowed into curves"; laugh failed "eyes
+    # squeezed shut into ^ arcs + blush"; angry failed "mouth open showing teeth"; brow keys were too weak (face_paint)
+    "happy": {"PF-SmileOpenJaw": 0.6, "PF-JawOpen": 0.12, "PF-Squeeze": 0.45, "PF-LidLowerUp": 0.7, "PF-BrowRaise": 0.35,
+              "_blush": 0.55},
+    "laugh": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.45, "PF-Squeeze": 1.0, "PF-BrowRaise": 0.5, "_blush": 0.75},
+    "angry": {"PF-BrowFurrow": 1.0, "PF-BrowLower": 0.8, "PF-LidUpperDown": 0.40, "PF-Squint": 0.4, "PF-VisEE": 1.0,
+              "PF-JawOpen": 0.18, "PF-Frown": 0.4},
+    "sad": {"PF-BrowSad": 1.0, "PF-BrowInnerUp": 0.5, "PF-Frown": 0.8, "PF-LidUpperDown": 0.55},
     "surprised": {"PF-EyeWide": 1.0, "PF-BrowRaise": 1.0, "PF-VisOH": 0.8},
     "talk_oh": {"PF-VisOH": 0.9}, "talk_ee": {"PF-VisEE": 0.9},
 }
@@ -150,6 +196,10 @@ EXPR = {
 
 def set_expr(col, expr):
     vals = EXPR[expr] if isinstance(expr, str) else expr
+    m = bpy.data.materials.get("MAT_V2Skin_" + TAG)
+    bn = m.node_tree.nodes.get("BlushStrength") if m else None
+    if bn is not None:                                      # contract blush_strength: a skin shader parameter
+        bn.outputs[0].default_value = vals.get("_blush", BLUSH)
     for o in col.objects:
         sk = o.data.shape_keys
         if sk:

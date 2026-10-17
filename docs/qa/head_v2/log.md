@@ -96,3 +96,24 @@ references from mhs3 as target look. remember to use typesafe".
   - v3x: ear_inner_lines (line x1.6, darker): ears 0.21 -> 0.37; A/B tie.
   - v3y: nose_side_shadow: A/B v3x wins nose_mouth + clean (both orders), judge 0.415 -> 0.285 -> reverted.
   - v3x judge first_fix: none (both orders). Pack head_mhs3_v2 re-exported from v3x (same 36 meshes); e2e E2E OK.
+
+## q25 (2026-10-17) - "this version looks worse than the previous version, the v2"
+- Sammy picked A (v2 face from d374f5f) over the Leo-matched v3x: "the face in general looked better, but the mouth and
+  eyes needed a bit of work". Face scripts restored from d374f5f; his pick is the baseline (gate --prev), his taste
+  overrides the Leo-matching judge. v4 fixes on top of A: LIFT respaced (z-fight mottling), second catchlight, mouth line
+  thickness profile, an_w = 1 at the mouth seam (jaggies), mark_corner_bridges + corner taper (open-mouth fangs).
+
+## q26 (2026-10-17) - books on anime/manga faces + TypeSafe image gate as the standard process
+- Three books read for every head / face element and expression -> docs/reference/books/rules_*_face.json; each rule
+  page-checked by TypeSafe against its own page (confirmed: actionanime 47/73, mangaguide13 68/85, crilley 64/110).
+- Face gate (blender/tools/typesafe_face_gate.py, skill face-gate, CLAUDE.md, character-gate --face-gate): book rules
+  per render with an applicability question, MHS3 look per element side by side, no regression vs the approved version.
+- v4l: FAIL - 44 rule failures; expressions unreadable (0.01-0.09); every MHS3-look question ~0.2.
+- v5a (book expression presets, neutral mouth 0.49 -> 0.41 D, inner lid fold): FAIL - 28 rule failures (44 -> 28);
+  happy same_expression 0.79 but happy regressed vs v4l (prev in both orders); MHS3 look still ~0.2 everywhere.
+  Gate bug found: missing reference images (mouth/ refs not on the PC) were skipped silently, so laugh / talk / angry were
+  never compared -> now "not measured" and the gate is "unknown" at best; refs copied to the PC.
+- v5b: brow keys x2.2 (angry / sad read neutral on the board), PF-Squeeze_L/R built (contract key, ^ joy arcs) for
+  laugh / happy, contract blush_strength as a skin shader mask (resting 0.30, happy 0.55, laugh 0.75), neutral mouth
+  0.35 D (one eye width), lid fold inner 40%, angry shows teeth. Blush is Blender-shader only so far: the app / pack
+  needs the same mask in its skin shader before export.

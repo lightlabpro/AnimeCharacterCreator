@@ -92,7 +92,7 @@ def eye_shapes(side):
     tl = 0.022 * np.clip((lo_part[:, 0] - 0.30) / 0.4, 0.2, 1)
     sh["lash_low"] = Polygon(np.vstack([lo_part, (lo_part - np.stack([np.zeros_like(tl), tl], -1))[::-1]])).buffer(0)
     # crease (double eyelid) above the lash
-    cr = up[(up[:, 0] > 0.08) & (up[:, 0] < 0.60)] + np.array([0, 0.15])   # q26: fold over the inner part only (Crilley p.15-ish rule)
+    cr = up[(up[:, 0] > 0.05) & (up[:, 0] < 0.40)] + np.array([0, 0.15])   # q26: fold over the inner part only (Crilley p.15-ish rule)
     sh["crease"] = LineString(cr).buffer(0.008, cap_style=1)
     return sh
 
@@ -214,6 +214,10 @@ EYE_KEYS = {
     "PF-EyeWide": (lambda U, L, u: U + 0.07, lambda U, L, u: L - 0.03),
     "PF-LidUpperDown": (lambda U, L, u: U - 0.35 * (U - L), lambda U, L, u: L),
     "PF-LidLowerUp": (lambda U, L, u: U, lambda U, L, u: L + 0.25 * (U - L)),
+    # q26 books (Crilley joy, Action Manga happy): eyes squeezed shut into upward-bowed arcs (^), not the calm blink;
+    # the contract's PF-Squeeze_L/R (CLAUDE_BUILD_PROMPT "PERFORMANCE EYES") was not built until now
+    "PF-Squeeze": (lambda U, L, u: 0.5 * (U + L) + 0.13 * np.sin(np.pi * u),
+                  lambda U, L, u: 0.5 * (U + L) + 0.13 * np.sin(np.pi * u)),
 }
 
 
@@ -239,14 +243,16 @@ def eye_key_uw(name, uw, key):
 
 
 BROW_KEYS = {   # world (x, h) offsets as f(t) where t = 0 inner end .. 1 outer end; h down is +
-    "PF-BrowInnerUp": lambda t: (0.0, -0.030 * (1 - t) ** 1.5),
-    "PF-BrowRaise": lambda t: (0.0, -0.024 + 0 * t),
-    "PF-BrowLower": lambda t: (0.0, 0.012 + 0.006 * (1 - t)),
-    "PF-BrowFurrow": lambda t: (-0.010 * (1 - t), 0.016 * (1 - t) ** 1.2),
-    "PF-BrowSad": lambda t: (0.0, -0.026 * (1 - t) ** 1.5 + 0.008 * t),
-    "PF-BrowOuterUp": lambda t: (0.0, -0.022 * t ** 1.5),
+    # q26 face gate v5a: angry / sad read as neutral (the inner end moved ~3 mm, ~5 px on the board); the books want
+    # brows "down hard" (anger) and "rising toward the centre" (sadness): inner-end travel x2.2, plus a tilt
+    "PF-BrowInnerUp": lambda t: (0.0, -0.066 * (1 - t) ** 1.5),
+    "PF-BrowRaise": lambda t: (0.0, -0.040 + 0 * t),
+    "PF-BrowLower": lambda t: (0.0, 0.026 + 0.014 * (1 - t)),
+    "PF-BrowFurrow": lambda t: (-0.020 * (1 - t), 0.040 * (1 - t) ** 1.2 - 0.010 * t),
+    "PF-BrowSad": lambda t: (0.0, -0.058 * (1 - t) ** 1.5 + 0.018 * t),
+    "PF-BrowOuterUp": lambda t: (0.0, -0.040 * t ** 1.5),
 }
-SIDED = ("PF-Blink", "PF-Squint", "PF-BrowInnerUp", "PF-BrowRaise", "PF-BrowLower", "PF-BrowFurrow")
+SIDED = ("PF-Blink", "PF-Squint", "PF-Squeeze", "PF-LidLowerUp", "PF-LidUpperDown", "PF-EyeWide", "PF-BrowInnerUp", "PF-BrowRaise", "PF-BrowLower", "PF-BrowFurrow")
 
 
 def build():
