@@ -1,6 +1,7 @@
 import { CONTROLS, CONTROL_BY_ID, controlRange, isControlVisible } from './controls';
 import { ACCESSORY_BY_ID, CHILD_HAIR_FALLBACK, FULL_HAIR_STYLES, HAIR_STYLES, defaultLooks, type AccessoryDef } from './looks';
 import { emptyAppearance } from './appearance';
+import { DEFAULT_HAIR_SHADER } from './hairShader';
 import {
   AGE_PRESETS_ADULT, AGE_PRESETS_BEAST, ARCHETYPE_BY_ID, OLD_HAIR_GRAY, PRESENTATION_PRESETS, isStylePreset,
 } from './presets';
@@ -45,6 +46,7 @@ export function newCharacter(kind: BodyKind = 'adult', style: StylePreset = 'sto
     values: {},
     looks: defaultLooks(kind),
     hair: { front: hair('swept'), back: hair('shortLayered'), sides: hair('short'), extras: [hair('ahoge')] },
+    hairShader: { ...DEFAULT_HAIR_SHADER },
     facialHair: { moustache: facial('none'), sideburns: facial('none'), beard: facial('none') },
     colors: { ...DEFAULT_COLORS },
     equipped: defaultOutfit(kind).map((e) => makeEquip(e)),
@@ -270,6 +272,7 @@ export function deserializeCharacter(text: string): Identity {
     looks: { ...base.looks, ...(raw.looks ?? {}) },
     colors: { ...base.colors, ...(raw.colors ?? {}) },
     hair: { ...base.hair, ...(raw.hair ?? {}) },
+    hairShader: { ...base.hairShader, ...(raw.hairShader ?? {}) },
     facialHair: { ...base.facialHair, ...(raw.facialHair ?? {}) },
     appearance: { ...base.appearance, ...(raw.appearance ?? {}) },
     faceProfile: { ...base.faceProfile, ...(raw.faceProfile ?? {}), wrinkles: { ...base.faceProfile.wrinkles, ...(raw.faceProfile?.wrinkles ?? {}) } },

@@ -10,6 +10,8 @@ import { regionLabel } from './Viewport';
 import { ColorRow, ControlSlider, Note, Section, Seg, Toggle, ValueSlider } from './controls';
 import { Icon } from './icons';
 import { loadBaked, saveBaked } from './LibraryPanel';
+import { DEFAULT_HAIR_SHADER } from '../model/hairShader';
+import type { HairShader } from '../model/types';
 
 const TABS: { id: ModifyTab; label: string }[] = [
   { id: 'attribute', label: 'Attribute' },
@@ -511,6 +513,7 @@ function MaterialTab() {
           })}>Match all groups to the back</button>
         </Section>
       )}
+      {humanoid && <HairShaderSection hs={id.hairShader} />}
       {id.bodyKind === 'adult' && (
         <Section title="Facial hair" defaultOpen={false}>
           {(['moustache', 'sideburns', 'beard'] as const).map((k) => (
@@ -615,5 +618,51 @@ function PhysicsTab() {
         );
       })}
     </>
+  );
+}
+
+type HairNum = { [K in keyof HairShader]: HairShader[K] extends number ? K : never }[keyof HairShader];
+const HAIR_SLIDERS: [HairNum, string, number, number, number][] = [
+  ['area', 'Shading area', -1, 1, 0.01],
+  ['hardness', 'Shading hardness', 0, 1, 0.01],
+  ['shadeMix', 'Shade color amount', 0, 1, 0.01],
+  ['rootDark', 'Root darkening', 0, 1, 0.01],
+  ['ringStrength', 'Highlight strength', 0, 1, 0.01],
+  ['ringPos', 'Highlight position', 0, 1, 0.01],
+  ['ringWidth', 'Highlight width', 0.01, 0.25, 0.005],
+  ['ringSpace', 'Highlight on head (vs strand)', 0, 1, 0.01],
+  ['ringFollow', 'Highlight follows light', 0, 1, 0.01],
+  ['ringJag', 'Highlight jaggedness', 0, 1, 0.01],
+  ['ringTeeth', 'Highlight teeth', 1, 8, 1],
+  ['strandLines', 'Strand lines', 0, 1, 0.01],
+  ['strandCount', 'Strands per clump', 1, 8, 1],
+  ['rim', 'Rim light', 0, 1, 0.01],
+  ['rimPow', 'Rim concentration', 0.5, 10, 0.1],
+];
+
+/** Anime hair shader (src/viewport/hairShader.ts): live sliders, no rebuild. */
+function HairShaderSection({ hs }: { hs: HairShader }) {
+  const st = useStore.getState;
+  const v = { ...DEFAULT_HAIR_SHADER, ...(hs ?? {}) };
+  return (
+    <Section title="Hair shader" defaultOpen={false}>
+      <ColorRow label="Shade color" value={v.shade}
+        onBegin={() => st().beginEdit()} onEnd={() => st().endEdit()}
+        onLive={(c) => st().editLive((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER, ...x.hairShader, shade: c }; })}
+        onChange={(c) => st().commit((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER, ...x.hairShader, shade: c }; })} />
+      <ColorRow label="Highlight color" value={v.ringColor}
+        onBegin={() => st().beginEdit()} onEnd={() => st().endEdit()}
+        onLive={(c) => st().editLive((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER, ...x.hairShader, ringColor: c }; })}
+        onChange={(c) => st().commit((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER, ...x.hairShader, ringColor: c }; })} />
+      {HAIR_SLIDERS.map(([k, label, min, max, step]) => (
+        <ValueSlider key={k} label={label} value={v[k]} min={min} max={max} step={step}
+          format={step >= 1 ? (n) => `${Math.round(n)}` : undefined}
+          onBegin={() => st().beginEdit()}
+          onLive={(n) => st().editLive((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER, ...x.hairShader, [k]: n }; })}
+          onCommit={() => st().endEdit()}
+          onReset={() => st().commit((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER, ...x.hairShader, [k]: DEFAULT_HAIR_SHADER[k] }; })} />
+      ))}
+      <button className="btn small" style={{ marginTop: 4 }} onClick={() => st().commit((x) => { x.hairShader = { ...DEFAULT_HAIR_SHADER }; })}>Reset hair shader</button>
+    </Section>
   );
 }

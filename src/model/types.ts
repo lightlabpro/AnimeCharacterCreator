@@ -34,6 +34,27 @@ export interface HairPiece {
   highlight: number;
 }
 
+/** Anime hair shader settings shared by all hair groups (see src/viewport/hairShader.ts). */
+export interface HairShader {
+  shade: string;
+  shadeMix: number;
+  area: number;
+  hardness: number;
+  rootDark: number;
+  ringPos: number;
+  ringWidth: number;
+  ringStrength: number;
+  ringColor: string;
+  ringFollow: number;
+  ringSpace: number;
+  ringJag: number;
+  ringTeeth: number;
+  strandLines: number;
+  strandCount: number;
+  rim: number;
+  rimPow: number;
+}
+
 export interface FacialHairPiece {
   id: string;
   length: number;
@@ -99,6 +120,7 @@ export interface Identity {
     sides: HairPiece;
     extras: HairPiece[];
   };
+  hairShader: HairShader;
   facialHair: {
     moustache: FacialHairPiece;
     sideburns: FacialHairPiece;

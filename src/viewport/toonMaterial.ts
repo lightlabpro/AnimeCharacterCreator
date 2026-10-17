@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { HAIR_GLSL, hairUniforms } from './hairShader';
 import { resolveStyle, type RenderExtras, type RenderOverrides, type StyleSettings } from '../model/presets';
 import type { StylePreset } from '../model/types';
 import { hatchTexture } from './hatch';
@@ -244,6 +245,7 @@ uniform vec3 uIri1;
 uniform vec3 uIri2;
 uniform float uIriStrength;
 uniform float uNormalScale;
+${HAIR_GLSL}
 
 uniform vec3 uLightDir;
 uniform vec3 uLightColor;
@@ -441,6 +443,7 @@ void main() {
   shadowCol = mix(shadowCol, shadow2Col, shadow2) * uShadowGrade;
   vec3 litCol = base * uLightColor;
   vec3 col = mix(shadowCol, litCol, lit);
+  if (uIsHair > 0.5) col = animeHair(base, shadowCol, litCol, ndl, N, V, L, -vViewPos, vObjPos, vUv2, uHighlight);
 
   if (uLight2Strength > 0.0) {
     float l2 = smoothstep(0.5 - soft, 0.5 + soft, (dot(N, normalize(uLight2Dir)) + uWrap) / (1.0 + uWrap));
@@ -482,13 +485,6 @@ void main() {
   float edge = smoothstep(0.55, 0.8, 1.0 - ndv) * uKindEdge * uEdgeHi * lit * specMask;
   col += edge * mix(base, vec3(1.0), 0.5) * uLightColor * 0.45;
 
-  if (uIsHair > 0.5) {
-    float band = 0.42 + N.y * 0.08;
-    float hb = 1.0 - smoothstep(0.0, 0.07, abs(vUv2.y - band));
-    float seg = fract(vUv2.x * 7.0 + hash(vec2(floor(vUv2.x * 7.0), 3.0)) * 0.4);
-    float slash = smoothstep(0.08, 0.16, seg) * (1.0 - smoothstep(0.5, 0.6, seg));
-    col += uHighlight * hb * slash * mix(vec3(1.0), uTip, 0.3) * 0.5 * lit;
-  }
 
   float rim = pow(1.0 - ndv, 3.0);
   rim = smoothstep(0.35, 0.55, rim) * uRim * uKindRim;
@@ -593,6 +589,7 @@ export class ToonMaterial extends THREE.ShaderMaterial {
       side: opts.side ?? THREE.FrontSide,
       uniforms: {
         ...sharedUniforms,
+        ...hairUniforms,
         uColor: { value: new THREE.Color(opts.color) },
         uTip: { value: new THREE.Color(opts.tip ?? opts.color) },
         uHighlight: { value: opts.highlight ?? 0 },

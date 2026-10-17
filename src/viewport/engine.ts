@@ -10,6 +10,7 @@ import { attachPacks, packMeshes } from './gltfPacks';
 import { PostPipeline } from './postPipeline';
 import type { Rig } from './rig';
 import { applyStyle } from './toonMaterial';
+import { applyHairShader } from './hairShader';
 
 export interface EngineCallbacks {
   onHover(region: Region | null, equipUid: string | null): void;
@@ -136,7 +137,9 @@ export class Engine {
   }
 
   setCharacter(id: Identity, packs: Map<string, ImportedPack>, pose: PerformanceState['bodyPose']) {
-    const key = JSON.stringify({ ...id, faceProfile: undefined, style: undefined, name: undefined }) + pose + [...packs.keys()].join(',');
+    // Hair shader settings are shared uniforms: applied live, no rebuild.
+    applyHairShader(id.hairShader);
+    const key = JSON.stringify({ ...id, faceProfile: undefined, style: undefined, name: undefined, hairShader: undefined }) + pose + [...packs.keys()].join(',');
     if (id.style !== this.style) this.setStyle(id.style);
     if (key === this.rigKey) return;
     this.rigKey = key;

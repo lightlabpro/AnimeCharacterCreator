@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { applyHairShader } from './hairShader';
 import type { ImportedPack } from '../library/importer';
 import { neutralPerformance, resolvePerformance, wrinkleActivation, type PerformanceState } from '../model/performance';
 import type { RenderOverrides } from '../model/presets';
@@ -58,6 +59,7 @@ function frame(camera: THREE.PerspectiveCamera, rig: Rig, view: CaptureView): nu
 export async function captureViews(identity: Identity, packs: Map<string, ImportedPack>, opts: CaptureOptions = {}): Promise<Record<string, string>> {
   const size = opts.size ?? 768;
   const views = opts.views ?? CAPTURE_VIEWS;
+  applyHairShader(identity.hairShader);
   const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, premultipliedAlpha: false, preserveDrawingBuffer: true });
   renderer.setPixelRatio(1);
   renderer.setSize(size, size, false);
