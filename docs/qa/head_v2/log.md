@@ -157,3 +157,22 @@ references from mhs3 as target look. remember to use typesafe".
 - Board: docs/qa/head_v2/gate/boards/q27_v5f_vs_v6g.png
 - Next (biggest gaps per TypeSafe): hair rebuild (chunky clumps, painted light planes), face shading quality (soft
   painted edges, rim), eye size 0.33 -> 0.31 D and iris detail, side-view jaw/neck shadow edge.
+
+## q28 (2026-10-17) - "the head has some distorted parts and weird shapes all around. validate with a 3d model"
+- Validation against real anime head meshes: 5 verified dataset heads (TexVerse, landmark-checked; 2 of 7 dropped,
+  scale/pose mismatch) and our built head, normalised, rendered in plain clay (blender/tools/dataset_clay).
+- Clay showed what the toon paint hid on v6g (and v5f): horizontal ripples over the whole skull (Pchip section
+  interpolation kinks), a trough / ridge band across the face at eye level (brow + socket relief, NF 2.9-3.0 boxy
+  sections), a stick nose ridge, the jaw plane slicing the back of the skull, a skull bottom flaring past the neck,
+  a deep notch at the nape, crown too long (depth at 0.1 H 0.65 vs dataset 0.55-0.58), lower back too shallow
+  (depth at 0.5 H 0.72 vs 0.81-0.97).
+- sdf_head: loft Gaussian-smoothed along h (LOFT_SMOOTH 0.03), crown shortened, lower back fuller then tucked into
+  the neck (B 0.27 -> 0.12-0.25 below the ears), jaw plane limited to the front of the jaw corner with a sloped
+  underside behind it, eye-level sections rounder (NF 2.4-2.5), brow and socket relief off, lips softer, nose a
+  small tip, neck re-seated. measure_v2: all dataset bands ok.
+- TypeSafe A/B on clay (REF = dataset head d60fb442): new head wins overall, head_shape and clean in front, 3/4 and
+  side (both orders); artifacts 0.91-0.94 -> 0.33-0.45, dented 0.48-0.58 -> 0.32-0.45; reads a little less adult
+  (front 0.65 -> 0.58).
+- Toon v7a vs v6g: side wins every aspect (dented 0.51 -> 0.32, artifacts 0.85 -> 0.53); front / 3/4 undecided
+  (toon hides form). Face gate v7a: FAIL as before (24 rule failures, within noise of 23), 0 regressions.
+- Board: docs/qa/head_v2/gate/boards/q28_clay_validation.png

@@ -72,3 +72,11 @@ the centre line. Bands from 7 verified anime heads are in `knowledge/dataset-stu
   Look at the jaw/neck junction in a plain side render: a fold there draws a stray toon line (`JAW_NECK_SMOOTH`).
 - When an eye opening gets smaller, fill the lateral orbit to the line from the brow ridge to the cheek
   (`ORBIT_FILL`, q1c), or the 3/4 silhouette notches in at eye level.
+
+## Clay check against real anime head meshes (q28, standard after any head-form change)
+Toon shading hides form errors. Render the built head in plain clay next to the verified dataset heads with
+`blender/tools/dataset_clay/` (README there): front, 3/4, side and back. Any horizontal banding, trough, ridge, shelf
+or crease that no dataset head shows is a defect, whatever the toon render looks like. Then ask TypeSafe A/B on the
+clay renders (REF = a dataset head's clay render). q28 found, on a head that passed the dataset width/depth bands:
+ripples from Pchip section interpolation (fixed by Gaussian smoothing along h), a jaw plane slicing the back of the
+skull, a skull bottom flaring past the neck, a brow/socket band across the face and a stick nose.

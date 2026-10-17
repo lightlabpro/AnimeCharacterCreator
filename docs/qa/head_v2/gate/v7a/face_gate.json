@@ -1,0 +1,2427 @@
+{
+ "model": "jev-1.14.0",
+ "renders": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\head_v2\\gate\\v7a",
+ "rules": [
+  {
+   "id": "aa_crying_brows_droop",
+   "element": "expression_sad",
+   "verdict": "not measured",
+   "views": [
+    "expression:crying"
+   ]
+  },
+  {
+   "id": "aa_crying_huge_tears",
+   "element": "expression_sad",
+   "verdict": "not measured",
+   "views": [
+    "expression:crying"
+   ]
+  },
+  {
+   "id": "aa_comic_dot_eyes_determined",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:determined"
+   ]
+  },
+  {
+   "id": "aa_courageous_smile",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:smug"
+   ]
+  },
+  {
+   "id": "aa_battle_ready_defined_features",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:determined"
+   ]
+  },
+  {
+   "id": "aa_exaggerate_expressions",
+   "element": "expression_general",
+   "verdict": "not measured",
+   "views": [
+    "expression:any"
+   ]
+  },
+  {
+   "id": "aa_hit_eyes_squeeze_shut",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:pain"
+   ]
+  },
+  {
+   "id": "aa_hit_eyes_roll_up",
+   "element": "eyes",
+   "verdict": "not measured",
+   "views": [
+    "expression:stunned"
+   ]
+  },
+  {
+   "id": "aa_hit_clenched_teeth_bitten_tongue",
+   "element": "teeth_tongue",
+   "verdict": "not measured",
+   "views": [
+    "expression:pain"
+   ]
+  },
+  {
+   "id": "aa_hit_face_angle_shift",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:pain"
+   ]
+  },
+  {
+   "id": "aa_hit_blush_bruise_marks",
+   "element": "face_shading",
+   "verdict": "not measured",
+   "views": [
+    "expression:pain"
+   ]
+  },
+  {
+   "id": "aa_faint_whites_of_eyes",
+   "element": "eyes",
+   "verdict": "not measured",
+   "views": [
+    "expression:knocked_out"
+   ]
+  },
+  {
+   "id": "aa_pained_open_mouth_spit",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:pain"
+   ]
+  },
+  {
+   "id": "aa_fangs_tongue_gallery",
+   "element": "teeth_tongue",
+   "verdict": "not measured",
+   "views": [
+    "expression:any"
+   ]
+  },
+  {
+   "id": "aa_chase_desire_open_mouth",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:determined"
+   ]
+  },
+  {
+   "id": "aa_same_pose_expression_flip",
+   "element": "expression_general",
+   "verdict": "not measured",
+   "views": [
+    "expression:any"
+   ]
+  },
+  {
+   "id": "aa_fear_open_mouth_squeezed_eyes",
+   "element": "expression_scared",
+   "verdict": "not measured",
+   "views": [
+    "expression:scared"
+   ]
+  },
+  {
+   "id": "aa_danger_brow_crease_sweat",
+   "element": "expression_scared",
+   "verdict": "not measured",
+   "views": [
+    "expression:scared"
+   ]
+  },
+  {
+   "id": "aa_tension_clenched_teeth_closed_eyes",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:bracing"
+   ]
+  },
+  {
+   "id": "aa_endurance_face",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:enduring"
+   ]
+  },
+  {
+   "id": "aa_determined_grin_slanted",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:determined"
+   ]
+  },
+  {
+   "id": "aa_blow_to_chin_head_back",
+   "element": "jaw_chin_neck",
+   "verdict": "not measured",
+   "views": [
+    "expression:knocked_out"
+   ]
+  },
+  {
+   "id": "aa_head_toward_chest_duck",
+   "element": "jaw_chin_neck",
+   "verdict": "not measured",
+   "views": [
+    "expression:scared"
+   ]
+  },
+  {
+   "id": "mg13_face_down_shadow",
+   "element": "face_shading",
+   "verdict": "not measured",
+   "views": [
+    "expression:downcast"
+   ]
+  },
+  {
+   "id": "mg13_expr_three_parts",
+   "element": "expression_general",
+   "verdict": "not measured",
+   "views": [
+    "expression:all"
+   ]
+  },
+  {
+   "id": "mg13_expr_height_control",
+   "element": "expression_general",
+   "verdict": "not measured",
+   "views": [
+    "expression:all"
+   ]
+  },
+  {
+   "id": "mg13_expr_mouth_corners",
+   "element": "expression_general",
+   "verdict": "not measured",
+   "views": [
+    "expression:all"
+   ]
+  },
+  {
+   "id": "mg13_expr_head_angle",
+   "element": "expression_general",
+   "verdict": "not measured",
+   "views": [
+    "expression:all"
+   ]
+  },
+  {
+   "id": "mg13_determined_brows_low",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:determined"
+   ]
+  },
+  {
+   "id": "mg13_relaxed_mouth_low",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:relaxed"
+   ]
+  },
+  {
+   "id": "mg13_wink_giggle",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:wink"
+   ]
+  },
+  {
+   "id": "cr_expr_confusion_asym_brows",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:confused"
+   ]
+  },
+  {
+   "id": "cr_expr_concern_furrow",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:concerned"
+   ]
+  },
+  {
+   "id": "cr_expr_bored_flat_lids",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:bored"
+   ]
+  },
+  {
+   "id": "cr_expr_determined_brows_low",
+   "element": "expression_determined",
+   "verdict": "not measured",
+   "views": [
+    "expression:determined"
+   ]
+  },
+  {
+   "id": "cr_expr_distress_zigzag",
+   "element": "expression_scared",
+   "verdict": "not measured",
+   "views": [
+    "expression:scared"
+   ]
+  },
+  {
+   "id": "cr_expr_embarrassed_combo",
+   "element": "expression_embarrassed",
+   "verdict": "not measured",
+   "views": [
+    "expression:embarrassed"
+   ]
+  },
+  {
+   "id": "cr_expr_embarrassed_chevrons",
+   "element": "expression_embarrassed",
+   "verdict": "not measured",
+   "views": [
+    "expression:embarrassed"
+   ]
+  },
+  {
+   "id": "cr_expr_shock_white_eyes",
+   "element": "expression_surprised",
+   "verdict": "not measured",
+   "views": [
+    "expression:shocked"
+   ]
+  },
+  {
+   "id": "cr_expr_fright_gloom_lines",
+   "element": "expression_scared",
+   "verdict": "not measured",
+   "views": [
+    "expression:scared"
+   ]
+  },
+  {
+   "id": "cr_expr_wink_arc",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:wink"
+   ]
+  },
+  {
+   "id": "cr_expr_disapproving_halflid",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:disapproving"
+   ]
+  },
+  {
+   "id": "cr_expr_frustrated_squeeze",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:frustrated"
+   ]
+  },
+  {
+   "id": "cr_expr_devious_slit",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:devious"
+   ]
+  },
+  {
+   "id": "cr_expr_love_hearts",
+   "element": "expression_other",
+   "verdict": "not measured",
+   "views": [
+    "expression:love"
+   ]
+  },
+  {
+   "id": "cr_expr_shy_dot_eyes",
+   "element": "expression_embarrassed",
+   "verdict": "not measured",
+   "views": [
+    "expression:shy"
+   ]
+  },
+  {
+   "id": "aa_neutral_eyes_mid_head",
+   "element": "head_shape",
+   "book": "rules_actionanime_face.json",
+   "page": 15,
+   "render": "front.png",
+   "p_yes": 0.6,
+   "p_applicable": 0.89,
+   "verdict": "pass",
+   "rule": "In the neutral front view the eyes sit at about the vertical middle of the whole head (crown to chin), with the nose roughly halfway between eyes and chin and the mouth a little below the nose."
+  },
+  {
+   "id": "aa_bangs_frame_forehead",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 15,
+   "render": "front.png",
+   "p_yes": 0.85,
+   "p_applicable": 0.76,
+   "verdict": "pass",
+   "rule": "Bangs fall over the forehead down toward the brows and side locks frame the cheeks; the female bob reaches past the jaw to the neck, the male cut stays above the jawline."
+  },
+  {
+   "id": "aa_teeth_center_line",
+   "element": "teeth_tongue",
+   "book": "rules_actionanime_face.json",
+   "page": 95,
+   "render": "front.png",
+   "p_yes": 0.22,
+   "p_applicable": 0.09,
+   "verdict": "not applicable",
+   "rule": "The gap between the two upper front teeth lines up with the vertical center line of the face."
+  },
+  {
+   "id": "aa_canine_third_tooth",
+   "element": "teeth_tongue",
+   "book": "rules_actionanime_face.json",
+   "page": 95,
+   "render": "front.png",
+   "p_yes": 0.41,
+   "p_applicable": 0.06,
+   "verdict": "not applicable",
+   "rule": "Counting out from the middle, the canine is the third tooth on each side."
+  },
+  {
+   "id": "aa_teeth_subtle_gaps",
+   "element": "teeth_tongue",
+   "book": "rules_actionanime_face.json",
+   "page": 95,
+   "render": "front.png",
+   "p_yes": 0.08,
+   "p_applicable": 0.04,
+   "verdict": "not applicable",
+   "rule": "Teeth read better with small gaps and separation lines between them rather than as one solid white band."
+  },
+  {
+   "id": "aa_face_light_front_above",
+   "element": "face_shading",
+   "book": "rules_actionanime_face.json",
+   "page": 143,
+   "render": "front.png",
+   "p_yes": 0.8,
+   "p_applicable": 0.87,
+   "verdict": "pass",
+   "rule": "Choose a light source and shade from it; the example is lit from the front and slightly above, so shadow falls under the bangs, below the chin onto the neck, and under the nose."
+  },
+  {
+   "id": "aa_highlight_protruding",
+   "element": "face_shading",
+   "book": "rules_actionanime_face.json",
+   "page": 143,
+   "render": "front.png",
+   "p_yes": 0.23,
+   "p_applicable": 0.75,
+   "verdict": "fail",
+   "rule": "Add highlights only to protruding areas (nose tip/bridge, cheekbones, lower lip, hair crown)."
+  },
+  {
+   "id": "aa_hair_shadow_on_face",
+   "element": "face_shading",
+   "book": "rules_actionanime_face.json",
+   "page": 143,
+   "render": "front.png",
+   "p_yes": 0.76,
+   "p_applicable": 0.93,
+   "verdict": "pass",
+   "rule": "Hair casts a shadow shape onto the forehead and around the eyes beneath the bangs."
+  },
+  {
+   "id": "aa_scars_as_accents",
+   "element": "face_shading",
+   "book": "rules_actionanime_face.json",
+   "page": 144,
+   "render": "front.png",
+   "p_yes": 0.67,
+   "p_applicable": 0.86,
+   "verdict": "pass",
+   "rule": "Small scars or marks on the skin can be added as character accents."
+  },
+  {
+   "id": "aa_hair_from_crown",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 105,
+   "render": "front.png",
+   "p_yes": 0.45,
+   "p_applicable": 0.75,
+   "verdict": "uncertain",
+   "rule": "Hair strands must visibly grow from the crown and hairline, flowing outward from those points even when blown or moving."
+  },
+  {
+   "id": "aa_hair_bouncy_even_still",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 105,
+   "render": "front.png",
+   "p_yes": 0.64,
+   "p_applicable": 0.79,
+   "verdict": "pass",
+   "rule": "Even with no wind, give hair a light, bouncy lift so it does not look pasted flat."
+  },
+  {
+   "id": "aa_hair_drifts_front",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 105,
+   "render": "front.png",
+   "p_yes": 0.62,
+   "p_applicable": 0.74,
+   "verdict": "pass",
+   "rule": "Long side locks can drift forward over the shoulders and partly across the face to frame it."
+  },
+  {
+   "id": "mg13_front_circle_cut_sides",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 31,
+   "render": "front.png",
+   "p_yes": 0.6,
+   "p_applicable": 0.79,
+   "verdict": "pass",
+   "rule": "Front head is built from a circle whose left and right arcs are trimmed off, leaving near-vertical cheek sides; the jaw contour turns inward toward the chin at about mouth level."
+  },
+  {
+   "id": "mg13_upper_lid_half_head",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 23,
+   "render": "front.png",
+   "p_yes": 0.4,
+   "p_applicable": 0.69,
+   "verdict": "fail",
+   "rule": "The upper eyelid line sits at half the head height, measured from the top of the skull (not the hair) to the chin tip."
+  },
+  {
+   "id": "mg13_hairline_mid_crown_lid",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 31,
+   "render": "front.png",
+   "p_yes": 0.39,
+   "p_applicable": 0.67,
+   "verdict": "fail",
+   "rule": "The hairline sits halfway between the top of the skull and the upper eyelid line."
+  },
+  {
+   "id": "mg13_nose_mouth_halving",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.56,
+   "p_applicable": 0.85,
+   "verdict": "uncertain",
+   "rule": "Below the eyes the face is halved twice: the nose bottom is halfway between the upper eyelid line and the chin tip, and the mouth is halfway between the nose bottom and the chin tip (p23 gives a close variant: lower lid-to-chin split into thirds, nose then mouth)."
+  },
+  {
+   "id": "mg13_cranium_wider_than_face",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 34,
+   "render": "front.png",
+   "p_yes": 0.44,
+   "p_applicable": 0.31,
+   "verdict": "not applicable",
+   "rule": "The back of the skull is wider than the face contour: in front view the cranium bulges out past the cheeks on both sides instead of the face outline running straight up into the skull outline."
+  },
+  {
+   "id": "mg13_face_not_too_big",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 128,
+   "render": "front.png",
+   "p_yes": 0.62,
+   "p_applicable": 0.66,
+   "verdict": "pass",
+   "rule": "The face looks too big when the eyes are pushed out to the head's edge and no side plane is shown; keep a band of side of head (temple/cheek) visible outside the eyes, especially in 3/4."
+  },
+  {
+   "id": "mg13_consistent_gaze",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 26,
+   "render": "front.png",
+   "p_yes": 0.64,
+   "p_applicable": 0.95,
+   "verdict": "pass",
+   "rule": "Both eyes must look in the same direction; covering one eye at a time is a quick way to catch mismatched gaze."
+  },
+  {
+   "id": "mg13_eye_gap_one_eye",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 23,
+   "render": "front.png",
+   "p_yes": 0.58,
+   "p_applicable": 0.9,
+   "verdict": "uncertain",
+   "rule": "Leave a gap of about one eye width between the two eyes."
+  },
+  {
+   "id": "mg13_iris_dome_pupil",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 45,
+   "render": "front.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.73,
+   "verdict": "fail",
+   "rule": "The dark part of the eye is a bowl-shaped iris with the pupil inside, covered by a dome cornea; in front view the iris is a full circle/oval, and as the face turns it becomes a narrower ellipse whose position shifts toward the turn."
+  },
+  {
+   "id": "mg13_lid_five_blocks",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 46,
+   "render": "front.png",
+   "p_yes": 0.73,
+   "p_applicable": 0.85,
+   "verdict": "pass",
+   "rule": "An eye outline is made of five blocks: thick upper lid, inner corner, upper outer flick, lower outer corner, and lower lid; styles differ by which blocks are omitted, with the upper lid always the heaviest."
+  },
+  {
+   "id": "mg13_corner_angle_60",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 47,
+   "render": "front.png",
+   "p_yes": 0.52,
+   "p_applicable": 0.81,
+   "verdict": "uncertain",
+   "rule": "In front view the two eyes are mirror images and the upper and lower lid lines meet the corners at roughly 60 degrees; at angles the corner angles change but the vertical height of the eye does not."
+  },
+  {
+   "id": "mg13_lashes_radial",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 47,
+   "render": "front.png",
+   "p_yes": 0.48,
+   "p_applicable": 0.6,
+   "verdict": "uncertain",
+   "rule": "Eyelashes grow radially from the lid edge, with curved roots and tapering, stretched tips; lashes pointing in random directions look wrong."
+  },
+  {
+   "id": "mg13_double_lid_highlight",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.6,
+   "p_applicable": 0.91,
+   "verdict": "pass",
+   "rule": "Finished eyes get a double-eyelid crease line above the upper lid, eyelash flicks, and white highlights in the iris."
+  },
+  {
+   "id": "mg13_brow_inner_past_eye",
+   "element": "brows",
+   "book": "rules_mangaguide13_face.json",
+   "page": 31,
+   "render": "front.png",
+   "p_yes": 0.67,
+   "p_applicable": 0.93,
+   "verdict": "pass",
+   "rule": "The inner end of each eyebrow extends a little past the inner corner of the eye toward the center."
+  },
+  {
+   "id": "mg13_brows_movable_mask",
+   "element": "brows",
+   "book": "rules_mangaguide13_face.json",
+   "page": 166,
+   "render": "front.png",
+   "p_yes": 0.78,
+   "p_applicable": 0.78,
+   "verdict": "pass",
+   "rule": "Eyebrows are movable parts that drive expression; think of brows plus eye area as a hero's mask whose shape changes with emotion."
+  },
+  {
+   "id": "mg13_nose_triangle_minimal",
+   "element": "nose",
+   "book": "rules_mangaguide13_face.json",
+   "page": 50,
+   "render": "front.png",
+   "p_yes": 0.96,
+   "p_applicable": 0.94,
+   "verdict": "pass",
+   "rule": "The anime nose has a triangular cross-section and is reduced to a line or a small mark; options are tip only, center line, nostril, one side line, or a small shadow under the nose."
+  },
+  {
+   "id": "mg13_child_round_adult_straight",
+   "element": "mouth",
+   "book": "rules_mangaguide13_face.json",
+   "page": 48,
+   "render": "front.png",
+   "p_yes": 0.74,
+   "p_applicable": 0.75,
+   "verdict": "pass",
+   "rule": "Children's mouths curve (rounded), adult mouths are straighter or a loose S-curve."
+  },
+  {
+   "id": "mg13_open_mouth_upper_first",
+   "element": "mouth",
+   "book": "rules_mangaguide13_face.json",
+   "page": 48,
+   "render": "front.png",
+   "p_yes": 0.36,
+   "p_applicable": 0.18,
+   "verdict": "not applicable",
+   "rule": "An open mouth is built from the upper lip line, with the lower lip curve coming out from under it, making a rounded opening wider at the top."
+  },
+  {
+   "id": "mg13_teeth_by_opening",
+   "element": "teeth_tongue",
+   "book": "rules_mangaguide13_face.json",
+   "page": 49,
+   "render": "front.png",
+   "p_yes": 0.42,
+   "p_applicable": 0.96,
+   "verdict": "uncertain",
+   "rule": "Closed mouth: thin lines and no teeth; slightly open: no tooth line or only the upper teeth; wide open: upper and lower teeth both show and the jaw drops, lengthening the face."
+  },
+  {
+   "id": "mg13_ear_eyelid_to_nose",
+   "element": "ears",
+   "book": "rules_mangaguide13_face.json",
+   "page": 31,
+   "render": "front.png",
+   "p_yes": 0.48,
+   "p_applicable": 0.84,
+   "verdict": "uncertain",
+   "rule": "Ears span from the upper eyelid line (top) to the nose-bottom line (lobe)."
+  },
+  {
+   "id": "mg13_ear_glasses_temple",
+   "element": "ears",
+   "book": "rules_mangaguide13_face.json",
+   "page": 49,
+   "render": "front.png",
+   "p_yes": 0.43,
+   "p_applicable": 0.78,
+   "verdict": "uncertain",
+   "rule": "The ear's attachment point is where the temple arm of a pair of glasses would reach, level with the eyes."
+  },
+  {
+   "id": "mg13_neck_width_iris",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.46,
+   "p_applicable": 0.7,
+   "verdict": "uncertain",
+   "rule": "Average neck width: the neck sides line up with the inner edges of the irises (dark of the eye) in front view; neck length is about a quarter of the head height for a 6-head body."
+  },
+  {
+   "id": "mg13_shoulder_width",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.35,
+   "p_applicable": 0.03,
+   "verdict": "not applicable",
+   "rule": "Shoulder width is about 1.5 times the ear-to-ear width for a typical (female) character, with the shoulder line starting where neck, trapezius and clavicle meet below the ear."
+  },
+  {
+   "id": "mg13_neck_motion",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 162,
+   "render": "front.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.08,
+   "verdict": "not applicable",
+   "rule": "Head movement pulls the shoulders: tilting the head sideways or turning it raises the shoulder on that side slightly; looking up stretches the throat, looking down tenses the back of the neck."
+  },
+  {
+   "id": "mg13_hair_volume_above_skull",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.42,
+   "p_applicable": 0.86,
+   "verdict": "uncertain",
+   "rule": "Hair sits outside the skull: its outline adds about 1/8 of the head height above the crown and wraps around the cranium."
+  },
+  {
+   "id": "mg13_hair_three_blocks",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 106,
+   "render": "front.png",
+   "p_yes": 0.48,
+   "p_applicable": 0.64,
+   "verdict": "uncertain",
+   "rule": "Hair is built from three blocks: bangs (front), middle/side hair, and back hair, each a separate mass; the hairline boundary is the reference."
+  },
+  {
+   "id": "mg13_hair_ribbon_veil",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 109,
+   "render": "front.png",
+   "p_yes": 0.51,
+   "p_applicable": 0.68,
+   "verdict": "uncertain",
+   "rule": "Think of hair as ribbons hanging around the head like a birdcage/veil, with the face area cut out; side hair falls in front of the ears and frames the face."
+  },
+  {
+   "id": "mg13_hair_from_part",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 111,
+   "render": "front.png",
+   "p_yes": 0.38,
+   "p_applicable": 0.76,
+   "verdict": "fail",
+   "rule": "All locks flow outward from the parting/whorl; drawing every lock from that point makes the hair look natural."
+  },
+  {
+   "id": "mg13_hair_depth_narrow",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 110,
+   "render": "front.png",
+   "p_yes": 0.66,
+   "p_applicable": 0.87,
+   "verdict": "pass",
+   "rule": "Locks get narrower toward the sides of the head sphere to show depth, and they overlap in order from front to back."
+  },
+  {
+   "id": "mg13_hair_highlight_band",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 110,
+   "render": "front.png",
+   "p_yes": 0.1,
+   "p_applicable": 0.39,
+   "verdict": "not applicable",
+   "rule": "Hair highlights are a horizontal band that follows a latitude line of the head sphere."
+  },
+  {
+   "id": "mg13_lock_banana",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 110,
+   "render": "front.png",
+   "p_yes": 0.56,
+   "p_applicable": 0.59,
+   "verdict": "uncertain",
+   "rule": "Each lock has a triangular, banana-like cross-section with a gentle curve on the back; layering these gives 3D hair."
+  },
+  {
+   "id": "mg13_lock_tips_random",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 108,
+   "render": "front.png",
+   "p_yes": 0.83,
+   "p_applicable": 0.84,
+   "verdict": "pass",
+   "rule": "Lock tips vary in length, gap and thickness; identical repeated spikes look copied and monotonous. Weight near the tip makes a lock look soft, weight mid-lock makes it look stiff."
+  },
+  {
+   "id": "mg13_lock_sizes_vary",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 105,
+   "render": "front.png",
+   "p_yes": 0.62,
+   "p_applicable": 0.9,
+   "verdict": "pass",
+   "rule": "Hair bundles should not all be the same size, and their flow should be consistent."
+  },
+  {
+   "id": "mg13_hair_weight_position",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 111,
+   "render": "front.png",
+   "p_yes": 0.59,
+   "p_applicable": 0.67,
+   "verdict": "uncertain",
+   "rule": "Hair weight is where the volume is widest: low weight reads calm, high weight reads lively, even at the same length."
+  },
+  {
+   "id": "mg13_in_out_silhouette",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 112,
+   "render": "front.png",
+   "p_yes": 0.63,
+   "p_applicable": 0.96,
+   "verdict": "pass",
+   "rule": "Judge a hairstyle by its outer silhouette and its inner silhouette (the face-shaped window the bangs and side hair leave)."
+  },
+  {
+   "id": "mg13_bangs_change_style",
+   "element": "hair_framing",
+   "book": "rules_mangaguide13_face.json",
+   "page": 114,
+   "render": "front.png",
+   "p_yes": 0.91,
+   "p_applicable": 0.64,
+   "verdict": "pass",
+   "rule": "Changing only the bangs (or the knot position/height) changes the character's look strongly; bangs, middle and back hair can be mixed and matched."
+  },
+  {
+   "id": "mg13_neck_shadow_only",
+   "element": "face_shading",
+   "book": "rules_mangaguide13_face.json",
+   "page": 131,
+   "render": "front.png",
+   "p_yes": 0.27,
+   "p_applicable": 0.52,
+   "verdict": "fail",
+   "rule": "With light from above-front, the main shadow is a cast shadow on the neck under the jaw; the face itself stays mostly unshaded."
+  },
+  {
+   "id": "mg13_cheek_blush",
+   "element": "face_shading",
+   "book": "rules_mangaguide13_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.97,
+   "p_applicable": 0.95,
+   "verdict": "pass",
+   "rule": "Finished faces carry a soft pink blush on the cheeks just under the eyes, plus highlights in the eyes and hair."
+  },
+  {
+   "id": "cr_brow_line_band1",
+   "element": "head_shape",
+   "book": "rules_crilley_face.json",
+   "page": 26,
+   "render": "front.png",
+   "p_yes": 0.24,
+   "p_applicable": 0.61,
+   "verdict": "fail",
+   "rule": "Split the lower half of the skull circle into four equal bands: brows sit on the first line (1/8 of the diameter below the circle's centre), the upper lash line on the second, and the bottom of the iris reaches the third."
+  },
+  {
+   "id": "cr_face_width_at_lashes",
+   "element": "head_shape",
+   "book": "rules_crilley_face.json",
+   "page": 28,
+   "render": "front.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.49,
+   "verdict": "not applicable",
+   "rule": "The outer ends of the upper lash lines touch the sides of the skull circle, so the face at eye level is as wide as the cranium."
+  },
+  {
+   "id": "cr_top_heavy_hair_volume",
+   "element": "head_shape",
+   "book": "rules_crilley_face.json",
+   "page": 30,
+   "render": "front.png",
+   "p_yes": 0.46,
+   "p_applicable": 0.59,
+   "verdict": "uncertain",
+   "rule": "The top of the hair sits about 1/4 of the circle diameter above the skull; manga heads are top heavy, which reads as youthful."
+  },
+  {
+   "id": "cr_shojo_high_brows",
+   "element": "brows",
+   "book": "rules_crilley_face.json",
+   "page": 21,
+   "render": "front.png",
+   "p_yes": 0.6,
+   "p_applicable": 0.58,
+   "verdict": "pass",
+   "rule": "In the most cartoony (shojo) style the eyes are very large and the brows sit very high, near the circle's centre line or above."
+  },
+  {
+   "id": "cr_male_thicker_neck",
+   "element": "jaw_chin_neck",
+   "book": "rules_crilley_face.json",
+   "page": 163,
+   "render": "front.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.64,
+   "verdict": "fail",
+   "rule": "A boy's neck is drawn thicker than a girl's and its sides start closer to the jaw corners."
+  },
+  {
+   "id": "cr_adult_nose_rendered",
+   "element": "nose",
+   "book": "rules_crilley_face.json",
+   "page": 70,
+   "render": "front.png",
+   "p_yes": 0.65,
+   "p_applicable": 0.77,
+   "verdict": "pass",
+   "rule": "The biggest young-versus-old difference is the nose: adults get a fully drawn nose with a bridge line and nostril wings, teens only a tiny mark."
+  },
+  {
+   "id": "cr_adult_mouth_lower_lip_line",
+   "element": "mouth",
+   "book": "rules_crilley_face.json",
+   "page": 81,
+   "render": "front.png",
+   "p_yes": 0.13,
+   "p_applicable": 0.88,
+   "verdict": "fail",
+   "rule": "Adult mouths add a short line under the mouth for the lower lip; youthful mouths are a single short line."
+  },
+  {
+   "id": "cr_fuller_neck_wide",
+   "element": "jaw_chin_neck",
+   "book": "rules_crilley_face.json",
+   "page": 92,
+   "render": "front.png",
+   "p_yes": 0.45,
+   "p_applicable": 0.2,
+   "verdict": "not applicable",
+   "rule": "Fuller-figured characters get a much wider neck than the standard manga neck."
+  },
+  {
+   "id": "cr_child_mouth_midway",
+   "element": "mouth",
+   "book": "rules_crilley_face.json",
+   "page": 110,
+   "render": "front.png",
+   "p_yes": 0.63,
+   "p_applicable": 0.56,
+   "verdict": "pass",
+   "rule": "On the child the mouth is halfway between the bottom of the skull circle and the chin tip, the same rule as for teens."
+  },
+  {
+   "id": "cr_child_bigger_ears_optional",
+   "element": "ears",
+   "book": "rules_crilley_face.json",
+   "page": 111,
+   "render": "front.png",
+   "p_yes": 0.58,
+   "p_applicable": 0.55,
+   "verdict": "uncertain",
+   "rule": "Child ears can be made slightly larger than a teen's for extra cuteness."
+  },
+  {
+   "id": "cr_eye_gap_one_eye",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 28,
+   "render": "front.png",
+   "p_yes": 0.58,
+   "p_applicable": 0.84,
+   "verdict": "uncertain",
+   "rule": "Leave exactly one eye width of empty skin between the eyes; that gap matters as much as the eye shapes."
+  },
+  {
+   "id": "cr_lash_lines_tilt_center",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 15,
+   "render": "front.png",
+   "p_yes": 0.44,
+   "p_applicable": 0.77,
+   "verdict": "uncertain",
+   "rule": "Brows and both lash lines tilt up slightly toward the centre of the face; the upper lash curve is stronger than the lower."
+  },
+  {
+   "id": "cr_iris_tall_oval",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 16,
+   "render": "front.png",
+   "p_yes": 0.49,
+   "p_applicable": 0.74,
+   "verdict": "uncertain",
+   "rule": "The iris is a tall oval filling most of the eye height, with a smaller oval pupil nested inside; its bottom flattens slightly where it meets the lower lash line."
+  },
+  {
+   "id": "cr_highlight_optional_bottom",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 126,
+   "render": "front.png",
+   "p_yes": 0.97,
+   "p_applicable": 0.91,
+   "verdict": "pass",
+   "rule": "Most manga eyes have at least one highlight; it can sit at the top of the iris, the bottom, or both, and a single dot can be enough."
+  },
+  {
+   "id": "cr_lid_fold_inner",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 29,
+   "render": "front.png",
+   "p_yes": 0.47,
+   "p_applicable": 0.82,
+   "verdict": "uncertain",
+   "rule": "The upper eyelid fold is a short curved line above the inner part of the eye only, not across the full width as in real life."
+  },
+  {
+   "id": "cr_nose_on_circle_bottom",
+   "element": "nose",
+   "book": "rules_crilley_face.json",
+   "page": 28,
+   "render": "front.png",
+   "p_yes": 0.61,
+   "p_applicable": 0.45,
+   "verdict": "not applicable",
+   "rule": "The teen nose rests on the bottom of the skull circle on the centre line; it is a tiny mark (a short hook or small shadow tick), not a full form."
+  },
+  {
+   "id": "cr_mouth_midway",
+   "element": "mouth",
+   "book": "rules_crilley_face.json",
+   "page": 28,
+   "render": "front.png",
+   "p_yes": 0.53,
+   "p_applicable": 0.71,
+   "verdict": "uncertain",
+   "rule": "The mouth sits midway between the bottom of the skull circle (nose level) and the chin tip."
+  },
+  {
+   "id": "cr_mouth_small_line",
+   "element": "mouth",
+   "book": "rules_crilley_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.34,
+   "p_applicable": 0.84,
+   "verdict": "fail",
+   "rule": "The neutral teen mouth is a short, slightly upturned line, roughly one eye width long, narrower than the gap between the eyes."
+  },
+  {
+   "id": "cr_ear_position",
+   "element": "ears",
+   "book": "rules_crilley_face.json",
+   "page": 29,
+   "render": "front.png",
+   "p_yes": 0.52,
+   "p_applicable": 0.63,
+   "verdict": "uncertain",
+   "rule": "The top of the ear is level with the middle of the eye and its bottom sits just above the mouth line."
+  },
+  {
+   "id": "cr_ear_simple_c",
+   "element": "ears",
+   "book": "rules_crilley_face.json",
+   "page": 46,
+   "render": "front.png",
+   "p_yes": 0.57,
+   "p_applicable": 0.88,
+   "verdict": "uncertain",
+   "rule": "Ears are simple C shapes with one or two inner curves; they stick out modestly from the sides of the head."
+  },
+  {
+   "id": "cr_bangs_part_for_eyes",
+   "element": "hair_framing",
+   "book": "rules_crilley_face.json",
+   "page": 48,
+   "render": "front.png",
+   "p_yes": 0.59,
+   "p_applicable": 0.88,
+   "verdict": "uncertain",
+   "rule": "Bangs are arranged to part over the forehead so they don't hide the eyes; they reach about to the brows."
+  },
+  {
+   "id": "cr_hairline_gap_chibi",
+   "element": "hair_framing",
+   "book": "rules_crilley_face.json",
+   "page": 218,
+   "render": "front.png",
+   "p_yes": 0.54,
+   "p_applicable": 0.66,
+   "verdict": "uncertain",
+   "rule": "There is real distance between the hairline/outer hair and the actual skull; if the hair hugs the skull the head looks wrong."
+  },
+  {
+   "id": "cr_side_locks_frame_face",
+   "element": "hair_framing",
+   "book": "rules_crilley_face.json",
+   "page": 32,
+   "render": "front.png",
+   "p_yes": 0.58,
+   "p_applicable": 0.72,
+   "verdict": "uncertain",
+   "rule": "Long side locks drop in front of or beside the ears, framing the cheeks and leaving the jaw outline readable."
+  },
+  {
+   "id": "cr_adult_hair_forehead",
+   "element": "hair_framing",
+   "book": "rules_crilley_face.json",
+   "page": 72,
+   "render": "front.png",
+   "p_yes": 0.57,
+   "p_applicable": 0.49,
+   "verdict": "not applicable",
+   "rule": "Older characters get a larger forehead and calmer, less flashy hairstyles."
+  },
+  {
+   "id": "cr_color_hair_highlight_band",
+   "element": "face_shading",
+   "book": "rules_crilley_face.json",
+   "page": 20,
+   "render": "front.png",
+   "p_yes": 0.52,
+   "p_applicable": 0.84,
+   "verdict": "uncertain",
+   "rule": "In colour the face is flat skin, and the hair carries a lighter highlight band across the crown."
+  },
+  {
+   "id": "cr_expr_neutral_vs_reaction",
+   "element": "expression_general",
+   "book": "rules_crilley_face.json",
+   "page": 392,
+   "render": "front.png",
+   "p_yes": 0.74,
+   "p_applicable": 0.61,
+   "verdict": "pass",
+   "rule": "Panels play off a neutral, innocent face against a strongly changed reaction face; the neutral must be calm (relaxed brows, closed small mouth) so the change reads."
+  },
+  {
+   "id": "aa_rage_mouth_wide_open",
+   "element": "expression_angry",
+   "book": "rules_actionanime_face.json",
+   "page": 121,
+   "render": "expr_angry.png",
+   "p_yes": 0.14,
+   "p_applicable": 0.55,
+   "verdict": "fail",
+   "rule": "A rage shout uses a tall, wide-open mouth (taller than it is wide is fine) to build tension."
+  },
+  {
+   "id": "aa_scream_attack",
+   "element": "expression_angry",
+   "book": "rules_actionanime_face.json",
+   "page": 121,
+   "render": "expr_angry.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.57,
+   "verdict": "fail",
+   "rule": "A spirited attack scream: eyes squeezed or narrowed, brows down hard, mouth wide open showing teeth."
+  },
+  {
+   "id": "aa_angry_running_squeezed",
+   "element": "expression_angry",
+   "book": "rules_actionanime_face.json",
+   "page": 28,
+   "render": "expr_angry.png",
+   "p_yes": 0.07,
+   "p_applicable": 0.55,
+   "verdict": "fail",
+   "rule": "A worked-up angry face squeezes the eyes into slanted lines, pulls brows down hard, and bares clenched teeth in a wide rectangle mouth."
+  },
+  {
+   "id": "aa_glare_brow_variation",
+   "element": "brows",
+   "book": "rules_actionanime_face.json",
+   "page": 92,
+   "render": "expr_angry.png",
+   "p_yes": 0.52,
+   "p_applicable": 0.84,
+   "verdict": "uncertain",
+   "rule": "In a glare, the eyes meet; whether the brows are raised or the area between them is wrinkled changes the feel, so brows must be independently controllable."
+  },
+  {
+   "id": "aa_smile_teeth_arc",
+   "element": "mouth",
+   "book": "rules_actionanime_face.json",
+   "page": 95,
+   "render": "expr_happy.png",
+   "p_yes": 0.51,
+   "p_applicable": 0.82,
+   "verdict": "uncertain",
+   "rule": "A grin shows the upper teeth along an upward-curving arc that follows the smile, with the mouth corners lifted."
+  },
+  {
+   "id": "aa_happy_bright_smile",
+   "element": "expression_happy",
+   "book": "rules_actionanime_face.json",
+   "page": 98,
+   "render": "expr_happy.png",
+   "p_yes": 0.2,
+   "p_applicable": 0.64,
+   "verdict": "fail",
+   "rule": "Bright, happy expressions use an open smile with raised cheeks and eyes closed or narrowed into curves."
+  },
+  {
+   "id": "mg13_happy_corners_lower_lid",
+   "element": "expression_happy",
+   "book": "rules_mangaguide13_face.json",
+   "page": 165,
+   "render": "expr_happy.png",
+   "p_yes": 0.66,
+   "p_applicable": 0.82,
+   "verdict": "pass",
+   "rule": "A smile raises the mouth corners and the lower eyelids rise with them, giving a gentle squint."
+  },
+  {
+   "id": "cr_expr_cheerful_flat_bottom",
+   "element": "expression_happy",
+   "book": "rules_crilley_face.json",
+   "page": 130,
+   "render": "expr_happy.png",
+   "p_yes": 0.47,
+   "p_applicable": 0.83,
+   "verdict": "uncertain",
+   "rule": "The cheerful default: a small, gentle curved smile, with the lower edge of the eyes flattened as if the cheeks were rising."
+  },
+  {
+   "id": "aa_laugh_face_center_focus",
+   "element": "expression_laugh",
+   "book": "rules_actionanime_face.json",
+   "page": 31,
+   "render": "expr_laugh.png",
+   "p_yes": 0.44,
+   "p_applicable": 0.71,
+   "verdict": "uncertain",
+   "rule": "Joy expressions are placed where the eye is drawn; the face tilts up slightly when jumping or cheering."
+  },
+  {
+   "id": "cr_tongue_simple",
+   "element": "teeth_tongue",
+   "book": "rules_crilley_face.json",
+   "page": 237,
+   "render": "expr_laugh.png",
+   "p_yes": 0.78,
+   "p_applicable": 0.95,
+   "verdict": "pass",
+   "rule": "When a tongue shows in a wide laughing mouth it is a simple lighter rounded shape at the bottom of the mouth, never detailed."
+  },
+  {
+   "id": "cr_expr_joy_closed_arcs",
+   "element": "expression_laugh",
+   "book": "rules_crilley_face.json",
+   "page": 131,
+   "render": "expr_laugh.png",
+   "p_yes": 0.81,
+   "p_applicable": 0.91,
+   "verdict": "pass",
+   "rule": "Ecstatic joy: eyes squeezed shut into upward-bowed arcs (like ^ shapes), a big open D-shaped mouth, and blush strokes across the cheeks; the bottom of the mouth may be left open."
+  },
+  {
+   "id": "aa_bangs_cover_eyes_mysterious",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 105,
+   "render": "34.png",
+   "p_yes": 0.3,
+   "p_applicable": 0.4,
+   "verdict": "not applicable",
+   "rule": "Asymmetrical bangs that fall forward over the eyes, leaving only the mouth area visible, create a mysterious look."
+  },
+  {
+   "id": "aa_hair_lags_motion",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 104,
+   "render": "34.png",
+   "p_yes": 0.15,
+   "p_applicable": 0.03,
+   "verdict": "not applicable",
+   "rule": "Hair follows the head's motion with a delay, its ends trailing behind and even whipping back across the face during spins."
+  },
+  {
+   "id": "mg13_forehead_overhangs_eyes",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 35,
+   "render": "34.png",
+   "p_yes": 0.61,
+   "p_applicable": 0.71,
+   "verdict": "pass",
+   "rule": "In profile the forehead and brow protrude slightly beyond the eyes, the face dips in a little between the eyes at the bridge, and the eyes sit recessed."
+  },
+  {
+   "id": "mg13_p_shape_head",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 139,
+   "render": "34.png",
+   "p_yes": 0.47,
+   "p_applicable": 0.55,
+   "verdict": "uncertain",
+   "rule": "Seen from the side the head reads like the letter P: a big rounded cranium behind and above, with the face plane and jaw as the stem; forehead protrudes and eyes are sunk."
+  },
+  {
+   "id": "mg13_median_matches_contour",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 41,
+   "render": "34.png",
+   "p_yes": 0.38,
+   "p_applicable": 0.81,
+   "verdict": "fail",
+   "rule": "On an angled face the curve of the center line (forehead-nose-mouth-chin) echoes the curve of the outer contour on the turned side; brow, cheek and jaw lines should repeat similar curvature."
+  },
+  {
+   "id": "mg13_34_centerline_nose_bridge",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 38,
+   "render": "34.png",
+   "p_yes": 0.42,
+   "p_applicable": 0.73,
+   "verdict": "uncertain",
+   "rule": "In 3/4 the center line runs as a curve from crown to chin; the nose bridge is placed on that curve between brow height and the outer-eye/lower-lid level, and the mouth sits where the center line crosses the mouth line."
+  },
+  {
+   "id": "mg13_pupil_not_stuck",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 46,
+   "render": "34.png",
+   "p_yes": 0.52,
+   "p_applicable": 0.81,
+   "verdict": "uncertain",
+   "rule": "The iris/pupil should not stay centered like a sticker when the head turns: at a tight angle the iris edge on the near-corner side stays round while the other side flattens."
+  },
+  {
+   "id": "mg13_eye_socket_hill",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 46,
+   "render": "34.png",
+   "p_yes": 0.65,
+   "p_applicable": 0.66,
+   "verdict": "pass",
+   "rule": "The area around the eye is shaped like a hill (a hexagonal mound); when the face turns, the eye on the far side narrows sharply while staying the same height."
+  },
+  {
+   "id": "mg13_brow_eye_offset_34",
+   "element": "brows",
+   "book": "rules_mangaguide13_face.json",
+   "page": 41,
+   "render": "34.png",
+   "p_yes": 0.7,
+   "p_applicable": 0.87,
+   "verdict": "pass",
+   "rule": "Because the eyes are recessed under the brow ridge, in 3/4 the far eyebrow and eye do not line up vertically; they appear shifted relative to each other, which keeps the face from looking flat."
+  },
+  {
+   "id": "mg13_mouth_34_tight",
+   "element": "mouth",
+   "book": "rules_mangaguide13_face.json",
+   "page": 48,
+   "render": "34.png",
+   "p_yes": 0.71,
+   "p_applicable": 0.79,
+   "verdict": "pass",
+   "rule": "In loose 3/4 the mouth is drawn without the vertical center line; at tight angles it shows as a small notch at the face contour."
+  },
+  {
+   "id": "mg13_ear_six_corners",
+   "element": "ears",
+   "book": "rules_mangaguide13_face.json",
+   "page": 49,
+   "render": "34.png",
+   "p_yes": 0.72,
+   "p_applicable": 0.81,
+   "verdict": "pass",
+   "rule": "Simplify the ear's rim into about six corners (angular turns) for a more convincing shape."
+  },
+  {
+   "id": "mg13_34_ear_position",
+   "element": "ears",
+   "book": "rules_mangaguide13_face.json",
+   "page": 38,
+   "render": "34.png",
+   "p_yes": 0.44,
+   "p_applicable": 0.76,
+   "verdict": "uncertain",
+   "rule": "In 3/4 the ear base sits halfway across the side plane of the head and the earlobe is level with the nose bottom."
+  },
+  {
+   "id": "mg13_under_chin_plane",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 43,
+   "render": "34.png",
+   "p_yes": 0.48,
+   "p_applicable": 0.79,
+   "verdict": "uncertain",
+   "rule": "There is a visible underside plane connecting chin tip to neck; even a slightly turned face shows a little of it, and it is often filled with solid shadow."
+  },
+  {
+   "id": "mg13_sphere_shield_cylinder",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 43,
+   "render": "34.png",
+   "p_yes": 0.6,
+   "p_applicable": 0.75,
+   "verdict": "pass",
+   "rule": "Simplify the head as a sphere, the face as a curved shield in front, and the neck as a cylinder plugged in under the back half of the head."
+  },
+  {
+   "id": "mg13_neck_from_ear_base",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 44,
+   "render": "34.png",
+   "p_yes": 0.58,
+   "p_applicable": 0.8,
+   "verdict": "uncertain",
+   "rule": "In 3/4 and profile the neck rises from the ear base and angles forward; drawing it straight down from the jaw erases the chin underside and makes the head look flat."
+  },
+  {
+   "id": "mg13_neck_parallel_lines",
+   "element": "jaw_chin_neck",
+   "book": "rules_mangaguide13_face.json",
+   "page": 39,
+   "render": "34.png",
+   "p_yes": 0.56,
+   "p_applicable": 0.7,
+   "verdict": "uncertain",
+   "rule": "In 3/4 the left and right neck lines run roughly parallel; the front neck line runs from under the chin and the back line drops from the back of the head."
+  },
+  {
+   "id": "cr_three_quarter_centerline",
+   "element": "head_shape",
+   "book": "rules_crilley_face.json",
+   "page": 35,
+   "render": "34.png",
+   "p_yes": 0.67,
+   "p_applicable": 0.84,
+   "verdict": "pass",
+   "rule": "In 3/4 view a gently curved centre line runs from the chin tip up to the brow line, set off toward the far side; the far contour follows the circle down to about the brow line, then the cheek/jaw angles in to the chin."
+  },
+  {
+   "id": "cr_features_touch_centerline",
+   "element": "head_shape",
+   "book": "rules_crilley_face.json",
+   "page": 36,
+   "render": "34.png",
+   "p_yes": 0.34,
+   "p_applicable": 0.84,
+   "verdict": "fail",
+   "rule": "In 3/4 view the brows, eyes, nose and mouth all touch the curved centre line at different points; the far eye sits between that line and the far contour."
+  },
+  {
+   "id": "cr_adult_eye_narrow_almond",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 84,
+   "render": "34.png",
+   "p_yes": 0.3,
+   "p_applicable": 0.71,
+   "verdict": "fail",
+   "rule": "Adult (father-type) eyes are narrow almonds about 2.5 times wider than tall with small irises, under thick, straight brows set close to the eye."
+  },
+  {
+   "id": "cr_far_brow_offset",
+   "element": "brows",
+   "book": "rules_crilley_face.json",
+   "page": 36,
+   "render": "34.png",
+   "p_yes": 0.64,
+   "p_applicable": 0.9,
+   "verdict": "pass",
+   "rule": "In 3/4 view the far brow is not directly above the far eye; it shifts a little toward the centre line."
+  },
+  {
+   "id": "cr_adult_nose_tip_34",
+   "element": "nose",
+   "book": "rules_crilley_face.json",
+   "page": 80,
+   "render": "34.png",
+   "p_yes": 0.54,
+   "p_applicable": 0.63,
+   "verdict": "uncertain",
+   "rule": "In an adult 3/4 face the nose tip lies between bands 3 and 4 at the circle edge, drawn with a long bridge line and an angular underside."
+  },
+  {
+   "id": "cr_neck_34_attach",
+   "element": "jaw_chin_neck",
+   "book": "rules_crilley_face.json",
+   "page": 38,
+   "render": "34.png",
+   "p_yes": 0.76,
+   "p_applicable": 0.87,
+   "verdict": "pass",
+   "rule": "In 3/4 view the neck meets the ear/cheek junction on one side and the chin tip on the other."
+  },
+  {
+   "id": "aa_bangs_fall_when_head_drops",
+   "element": "hair_framing",
+   "book": "rules_actionanime_face.json",
+   "page": 105,
+   "render": "side.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.33,
+   "verdict": "not applicable",
+   "rule": "When the head tilts down, bangs swing forward and hang ahead of the face rather than staying glued to the forehead."
+  },
+  {
+   "id": "aa_chin_tilt_up_jump",
+   "element": "jaw_chin_neck",
+   "book": "rules_actionanime_face.json",
+   "page": 31,
+   "render": "side.png",
+   "p_yes": 0.26,
+   "p_applicable": 0.5,
+   "verdict": "fail",
+   "rule": "Lifting the chin slightly makes the character appear to rise higher and look triumphant."
+  },
+  {
+   "id": "mg13_profile_ear_center",
+   "element": "head_shape",
+   "book": "rules_mangaguide13_face.json",
+   "page": 35,
+   "render": "side.png",
+   "p_yes": 0.33,
+   "p_applicable": 0.76,
+   "verdict": "fail",
+   "rule": "In profile the ear sits on the vertical center line of the head, at the same height as in front view (top at upper eyelid, lobe at nose bottom)."
+  },
+  {
+   "id": "mg13_profile_eye_wedge",
+   "element": "eyes",
+   "book": "rules_mangaguide13_face.json",
+   "page": 47,
+   "render": "side.png",
+   "p_yes": 0.37,
+   "p_applicable": 0.78,
+   "verdict": "fail",
+   "rule": "In profile the eye becomes a wedge/arrowhead shape set back from the face line, with the iris as a narrow vertical ellipse touching the front."
+  },
+  {
+   "id": "mg13_profile_upper_lip",
+   "element": "mouth",
+   "book": "rules_mangaguide13_face.json",
+   "page": 36,
+   "render": "side.png",
+   "p_yes": 0.65,
+   "p_applicable": 0.86,
+   "verdict": "pass",
+   "rule": "In profile the upper lip projects slightly in front of the lower lip and the chin juts out a little; a high upper lip improves balance."
+  },
+  {
+   "id": "cr_profile_face_line",
+   "element": "head_shape",
+   "book": "rules_crilley_face.json",
+   "page": 54,
+   "render": "side.png",
+   "p_yes": 0.42,
+   "p_applicable": 0.7,
+   "verdict": "uncertain",
+   "rule": "In profile the face line leaves the skull circle between bands 2 and 3, slopes straight to a nose tip just above the circle bottom, then drops to the chin with two small lip bumps midway; the jaw line points back toward the bottom of the vertical centre line without reaching it."
+  },
+  {
+   "id": "cr_profile_neck_attach",
+   "element": "jaw_chin_neck",
+   "book": "rules_crilley_face.json",
+   "page": 56,
+   "render": "side.png",
+   "p_yes": 0.54,
+   "p_applicable": 0.68,
+   "verdict": "uncertain",
+   "rule": "In profile the back of the neck joins just behind the ear, and the throat line starts halfway between the chin tip and the bottom of the vertical centre line."
+  },
+  {
+   "id": "cr_profile_eye_wedge",
+   "element": "eyes",
+   "book": "rules_crilley_face.json",
+   "page": 55,
+   "render": "side.png",
+   "p_yes": 0.25,
+   "p_applicable": 0.31,
+   "verdict": "not applicable",
+   "rule": "In profile the eye is a narrow wedge, roughly a third as wide as the front eye, lying between bands 2 and 3, close to but not touching the face contour, with the iris as a thin vertical ellipse at its front."
+  },
+  {
+   "id": "cr_mouth_profile_setback",
+   "element": "mouth",
+   "book": "rules_crilley_face.json",
+   "page": 55,
+   "render": "side.png",
+   "p_yes": 0.46,
+   "p_applicable": 0.82,
+   "verdict": "uncertain",
+   "rule": "In profile the mouth is a short stroke set back from the lip bumps, about midway between nose and chin."
+  },
+  {
+   "id": "cr_ear_profile_position",
+   "element": "ears",
+   "book": "rules_crilley_face.json",
+   "page": 55,
+   "render": "side.png",
+   "p_yes": 0.38,
+   "p_applicable": 0.69,
+   "verdict": "fail",
+   "rule": "In profile the ear sits between bands 2 and 4, its front edge flat against the vertical centre line of the skull circle."
+  },
+  {
+   "id": "cr_expr_regret_crooked_brows",
+   "element": "expression_sad",
+   "book": "rules_crilley_face.json",
+   "page": 134,
+   "render": "expr_sad.png",
+   "p_yes": 0.28,
+   "p_applicable": 0.73,
+   "verdict": "fail",
+   "rule": "Sadness or regret: brows follow a crooked path, rising toward the centre of the forehead; upper lids are heavy, and the mouth is a tiny frown."
+  },
+  {
+   "id": "cr_expr_sad_iris_tucked",
+   "element": "expression_sad",
+   "book": "rules_crilley_face.json",
+   "page": 141,
+   "render": "expr_sad.png",
+   "p_yes": 0.05,
+   "p_applicable": 0.6,
+   "verdict": "fail",
+   "rule": "Crying sadness: big irises tucked well under the upper lids, one or two tears (not floods), and a mouth with a wavering lower lip."
+  },
+  {
+   "id": "cr_expr_despondent_wail",
+   "element": "expression_sad",
+   "book": "rules_crilley_face.json",
+   "page": 236,
+   "render": "expr_sad.png",
+   "p_yes": 0.29,
+   "p_applicable": 0.16,
+   "verdict": "not applicable",
+   "rule": "Despondent wailing: eyes squeezed shut with tears streaming, a wobbly open wailing mouth, and tear drops flying from the face."
+  },
+  {
+   "id": "cr_expr_surprise_small_iris",
+   "element": "expression_surprised",
+   "book": "rules_crilley_face.json",
+   "page": 139,
+   "render": "expr_surprised.png",
+   "p_yes": 0.12,
+   "p_applicable": 0.61,
+   "verdict": "fail",
+   "rule": "Surprise: small irises float inside the whites (white visible all round), with a small open gasping mouth and raised brows."
+  }
+ ],
+ "skipped_elements": [
+  "face_by_type"
+ ],
+ "look": [
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_head_shape",
+   "p_yes": 0.33,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_eyes",
+   "p_yes": 0.31,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_brows",
+   "p_yes": 0.36,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_nose",
+   "p_yes": 0.4,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_mouth",
+   "p_yes": 0.43,
+   "verdict": "uncertain"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_ears",
+   "p_yes": 0.26,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_hair_framing",
+   "p_yes": 0.33,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "look_face_shading",
+   "p_yes": 0.25,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "leo_ref_front.png",
+   "question": "same_style",
+   "p_yes": 0.39,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_head_shape",
+   "p_yes": 0.27,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_eyes",
+   "p_yes": 0.3,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_brows",
+   "p_yes": 0.34,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_nose",
+   "p_yes": 0.22,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_mouth",
+   "p_yes": 0.29,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_ears",
+   "p_yes": 0.24,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_hair_framing",
+   "p_yes": 0.24,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "look_face_shading",
+   "p_yes": 0.2,
+   "verdict": "fail"
+  },
+  {
+   "view": "front",
+   "ref": "face_leia_front.png",
+   "question": "same_style",
+   "p_yes": 0.28,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_head_shape",
+   "p_yes": 0.25,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_eyes",
+   "p_yes": 0.21,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_brows",
+   "p_yes": 0.27,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_nose",
+   "p_yes": 0.24,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_mouth",
+   "p_yes": 0.22,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_ears",
+   "p_yes": 0.17,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_hair_framing",
+   "p_yes": 0.12,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "look_face_shading",
+   "p_yes": 0.13,
+   "verdict": "fail"
+  },
+  {
+   "view": "34",
+   "ref": "face_eleanor_front.png",
+   "question": "same_style",
+   "p_yes": 0.19,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "face_eleanor_front.png",
+   "question": "look_eyes",
+   "p_yes": 0.19,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "face_eleanor_front.png",
+   "question": "look_brows",
+   "p_yes": 0.27,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "face_eleanor_front.png",
+   "question": "look_mouth",
+   "p_yes": 0.27,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "face_eleanor_front.png",
+   "question": "look_face_shading",
+   "p_yes": 0.17,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "face_eleanor_front.png",
+   "question": "same_style",
+   "p_yes": 0.22,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "face_eleanor_front.png",
+   "question": "same_expression",
+   "p_yes": 0.77,
+   "verdict": "pass"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "m07_kid_smile.png",
+   "question": "look_eyes",
+   "p_yes": 0.33,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "m07_kid_smile.png",
+   "question": "look_brows",
+   "p_yes": 0.33,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "m07_kid_smile.png",
+   "question": "look_mouth",
+   "p_yes": 0.35,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "m07_kid_smile.png",
+   "question": "look_face_shading",
+   "p_yes": 0.21,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "m07_kid_smile.png",
+   "question": "same_style",
+   "p_yes": 0.31,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:happy",
+   "ref": "m07_kid_smile.png",
+   "question": "same_expression",
+   "p_yes": 0.84,
+   "verdict": "pass"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m02_eleanor_laugh.png",
+   "question": "look_eyes",
+   "p_yes": 0.06,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m02_eleanor_laugh.png",
+   "question": "look_brows",
+   "p_yes": 0.2,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m02_eleanor_laugh.png",
+   "question": "look_mouth",
+   "p_yes": 0.14,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m02_eleanor_laugh.png",
+   "question": "look_face_shading",
+   "p_yes": 0.14,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m02_eleanor_laugh.png",
+   "question": "same_style",
+   "p_yes": 0.13,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m02_eleanor_laugh.png",
+   "question": "same_expression",
+   "p_yes": 0.81,
+   "verdict": "pass"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m08_laugh_eyes_closed.png",
+   "question": "look_eyes",
+   "p_yes": 0.37,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m08_laugh_eyes_closed.png",
+   "question": "look_brows",
+   "p_yes": 0.34,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m08_laugh_eyes_closed.png",
+   "question": "look_mouth",
+   "p_yes": 0.27,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m08_laugh_eyes_closed.png",
+   "question": "look_face_shading",
+   "p_yes": 0.29,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m08_laugh_eyes_closed.png",
+   "question": "same_style",
+   "p_yes": 0.31,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:laugh",
+   "ref": "m08_laugh_eyes_closed.png",
+   "question": "same_expression",
+   "p_yes": 0.92,
+   "verdict": "pass"
+  },
+  {
+   "view": "expression:talk_aa",
+   "ref": "m01_eleanor_talk.png",
+   "question": "look_eyes",
+   "p_yes": 0.24,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:talk_aa",
+   "ref": "m01_eleanor_talk.png",
+   "question": "look_brows",
+   "p_yes": 0.32,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:talk_aa",
+   "ref": "m01_eleanor_talk.png",
+   "question": "look_mouth",
+   "p_yes": 0.24,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:talk_aa",
+   "ref": "m01_eleanor_talk.png",
+   "question": "look_face_shading",
+   "p_yes": 0.22,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:talk_aa",
+   "ref": "m01_eleanor_talk.png",
+   "question": "same_style",
+   "p_yes": 0.23,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:talk_aa",
+   "ref": "m01_eleanor_talk.png",
+   "question": "same_expression",
+   "p_yes": 0.57,
+   "verdict": "uncertain"
+  },
+  {
+   "view": "expression:angry",
+   "ref": "m06_leo_grit.png",
+   "question": "look_eyes",
+   "p_yes": 0.23,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:angry",
+   "ref": "m06_leo_grit.png",
+   "question": "look_brows",
+   "p_yes": 0.35,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:angry",
+   "ref": "m06_leo_grit.png",
+   "question": "look_mouth",
+   "p_yes": 0.26,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:angry",
+   "ref": "m06_leo_grit.png",
+   "question": "look_face_shading",
+   "p_yes": 0.19,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:angry",
+   "ref": "m06_leo_grit.png",
+   "question": "same_style",
+   "p_yes": 0.25,
+   "verdict": "fail"
+  },
+  {
+   "view": "expression:angry",
+   "ref": "m06_leo_grit.png",
+   "question": "same_expression",
+   "p_yes": 0.78,
+   "verdict": "pass"
+  }
+ ],
+ "no_regression": [
+  {
+   "view": "front",
+   "votes": [
+    "tie",
+    "tie"
+   ],
+   "result": "tie"
+  },
+  {
+   "view": "34",
+   "votes": [
+    "tie",
+    "tie"
+   ],
+   "result": "tie"
+  },
+  {
+   "view": "expression:happy",
+   "votes": [
+    "current",
+    "prev"
+   ],
+   "result": "disagree"
+  },
+  {
+   "view": "expression:laugh",
+   "votes": [
+    "tie",
+    "tie"
+   ],
+   "result": "tie"
+  },
+  {
+   "view": "expression:talk_aa",
+   "votes": [
+    "tie",
+    "tie"
+   ],
+   "result": "tie"
+  },
+  {
+   "view": "expression:angry",
+   "votes": [
+    "tie",
+    "tie"
+   ],
+   "result": "tie"
+  }
+ ],
+ "summary": {
+  "expression_sad": {
+   "pass": 0,
+   "fail": 2,
+   "uncertain": 0,
+   "not measured": 2,
+   "not applicable": 1,
+   "failed_rules": [
+    "cr_expr_regret_crooked_brows",
+    "cr_expr_sad_iris_tucked"
+   ]
+  },
+  "expression_determined": {
+   "pass": 0,
+   "fail": 0,
+   "uncertain": 0,
+   "not measured": 8,
+   "not applicable": 0,
+   "failed_rules": []
+  },
+  "expression_general": {
+   "pass": 1,
+   "fail": 0,
+   "uncertain": 0,
+   "not measured": 6,
+   "not applicable": 0,
+   "failed_rules": []
+  },
+  "expression_other": {
+   "pass": 0,
+   "fail": 0,
+   "uncertain": 0,
+   "not measured": 14,
+   "not applicable": 0,
+   "failed_rules": []
+  },
+  "eyes": {
+   "pass": 5,
+   "fail": 3,
+   "uncertain": 8,
+   "not measured": 2,
+   "not applicable": 1,
+   "failed_rules": [
+    "mg13_iris_dome_pupil",
+    "cr_adult_eye_narrow_almond",
+    "mg13_profile_eye_wedge"
+   ]
+  },
+  "teeth_tongue": {
+   "pass": 1,
+   "fail": 0,
+   "uncertain": 1,
+   "not measured": 2,
+   "not applicable": 3,
+   "failed_rules": []
+  },
+  "face_shading": {
+   "pass": 4,
+   "fail": 2,
+   "uncertain": 1,
+   "not measured": 2,
+   "not applicable": 0,
+   "failed_rules": [
+    "aa_highlight_protruding",
+    "mg13_neck_shadow_only"
+   ]
+  },
+  "expression_scared": {
+   "pass": 0,
+   "fail": 0,
+   "uncertain": 0,
+   "not measured": 4,
+   "not applicable": 0,
+   "failed_rules": []
+  },
+  "jaw_chin_neck": {
+   "pass": 2,
+   "fail": 2,
+   "uncertain": 5,
+   "not measured": 2,
+   "not applicable": 3,
+   "failed_rules": [
+    "cr_male_thicker_neck",
+    "aa_chin_tilt_up_jump"
+   ]
+  },
+  "expression_embarrassed": {
+   "pass": 0,
+   "fail": 0,
+   "uncertain": 0,
+   "not measured": 3,
+   "not applicable": 0,
+   "failed_rules": []
+  },
+  "expression_surprised": {
+   "pass": 0,
+   "fail": 1,
+   "uncertain": 0,
+   "not measured": 1,
+   "not applicable": 0,
+   "failed_rules": [
+    "cr_expr_surprise_small_iris"
+   ]
+  },
+  "head_shape": {
+   "pass": 5,
+   "fail": 6,
+   "uncertain": 5,
+   "not measured": 0,
+   "not applicable": 2,
+   "failed_rules": [
+    "mg13_upper_lid_half_head",
+    "mg13_hairline_mid_crown_lid",
+    "cr_brow_line_band1",
+    "mg13_median_matches_contour",
+    "cr_features_touch_centerline",
+    "mg13_profile_ear_center"
+   ]
+  },
+  "hair_framing": {
+   "pass": 8,
+   "fail": 1,
+   "uncertain": 9,
+   "not measured": 0,
+   "not applicable": 5,
+   "failed_rules": [
+    "mg13_hair_from_part"
+   ]
+  },
+  "brows": {
+   "pass": 5,
+   "fail": 0,
+   "uncertain": 1,
+   "not measured": 0,
+   "not applicable": 0,
+   "failed_rules": []
+  },
+  "nose": {
+   "pass": 2,
+   "fail": 0,
+   "uncertain": 1,
+   "not measured": 0,
+   "not applicable": 1,
+   "failed_rules": []
+  },
+  "mouth": {
+   "pass": 4,
+   "fail": 2,
+   "uncertain": 3,
+   "not measured": 0,
+   "not applicable": 1,
+   "failed_rules": [
+    "cr_adult_mouth_lower_lip_line",
+    "cr_mouth_small_line"
+   ]
+  },
+  "ears": {
+   "pass": 1,
+   "fail": 1,
+   "uncertain": 6,
+   "not measured": 0,
+   "not applicable": 0,
+   "failed_rules": [
+    "cr_ear_profile_position"
+   ]
+  },
+  "expression_angry": {
+   "pass": 0,
+   "fail": 3,
+   "uncertain": 0,
+   "not measured": 0,
+   "not applicable": 0,
+   "failed_rules": [
+    "aa_rage_mouth_wide_open",
+    "aa_scream_attack",
+    "aa_angry_running_squeezed"
+   ]
+  },
+  "expression_happy": {
+   "pass": 1,
+   "fail": 1,
+   "uncertain": 1,
+   "not measured": 0,
+   "not applicable": 0,
+   "failed_rules": [
+    "aa_happy_bright_smile"
+   ]
+  },
+  "expression_laugh": {
+   "pass": 1,
+   "fail": 0,
+   "uncertain": 1,
+   "not measured": 0,
+   "not applicable": 0,
+   "failed_rules": []
+  }
+ },
+ "gate": {
+  "rule_failures": 24,
+  "look_failures": 56,
+  "regressions": 0,
+  "look_not_measured": 0,
+  "verdict": "fail"
+ }
+}
