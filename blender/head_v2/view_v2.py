@@ -44,6 +44,13 @@ def remesh(ob, quads, voxel=None):
         bpy.ops.object.voxel_remesh()
         m = ob.modifiers.new("sw", "SHRINKWRAP"); m.target = src; m.wrap_method = "NEAREST_SURFACEPOINT"
         bpy.ops.object.modifier_apply(modifier="sw")
+        # relax: even out the projected voxel quads, then back onto the surface (uneven quads shade as speckles
+        # once a shape key moves them, because Blender keeps custom normals relative to the face normals)
+        for _ in range(3):
+            m = ob.modifiers.new("rl", "SMOOTH"); m.factor = 0.5; m.iterations = 4
+            bpy.ops.object.modifier_apply(modifier="rl")
+            m = ob.modifiers.new("sw", "SHRINKWRAP"); m.target = src; m.wrap_method = "NEAREST_SURFACEPOINT"
+            bpy.ops.object.modifier_apply(modifier="sw")
         bpy.data.objects.remove(src)
         print("voxel quads", len(ob.data.polygons), "size", round(ob.data.remesh_voxel_size * 1000, 2), "mm")
     bpy.ops.object.shade_smooth()

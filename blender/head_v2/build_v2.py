@@ -100,7 +100,25 @@ def set_toon_normals(head, ell_mix=0.90):
     for i in bad:
         out[i] = gn[i]
     out /= np.linalg.norm(out, axis=1, keepdims=True)
-    me.normals_split_custom_set_from_vertices([tuple(v) for v in out])
+    me.normals_split_custom_set_from_vertices([tuple(v) for v in out])     # baked: for the app export (static)
+    # for Blender renders (live under shape keys): weights the shader / normal transfer use
+    n = len(co)
+    # the n56 skin material reads these: an_w (analytic-normal weight), shade (1 = lit), ear_f / ear_lw / ear_bowl
+    # (ear line paint: the line shows where |ear_f - 1| < ear_lw, so ear_f = 0 means no line). v2 paints its ear
+    # forms separately.
+    an_w = np.clip(1 - near_mouth, 0, 1) * (1 - ears) * (1 - neck)
+    for nm, arr in (("ell_w", w_ell), ("toon_w", w_toon), ("an_w", an_w), ("shade", np.ones(n)),
+                    ("ear_f", np.zeros(n)), ("ear_lw", np.zeros(n)), ("ear_bowl", np.zeros(n))):
+        a = me.attributes.get(nm) or me.attributes.new(nm, "FLOAT", "POINT")
+        a.data.foreach_set("value", np.asarray(arr, np.float32))
+    vg = head.vertex_groups.get("smooth_n") or head.vertex_groups.new(name="smooth_n")
+    for i, wi in enumerate(w_toon):
+        vg.add([i], 0.0 if i in bad else float(wi), "REPLACE")
+    # smoothed proxy that keeps the shape keys (Smooth modifier live): its normals follow the jaw
+    prox = head.copy(); prox.data = me.copy(); prox.name = "V2_HeadNrmProxy"; prox.data.name = "V2_HeadNrmProxy"
+    bpy.context.scene.collection.objects.link(prox)
+    m = prox.modifiers.new("sm", "SMOOTH"); m.factor = 1.0; m.iterations = 25
+    prox.hide_render = True
 
 
 def main():
@@ -123,7 +141,7 @@ def main():
     pmats = V.load_paint(paint_npz)
     # V2MouthLine (painted, dark) stays: drawn just above the slit so it rides on the upper lip (follow_keys)
     MO.add_jaw_key(head, [bot, tg])
-    follow_keys(head, [o for o in bpy.data.objects if o.name.startswith(("V2Eye_", "V2Brow_", "V2Nose", "V2Lip"))])
+    follow_keys(head, [o for o in bpy.data.objects if o.name.startswith(("V2Eye_", "V2Brow_", "V2Nose", "V2Lip", "V2Ear"))])
     follow_keys(head, [o for o in bpy.data.objects if o.name.startswith("V2MouthLine")], upper_only=True)
     set_toon_normals(head)
     if arg("--blend"):

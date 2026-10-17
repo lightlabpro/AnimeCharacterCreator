@@ -43,20 +43,20 @@ SECT = knob("SECT", [
     [0.20,  0.3345, 0.370, 0.432, 2.35, 2.25],
     [0.25,  0.3530, 0.395, 0.445, 2.4, 2.25],
     [0.30,  0.3625, 0.400, 0.450, 2.4, 2.25],
-    [0.35,  0.3675, 0.405, 0.448, 2.4, 2.25],
-    [0.40,  0.3670, 0.408, 0.438, 2.4, 2.25],
-    [0.45,  0.3630, 0.402, 0.418, 2.4, 2.25],
-    [0.50,  0.3570, 0.392, 0.395, 2.4, 2.2],
-    [0.55,  0.3520, 0.393, 0.365, 2.35, 2.2],
+    [0.35,  0.3675, 0.405, 0.448, 2.6, 2.25],
+    [0.40,  0.3670, 0.408, 0.438, 2.9, 2.25],
+    [0.45,  0.3630, 0.402, 0.418, 3.0, 2.25],
+    [0.50,  0.3570, 0.394, 0.395, 2.8, 2.2],
+    [0.55,  0.3520, 0.393, 0.365, 2.5, 2.2],
     [0.60,  0.3480, 0.393, 0.330, 2.3, 2.2],
     [0.65,  0.3400, 0.390, 0.300, 2.3, 2.2],
     [0.70,  0.3230, 0.386, 0.280, 2.3, 2.2],
-    [0.75,  0.3150, 0.382, 0.270, 2.3, 2.2],
-    [0.80,  0.2800, 0.376, 0.270, 2.3, 2.2],
-    [0.85,  0.2450, 0.366, 0.270, 2.4, 2.2],
-    [0.90,  0.2050, 0.352, 0.270, 2.6, 2.2],
-    [0.95,  0.1600, 0.332, 0.270, 2.8, 2.2],
-    [1.00,  0.1000, 0.295, 0.270, 2.8, 2.2],
+    [0.75,  0.3100, 0.382, 0.270, 2.3, 2.2],
+    [0.80,  0.2720, 0.376, 0.270, 2.3, 2.2],
+    [0.85,  0.2320, 0.364, 0.270, 2.4, 2.2],
+    [0.90,  0.1900, 0.350, 0.270, 2.6, 2.2],
+    [0.95,  0.1450, 0.330, 0.270, 2.8, 2.2],
+    [1.00,  0.0850, 0.295, 0.270, 2.8, 2.2],
     [1.03,  0.0000, 0.000, 0.000, 2.4, 2.2],
 ])
 
@@ -65,17 +65,17 @@ SECT = knob("SECT", [
 # Anime simplification (Sammy 2026-10-16: "you're deviating way far from it being an anime character"):
 # small soft nose (a ridge and a tip, no alae), nearly flat lips, no sockets or cheekbones, smooth face plane.
 NOSE = knob("NOSE", dict(
-    height=[(0.48, 0.0), (0.53, 0.005), (0.60, 0.015), (0.66, 0.030), (0.700, 0.042), (0.714, 0.045),
-            (0.728, 0.032), (0.742, 0.008), (0.752, 0.0)],                 # Leo: a real bridge, modest tip
-    halfw=[(0.50, 0.022), (0.60, 0.024), (0.68, 0.030), (0.71, 0.036), (0.75, 0.034)],
-    ala=(0.030, 0.728, 0.020, 0.018, 0.0)))
-BROW = knob("BROW", dict(h=0.425, rh=0.050, halfw=0.33, A=0.004, glabella=0.0))
-SOCKET = knob("SOCKET", dict(x=0.175, h=0.502, rx=0.115, rh=0.068, A=-0.004))
+    height=[(0.44, 0.0), (0.49, 0.005), (0.56, 0.016), (0.63, 0.032), (0.672, 0.044), (0.688, 0.047),
+            (0.703, 0.034), (0.716, 0.009), (0.726, 0.0)],                 # Leo: a real bridge, modest tip
+    halfw=[(0.44, 0.022), (0.56, 0.024), (0.65, 0.030), (0.685, 0.037), (0.725, 0.035)],
+    ala=(0.030, 0.703, 0.020, 0.018, 0.0)))
+BROW = knob("BROW", dict(h=0.370, rh=0.050, halfw=0.33, A=0.006, glabella=0.0))
+SOCKET = knob("SOCKET", dict(x=0.185, h=0.447, rx=0.120, rh=0.070, A=-0.010))
 CHEEK = knob("CHEEK", dict(x=0.240, h=0.590, rx=0.125, rh=0.090, A=0.0))
-MUZZLE = knob("MUZZLE", dict(h=0.810, rx=0.185, rh=0.095, A=0.004))
-LIPS = knob("LIPS", dict(line=0.823, up_h=0.805, up_rh=0.020, up_w=0.110, up_A=0.004, bow=0.0,
-                         lo_h=0.845, lo_rh=0.020, lo_w=0.090, lo_A=0.005, groove_A=-0.0015, groove_rh=0.005))
-CHIN = knob("CHIN", dict(h=0.94, rx=0.13, rh=0.05, A=0.008, labial_h=0.882, labial_A=0.0))
+MUZZLE = knob("MUZZLE", dict(h=0.790, rx=0.185, rh=0.095, A=0.004))
+LIPS = knob("LIPS", dict(line=0.800, up_h=0.783, up_rh=0.020, up_w=0.130, up_A=0.004, bow=0.0,
+                         lo_h=0.822, lo_rh=0.020, lo_w=0.105, lo_A=0.005, groove_A=-0.0015, groove_rh=0.005))
+CHIN = knob("CHIN", dict(h=0.94, rx=0.11, rh=0.05, A=0.008, labial_h=0.870, labial_A=0.0))
 JAW = knob("JAW", dict(gonion=(0.075, 0.800), chin=(-0.300, 1.000), k=0.020))   # (y, h) points of the jaw line
 NECK = knob("NECK", dict(c=(0.0, 0.100), rx=0.160, ry=0.180, h0=0.62, h1=1.40, k=0.045))
 
@@ -137,8 +137,8 @@ def loft(p):
 
 # Ear: between the eye tops and the nose bottom (AnimeOutline ears; Leo), about 1/4 of the face tall, set back of the
 # middle of the head depth, flared out ~18 degrees and leaned back ~12 degrees. Rim (helix) kept, inside recessed.
-EAR = knob("EAR", dict(c=(0.0, 0.080, 0.580), a=0.070, b=0.155, top_flare=0.30, t=0.040, flare=18.0, lean=12.0,
-                       recess=0.016, k=0.018, x_in=0.012))
+EAR = knob("EAR", dict(c=(0.0, 0.080, 0.560), a=0.072, b=0.160, top_flare=0.30, t=0.032, flare=20.0, lean=12.0,
+                       recess=0.010, k=0.018, x_in=0.012))
 
 
 def ear_sdf(p, side):
@@ -159,12 +159,10 @@ def ear_sdf(p, side):
     outline = (r2 - 1.0) * np.minimum(a, e["b"])
     slab = np.abs(w - e["t"] * 0.5) - e["t"] * 0.5
     d = smax(outline, slab, 0.008)
-    # recess on the outer face inside the rim (scapha / concha), deeper toward the front-lower bowl
-    inner = (np.sqrt(((u + 0.010) / (a * 0.72)) ** 2 + ((v + 0.006) / (e["b"] * 0.74)) ** 2) - 1.0) * a * 0.72
-    bowl = np.sqrt(((u + 0.022) / 0.034) ** 2 + ((v - 0.035) / 0.050) ** 2) - 1.0
-    depth = e["recess"] * (1.0 + 0.8 * np.clip(-bowl, 0, 1))
-    cut = smax(inner, -(w - (e["t"] - depth)), 0.004)
-    d = smax(d, -cut, 0.005)
+    # gentle bowl on the outer face (the inner ear forms are painted, MHS3-style: a smooth shell reads cleaner than
+    # cut detail at this mesh density)
+    bowl = (np.sqrt(((u + 0.012) / (a * 0.70)) ** 2 + ((v + 0.010) / (e["b"] * 0.70)) ** 2) - 1.0)
+    d = d + e["recess"] * np.clip(-bowl, 0, 1) ** 2 * np.clip(1 - np.abs(w - e["t"]) / 0.02, 0, 1)
     return d
 
 

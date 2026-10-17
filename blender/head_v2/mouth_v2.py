@@ -22,13 +22,12 @@ from mathutils import Matrix, Vector
 from mathutils.bvhtree import BVHTree
 
 ZT, H = 1.685, 0.22
-EYE_H = 0.50
-D = 1.0 - EYE_H
-MY = EYE_H + 0.64 * D          # mouth line (h) at the centre
-MW = 0.49 * D / 2              # half width (H)
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from mouth_v2_line import EYE_H, D, MY, MW  # noqa: E402  (one face layout for every script)
 M = dict(curve=0.006, sag=0.003, band=0.62, lip_in=0.0022, up_open=0.0060, lo_open=0.0075, depth1=0.0065,
          depth2=0.024, x2=0.78, jaw_pivot=(0.055, 0.600), jaw_deg=11.0, bowl=0.0065, teeth_back=0.0040, teeth_rx=0.80,
-         teeth_ry=0.0120, teeth_up=0.0055, teeth_vis=-0.0004, lip_lift=0.0024, teeth_lo=0.0022, teeth_t=0.0012)
+         teeth_ry=0.0120, teeth_up=0.0055, teeth_vis=0.0005, lip_lift=0.0036, teeth_lo=0.0022, teeth_t=0.0012)
 
 
 def line_h(x):
@@ -128,7 +127,7 @@ def build_mouth(head, spacing):
             x, h = to_xh(v.co)
             s = side_of(v)
             # find the original side by nearest earlier vertex
-            v.co = from_xh(x * xs, h + (s * (up if s < 0 else lo) * abs(s)) / H * (1 - (abs(x) / MW) ** 2) ** 0.5,
+            v.co = from_xh(x * xs, h + (s * (up if s < 0 else lo) * abs(s)) / H * max(0.0, 1 - (abs(x) / MW) ** 2) ** 0.5,
                            v.co.y + depth)
         cav_faces += nf2
         edges = ne2
@@ -147,15 +146,20 @@ def build_mouth(head, spacing):
     return tree
 
 
-def arch_strip(name, y_front, h_top, h_bot, rx, ry, t, n=40):
-    """Curved tooth band: an elliptical arch in plan (front at y_front, half width rx, depth ry), thickness t."""
+def arch_strip(name, y_front, h_top, h_bot, rx, ry, t, n=40, upper=True):
+    """Curved tooth band: an elliptical arch in plan (front at y_front, half width rx, depth ry), thickness t.
+    The visible edge (bottom of the upper band, top of the lower) withdraws toward the ends: the side teeth curve
+    back and disappear behind the cheeks (Pavelec p101) instead of ending in a white post at the mouth corner."""
     verts, faces = [], []
-    a0 = math.radians(80)
+    a0 = math.radians(72)
     for i in range(n + 1):
         a = -a0 + 2 * a0 * i / n
         x = rx * math.sin(a); y = y_front + ry * (1 - math.cos(a))
         nx, ny = math.sin(a), -math.cos(a)                     # outward normal in plan
-        for (hh, off) in ((h_top, 0), (h_bot, 0), (h_bot, t), (h_top, t)):
+        k = 0.85 * (abs(a) / a0) ** 2.5
+        he = h_bot + (h_top - h_bot) * k if upper else h_top + (h_bot - h_top) * k
+        hb_, ht_ = (he, h_top) if upper else (h_bot, he)
+        for (hh, off) in ((ht_, 0), (hb_, 0), (hb_, t), (ht_, t)):
             verts.append((x - nx * off, y - ny * off, ZT - hh * H))
     for i in range(n):
         a, b = 4 * i, 4 * (i + 1)
@@ -178,7 +182,7 @@ def build_teeth_tongue(tree):
     top = arch_strip("V2TeethUpper", yf, MY - M["teeth_up"] / H, MY + M["teeth_vis"] / H, rx, M["teeth_ry"],
                      M["teeth_t"])
     bot = arch_strip("V2TeethLower", yf + 0.0015, MY + 0.0030 / H, MY + (0.0030 + M["teeth_lo"]) / H, rx * 0.90,
-                     M["teeth_ry"] * 0.95, M["teeth_t"])
+                     M["teeth_ry"] * 0.95, M["teeth_t"], upper=False)
     bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=1.0)
     tg = bpy.context.object; tg.name = "V2Tongue"
     tg.scale = (rx * 0.78, 0.015, 0.0055)

@@ -37,25 +37,23 @@ def emission_mat(name, rgba):
 
 
 def skin_mat():
+    """The n56 skin material itself (NG_ToonSkin_NewHead fed by n56's analytic normal: an ellipsoid plus a forward
+    push over the face front, chin to forehead, mixed with the surface normal by 'an_w'), with its head-size
+    constants moved to v2 (head height 0.262 -> H, base height 1.4826 -> chin ZT - H). Same light, same look."""
     name = "MAT_V2Skin_" + TAG
-    m = bpy.data.materials.get(name) or bpy.data.materials.new(name)
-    m.use_nodes = True
-    nt = m.node_tree; nt.nodes.clear()
-    g = nt.nodes.new("ShaderNodeGroup"); g.node_tree = bpy.data.node_groups["NG_ToonSkin_NewHead"]
-    src = bpy.data.materials["MAT_NewSkin_n56"].node_tree.nodes["Group"]
-    for i in g.inputs:
-        if i.name in src.inputs and hasattr(i, "default_value") and not src.inputs[i.name].is_linked:
-            try:
-                i.default_value = src.inputs[i.name].default_value
-            except Exception:
-                pass
-    for nm in ("Lip Mask", "Nail Mask", "Blush Mask", "Vein Mask", "Line Mask", "Shadow Mask"):
-        if nm in g.inputs:
-            g.inputs[nm].default_value = 1.0 if nm == "Shadow Mask" else 0.0   # Shadow Mask 1 = lit (n56 'shade')
-    geo = nt.nodes.new("ShaderNodeNewGeometry")             # the group lights by its Normal input (n56 feeds analytic
-    nt.links.new(geo.outputs["Normal"], g.inputs["Normal"])  # normals there); v2 uses its real surface normal
-    out = nt.nodes.new("ShaderNodeOutputMaterial")
-    nt.links.new(g.outputs[0], out.inputs[0])
+    old = bpy.data.materials.get(name)
+    if old:
+        bpy.data.materials.remove(old)
+    m = bpy.data.materials["MAT_NewSkin_n56"].copy(); m.name = name
+    for n in m.node_tree.nodes:
+        if n.type == "MATH":
+            for i in n.inputs[:2]:
+                if i.is_linked:
+                    continue
+                if abs(i.default_value - 0.262) < 1e-4:
+                    i.default_value = H
+                elif abs(i.default_value - 1.4826) < 1e-4:
+                    i.default_value = ZT - H
     return m
 
 
@@ -89,9 +87,14 @@ def shade(col):
             for i, m in enumerate(mats[1:], 1):
                 c = m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value
                 o.data.materials[i] = emission_mat("MAT_%s_%s" % (m.name.split(".")[0], TAG), tuple(c))
-            prox = None                                   # toon normals are baked as custom normals in the .blend
+            prox = next((p for p in col.objects if p.name.startswith("V2_HeadNrmProxy")), None)
+            # Blender renders: drop the baked custom normals (they are carried through shape keys in noisy
+            # per-face spaces -> speckles where the jaw moves) and take live normals from the smoothed proxy
+            bpy.context.view_layer.objects.active = o
+            with bpy.context.temp_override(object=o, active_object=o, selected_objects=[o]):
+                bpy.ops.mesh.customdata_custom_splitnormals_clear()
             if prox is not None:
-                prox.hide_render = True; prox.hide_viewport = True
+                prox.hide_render = True
                 dt = o.modifiers.new("SmoothNormals", "DATA_TRANSFER"); dt.object = prox
                 dt.use_loop_data = True; dt.data_types_loops = {"CUSTOM_NORMAL"}
                 dt.loop_mapping = "POLYINTERP_NEAREST"; dt.vertex_group = "smooth_n"

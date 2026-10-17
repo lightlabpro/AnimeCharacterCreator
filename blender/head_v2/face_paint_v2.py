@@ -25,17 +25,17 @@ from shapely.ops import unary_union
 import sdf_head as S
 
 H = S.H
-EYE_H = 0.500            # pupil line (h)
-D = 1.0 - EYE_H
+from mouth_v2_line import EYE_H, D, NB as _NB  # one face layout for every script
 E = 0.33 * D             # eye width
 CX = 0.36 * D            # eye centre |x|
 COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 98), iris_top=(56, 118, 66),
            iris_rim=(40, 86, 48), pupil=(24, 52, 30), highlight=(255, 255, 255), lash=(58, 34, 26),
            lash_low=(128, 84, 66), crease=(186, 128, 106), brow=(104, 70, 44), mouth=(84, 44, 38),
-           nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210))
+           nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
+           ear_in=(214, 160, 146), ear_line=(166, 112, 100))
 LIFT = dict(sclera=0.00030, sclera_shade=0.00034, iris=0.00038, iris_top=0.00042, iris_rim=0.00044, pupil=0.00046,
             highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00032, mouth=0.00030,
-            nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028)
+            nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028, ear_in=0.00030, ear_line=0.00034)
 
 UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.30), (0.50, 0.34), (0.70, 0.32), (0.88, 0.22), (1.0, 0.06)]
 LOWER = [(1.0, 0.06), (0.90, -0.10), (0.70, -0.20), (0.50, -0.23), (0.30, -0.20), (0.12, -0.10), (0.0, 0.02)]
@@ -97,8 +97,8 @@ def eye_shapes(side):
 
 def brow_shape(side):
     # world (x, h) in H units: thick inner end low and close to the eye top, rising outward, tapering (Leo)
-    top = [(0.040, 0.410), (0.100, 0.383), (0.180, 0.370), (0.260, 0.376), (0.318, 0.396)]
-    bot = [(0.322, 0.404), (0.260, 0.398), (0.180, 0.402), (0.100, 0.420), (0.045, 0.446)]
+    top = [(0.044, 0.355), (0.111, 0.328), (0.200, 0.315), (0.289, 0.321), (0.353, 0.341)]
+    bot = [(0.357, 0.349), (0.289, 0.343), (0.200, 0.347), (0.111, 0.365), (0.050, 0.391)]
     P = np.vstack([smooth_curve(top, 24), smooth_curve(bot, 24)])
     P[:, 0] *= side
     return Polygon(P).buffer(0)
@@ -155,6 +155,47 @@ def project(xh, lift):
     return P
 
 
+def project_side(yh, side, lift):
+    """Project (y, h) points along -x (from the character's side) onto the outermost SDF surface - the ear."""
+    y, h = yh[:, 0], yh[:, 1]
+    x = np.full(len(y), side * 0.60)
+    step = -side * 0.003
+    prev = S.sdf(np.stack([x, y, h], -1))
+    lo = x.copy(); hi = x.copy(); found = np.zeros(len(y), bool)
+    for _ in range(250):
+        x2 = x + step
+        d = S.sdf(np.stack([x2, y, h], -1))
+        hit = (~found) & (d < 0) & (prev >= 0)
+        lo[hit] = x[hit]; hi[hit] = x2[hit]; found |= hit
+        x, prev = x2, d
+        if found.all():
+            break
+    for _ in range(30):
+        m = 0.5 * (lo + hi)
+        d = S.sdf(np.stack([m, y, h], -1))
+        out = d > 0
+        lo = np.where(out, m, lo); hi = np.where(out, hi, m)
+    p = np.stack([0.5 * (lo + hi), y, h], -1)
+    e = 1e-4
+    g = np.stack([(S.sdf(p + np.array(v) * e) - S.sdf(p - np.array(v) * e)) for v in np.eye(3)], -1)
+    g[:, 2] *= -1
+    n = g / np.linalg.norm(g, axis=1, keepdims=True)
+    return np.stack([p[:, 0] * H, p[:, 1] * H, S.ZT - p[:, 2] * H], -1) + n * lift
+
+
+def ear_shapes():
+    """Painted inner ear (MHS3 / Leo: a mauve inner shadow and a rim line, AnimeOutline ears: rim, bump, opening),
+    in side-view (y, h), on the SDF ear (EAR centre / size)."""
+    e = S.EAR
+    cy, ch = e["c"][1], e["c"][2]
+    a, b = e["a"], e["b"]
+    t = np.linspace(np.radians(200), np.radians(-60), 40)        # C-shaped rim line: front-top, over, down the back
+    rim = np.stack([cy + 0.62 * a * np.cos(t) * 1.15, ch - 0.70 * b * np.sin(t)], -1)
+    line = LineString(rim).buffer(0.0038, cap_style=1)
+    inner = affinity.scale(Point((cy - 0.010, ch + 0.020)).buffer(1.0, 48), 0.30 * a, 0.30 * b)
+    return line, inner
+
+
 def build():
     pieces = {}
     for side, tag in ((1, "L"), (-1, "R")):
@@ -171,9 +212,16 @@ def build():
         if side < 0:
             f = f[:, ::-1]
         pieces["V2Brow_%s" % tag] = (project(xy, LIFT["brow"]), f, COL["brow"])
+    line, inner = ear_shapes()
+    for side, tag in ((1, "L"), (-1, "R")):
+        for nm, poly in (("ear_in", inner), ("ear_line", line)):
+            yh, f = tri_poly(poly, 0.00002)
+            if side > 0:
+                f = f[:, ::-1]
+            pieces["V2Ear_%s_%s" % (nm, tag)] = (project_side(yh, side, LIFT[nm]), f, COL[nm])
     # Leo's painted marks (MHS3 nose = a small darker shape under the tip; a short lower-lip shade; a light bridge
     # highlight on the lit side) - the toon light alone does not draw them
-    nb = EYE_H + 0.49 * D                                   # nose bottom
+    nb = _NB                                                # nose bottom
     ns_ = Polygon(smooth_curve([(-0.040, nb - 0.004), (-0.012, nb - 0.016), (0.020, nb - 0.018), (0.042, nb - 0.006),
                                 (0.030, nb + 0.004), (-0.030, nb + 0.004)], 30)).buffer(0)
     xy, f = tri_poly(ns_, 0.00002)
@@ -183,7 +231,7 @@ def build():
                                (0.0, my + 0.062), (-0.050, my + 0.058)], 30)).buffer(0)
     xy, f = tri_poly(ls, 0.00002)
     pieces["V2LipShade"] = (project(xy, LIFT["lip_shade"]), f, COL["lip_shade"])
-    hl = Polygon(smooth_curve([(-0.012, 0.56), (-0.004, 0.555), (-0.006, 0.68), (-0.022, 0.70), (-0.020, 0.62)], 30)).buffer(0)
+    hl = Polygon(smooth_curve([(-0.012, 0.51), (-0.004, 0.505), (-0.006, 0.645), (-0.022, 0.665), (-0.020, 0.58)], 30)).buffer(0)
     xy, f = tri_poly(hl, 0.00002)
     pieces["V2NoseHL"] = (project(xy, LIFT["nose_hl"]), f, COL["nose_hl"])
     # mouth line (Leo: a thin dark-brown line, a touch heavier in the middle, ends fading), drawn just above the
