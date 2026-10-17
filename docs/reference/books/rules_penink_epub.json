@@ -1,0 +1,14 @@
+[
+ {"id": "pi_symmetry_faces", "page": 92, "rule": "Symmetric subjects such as buildings and faces need precise construction; only naturally asymmetric subjects tolerate free variation in proportion and line."},
+ {"id": "pi_lit_edge_no_line", "page": 88, "rule": "A form's lit edge can be left with no outline at all; the shadow side alone defines the edge and the viewer supplies the rest."},
+ {"id": "pi_min_outline", "page": 21, "rule": "Minimise outlines in the finished drawing; define forms through tone and shadow rather than contour lines."},
+ {"id": "pi_overlap_gap", "page": 111, "rule": "Where one element passes in front of another, leave a small gap so the lines do not touch; touching lines destroy the illusion of depth."},
+ {"id": "pi_focus_contrast", "page": 83, "rule": "Put the greatest contrast and finest detail where the viewer's attention should go."},
+ {"id": "pi_suggest", "page": 69, "rule": "Suggest detail rather than render all of it; adequate suggestion lets the viewer complete the rest."},
+ {"id": "pi_spotlight_face", "page": 71, "rule": "Excluding detail from a face gives the impression of bright light flooding it."},
+ {"id": "pi_hatch_follows_form", "page": 108, "rule": "Hatch marks curve to describe concave or convex surfaces and run straight on flat ones."},
+ {"id": "pi_haze_flat", "page": 61, "rule": "Fog and haze reduce distant objects to flat monotone silhouettes; only near objects keep tonal gradation."},
+ {"id": "pi_alternate_values", "page": 98, "rule": "Alternate light and dark masses to separate successive planes and show distance."},
+ {"id": "pi_mirror_check", "page": 18, "rule": "Check a drawing in a mirror to expose proportion and perspective errors before finishing."},
+ {"id": "pi_light_to_dark", "page": 77, "rule": "Build dark tones from light to dark in layers, keeping the first light layer where highlights belong."}
+]
