@@ -33,9 +33,10 @@ COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 
            lash_low=(128, 84, 66), crease=(186, 128, 106), brow=(104, 70, 44), mouth=(84, 44, 38),
            nose_shade=(196, 132, 106), lip_shade=(205, 146, 122), nose_hl=(250, 228, 210),
            ear_in=(214, 160, 146), ear_line=(166, 112, 100))
-LIFT = dict(sclera=0.00030, sclera_shade=0.00034, iris=0.00038, iris_top=0.00042, iris_rim=0.00044, pupil=0.00046,
-            highlight=0.00050, lash=0.00056, lash_low=0.00050, crease=0.00030, brow=0.00032, mouth=0.00050,
-            nose_shade=0.00028, lip_shade=0.00026, nose_hl=0.00028, ear_in=0.00030, ear_line=0.00034)
+# q25: layers 0.05-0.1 mm apart (0.02-0.04 mm z-fought in EEVEE: mottled iris / sclera, specks in the nose shade)
+LIFT = dict(sclera=0.00030, sclera_shade=0.00040, iris=0.00050, iris_top=0.00060, iris_rim=0.00068, pupil=0.00076,
+            highlight=0.00090, lash=0.00100, lash_low=0.00090, crease=0.00035, brow=0.00045, mouth=0.00055,
+            nose_shade=0.00045, lip_shade=0.00040, nose_hl=0.00050, ear_in=0.00035, ear_line=0.00045)
 
 UPPER = [(0.0, 0.02), (0.10, 0.17), (0.30, 0.30), (0.50, 0.34), (0.70, 0.32), (0.88, 0.22), (1.0, 0.06)]
 LOWER = [(1.0, 0.06), (0.90, -0.10), (0.70, -0.20), (0.50, -0.23), (0.30, -0.20), (0.12, -0.10), (0.0, 0.02)]
@@ -79,7 +80,8 @@ def eye_shapes(side):
     sh["pupil"] = affinity.scale(Point((ic[0], ic[1] + 0.02)).buffer(1.0, 48), 0.085, 0.14).intersection(sclera)
     hx = ic[0] + side * 0.11                                  # same world side (+x) in both eyes
     hl = affinity.rotate(affinity.scale(Point((hx, ic[1] + 0.12)).buffer(1.0, 32), 0.075, 0.032), 20)
-    sh["highlight"] = hl.intersection(sclera)
+    hl2 = affinity.scale(Point((ic[0] - side * 0.10, ic[1] - 0.13)).buffer(1.0, 24), 0.032, 0.026)   # q25: small second catchlight
+    sh["highlight"] = hl.union(hl2).intersection(sclera)
     # upper lash: thick along the top, thickest at the outer third, short wing past the outer corner
     t = 0.060 + 0.060 * np.clip((up[:, 0] - 0.1) / 0.65, 0, 1) * (1 - np.clip((up[:, 0] - 0.85) / 0.15, 0, 1) * 0.4)
     outer = up + np.stack([np.zeros_like(t), t], -1)
@@ -305,8 +307,11 @@ def build():
     import mouth_v2_line as ML
     xs = np.linspace(-0.97, 0.97, 60)
     # mouth-line fix (q24): ends kept >= ~0.0045 H thick (sub-pixel ends rendered as dots), lifted to 0.50 mm
-    top = [(u * ML.MW, ML.line(u * ML.MW) - 0.0035 - 0.0035 * (1 - u * u)) for u in xs]
-    bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.0010 + 0.0008 * (1 - u * u) ** 0.5) for u in xs[::-1]]
+    # q25: drawn-line shape - heavier in the middle third, tapering to rounded ends (was an even bar)
+    def th(u):
+        return 0.0022 + 0.0042 * (1 - np.clip(abs(u), 0, 1) ** 2) ** 1.5
+    top = [(u * ML.MW, ML.line(u * ML.MW) - 0.30 * th(u) - 0.0012) for u in xs]
+    bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.70 * th(u) - 0.0012) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)
     pieces["V2MouthLine"] = (project(xy, LIFT["mouth"]), f, COL["mouth"])
     return pieces

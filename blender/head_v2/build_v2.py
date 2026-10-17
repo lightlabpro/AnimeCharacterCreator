@@ -136,7 +136,7 @@ def set_toon_normals(head, ell_mix=0.90):
     en /= np.linalg.norm(en, axis=1, keepdims=True)
     x = co[:, 0] / V.H; h = (V.ZT - co[:, 2]) / V.H
     lh = MO.line_h(np.clip(x, -MO.MW, MO.MW))
-    near_mouth = np.exp(-((h - lh) / 0.008) ** 2) * (np.abs(x) < MO.MW * 1.05)
+    near_mouth = np.exp(-((h - lh) / 0.0035) ** 2) * (np.abs(x) < MO.MW * 1.05)   # q25: 0.008 left crumpled seam normals -> shadow jaggies above the mouth line
     ears = np.clip((np.abs(x) - 0.33) / 0.03, 0, 1) * (np.abs(h - 0.58) < 0.2)
     neck = np.clip((h - 1.0) / 0.1, 0, 1)
     w_toon = np.clip(1 - near_mouth, 0, 1) * (1 - ears)

@@ -215,7 +215,7 @@ def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 Typ
 col = import_blend()
 shade(col)
 if globals().get("HAIR", "leo"):
-    print("hair objects:", attach_hair(col, globals().get("HAIR", "leo")))
+    print("hair objects:", attach_hair(col, globals().get("HAIR", "leo"), k=globals().get("HAIR_K", 0.90), dz=globals().get("HAIR_DZ", -0.004)))
 col.hide_render = True                     # n56 renders stay as they were
 bpy.app.driver_namespace["v2"] = {"shots": shots, "set_expr": set_expr, "col": col}
 print("v2 imported:", len(col.objects), "objects")
