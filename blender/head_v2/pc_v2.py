@@ -56,6 +56,14 @@ def skin_mat():
                     i.default_value = ZT - H
     # q23 TypeSafe face_shadow_smaller: the menu's push 2.5 -> 3.2 moved ~500 px (8.0 only ~1200), so the far-cheek band
     # is narrowed with the analytic ellipsoid's x radius instead (n56 a 0.40 -> 0.50 H; x / a^2 in the 'Math.005' divide)
+    # q24 TypeSafe cheek_shadow_softer: menu x2 (0.002 -> 0.004) was invisible; Leo's band edge is painted soft ->
+    # v2 gets its own copy of the skin group with toon boundary softness SKIN_SOFT (n56 keeps the shared one)
+    grp = next((n for n in m.node_tree.nodes if n.type == "GROUP"), None)
+    if grp is not None:
+        grp.node_tree = grp.node_tree.copy(); grp.node_tree.name = "NG_ToonSkin_" + TAG
+        surf = next((n for n in grp.node_tree.nodes if n.type == "GROUP" and n.node_tree.name.startswith("NG_ToonSurface")), None)
+        if surf is not None:
+            surf.inputs["Softness"].default_value = SKIN_SOFT
     nd = m.node_tree.nodes.get("Math.005")
     if nd and nd.operation == "DIVIDE" and abs(nd.inputs[1].default_value - 0.16) < 1e-4:
         nd.inputs[1].default_value = ELL_A * ELL_A
@@ -63,6 +71,7 @@ def skin_mat():
 
 
 ELL_A = 0.50
+SKIN_SOFT = 0.03
 
 
 def import_blend():
