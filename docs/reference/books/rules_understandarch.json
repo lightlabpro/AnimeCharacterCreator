@@ -1,0 +1,10 @@
+[
+ {"id": "ua_essence", "page": 12, "rule": "Capture the essence rather than exhaustive realism; know what to leave suggested."},
+ {"id": "ua_raking_light", "page": 42, "rule": "Light should strike the subject at an angle rather than straight on, to bring out sculptural modelling and surface relief."},
+ {"id": "ua_light_45", "page": 55, "rule": "The standard shading convention assumes light coming over the viewer's left shoulder at about 45 degrees; shade the sides turned away from it and draw the cast shadows."},
+ {"id": "ua_front_heavier", "page": 51, "rule": "Foreground objects get the thickest lines, darkest shadows and brightest colors; distant ones get faint lines, soft shadows and subdued color."},
+ {"id": "ua_shadow_recede", "page": 57, "rule": "Darker shade and stronger shadows belong in the foreground, becoming progressively lighter into the distance, reinforcing perspective."},
+ {"id": "ua_uneven_intensity", "page": 67, "rule": "Do not render the whole sheet at the same intensity; leave large areas lightly treated so the detailed areas gain tension and focus."},
+ {"id": "ua_distant_detail", "page": 53, "rule": "Distant repeated detail can be reduced to a single line or a hint; full detail belongs only in the foreground."},
+ {"id": "ua_counter_direction", "page": 67, "rule": "Balance a dominant direction in a composition with counter-lines in the other direction."}
+]
