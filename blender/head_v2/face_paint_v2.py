@@ -26,7 +26,7 @@ import sdf_head as S
 
 H = S.H
 from mouth_v2_line import EYE_H, D, NB as _NB  # one face layout for every script
-E = 0.33 * D             # eye width
+E = 0.36 * D             # eye width (q23 TypeSafe eyes_bigger 0.33 -> 0.36, on trial vs picture A/B)
 CX = 0.36 * D            # eye centre |x|
 COL = dict(sclera=(238, 240, 246), sclera_shade=(196, 200, 216), iris=(96, 168, 98), iris_top=(56, 118, 66),
            iris_rim=(40, 86, 48), pupil=(24, 52, 30), highlight=(255, 255, 255), lash=(58, 34, 26),
