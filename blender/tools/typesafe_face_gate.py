@@ -1,7 +1,7 @@
 """Face gate (q26): the standard check for every head / face element and expression, with TypeSafe looking at images.
 
     py -3 typesafe_face_gate.py RENDERS_DIR OUT.json --rules a.json,b.json,... --refs refs.json [--only eyes,mouth]
-        [--prev PREV_RENDERS_DIR] [--min-rule-page 0.6]
+        [--prev PREV_RENDERS_DIR] [--min-rule-page 0.6] [--skip-elements face_by_type]
 
 Sammy (q26): "research the books about anime and manga ... all elements and expressions on the head and face. Validate
 using typesafe image, compare with the mhs3 references and validate look with typesafe image. Make sure this process is
@@ -71,11 +71,13 @@ def load_rules(paths, min_page):
     return rules
 
 
-def pass_rules(rules, renders, only):
+def pass_rules(rules, renders, only, skip=()):
     """One request per (render, batch of <= BATCH rules)."""
     groups = {}
     out = []
     for r in rules:
+        if r["element"] in skip:
+            continue
         if only and r["element"] not in only and not (r["element"].startswith("expression") and "expressions" in only):
             continue
         views = r.get("views") or ["front"]
@@ -172,7 +174,9 @@ def main():
     rules = load_rules([p for p in (arg("--rules", "") or "").split(",") if p], float(arg("--min-rule-page", 0.6)))
     refs = json.load(open(arg("--refs"))) if arg("--refs") else {}
     only = set(arg("--only").split(",")) if arg("--only") else set()
-    rep = {"model": MODEL, "renders": renders, "rules": pass_rules(rules, renders, only),
+    # face_by_type rules describe other head types (child, chibi, elderly...): skipped unless asked for
+    skip = set((arg("--skip-elements", "face_by_type") or "").split(",")) - {""}
+    rep = {"model": MODEL, "renders": renders, "rules": pass_rules(rules, renders, only, skip), "skipped_elements": sorted(skip),
            "look": pass_look(renders, refs, only)}
     if arg("--prev"):
         rep["no_regression"] = pass_prev(renders, arg("--prev"), refs, only)

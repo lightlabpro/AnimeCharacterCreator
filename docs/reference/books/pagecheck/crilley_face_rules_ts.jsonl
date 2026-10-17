@@ -1,0 +1,77 @@
+{"page": 16, "src": "ocr", "chars": 429, "head_p": 0.99, "rules": {"cr_iris_tall_oval": 0.93, "cr_iris_touches_upper_lid": 0.27}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 15, "src": "ocr", "chars": 469, "head_p": 1.0, "rules": {"cr_lash_lines_tilt_center": 0.92, "cr_highlight_top_circle": 0.49}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 14, "src": "ocr", "chars": 203, "head_p": 0.23, "rules": {"cr_eye_box_taller": 0.22}, "topic": null, "topic_orders": ["perspective", "head_proportions"]}
+{"page": 19, "src": "ocr", "chars": 614, "head_p": 0.99, "rules": {"cr_skull_circle_base": 0.25}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 17, "src": "ocr", "chars": 298, "head_p": 0.9, "rules": {"cr_upper_lash_heaviest": 0.14}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 27, "src": "ocr", "chars": 234, "head_p": 0.99, "rules": {"cr_chin_quarter_below": 0.58, "cr_jaw_straight_to_point": 0.38}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 20, "src": "ocr", "chars": 425, "head_p": 0.99, "rules": {"cr_style_ears_drop_with_cartoon": 0.49, "cr_style_cartoony_eye_nose_gap": 0.91, "cr_color_hair_highlight_band": 0.83}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 26, "src": "ocr", "chars": 240, "head_p": 0.99, "rules": {"cr_brow_line_band1": 0.8, "cr_eyes_low_in_head": 0.39}, "topic": null, "topic_orders": ["head_proportions", "eyes_brows"]}
+{"page": 28, "src": "ocr", "chars": 352, "head_p": 1.0, "rules": {"cr_face_width_at_lashes": 0.81, "cr_eye_gap_one_eye": 0.97, "cr_nose_on_circle_bottom": 0.89, "cr_mouth_midway": 0.96}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 21, "src": "ocr", "chars": 672, "head_p": 0.99, "rules": {"cr_style_whole_face_balance": 0.78, "cr_shojo_high_brows": 0.85}, "topic": "manga_anime_style", "topic_orders": ["manga_anime_style", "manga_anime_style"]}
+{"page": 30, "src": "ocr", "chars": 293, "head_p": 0.99, "rules": {"cr_top_heavy_hair_volume": 0.97}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 29, "src": "ocr", "chars": 354, "head_p": 1.0, "rules": {"cr_lid_fold_inner": 0.81, "cr_ear_position": 0.9}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 32, "src": "ocr", "chars": 211, "head_p": 0.92, "rules": {"cr_female_lash_tick": 0.58, "cr_brows_thin_arcs": 0.16, "cr_mouth_small_line": 0.64, "cr_neck_width_half": 0.38, "cr_side_locks_frame_face": 0.78}, "topic": null, "topic_orders": ["manga_anime_style", "head_proportions"]}
+{"page": 31, "src": "ocr", "chars": 144, "head_p": 0.98, "rules": {"cr_chin_shadow_hatched": 0.45, "cr_hair_follows_skull": 0.59}, "topic": "hair", "topic_orders": ["hair", "hair"]}
+{"page": 36, "src": "ocr", "chars": 376, "head_p": 1.0, "rules": {"cr_features_touch_centerline": 0.68, "cr_far_brow_offset": 0.82, "cr_nose_34_protrudes": 0.46, "cr_mouth_34_near_side": 0.34}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 35, "src": "ocr", "chars": 251, "head_p": 0.99, "rules": {"cr_three_quarter_centerline": 0.73}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 38, "src": "ocr", "chars": 184, "head_p": 0.98, "rules": {"cr_ear_34_near_only": 0.34, "cr_neck_34_attach": 0.88}, "topic": "hair", "topic_orders": ["hair", "hair"]}
+{"page": 41, "src": "ocr", "chars": 742, "head_p": 0.72, "rules": {"cr_male_female_same_face": 0.21}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 47, "src": "ocr", "chars": 146, "head_p": 0.95, "rules": {"cr_short_hair_reads_male": 0.1}, "topic": "hair", "topic_orders": ["hair", "hair"]}
+{"page": 46, "src": "ocr", "chars": 309, "head_p": 1.0, "rules": {"cr_ear_simple_c": 0.94}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 49, "src": "ocr", "chars": 255, "head_p": 0.99, "rules": {"cr_male_thinner_lashes": 0.23, "cr_male_brows_straighter": 0.05}, "topic": null, "topic_orders": ["manga_anime_style", "eyes_brows"]}
+{"page": 48, "src": "ocr", "chars": 227, "head_p": 0.99, "rules": {"cr_bangs_part_for_eyes": 0.9}, "topic": "hair", "topic_orders": ["hair", "hair"]}
+{"page": 54, "src": "ocr", "chars": 417, "head_p": 0.99, "rules": {"cr_profile_face_line": 0.75}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 55, "src": "ocr", "chars": 341, "head_p": 1.0, "rules": {"cr_profile_eye_wedge": 0.63, "cr_mouth_profile_setback": 0.78, "cr_ear_profile_position": 0.93}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 56, "src": "ocr", "chars": 266, "head_p": 0.99, "rules": {"cr_profile_neck_attach": 0.8}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 59, "src": "ocr", "chars": 244, "head_p": 0.9, "rules": {"cr_nose_profile_pointed": 0.56}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 69, "src": "ocr", "chars": 305, "head_p": 0.99, "rules": {"cr_adult_chin_third": 0.86}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 70, "src": "ocr", "chars": 290, "head_p": 0.99, "rules": {"cr_adult_features_higher": 0.21, "cr_adult_nose_rendered": 0.66}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 71, "src": "ocr", "chars": 236, "head_p": 0.99, "rules": {"cr_adult_age_lines": 0.56}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 63, "src": "ocr", "chars": 407, "head_p": 0.86, "rules": {"cr_male_long_hair_angular": 0.99}, "topic": "hair", "topic_orders": ["hair", "hair"]}
+{"page": 72, "src": "ocr", "chars": 217, "head_p": 0.99, "rules": {"cr_adult_hair_forehead": 0.97}, "topic": "hair", "topic_orders": ["hair", "hair"]}
+{"page": 81, "src": "ocr", "chars": 242, "head_p": 1.0, "rules": {"cr_adult_mouth_lower_lip_line": 0.82}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 80, "src": "ocr", "chars": 382, "head_p": 1.0, "rules": {"cr_adult_nose_tip_34": 0.8}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 74, "src": "ocr", "chars": 282, "head_p": 0.99, "rules": {"cr_less_is_more_youth": 0.17}, "topic": "manga_anime_style", "topic_orders": ["manga_anime_style", "manga_anime_style"]}
+{"page": 84, "src": "ocr", "chars": 244, "head_p": 0.97, "rules": {"cr_adult_eye_narrow_almond": 0.62}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 89, "src": "ocr", "chars": 153, "head_p": 1.0, "rules": {"cr_fuller_round_chin": 0.24}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 100, "src": "ocr", "chars": 259, "head_p": 0.99, "rules": {"cr_fuller_34_mouth_chin_gap": 0.4}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 105, "src": "ocr", "chars": 496, "head_p": 0.87, "rules": {"cr_child_blush_ovals": 0.03}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 109, "src": "ocr", "chars": 296, "head_p": 0.99, "rules": {"cr_child_square_cheeks": 0.83}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 110, "src": "ocr", "chars": 236, "head_p": 1.0, "rules": {"cr_child_eyes_double": 0.42, "cr_child_mouth_midway": 0.8}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 92, "src": "ocr", "chars": 110, "head_p": 0.98, "rules": {"cr_fuller_neck_wide": 0.61}, "topic": null, "topic_orders": ["hair", "head_proportions"]}
+{"page": 111, "src": "ocr", "chars": 255, "head_p": 0.99, "rules": {"cr_child_bigger_ears_optional": 0.98}, "topic": null, "topic_orders": ["ears", "head_proportions"]}
+{"page": 118, "src": "ocr", "chars": 488, "head_p": 0.99, "rules": {"cr_child_profile_short_nose": 0.37}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 125, "src": "ocr", "chars": 137, "head_p": 0.98, "rules": {"cr_eye_style_semireal_small": 0.17}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 128, "src": "ocr", "chars": 324, "head_p": 0.99, "rules": {"cr_tiny_iris_menace": 0.19}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 126, "src": "ocr", "chars": 256, "head_p": 0.98, "rules": {"cr_highlight_optional_bottom": 0.89}, "topic": "eyes_brows", "topic_orders": ["eyes_brows", "eyes_brows"]}
+{"page": 130, "src": "ocr", "chars": 236, "head_p": 0.99, "rules": {"cr_expr_cheerful_flat_bottom": 0.97}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 131, "src": "ocr", "chars": 238, "head_p": 0.99, "rules": {"cr_expr_joy_closed_arcs": 0.89, "cr_expr_laugh_blush": 0.22}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 132, "src": "ocr", "chars": 154, "head_p": 0.99, "rules": {"cr_brows_carry_expression": 0.3, "cr_expr_confusion_asym_brows": 0.95, "cr_expr_symmetry_break": 0.05}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 133, "src": "ocr", "chars": 187, "head_p": 0.99, "rules": {"cr_open_mouth_flat_interior": 0.39, "cr_expr_concern_furrow": 0.86}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 134, "src": "ocr", "chars": 198, "head_p": 0.99, "rules": {"cr_expr_regret_crooked_brows": 0.8}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 135, "src": "ocr", "chars": 180, "head_p": 0.99, "rules": {"cr_expr_bored_flat_lids": 0.98}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 136, "src": "ocr", "chars": 251, "head_p": 0.99, "rules": {"cr_clenched_teeth_break": 0.42, "cr_expr_determined_brows_low": 0.88}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 137, "src": "ocr", "chars": 179, "head_p": 0.99, "rules": {"cr_teeth_upper_band": 0.57, "cr_expr_angry_crooks": 0.49, "cr_expr_angry_no_highlight": 0.17}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 139, "src": "ocr", "chars": 228, "head_p": 0.99, "rules": {"cr_expr_surprise_small_iris": 0.88}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 138, "src": "ocr", "chars": 256, "head_p": 0.99, "rules": {"cr_expr_distress_zigzag": 0.81}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 140, "src": "ocr", "chars": 265, "head_p": 0.99, "rules": {"cr_open_smile_d_shape": 0.57, "cr_expr_embarrassed_combo": 0.88}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 141, "src": "ocr", "chars": 187, "head_p": 0.99, "rules": {"cr_expr_sad_iris_tucked": 0.94}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 163, "src": "ocr", "chars": 389, "head_p": 0.51, "rules": {"cr_male_thicker_neck": 0.95}, "topic": "body_anatomy", "topic_orders": ["body_anatomy", "body_anatomy"]}
+{"page": 184, "src": "ocr", "chars": 425, "head_p": 0.98, "rules": {"cr_elderly_wrinkles": 0.19}, "topic": "character_design", "topic_orders": ["character_design", "character_design"]}
+{"page": 215, "src": "ocr", "chars": 320, "head_p": 0.99, "rules": {"cr_far_eye_narrower": 0.53}, "topic": "head_proportions", "topic_orders": ["head_proportions", "head_proportions"]}
+{"page": 218, "src": "ocr", "chars": 160, "head_p": 0.98, "rules": {"cr_hairline_gap_chibi": 0.94}, "topic": null, "topic_orders": ["hair", "head_proportions"]}
+{"page": 226, "src": "ocr", "chars": 340, "head_p": 0.99, "rules": {"cr_expr_rage_vein_white_eyes": 0.16}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 229, "src": "text", "chars": 0, "head_p": 0.71, "rules": {"cr_expr_shy_dot_eyes": 0.91}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 231, "src": "ocr", "chars": 11, "head_p": 0.98, "rules": {"cr_expr_embarrassed_chevrons": 0.93}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 232, "src": "text", "chars": 0, "head_p": 0.75, "rules": {"cr_expr_wink_arc": 0.95}, "topic": null, "topic_orders": ["character_design", "manga_anime_style"]}
+{"page": 233, "src": "text", "chars": 0, "head_p": 0.96, "rules": {"cr_expr_tears_bead": 0.57}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 234, "src": "text", "chars": 0, "head_p": 0.68, "rules": {"cr_expr_love_hearts": 0.95}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 236, "src": "ocr", "chars": 10, "head_p": 0.97, "rules": {"cr_expr_despondent_wail": 0.93}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 237, "src": "ocr", "chars": 15, "head_p": 0.9, "rules": {"cr_tongue_simple": 0.83}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 239, "src": "text", "chars": 0, "head_p": 0.9, "rules": {"cr_expr_frustrated_squeeze": 0.9}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 243, "src": "ocr", "chars": 12, "head_p": 0.96, "rules": {"cr_expr_disapproving_halflid": 0.88}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 242, "src": "ocr", "chars": 7, "head_p": 0.91, "rules": {"cr_expr_devious_slit": 0.92}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 244, "src": "text", "chars": 0, "head_p": 0.91, "rules": {"cr_expr_shock_white_eyes": 0.96}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 247, "src": "ocr", "chars": 10, "head_p": 0.97, "rules": {"cr_expr_fright_gloom_lines": 0.78}, "topic": "expressions", "topic_orders": ["expressions", "expressions"]}
+{"page": 379, "src": "ocr", "chars": 618, "head_p": 0.55, "rules": {"cr_iris_dark_top_gradient": 0.4}, "topic": "tools_basics", "topic_orders": ["tools_basics", "tools_basics"]}
+{"page": 392, "src": "ocr", "chars": 792, "head_p": 0.75, "rules": {"cr_expr_neutral_vs_reaction": 0.85}, "topic": null, "topic_orders": ["expressions", "story_writing"]}

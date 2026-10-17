@@ -7,7 +7,8 @@
   "check": "In the front view, are the cheek sides fairly straight/vertical down to about mouth level before the jaw turns in to the chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.92
  },
  {
   "id": "mg13_upper_lid_half_head",
@@ -17,7 +18,8 @@
   "check": "Is the top of the upper eyelid about halfway between the top of the skull and the chin tip?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "mg13_hairline_mid_crown_lid",
@@ -27,7 +29,8 @@
   "check": "Is the hairline roughly midway between the top of the skull and the upper eyelid?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "mg13_nose_mouth_halving",
@@ -37,7 +40,8 @@
   "check": "Is the nose bottom about halfway from the upper eyelid to the chin, with the mouth about halfway from the nose to the chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "mg13_cranium_wider_than_face",
@@ -47,7 +51,8 @@
   "check": "In front view, does the skull silhouette extend slightly wider than the cheek/face contour on both sides (no straight line from jaw up into the skull)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "mg13_back_of_head_volume",
@@ -58,7 +63,8 @@
   "views": [
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.52
  },
  {
   "id": "mg13_profile_ear_center",
@@ -68,7 +74,8 @@
   "check": "In side view, is the ear roughly at the head's front-to-back midpoint and at eye-to-nose height?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.73
  },
  {
   "id": "mg13_forehead_overhangs_eyes",
@@ -79,7 +86,8 @@
   "views": [
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "mg13_p_shape_head",
@@ -90,7 +98,8 @@
   "views": [
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "mg13_head_as_box_planes",
@@ -100,7 +109,8 @@
   "check": "In the 3/4 view, can you see a distinct side plane of the head (between the outer eye corner/cheek and the ear) in addition to the face front?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.22
  },
  {
   "id": "mg13_tilted_crown_flat",
@@ -110,7 +120,8 @@
   "check": "In the 3/4 or tilted view, does the top of the head curve gently (slightly flattened) rather than a tight round dome?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.22
  },
  {
   "id": "mg13_face_not_too_big",
@@ -121,7 +132,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "mg13_level_symmetry",
@@ -132,7 +144,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.29
  },
  {
   "id": "mg13_consistent_gaze",
@@ -143,7 +156,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.82
  },
  {
   "id": "mg13_median_matches_contour",
@@ -153,7 +167,8 @@
   "check": "In 3/4 view, does the facial center line curve in the same way as the near/far face contour?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.79
  },
  {
   "id": "mg13_34_centerline_nose_bridge",
@@ -163,7 +178,8 @@
   "check": "In 3/4 view, do the nose and the middle of the mouth both lie on one smooth curved center line?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.72
  },
  {
   "id": "mg13_34_far_cheek",
@@ -173,7 +189,8 @@
   "check": "In 3/4 view, does the far cheek contour bulge outward around nose/mouth level before turning in to the chin?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.46
  },
  {
   "id": "mg13_age_lower_face",
@@ -183,7 +200,8 @@
   "check": "Does the face's age read correctly: for a younger look, are the eyes taller and the lower face shorter/wider; for an adult, eyes less tall and chin lower?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.61
  },
  {
   "id": "mg13_2d_teen_child_balance",
@@ -194,7 +212,8 @@
   "views": [
    "front",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_male_smaller_eyes_narrow",
@@ -204,7 +223,8 @@
   "check": "For a male head, are the eyes smaller and the face narrower than the female equivalent?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_thin_neck_type",
@@ -214,7 +234,8 @@
   "check": "For a slender character in side view, is the head shallow front-to-back (short eye-to-ear and ear-to-back distances) with a thin neck?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.92
  },
  {
   "id": "mg13_eye_height_third",
@@ -224,7 +245,8 @@
   "check": "Is each eye's height roughly one third of the upper-eyelid-to-chin distance?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.43
  },
  {
   "id": "mg13_eye_gap_one_eye",
@@ -234,7 +256,8 @@
   "check": "Is the space between the inner eye corners about one eye width?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "mg13_iris_dome_pupil",
@@ -245,7 +268,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "mg13_pupil_not_stuck",
@@ -255,7 +279,8 @@
   "check": "In 3/4 view, is the iris shape asymmetric (flatter on one side) and shifted, rather than an unchanged centered decal?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "mg13_lid_five_blocks",
@@ -266,7 +291,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.77
  },
  {
   "id": "mg13_eye_socket_hill",
@@ -276,7 +302,8 @@
   "check": "In 3/4 view, is the far eye much narrower than the near eye but about the same height?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.79
  },
  {
   "id": "mg13_corner_angle_60",
@@ -287,7 +314,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_lashes_radial",
@@ -298,7 +326,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_double_lid_highlight",
@@ -309,7 +338,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.87
  },
  {
   "id": "mg13_profile_eye_wedge",
@@ -319,7 +349,8 @@
   "check": "In side view, is the eye a narrow wedge with a thin vertical-oval iris, set back from the face contour?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "mg13_brow_eye_offset_34",
@@ -329,7 +360,8 @@
   "check": "In 3/4 view, is the far brow offset horizontally from the far eye (brow sitting on the ridge outside the eye) rather than stacked flat above it?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "mg13_brow_height",
@@ -339,7 +371,8 @@
   "check": "Are the brows close above the eyes (about a quarter of the hairline-to-eye distance)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.28
  },
  {
   "id": "mg13_brow_inner_past_eye",
@@ -349,7 +382,8 @@
   "check": "Does the inner end of each brow reach slightly further toward the nose than the inner eye corner?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "mg13_34_near_brow_pos",
@@ -359,7 +393,8 @@
   "check": "In 3/4 view, does the far brow end near the center line/bridge and not cross over it?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.53
  },
  {
   "id": "mg13_brows_movable_mask",
@@ -369,7 +404,8 @@
   "check": "Are the brows a separate, readable shape whose position/angle could change with expression (not hidden or fixed flat)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "mg13_nose_triangle_minimal",
@@ -381,7 +417,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "mg13_nose_on_centerline",
@@ -391,7 +428,8 @@
   "check": "In 3/4 view, does the nose sit on the curved center line and point the direction the face turns?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.23
  },
  {
   "id": "mg13_mouth_small_corners_even",
@@ -401,7 +439,8 @@
   "check": "Is the mouth a small line with clearly defined, matching left and right corners at equal height?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.48
  },
  {
   "id": "mg13_mouth_center_tilt",
@@ -412,7 +451,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.24
  },
  {
   "id": "mg13_mouth_34_tight",
@@ -422,7 +462,8 @@
   "check": "In 3/4 view, is the mouth a simple short shape positioned on the center line without a philtrum/split line?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "mg13_child_round_adult_straight",
@@ -432,7 +473,8 @@
   "check": "Does the mouth line curvature match age (rounded for child, straighter/S-curve for adult)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.99
  },
  {
   "id": "mg13_profile_upper_lip",
@@ -442,7 +484,8 @@
   "check": "In side view, does the upper lip sit slightly forward of the lower lip, with a visible chin projection below?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.89
  },
  {
   "id": "mg13_open_mouth_upper_first",
@@ -454,7 +497,8 @@
    "front",
    "34",
    "expression:open_mouth"
-  ]
+  ],
+  "rule_page_p": 0.77
  },
  {
   "id": "mg13_teeth_by_opening",
@@ -466,7 +510,8 @@
    "front",
    "34",
    "expression:open_mouth"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "mg13_tongue_in_open_mouth",
@@ -476,7 +521,8 @@
   "check": "In a wide-open mouth, is a tongue visible low in the mouth behind the lower teeth?",
   "views": [
    "expression:open_mouth"
-  ]
+  ],
+  "rule_page_p": 0.55
  },
  {
   "id": "mg13_ear_eyelid_to_nose",
@@ -487,7 +533,8 @@
   "views": [
    "front",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.66
  },
  {
   "id": "mg13_ear_glasses_temple",
@@ -499,7 +546,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.86
  },
  {
   "id": "mg13_ear_six_corners",
@@ -510,7 +558,8 @@
   "views": [
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "mg13_34_ear_position",
@@ -520,7 +569,8 @@
   "check": "In 3/4 view, is the ear placed in the middle of the side plane with its lobe level with the nose bottom?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.65
  },
  {
   "id": "mg13_neck_width_iris",
@@ -530,7 +580,8 @@
   "check": "In front view, do the neck sides fall roughly under the inner edges of the irises?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.87
  },
  {
   "id": "mg13_shoulder_width",
@@ -540,7 +591,8 @@
   "check": "In a bust render, are the shoulders about 1.5 times the head width (female) or about 2 times (male)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "mg13_under_chin_plane",
@@ -550,7 +602,8 @@
   "check": "In 3/4 view, is there a visible underside of the jaw between chin and neck (often in shadow)?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "mg13_sphere_shield_cylinder",
@@ -561,7 +614,8 @@
   "views": [
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.86
  },
  {
   "id": "mg13_neck_from_ear_base",
@@ -572,7 +626,8 @@
   "views": [
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "mg13_neck_parallel_lines",
@@ -582,7 +637,8 @@
   "check": "In 3/4 view, are the two neck contour lines roughly parallel?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.85
  },
  {
   "id": "mg13_profile_neck_diagonal",
@@ -592,7 +648,8 @@
   "check": "In side view, does the neck slant forward rather than stand vertical?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.59
  },
  {
   "id": "mg13_neck_motion",
@@ -603,7 +660,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "mg13_hair_volume_above_skull",
@@ -615,7 +673,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "mg13_hair_three_blocks",
@@ -627,7 +686,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "mg13_hair_ribbon_veil",
@@ -638,7 +698,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "mg13_hair_from_part",
@@ -650,7 +711,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.82
  },
  {
   "id": "mg13_hair_depth_narrow",
@@ -661,7 +723,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "mg13_hair_highlight_band",
@@ -672,7 +735,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_lock_banana",
@@ -684,7 +748,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.98
  },
  {
   "id": "mg13_lock_tips_random",
@@ -695,7 +760,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "mg13_lock_sizes_vary",
@@ -706,7 +772,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "mg13_hair_weight_position",
@@ -716,7 +783,8 @@
   "check": "Does the widest part of the hair sit where the character's mood needs it (low = calm, high = lively)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "mg13_in_out_silhouette",
@@ -726,7 +794,8 @@
   "check": "Is the face opening framed by the hair a clean, readable shape?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "mg13_bangs_change_style",
@@ -736,7 +805,8 @@
   "check": "Are the bangs a deliberate, distinctive shape over the forehead?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.98
  },
  {
   "id": "mg13_neck_shadow_only",
@@ -748,7 +818,8 @@
    "front",
    "34",
    "side"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "mg13_cheek_blush",
@@ -759,7 +830,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.6
  },
  {
   "id": "mg13_face_down_shadow",
@@ -769,7 +841,8 @@
   "check": "When the head tilts down, is there shading over the upper face/eye area?",
   "views": [
    "expression:downcast"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "mg13_expr_three_parts",
@@ -779,7 +852,8 @@
   "check": "In each expression, do brows, eyelids and mouth all change together, not only one feature?",
   "views": [
    "expression:all"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "mg13_expr_height_control",
@@ -789,7 +863,8 @@
   "check": "Do the expression shape keys move the brows and mouth up/down rather than only reshaping them?",
   "views": [
    "expression:all"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_expr_mouth_corners",
@@ -799,7 +874,8 @@
   "check": "Do the mouth corners clearly turn up for positive and down for negative expressions?",
   "views": [
    "expression:all"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_expr_head_angle",
@@ -809,7 +885,8 @@
   "check": "Does the expression's head angle fit it (up for outward emotions, down for inward ones)?",
   "views": [
    "expression:all"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_happy_corners_lower_lid",
@@ -819,7 +896,8 @@
   "check": "In the happy expression, are the mouth corners up and the lower lids pushed up?",
   "views": [
    "expression:happy"
-  ]
+  ],
+  "rule_page_p": 0.86
  },
  {
   "id": "mg13_laugh_brows_up",
@@ -829,7 +907,8 @@
   "check": "In the laugh expression, are the brows raised away from the eyes with an open, upturned mouth?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.46
  },
  {
   "id": "mg13_angry_brows_v",
@@ -839,7 +918,8 @@
   "check": "In the angry expression, are the brows angled down toward the center and pressing low onto the eyes?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.12
  },
  {
   "id": "mg13_determined_brows_low",
@@ -849,7 +929,8 @@
   "check": "In the determined expression, are the brows lowered close to the eyes with a firm mouth?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.7
  },
  {
   "id": "mg13_sad_corners_down",
@@ -859,7 +940,8 @@
   "check": "In the sad expression, do the mouth corners turn down with brows raised at the inner ends?",
   "views": [
    "expression:sad"
-  ]
+  ],
+  "rule_page_p": 0.46
  },
  {
   "id": "mg13_surprised_lids_up",
@@ -869,7 +951,8 @@
   "check": "In the surprised expression, are the brows high and arched, eyes wide, mouth open?",
   "views": [
    "expression:surprised"
-  ]
+  ],
+  "rule_page_p": 0.07
  },
  {
   "id": "mg13_relaxed_mouth_low",
@@ -879,7 +962,8 @@
   "check": "In a relaxed/goofy expression, is the mouth set slightly lower and looser?",
   "views": [
    "expression:relaxed"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "mg13_wink_giggle",
@@ -889,6 +973,7 @@
   "check": "In the wink expression, is one eye closed with an upward-curved lid line while the other stays open with a smile?",
   "views": [
    "expression:wink"
-  ]
+  ],
+  "rule_page_p": 0.83
  }
 ]

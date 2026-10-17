@@ -8,7 +8,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.25
  },
  {
   "id": "aa_female_face_rounded",
@@ -19,7 +20,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.24
  },
  {
   "id": "aa_male_female_same_feature_layout",
@@ -29,7 +31,8 @@
   "check": "Do the male and female neutral heads keep the same eye/nose/mouth placement, differing mainly in face outline and neck?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.65
  },
  {
   "id": "aa_neutral_eyes_mid_head",
@@ -39,7 +42,8 @@
   "check": "In front view are the eyes near the vertical midpoint of the head, with the nose about halfway from eyes to chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.68
  },
  {
   "id": "aa_neutral_eye_spacing",
@@ -49,7 +53,8 @@
   "check": "Is the gap between the two eyes roughly one eye-width, with a darker/heavier upper lid line than the lower?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.06
  },
  {
   "id": "aa_neutral_nose_minimal",
@@ -60,7 +65,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.24
  },
  {
   "id": "aa_neutral_mouth_short",
@@ -70,7 +76,8 @@
   "check": "In the neutral face, is the mouth narrower than the distance between the pupils and drawn as a simple line with a small lower-lip hint?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.46
  },
  {
   "id": "aa_male_neck_thicker",
@@ -81,7 +88,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.18
  },
  {
   "id": "aa_ears_between_eye_and_nose",
@@ -92,7 +100,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.11
  },
  {
   "id": "aa_bangs_frame_forehead",
@@ -103,7 +112,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.73
  },
  {
   "id": "aa_rage_whites_around_iris",
@@ -113,7 +123,8 @@
   "check": "In the angry/rage expression, are the eyes opened wide with a small iris that has white visible on all sides?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.41
  },
  {
   "id": "aa_rage_mouth_wide_open",
@@ -123,7 +134,8 @@
   "check": "In the rage expression, is the mouth open wide, taller than in a normal talking pose?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.74
  },
  {
   "id": "aa_rage_brows_raised_inner_down",
@@ -133,7 +145,8 @@
   "check": "In the rage expression, do the brows form a steep V with inner ends pulled down toward the nose?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.39
  },
  {
   "id": "aa_rage_upper_lid_pulled",
@@ -143,7 +156,8 @@
   "check": "In the angry expression, is the upper eyelid angled down toward the nose, making the eye a slanted wedge?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.3
  },
  {
   "id": "aa_holding_back_clenched_teeth",
@@ -153,7 +167,8 @@
   "check": "In the 'holding back' expression, are the teeth clenched with lips slightly apart and brows knitted?",
   "views": [
    "expression:holding_back"
-  ]
+  ],
+  "rule_page_p": 0.5
  },
  {
   "id": "aa_holding_back_brow_crease",
@@ -163,7 +178,8 @@
   "check": "Are there crease lines between the brows in the restrained/holding-back expression?",
   "views": [
    "expression:holding_back"
-  ]
+  ],
+  "rule_page_p": 0.25
  },
  {
   "id": "aa_crying_brows_droop",
@@ -173,7 +189,8 @@
   "check": "In the crying expression, are the brows raised at the inner ends and drooping at the outer ends?",
   "views": [
    "expression:crying"
-  ]
+  ],
+  "rule_page_p": 0.6
  },
  {
   "id": "aa_crying_mouth_open_wavy",
@@ -183,7 +200,8 @@
   "check": "In the crying expression, is the mouth open with teeth visible and the corners pulled down?",
   "views": [
    "expression:crying"
-  ]
+  ],
+  "rule_page_p": 0.57
  },
  {
   "id": "aa_crying_huge_tears",
@@ -193,7 +211,8 @@
   "check": "In the crying expression, are there large tear streams from the lower lids down the cheeks?",
   "views": [
    "expression:crying"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "aa_crying_eyes_squeezed",
@@ -203,7 +222,8 @@
   "check": "In the crying expression, are the eyes narrowed/squeezed with the lower lid raised?",
   "views": [
    "expression:crying"
-  ]
+  ],
+  "rule_page_p": 0.4
  },
  {
   "id": "aa_crying_blush",
@@ -213,7 +233,8 @@
   "check": "Is there flush/blush shading across the nose and cheeks in the crying expression?",
   "views": [
    "expression:crying"
-  ]
+  ],
+  "rule_page_p": 0.25
  },
  {
   "id": "aa_comic_dot_eyes_determined",
@@ -223,7 +244,8 @@
   "check": "In the comic determined variant, are the eyes large dark circles with thick steeply slanted brows and a small round mouth?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "aa_courageous_smile",
@@ -233,7 +255,8 @@
   "check": "In the confident/courageous expression, is it a narrowed-eye smile with at least one mouth corner raised?",
   "views": [
    "expression:smug"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "aa_serious_straight_mouth",
@@ -243,7 +266,8 @@
   "check": "In the serious/determined expression, is the mouth a straight closed line with level or lowered brows?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.32
  },
  {
   "id": "aa_battle_ready_defined_features",
@@ -253,7 +277,8 @@
   "check": "In the battle-ready expression, are the eyes narrowed under lowered brows with a closed mouth?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.72
  },
  {
   "id": "aa_scream_attack",
@@ -263,7 +288,8 @@
   "check": "In the battle-scream expression, are the brows hard down and the mouth wide open with teeth?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "aa_exaggerate_expressions",
@@ -273,7 +299,8 @@
   "check": "Do the expression shapes visibly exaggerate the neutral face (strong changes in eye, brow and mouth shape)?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "aa_hit_eyes_squeeze_shut",
@@ -283,7 +310,8 @@
   "check": "In the pain/hit expression, are the eyes squeezed shut into tight lines with creased brows?",
   "views": [
    "expression:pain"
-  ]
+  ],
+  "rule_page_p": 0.82
  },
  {
   "id": "aa_hit_eyes_roll_up",
@@ -293,7 +321,8 @@
   "check": "In the stunned variant, are the irises rolled up under the upper lid with white showing below?",
   "views": [
    "expression:stunned"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "aa_hit_clenched_teeth_bitten_tongue",
@@ -303,7 +332,8 @@
   "check": "In the pain expression, are both rows of teeth shown clenched together inside a wide, tense mouth?",
   "views": [
    "expression:pain"
-  ]
+  ],
+  "rule_page_p": 0.73
  },
  {
   "id": "aa_hit_face_angle_shift",
@@ -313,7 +343,8 @@
   "check": "In the hit reaction, is the head turned or tilted away from the impact rather than facing straight forward?",
   "views": [
    "expression:pain"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "aa_comic_hit_eyes_pop",
@@ -323,7 +354,8 @@
   "check": "In the comic hit variant, are the eyes enlarged ovals with tiny pupils?",
   "views": [
    "expression:comic_hit"
-  ]
+  ],
+  "rule_page_p": 0.38
  },
  {
   "id": "aa_hit_blush_bruise_marks",
@@ -333,7 +365,8 @@
   "check": "Is there localized redness/hatching on the struck area of the face?",
   "views": [
    "expression:pain"
-  ]
+  ],
+  "rule_page_p": 0.73
  },
  {
   "id": "aa_faint_whites_of_eyes",
@@ -343,7 +376,8 @@
   "check": "In the knocked-out expression, are the eyes shown as whites with no iris visible?",
   "views": [
    "expression:knocked_out"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "aa_pained_open_mouth_spit",
@@ -353,7 +387,8 @@
   "check": "In the winded/pained expression, is the mouth open with teeth visible?",
   "views": [
    "expression:pain"
-  ]
+  ],
+  "rule_page_p": 0.92
  },
  {
   "id": "aa_teeth_center_line",
@@ -364,7 +399,8 @@
   "views": [
    "front",
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "aa_canine_third_tooth",
@@ -375,7 +411,8 @@
   "views": [
    "front",
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.98
  },
  {
   "id": "aa_teeth_subtle_gaps",
@@ -386,7 +423,8 @@
   "views": [
    "front",
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.87
  },
  {
   "id": "aa_open_mouth_shows_both_rows_and_tongue",
@@ -396,7 +434,8 @@
   "check": "In a wide-open mouth, are both teeth rows, dark inner corners and a tongue in the lower part visible?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.52
  },
  {
   "id": "aa_smile_teeth_arc",
@@ -406,7 +445,8 @@
   "check": "In a grin, do the visible upper teeth follow an upward-curving arc with lifted corners?",
   "views": [
    "expression:happy"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "aa_fangs_tongue_gallery",
@@ -416,7 +456,8 @@
   "check": "If the character has a wild/feral design, are the canines pointed and visibly sharper than the other teeth?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.71
  },
  {
   "id": "aa_laugh_arc_eyes",
@@ -426,7 +467,8 @@
   "check": "In the laughing expression, are the eyes closed into upward-curving arcs?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.19
  },
  {
   "id": "aa_laugh_big_open_mouth",
@@ -436,7 +478,8 @@
   "check": "In the laughing expression, is the mouth a large open rounded shape with upper teeth visible?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.48
  },
  {
   "id": "aa_laugh_face_center_focus",
@@ -446,7 +489,8 @@
   "check": "In the cheering/laughing pose, is the face tilted slightly upward?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.8
  },
  {
   "id": "aa_happy_bright_smile",
@@ -456,7 +500,8 @@
   "check": "In the happy expression, is there an open smile with eyes curved/narrowed upward?",
   "views": [
    "expression:happy"
-  ]
+  ],
+  "rule_page_p": 0.62
  },
  {
   "id": "aa_angry_running_squeezed",
@@ -466,7 +511,8 @@
   "check": "In the strained-angry expression, are the eyes squeezed and slanted, with clenched teeth in a wide mouth?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.69
  },
  {
   "id": "aa_angry_mark",
@@ -476,7 +522,8 @@
   "check": "If anger marks are used, is the cross-shaped vein mark placed on the temple/forehead?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.52
  },
  {
   "id": "aa_chase_desire_open_mouth",
@@ -486,7 +533,8 @@
   "check": "In the pursuing/determined variant, are the brows down and the eyes looking forward with an open shouting mouth?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "aa_same_pose_expression_flip",
@@ -496,7 +544,8 @@
   "check": "Can the expression be identified correctly from the face alone without body cues?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "aa_fear_open_mouth_squeezed_eyes",
@@ -506,7 +555,8 @@
   "check": "In the scared/panic expression, is the mouth wide open with eyes either squeezed shut or wide with tiny pupils?",
   "views": [
    "expression:scared"
-  ]
+  ],
+  "rule_page_p": 0.81
  },
  {
   "id": "aa_danger_brow_crease_sweat",
@@ -516,7 +566,8 @@
   "check": "In the alarmed/scared expression, are there crease lines between the brows and sweat drops on the face?",
   "views": [
    "expression:scared"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "aa_tension_clenched_teeth_closed_eyes",
@@ -526,7 +577,8 @@
   "check": "In the bracing expression, are the eyes shut tight with teeth clenched and bared?",
   "views": [
    "expression:bracing"
-  ]
+  ],
+  "rule_page_p": 0.67
  },
  {
   "id": "aa_endurance_face",
@@ -536,7 +588,8 @@
   "check": "In the enduring expression, are the teeth gritted with brows drawn together?",
   "views": [
    "expression:enduring"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "aa_alert_gaze_tension",
@@ -546,7 +599,8 @@
   "check": "In the alert/startled expression, are the eyes tensed and turned toward one side with a sweat drop?",
   "views": [
    "expression:surprised"
-  ]
+  ],
+  "rule_page_p": 0.49
  },
  {
   "id": "aa_glare_brow_variation",
@@ -556,7 +610,8 @@
   "check": "Can the brows be raised or knitted (with a crease between them) independently of the eyes?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.77
  },
  {
   "id": "aa_determined_grin_slanted",
@@ -566,7 +621,8 @@
   "check": "In the determined grin, are the brows slanted down to the nose, the eyes narrowed, and the clenched teeth visible in a wide grin?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.84
  },
  {
   "id": "aa_eye_airbrush_glow",
@@ -577,7 +633,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.53
  },
  {
   "id": "aa_iris_dark_upper_light_lower",
@@ -588,7 +645,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.52
  },
  {
   "id": "aa_small_irises_for_intensity",
@@ -599,7 +657,8 @@
   "views": [
    "expression:determined",
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.16
  },
  {
   "id": "aa_face_light_front_above",
@@ -610,7 +669,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.92
  },
  {
   "id": "aa_highlight_protruding",
@@ -621,7 +681,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.65
  },
  {
   "id": "aa_hair_shadow_on_face",
@@ -632,7 +693,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "aa_scars_as_accents",
@@ -643,7 +705,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.98
  },
  {
   "id": "aa_hair_from_crown",
@@ -654,7 +717,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.66
  },
  {
   "id": "aa_bangs_cover_eyes_mysterious",
@@ -664,7 +728,8 @@
   "check": "For a mysterious hairstyle variant, do the bangs fall asymmetrically over the eyes leaving the lower face visible?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "aa_bangs_fall_when_head_drops",
@@ -675,7 +740,8 @@
   "views": [
    "side",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "aa_hair_lags_motion",
@@ -685,7 +751,8 @@
   "check": "In a turning/action pose, do the hair ends trail behind the head's motion?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "aa_hair_bouncy_even_still",
@@ -696,7 +763,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "aa_hair_drifts_front",
@@ -707,7 +775,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.69
  },
  {
   "id": "aa_crown_hairline_layout",
@@ -718,7 +787,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.48
  },
  {
   "id": "aa_chin_tilt_up_jump",
@@ -729,7 +799,8 @@
   "views": [
    "side",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.7
  },
  {
   "id": "aa_blow_to_chin_head_back",
@@ -739,7 +810,8 @@
   "check": "In the chin-hit pose, is the head thrown back to show the underside of the jaw?",
   "views": [
    "expression:knocked_out"
-  ]
+  ],
+  "rule_page_p": 0.64
  },
  {
   "id": "aa_head_toward_chest_duck",
@@ -749,6 +821,7 @@
   "check": "In a ducking/flinch pose, does the head tuck toward the chest with the chin lowered?",
   "views": [
    "expression:scared"
-  ]
+  ],
+  "rule_page_p": 0.94
  }
 ]

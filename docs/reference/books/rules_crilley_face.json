@@ -8,7 +8,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.25
  },
  {
   "id": "cr_brow_line_band1",
@@ -18,7 +19,8 @@
   "check": "Do the brows sit only slightly below the vertical middle of the cranium circle, with the upper lash line one similar step lower?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.8
  },
  {
   "id": "cr_eyes_low_in_head",
@@ -28,7 +30,8 @@
   "check": "Is the vertical distance from the top of the skull to the brows larger than the distance from the brows to the chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.39
  },
  {
   "id": "cr_chin_quarter_below",
@@ -38,7 +41,8 @@
   "check": "Is the distance from the nose to the chin tip short, roughly a quarter of the cranium width?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.58
  },
  {
   "id": "cr_jaw_straight_to_point",
@@ -48,7 +52,8 @@
   "check": "Do the jaw contours run in nearly straight lines from the cheek to a softly pointed chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.38
  },
  {
   "id": "cr_face_width_at_lashes",
@@ -58,7 +63,8 @@
   "check": "Do the outer corners of the eyes sit close to the side contour of the face, leaving only a thin strip of cheek outside them?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.81
  },
  {
   "id": "cr_top_heavy_hair_volume",
@@ -69,7 +75,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "cr_three_quarter_centerline",
@@ -79,7 +86,8 @@
   "check": "In 3/4, does the far side of the face show a cheek contour that turns inward below the eye toward the chin?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.73
  },
  {
   "id": "cr_features_touch_centerline",
@@ -89,7 +97,8 @@
   "check": "In 3/4, are the nose and mouth placed on a curving centre line that sits well toward the far side of the face?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.68
  },
  {
   "id": "cr_profile_face_line",
@@ -99,7 +108,8 @@
   "check": "In profile, is the brow-to-nose contour a straight slope with a small pointed nose, followed by small lip bumps and a pointed chin?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.75
  },
  {
   "id": "cr_profile_neck_attach",
@@ -109,7 +119,8 @@
   "check": "In profile, does the throat start about halfway back along the underside of the jaw, rather than right at the chin?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.8
  },
  {
   "id": "cr_style_whole_face_balance",
@@ -119,7 +130,8 @@
   "check": "Are the nose and mouth small and simplified in proportion to the large eyes?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "cr_style_ears_drop_with_cartoon",
@@ -129,7 +141,8 @@
   "check": "Do the ears sit roughly between eye level and nose level, matching a mid-cartoony style (not floating above the eyes)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.49
  },
  {
   "id": "cr_style_cartoony_eye_nose_gap",
@@ -139,7 +152,8 @@
   "check": "Is there visible skin between the bottom of the eyes and the nose tip (the nose is not touching the eye line)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.91
  },
  {
   "id": "cr_shojo_high_brows",
@@ -149,7 +163,8 @@
   "check": "For a large-eyed shojo variant, do the brows sit well above the eyes with clear forehead skin between them?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.85
  },
  {
   "id": "cr_male_female_same_face",
@@ -159,7 +174,8 @@
   "check": "Apart from hair and lash thickness, do the male and female heads share the same jaw, eye placement and proportions?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.21
  },
  {
   "id": "cr_male_thinner_lashes",
@@ -169,7 +185,8 @@
   "check": "On the male head, is the upper lash line thinner and less flared than on the female head?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.23
  },
  {
   "id": "cr_male_thicker_neck",
@@ -179,7 +196,8 @@
   "check": "On the male head, is the neck noticeably wider than the female neck, starting near the jaw corners?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "cr_male_long_hair_angular",
@@ -189,7 +207,8 @@
   "check": "If the male has long hair, are the jaw and brows more angular and the neck thicker than the female's?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.99
  },
  {
   "id": "cr_adult_chin_third",
@@ -199,7 +218,8 @@
   "check": "For an adult variant, is the lower face visibly longer and the jaw squarer than on the teen head?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.86
  },
  {
   "id": "cr_adult_features_higher",
@@ -209,7 +229,8 @@
   "check": "For an adult variant, are the eyes smaller and set higher relative to the chin than on the teen?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.21
  },
  {
   "id": "cr_adult_nose_rendered",
@@ -219,7 +240,8 @@
   "check": "Does the teen nose stay a tiny minimal form, while any adult variant has a fuller bridge and nostrils?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.66
  },
  {
   "id": "cr_adult_age_lines",
@@ -229,7 +251,8 @@
   "check": "For a youthful head, is the face free of under-eye lines, crow's-feet and mouth-side creases?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.56
  },
  {
   "id": "cr_less_is_more_youth",
@@ -240,7 +263,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.17
  },
  {
   "id": "cr_adult_eye_narrow_almond",
@@ -250,7 +274,8 @@
   "check": "For an adult male variant, are the eyes narrow almonds under thick, low, straight brows?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.62
  },
  {
   "id": "cr_adult_mouth_lower_lip_line",
@@ -260,7 +285,8 @@
   "check": "Is the teen mouth a single simple line or crease, without a separate lower-lip contour?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.82
  },
  {
   "id": "cr_elderly_wrinkles",
@@ -270,7 +296,8 @@
   "check": "For an elderly variant, are there wrinkles at the outer eyes, cheekbones and lips?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.19
  },
  {
   "id": "cr_fuller_round_chin",
@@ -280,7 +307,8 @@
   "check": "For a fuller variant, is the chin rounded instead of pointed, with the eyes, nose and mouth in standard positions?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.24
  },
  {
   "id": "cr_fuller_neck_wide",
@@ -290,7 +318,8 @@
   "check": "For a fuller variant, is the neck nearly as wide as the jaw?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.61
  },
  {
   "id": "cr_fuller_34_mouth_chin_gap",
@@ -300,7 +329,8 @@
   "check": "For a fuller variant in 3/4, is there a larger gap between the mouth and the chin outline than on the standard head?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.4
  },
  {
   "id": "cr_child_eyes_double",
@@ -310,7 +340,8 @@
   "check": "For a child variant, are the eyes much larger and rounder than the teen's, filling more of the face?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.42
  },
  {
   "id": "cr_child_square_cheeks",
@@ -320,7 +351,8 @@
   "check": "For a child variant, do the cheeks drop almost vertically before turning in to a short, blunt chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "cr_child_mouth_midway",
@@ -330,7 +362,8 @@
   "check": "Is the mouth about halfway between the nose and the chin tip?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.8
  },
  {
   "id": "cr_child_profile_short_nose",
@@ -340,7 +373,8 @@
   "check": "For a child in profile, is the nose a tiny point and the jaw underside nearly horizontal?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.37
  },
  {
   "id": "cr_child_bigger_ears_optional",
@@ -350,7 +384,8 @@
   "check": "For a child variant, are the ears equal to or slightly larger than the teen's relative to the head?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.98
  },
  {
   "id": "cr_eye_box_taller",
@@ -360,7 +395,8 @@
   "check": "Is each eye about as tall as it is wide, or slightly taller?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.22
  },
  {
   "id": "cr_eye_gap_one_eye",
@@ -370,7 +406,8 @@
   "check": "Is the gap between the inner eye corners about one eye width?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "cr_lash_lines_tilt_center",
@@ -380,7 +417,8 @@
   "check": "Do the upper lash lines rise slightly from the outer corners toward the nose, with a stronger curve than the lower lash line?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.92
  },
  {
   "id": "cr_upper_lash_heaviest",
@@ -391,7 +429,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.14
  },
  {
   "id": "cr_iris_tall_oval",
@@ -402,7 +441,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "cr_iris_touches_upper_lid",
@@ -413,7 +453,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.27
  },
  {
   "id": "cr_highlight_top_circle",
@@ -424,7 +465,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.49
  },
  {
   "id": "cr_highlight_optional_bottom",
@@ -435,7 +477,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.89
  },
  {
   "id": "cr_iris_dark_top_gradient",
@@ -446,7 +489,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.4
  },
  {
   "id": "cr_lid_fold_inner",
@@ -457,7 +501,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.81
  },
  {
   "id": "cr_far_eye_narrower",
@@ -467,7 +512,8 @@
   "check": "In 3/4, is the far eye narrower than the near eye, with only a small strip of face outside it?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.53
  },
  {
   "id": "cr_profile_eye_wedge",
@@ -477,7 +523,8 @@
   "check": "In profile, is the eye a narrow wedge set just behind the face contour, not a full almond?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.63
  },
  {
   "id": "cr_eye_style_semireal_small",
@@ -487,7 +534,8 @@
   "check": "Is the eye size consistent with one chosen style (not a mix, such as huge irises inside narrow realistic lids)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.17
  },
  {
   "id": "cr_tiny_iris_menace",
@@ -497,7 +545,8 @@
   "check": "In the neutral expression, is the iris large (not a tiny dot floating in white)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.19
  },
  {
   "id": "cr_female_lash_tick",
@@ -508,7 +557,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.58
  },
  {
   "id": "cr_brows_thin_arcs",
@@ -518,7 +568,8 @@
   "check": "Are the brows thin, gently curved strokes, slightly longer than the eye, with a clear gap above the lash line?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.16
  },
  {
   "id": "cr_far_brow_offset",
@@ -528,7 +579,8 @@
   "check": "In 3/4, is the far brow shifted toward the centre of the face relative to the far eye, rather than centred over it?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.82
  },
  {
   "id": "cr_male_brows_straighter",
@@ -538,7 +590,8 @@
   "check": "On the male head, are the brows a little thicker and flatter than on the female head?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.05
  },
  {
   "id": "cr_brows_carry_expression",
@@ -548,7 +601,8 @@
   "check": "In the expression set, does each emotion use a clearly different brow tilt or brow shape?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.3
  },
  {
   "id": "cr_nose_on_circle_bottom",
@@ -558,7 +612,8 @@
   "check": "Is the nose a small, minimal form on the face centre line, sitting a little below the bottom of the eyes?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.89
  },
  {
   "id": "cr_nose_34_protrudes",
@@ -568,7 +623,8 @@
   "check": "In 3/4, does the nose tip project slightly beyond the face centre line toward the far side?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.46
  },
  {
   "id": "cr_nose_profile_pointed",
@@ -578,7 +634,8 @@
   "check": "In profile, is the nose a small sharp point with a straight bridge?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.56
  },
  {
   "id": "cr_adult_nose_tip_34",
@@ -588,7 +645,8 @@
   "check": "For an adult in 3/4, does the nose show a longer bridge and an angular underside instead of a tiny dot?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.8
  },
  {
   "id": "cr_mouth_midway",
@@ -598,7 +656,8 @@
   "check": "Is the mouth about halfway between the nose and the chin tip?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "cr_mouth_small_line",
@@ -608,7 +667,8 @@
   "check": "Is the closed mouth a short line no wider than about one eye width?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.64
  },
  {
   "id": "cr_mouth_34_near_side",
@@ -618,7 +678,8 @@
   "check": "In 3/4, does the mouth extend mainly to the near side of the face centre line?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.34
  },
  {
   "id": "cr_mouth_profile_setback",
@@ -628,7 +689,8 @@
   "check": "In profile, is the mouth a short line set back from the lip contour, halfway between nose and chin?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "cr_open_mouth_flat_interior",
@@ -638,7 +700,8 @@
   "check": "When the mouth opens, is the interior one flat colour with a simple rounded outline and no lip volume?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.39
  },
  {
   "id": "cr_open_smile_d_shape",
@@ -649,7 +712,8 @@
   "views": [
    "expression:happy",
    "expression:embarrassed"
-  ]
+  ],
+  "rule_page_p": 0.57
  },
  {
   "id": "cr_teeth_upper_band",
@@ -660,7 +724,8 @@
   "views": [
    "expression:angry",
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.57
  },
  {
   "id": "cr_clenched_teeth_break",
@@ -670,7 +735,8 @@
   "check": "In the determined expression, does the mouth show clenched white teeth framed by an outline?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.42
  },
  {
   "id": "cr_tongue_simple",
@@ -680,7 +746,8 @@
   "check": "If a tongue is visible, is it a simple rounded lighter shape in the lower mouth, without detail?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "cr_ear_position",
@@ -690,7 +757,8 @@
   "check": "Does the top of the ear line up with the middle of the eye and its bottom sit just above the mouth?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "cr_ear_simple_c",
@@ -701,7 +769,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "cr_ear_34_near_only",
@@ -711,7 +780,8 @@
   "check": "In 3/4, is the far ear hidden?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.34
  },
  {
   "id": "cr_ear_profile_position",
@@ -721,7 +791,8 @@
   "check": "In profile, is the ear placed at the middle of the head (front to back), spanning from eye level to just below nose level?",
   "views": [
    "side"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "cr_neck_width_half",
@@ -731,7 +802,8 @@
   "check": "Is the neck about half as wide as the face at ear level?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.38
  },
  {
   "id": "cr_neck_34_attach",
@@ -741,7 +813,8 @@
   "check": "In 3/4, does the near neck line start under the ear and the front neck line start close to the chin?",
   "views": [
    "34"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "cr_chin_shadow_hatched",
@@ -752,7 +825,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.45
  },
  {
   "id": "cr_hair_follows_skull",
@@ -763,7 +837,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.59
  },
  {
   "id": "cr_bangs_part_for_eyes",
@@ -774,7 +849,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "cr_hairline_gap_chibi",
@@ -785,7 +861,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "cr_short_hair_reads_male",
@@ -795,7 +872,8 @@
   "check": "Does the hairstyle match the intended gender read (shorter for the default male)?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.1
  },
  {
   "id": "cr_side_locks_frame_face",
@@ -805,7 +883,8 @@
   "check": "Do side locks frame the cheeks without hiding the jaw outline and chin?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "cr_adult_hair_forehead",
@@ -815,7 +894,8 @@
   "check": "For an adult variant, is more forehead showing and is the hairstyle simpler than the teen's?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "cr_color_hair_highlight_band",
@@ -826,7 +906,8 @@
   "views": [
    "front",
    "34"
-  ]
+  ],
+  "rule_page_p": 0.83
  },
  {
   "id": "cr_child_blush_ovals",
@@ -836,7 +917,8 @@
   "check": "For a child variant, are there soft pink blush spots on the cheeks just below the outer eyes?",
   "views": [
    "front"
-  ]
+  ],
+  "rule_page_p": 0.03
  },
  {
   "id": "cr_expr_cheerful_flat_bottom",
@@ -846,7 +928,8 @@
   "check": "In the happy expression, is the smile small and gentle, and is the lower edge of each eye flattened upward?",
   "views": [
    "expression:happy"
-  ]
+  ],
+  "rule_page_p": 0.97
  },
  {
   "id": "cr_expr_joy_closed_arcs",
@@ -856,7 +939,8 @@
   "check": "In the laughing expression, are the eyes closed upward arcs and the mouth a large open D shape?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.89
  },
  {
   "id": "cr_expr_laugh_blush",
@@ -866,7 +950,8 @@
   "check": "In the laughing expression, is there blush on the cheeks below the eyes?",
   "views": [
    "expression:laugh"
-  ]
+  ],
+  "rule_page_p": 0.22
  },
  {
   "id": "cr_expr_confusion_asym_brows",
@@ -876,7 +961,8 @@
   "check": "In the confused expression, is one brow lowered and the other raised, with a small round mouth?",
   "views": [
    "expression:confused"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "cr_expr_concern_furrow",
@@ -886,7 +972,8 @@
   "check": "In the serious/concerned expression, do the brows angle slightly down toward the nose without a strong crook?",
   "views": [
    "expression:concerned"
-  ]
+  ],
+  "rule_page_p": 0.86
  },
  {
   "id": "cr_expr_regret_crooked_brows",
@@ -896,7 +983,8 @@
   "check": "In the sad expression, do the inner ends of the brows rise toward the centre, with heavy upper lids and a small frown?",
   "views": [
    "expression:sad"
-  ]
+  ],
+  "rule_page_p": 0.8
  },
  {
   "id": "cr_expr_sad_iris_tucked",
@@ -906,7 +994,8 @@
   "check": "In the crying expression, are the irises large and tucked under the lids, with only one or two tears and a wobbly lower lip?",
   "views": [
    "expression:sad"
-  ]
+  ],
+  "rule_page_p": 0.94
  },
  {
   "id": "cr_expr_bored_flat_lids",
@@ -916,7 +1005,8 @@
   "check": "In the bored expression, do flat upper lids cover at least half of each iris, with neutral brows and a small closed mouth?",
   "views": [
    "expression:bored"
-  ]
+  ],
+  "rule_page_p": 0.98
  },
  {
   "id": "cr_expr_determined_brows_low",
@@ -926,7 +1016,8 @@
   "check": "In the determined expression, are the brows angled down toward the nose and almost touching the upper lash lines?",
   "views": [
    "expression:determined"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "cr_expr_angry_crooks",
@@ -936,7 +1027,8 @@
   "check": "In the angry expression, do the brows angle down with a crook near the inner ends, and is the mouth wide open showing upper teeth?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.49
  },
  {
   "id": "cr_expr_angry_no_highlight",
@@ -946,7 +1038,8 @@
   "check": "In the angry expression, are the eye highlights reduced or gone and the upper lids flattened?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.17
  },
  {
   "id": "cr_expr_distress_zigzag",
@@ -956,7 +1049,8 @@
   "check": "In the distressed expression, are the brows raised with a zigzag, with white visible between iris and upper lid?",
   "views": [
    "expression:scared"
-  ]
+  ],
+  "rule_page_p": 0.81
  },
  {
   "id": "cr_expr_surprise_small_iris",
@@ -966,7 +1060,8 @@
   "check": "In the surprised expression, are the irises small with white showing above and below, and is the mouth a small open oval?",
   "views": [
    "expression:surprised"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "cr_expr_embarrassed_combo",
@@ -976,7 +1071,8 @@
   "check": "In the embarrassed expression, are the brows tilted up at the inner ends while the mouth smiles widely and the cheeks blush?",
   "views": [
    "expression:embarrassed"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "cr_expr_embarrassed_chevrons",
@@ -986,7 +1082,8 @@
   "check": "In the embarrassed variant, are the eyes squeezed into > < chevrons with blush and a grin?",
   "views": [
    "expression:embarrassed"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "cr_expr_shock_white_eyes",
@@ -996,7 +1093,8 @@
   "check": "In the shocked variant, are the eyes blank white circles with tiny or no pupils and the mouth very large?",
   "views": [
    "expression:shocked"
-  ]
+  ],
+  "rule_page_p": 0.96
  },
  {
   "id": "cr_expr_fright_gloom_lines",
@@ -1006,7 +1104,8 @@
   "check": "In the scared expression, are the irises small and the mouth a tiny 'o', with any vertical gloom lines kept off the eyes?",
   "views": [
    "expression:scared"
-  ]
+  ],
+  "rule_page_p": 0.78
  },
  {
   "id": "cr_expr_rage_vein_white_eyes",
@@ -1016,7 +1115,8 @@
   "check": "In the furious variant, are the eyes left bright white under steeply slanted brows, with a cross-shaped anger vein?",
   "views": [
    "expression:angry"
-  ]
+  ],
+  "rule_page_p": 0.16
  },
  {
   "id": "cr_expr_wink_arc",
@@ -1026,7 +1126,8 @@
   "check": "In the wink, is one eye a closed arc while the other is fully open?",
   "views": [
    "expression:wink"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "cr_expr_disapproving_halflid",
@@ -1036,7 +1137,8 @@
   "check": "In the disapproving expression, are the lids half closed over the irises with a small pout?",
   "views": [
    "expression:disapproving"
-  ]
+  ],
+  "rule_page_p": 0.88
  },
  {
   "id": "cr_expr_despondent_wail",
@@ -1046,7 +1148,8 @@
   "check": "In the wailing variant, are the eyes squeezed shut with streaming tears and the mouth a wobbly open shape?",
   "views": [
    "expression:sad"
-  ]
+  ],
+  "rule_page_p": 0.93
  },
  {
   "id": "cr_expr_frustrated_squeeze",
@@ -1056,7 +1159,8 @@
   "check": "In the frustrated expression, are the eyes squeezed shut under lowered brows with a small tight mouth?",
   "views": [
    "expression:frustrated"
-  ]
+  ],
+  "rule_page_p": 0.9
  },
  {
   "id": "cr_expr_devious_slit",
@@ -1066,7 +1170,8 @@
   "check": "In the devious expression, are the eyes narrow slanted slits with a wide grin?",
   "views": [
    "expression:devious"
-  ]
+  ],
+  "rule_page_p": 0.92
  },
  {
   "id": "cr_expr_love_hearts",
@@ -1076,7 +1181,8 @@
   "check": "In the in-love variant, are the irises replaced by hearts?",
   "views": [
    "expression:love"
-  ]
+  ],
+  "rule_page_p": 0.95
  },
  {
   "id": "cr_expr_shy_dot_eyes",
@@ -1086,7 +1192,8 @@
   "check": "In the shy variant, are the eyes simplified with small dot pupils and the mouth a tiny circle?",
   "views": [
    "expression:shy"
-  ]
+  ],
+  "rule_page_p": 0.91
  },
  {
   "id": "cr_expr_tears_bead",
@@ -1097,7 +1204,8 @@
   "views": [
    "expression:sad",
    "expression:scared"
-  ]
+  ],
+  "rule_page_p": 0.57
  },
  {
   "id": "cr_expr_neutral_vs_reaction",
@@ -1108,7 +1216,8 @@
   "views": [
    "front",
    "expression:neutral"
-  ]
+  ],
+  "rule_page_p": 0.85
  },
  {
   "id": "cr_expr_symmetry_break",
@@ -1118,6 +1227,7 @@
   "check": "Do the asymmetric expressions (confused, wink) actually differ between left and right while the basic emotions stay symmetrical?",
   "views": [
    "expression:any"
-  ]
+  ],
+  "rule_page_p": 0.05
  }
 ]
