@@ -1,0 +1,6 @@
+[
+ {"id": "da_no_morph", "page": 28, "rule": "A head's construction is the same from every view; only the viewing angle changes - features must not change shape between views beyond what the turn causes."},
+ {"id": "da_eye_socket", "page": 29, "rule": "Set the eyes behind the brow ridges so they sit inside the eye sockets instead of looking pasted flat on the surface."},
+ {"id": "da_happy_eyes", "page": 25, "rule": "A happy face needs wide eyes and raised brows; a smile with lowered angry brows reads as an evil grin."},
+ {"id": "da_sweet_spots", "page": 77, "rule": "Simplified, eye-pleasing highlight and shadow shapes guide the eye better than photo-accurate shading."}
+]
