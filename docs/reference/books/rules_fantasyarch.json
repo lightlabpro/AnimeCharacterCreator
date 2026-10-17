@@ -1,0 +1,15 @@
+[
+ {"id": "fa_focus_in_light", "page": 55, "rule": "The center of interest is always in the light; the eye goes to light areas first."},
+ {"id": "fa_shadow_simple", "page": 55, "rule": "Keep shadows thin, simple and transparent with little detail, so the eye passes over them to the next lit area."},
+ {"id": "fa_warm_shadow", "page": 55, "rule": "Under a cool light source, shadows usually read best as warm colors, which look transparent and recede."},
+ {"id": "fa_highlight_planes", "page": 55, "rule": "Place highlights where a plane changes direction or at the corners of forms."},
+ {"id": "fa_value_or_color", "page": 55, "rule": "In a light area let one element dominate - either value or color, not both; the brighter a highlight, the less color it shows."},
+ {"id": "fa_limit_values", "page": 58, "rule": "Limit the number of distinct values (about three to five) and keep the value plan fixed once set."},
+ {"id": "fa_closer_more", "page": 58, "rule": "The closer an object is, the more contrast, color, intensity and edge sharpness it has."},
+ {"id": "fa_complement_modify", "page": 67, "rule": "Dull or shift a color with its complement rather than with black or gray, which deadens it."},
+ {"id": "fa_light_unifies", "page": 70, "rule": "The color of the light source informs every lit area and unifies the image; shadows share its absence."},
+ {"id": "fa_stroke_one_job", "page": 84, "rule": "A single brushstroke should convey color or value, not both at once."},
+ {"id": "fa_pattern_extend", "page": 91, "rule": "For hair-like masses such as thatch, paint the volume and pick out a few strands; the viewer extends the established pattern."},
+ {"id": "fa_cast_edge_warm", "page": 94, "rule": "Cast shadows tend to warm up at their edges."},
+ {"id": "fa_massed_not_dark", "page": 120, "rule": "Massed shadow shapes need to be unified, not necessarily very dark, especially as they recede."}
+]
