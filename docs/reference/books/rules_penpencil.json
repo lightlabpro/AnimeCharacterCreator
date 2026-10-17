@@ -1,0 +1,8 @@
+[
+ {"id": "pp_diagram_first", "page": 37, "rule": "Establish proportions and sizes in a simple diagrammatic sketch first; errors there carry through to the finished drawing."},
+ {"id": "pp_dark_accents", "page": 36, "rule": "Place the darkest accents on a portrait only at the eyes, nose, mouth, around the ear and under the chin; misplaced accents ruin the drawing."},
+ {"id": "pp_value_simplify", "page": 46, "rule": "Break a subject down into a few simple values before rendering; the white paper counts as one of the values."},
+ {"id": "pp_few_lines_objects", "page": 142, "rule": "Draw objects with as few lines as possible, choosing the lines that explain the form, and use overlap and perspective to show depth."},
+ {"id": "pp_spot_blacks", "page": 165, "rule": "Spot solid blacks early; they give a reference for judging the gray values and separate the elements."},
+ {"id": "pp_paper_affects", "page": 18, "rule": "The paper surface changes line and tone quality; rough paper breaks up darks, smooth paper gives crisp lines and a full tonal range."}
+]
