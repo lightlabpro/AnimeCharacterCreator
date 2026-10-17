@@ -135,3 +135,9 @@ Append-only. Newest at the bottom. Format (use `python3 bridge/tools/log.py`):
 - evidence: tests/py/test_gate.py (20), test_skill_graph.py (6), test_pack_check SkinnedNodeTransform (fails without the fix)
 - status: confirmed
 - use: Run run_gate.py after every export and give gate_report.json to the render validator
+
+## 2026-10-17 [code] face gate: book rules + MHS3 look + no regression, standard for every face element
+- finding: Sammy (q26) made a TypeSafe image gate standard for every head/face element and expression. Rules read from three anime/manga books (actionanime 47/73, mangaguide13 68/85, crilley 64/110 confirmed by TypeSafe against their own pages, rule_page_p >= 0.6) are asked against fixed renders (front, 3/4, side, 8 expressions); a per-rule applicability question keeps closed-mouth or motion rules from failing unfairly. MHS3 look is asked per element side by side with face crops; --prev compares against the version Sammy approved, not the last judged one (q25: he preferred the bigger-eyed v2 over the Leo-matched v3x). First run on v4l failed: expressions were too weak to read (0.01-0.09), neutral mouth too long, lid fold should be inner-only, no blush, and every MHS3-look question ~0.2 (painterly vs flat).
+- evidence: blender/tools/typesafe_face_gate.py, .claude/skills/face-gate/SKILL.md, docs/qa/head_v2/gate/v4l/face_gate.json
+- status: confirmed (gate runs); fixes for v5a in progress
+- use: Chat: after any head/face piece or expression change, render gate_shots and run the gate before showing Sammy; blush needs a mask or a new piece (inbox item if a new mesh name)
