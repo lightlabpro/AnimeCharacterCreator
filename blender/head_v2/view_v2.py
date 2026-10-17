@@ -105,7 +105,7 @@ def load_paint(npz):
     """Face pieces from face_paint_v2.py: one object per piece, flat colour material (Principled base colour, so the
     toon preview treats it like albedo)."""
     d = np.load(npz)
-    names = sorted({k.rsplit("__", 1)[0] for k in d.files})
+    names = sorted({k.rsplit("__", 1)[0] for k in d.files if "__k" not in k})
     mats = []
     for n in names:
         v, f, c = d[n + "__v"], d[n + "__f"], d[n + "__c"]
@@ -117,6 +117,12 @@ def load_paint(npz):
         col = [((ci / 255.0 + 0.055) / 1.055) ** 2.4 if ci / 255.0 > 0.04045 else ci / 255.0 / 12.92 for ci in c]
         m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (*col, 1)
         me.materials.append(m); mats.append(m)
+        keys = [k for k in d.files if k.startswith(n + "__k")]
+        if keys:
+            ob.shape_key_add(name="Basis")
+            for k in sorted(keys):
+                kb = ob.shape_key_add(name=k.split("__k", 1)[1]); kb.value = 0.0
+                kb.data.foreach_set("co", d[k].astype(np.float32).ravel())
     return mats
 
 

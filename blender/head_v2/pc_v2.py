@@ -112,8 +112,22 @@ def shade(col):
                 sm.use_flip_normals = True; sm.use_rim = False; sm.material_offset = 1
 
 
+EXPR = {
+    "neutral": {}, "jaw": {"PF-JawOpen": 1.0}, "jaw_half": {"PF-JawOpen": 0.5},
+    # the app's e2e presets (scripts/e2e_head_pack.cjs) and a few readable expressions
+    "smile_open": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.35}, "talk_aa": {"PF-VisAA": 0.8},
+    "blink": {"PF-Blink_L": 1.0, "PF-Blink_R": 1.0},
+    "happy": {"PF-SmileClosed": 1.0, "PF-Squint": 0.45, "PF-BrowRaise": 0.3},
+    "laugh": {"PF-SmileOpenJaw": 1.0, "PF-JawOpen": 0.3, "PF-Squint": 0.7, "PF-BrowRaise": 0.4},
+    "angry": {"PF-BrowFurrow": 1.0, "PF-Frown": 0.6, "PF-LidUpperDown": 0.2},
+    "sad": {"PF-BrowSad": 1.0, "PF-Frown": 0.5, "PF-LidUpperDown": 0.3},
+    "surprised": {"PF-EyeWide": 1.0, "PF-BrowRaise": 1.0, "PF-VisOH": 0.8},
+    "talk_oh": {"PF-VisOH": 0.9}, "talk_ee": {"PF-VisEE": 0.9},
+}
+
+
 def set_expr(col, expr):
-    vals = {"neutral": {}, "jaw": {"PF-JawOpen": 1.0}, "jaw_half": {"PF-JawOpen": 0.5}}[expr]
+    vals = EXPR[expr] if isinstance(expr, str) else expr
     for o in col.objects:
         sk = o.data.shape_keys
         if sk:

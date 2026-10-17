@@ -4,6 +4,11 @@
       "id": "head_mhs3_n56",
       "library": "humanoid",
       "folder": "humanoid/bodies/adult/head_mhs3_n56"
+    },
+    {
+      "id": "head_mhs3_v2",
+      "library": "humanoid",
+      "folder": "humanoid/bodies/adult/head_mhs3_v2"
     }
   ]
 }

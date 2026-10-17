@@ -147,5 +147,19 @@ Open items first. Claude Code reads this at session start and moves finished ite
   them are 15% shorter vertically in VW-Yaw (far side only). Pack re-exported (27 meshes); typecheck / test / build pass,
   e2e_head_pack OK. Knobs: blender/newhead/look_knobs.json view.FAR_V / MOUTH_TEETH_D / MOUTH_TONGUE_D.
 
+- **2026-10-16 - new head pack head_mhs3_v2 (chat, head v2) - new element names.**
+  Sammy asked for a new model (q22). library/humanoid/bodies/adult/head_mhs3_v2 is a new sculpted head (blender/head_v2):
+  real mouth cavity, curved tooth arches and tongue (PF- mouth keys move them), face pieces lying on a curved face so
+  turned views foreshorten from the geometry - no VW- view keys. Same CHR_ names as n56 where they exist (CHR_Head,
+  CHR_Ears, CHR_EyeWhite, CHR_Iris, CHR_LidLine, CHR_Brow, CHR_NoseShade, CHR_NoseHighlight, CHR_MouthLine,
+  CHR_MouthInside, CHR_TeethUpper, CHR_Tongue, CHR_LipShadow) plus new flat-colour elements (please add to the
+  contract if you keep them): CHR_EyeWhiteShade, CHR_IrisTop, CHR_IrisRim, CHR_Pupil, CHR_EyeHighlight, CHR_LidLower,
+  CHR_LidCrease, CHR_EarInner, CHR_EarLine, CHR_TeethLower. CHR_MouthInside is now the real cavity (two materials).
+  Keys: ID-EyeSize, ID-MouthWidth, ID-JawWidth, ID-EarSize (+ _Neg), PF-JawOpen, PF-SmileClosed, PF-SmileOpenJaw,
+  PF-Frown, PF-FrownOpen, PF-VisAA/OH/EE (+ aliases), PF-Pout, PF-Smirk_L/R, PF-Blink(_L/_R), PF-Squint(_L/_R),
+  PF-EyeWide, PF-LidUpperDown, PF-LidLowerUp, PF-Brow* (InnerUp, Raise, Lower, Furrow + sides, Sad, OuterUp).
+  e2e_head_pack --id head_mhs3_v2: E2E OK (36 meshes). check_pack: same two head-only fails as n56 (height, feet),
+  WARN 80k triangles (budget 18-28k: to reduce). typecheck / test / build pass.
+
 ## Done
 (none yet)

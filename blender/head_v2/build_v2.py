@@ -28,6 +28,54 @@ def flat_mat(name, srgb):
     return m
 
 
+def identity_keys(head, eyes, ears_pieces):
+    """ID- keys the app's sliders drive (contract): eye size, mouth width, jaw width, ear size.
+    Head deformations are smooth fields; eye pieces scale about their eye centre and are put back on the skin."""
+    import numpy as np
+    from mathutils import Vector
+    from mathutils.bvhtree import BVHTree
+    import bmesh
+    me = head.data
+    if me.shape_keys is None:
+        head.shape_key_add(name="Basis")
+    co = np.array([v.co[:] for v in me.vertices])
+    x = co[:, 0] / V.H; h = (V.ZT - co[:, 2]) / V.H; y = co[:, 1] / V.H
+    def add(name, newco):
+        k = head.shape_key_add(name=name); k.value = 0.0
+        k.data.foreach_set("co", newco.astype(np.float32).ravel())
+    m = np.exp(-((x / (MO.MW * 1.6)) ** 2 + ((h - MO.MY) / 0.07) ** 2)) * (y < -0.18)
+    c2 = co.copy(); c2[:, 0] *= 1 + 0.16 * m; add("ID-MouthWidth", c2)
+    c2 = co.copy(); c2[:, 0] *= 1 - 0.12 * m; add("ID-MouthWidth_Neg", c2)
+    jw = np.clip((h - 0.62) / 0.15, 0, 1) * np.clip((1.02 - h) / 0.05, 0, 1) * (1 - np.clip((y - 0.05) / 0.1, 0, 1))
+    c2 = co.copy(); c2[:, 0] *= 1 + 0.10 * jw; add("ID-JawWidth", c2)
+    c2 = co.copy(); c2[:, 0] *= 1 - 0.08 * jw; add("ID-JawWidth_Neg", c2)
+    ec_y, ec_h = 0.080, 0.560                      # sdf_head.EAR centre (y, h) - bpy has no scipy to import it
+    ear = (np.abs(x) > 0.33) * np.exp(-(((h - ec_h) / 0.20) ** 2 + ((y - ec_y) / 0.14) ** 2))
+    root = np.stack([np.sign(x) * 0.34 * V.H, np.full_like(x, (ec_y + 0.0) * V.H),
+                     np.full_like(x, V.ZT - ec_h * V.H)], 1)
+    for nm, sc in (("ID-EarSize", 1.22), ("ID-EarSize_Neg", 0.82)):
+        c2 = co + (co - root) * (sc - 1) * ear[:, None]; add(nm, c2)
+    # eye pieces: scale about each eye's centre in x/z, then back onto the skin (ray along +y)
+    bm = bmesh.new(); bm.from_mesh(me); tree = BVHTree.FromBMesh(bm); bm.free()
+    for side in ("L", "R"):
+        grp = [o for o in eyes if o.name.endswith("_" + side)]
+        sc = [o for o in grp if "_sclera_" in o.name]
+        if not sc:
+            continue
+        P = np.array([v.co[:] for v in sc[0].data.vertices]); cen = P.mean(0)
+        for nm, s_ in (("ID-EyeSize", 1.15), ("ID-EyeSize_Neg", 0.88)):
+            for o in grp:
+                if o.data.shape_keys is None:
+                    o.shape_key_add(name="Basis")
+                k = o.shape_key_add(name=nm); k.value = 0.0
+                for i, v in enumerate(o.data.vertices):
+                    q = v.co.copy()
+                    q.x = cen[0] + (q.x - cen[0]) * s_; q.z = cen[2] + (q.z - cen[2]) * s_
+                    loc, n, idx, dist = tree.ray_cast(Vector((q.x, -1.0, q.z)), Vector((0, 1, 0)))
+                    lift = (v.co - Vector(tuple(sc[0].data.vertices[0].co))).length * 0 + 0.0004
+                    k.data[i].co = (loc + n * lift) if loc is not None else q
+
+
 def follow_keys(head, pieces, upper_only=False):
     """Painted pieces ride on the skin: each piece vertex copies the shape-key offset of the nearest head vertex (skin
     faces only), for every key on the head. upper_only: candidates above the mouth line only (the mouth line rides
@@ -52,7 +100,10 @@ def follow_keys(head, pieces, upper_only=False):
         idx = [kd.find(v.co)[1] for v in ob.data.vertices]
         if ob.data.shape_keys is None:
             ob.shape_key_add(name="Basis")
+        have = set(ob.data.shape_keys.key_blocks.keys())
         for kb in me.shape_keys.key_blocks[1:]:
+            if kb.name in have:
+                continue
             k = ob.shape_key_add(name=kb.name); k.value = 0.0
             for j, v in enumerate(ob.data.vertices):
                 i = idx[j]
@@ -141,6 +192,9 @@ def main():
     pmats = V.load_paint(paint_npz)
     # V2MouthLine (painted, dark) stays: drawn just above the slit so it rides on the upper lip (follow_keys)
     MO.add_jaw_key(head, [bot, tg])
+    MO.add_mouth_keys(head, [bot, tg])
+    identity_keys(head, [o for o in bpy.data.objects if o.name.startswith("V2Eye_")],
+                  [o for o in bpy.data.objects if o.name.startswith("V2Ear")])
     follow_keys(head, [o for o in bpy.data.objects if o.name.startswith(("V2Eye_", "V2Brow_", "V2Nose", "V2Lip", "V2Ear"))])
     follow_keys(head, [o for o in bpy.data.objects if o.name.startswith("V2MouthLine")], upper_only=True)
     set_toon_normals(head)

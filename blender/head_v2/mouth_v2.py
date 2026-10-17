@@ -262,3 +262,77 @@ def add_jaw_key(head, extra):
         for i, v in enumerate(ob.data.vertices):
             kk.data[i].co = pivot + R @ (v.co - pivot)
     return k
+
+
+# ---- mouth expression keys (contract PF- names) ------------------------------------------------------------------
+MOUTH_KEYS = {
+    # name: jaw fraction, smile, frown, wide, round, side (+1 L only, -1 R only, 0 both)
+    "PF-SmileClosed": dict(jaw=0.0, smile=1.0),
+    "PF-SmileOpenJaw": dict(jaw=0.45, smile=0.9),
+    "PF-Frown": dict(frown=1.0),
+    "PF-FrownOpen": dict(jaw=0.35, frown=0.9),
+    "PF-VisAA": dict(jaw=0.62, wide=0.25),
+    "PF-VisOH": dict(jaw=0.42, round=1.0),
+    "PF-VisEE": dict(jaw=0.16, wide=1.0, smile=0.15),
+    "PF-Pout": dict(round=0.7),
+    "PF-Smirk_L": dict(smile=0.9, side=1),
+    "PF-Smirk_R": dict(smile=0.9, side=-1),
+}
+
+
+def _jaw_positions(head, frac):
+    """Head vertex positions for the jaw opened by frac of the full PF-JawOpen (rotation + bowl + lip lift)."""
+    ang = math.radians(M["jaw_deg"]) * frac
+    py, ph = M["jaw_pivot"]
+    pivot = Vector((0.0, py * H, ZT - ph * H))
+    R = Matrix.Rotation(ang, 3, "X")
+    w = jaw_weights(head)
+    out = []
+    for i, v in enumerate(head.data.vertices):
+        p = v.co - pivot
+        out.append(v.co.lerp(pivot + R @ p, float(w[i])) + bowl_offset(v.co) * float(w[i]) * frac
+                   + lip_lift(v.co) * (1.0 - float(w[i])) * frac)
+    return out, R, pivot
+
+
+def _mouth_offsets(co, smile=0.0, frown=0.0, wide=0.0, round=0.0, side=0):
+    x = co.x / H; h = (ZT - co.z) / H; y = co.y / H
+    if y > -0.18:
+        return Vector()
+    sx = 1.0 if x >= 0 else -1.0
+    if side and sx != side:
+        return Vector()
+    ax = abs(x)
+    c = math.exp(-(((ax - MW) / 0.065) ** 2 + ((h - MY) / 0.055) ** 2))          # mouth corner
+    m = math.exp(-((x / (MW * 1.1)) ** 2 + ((h - MY) / 0.06) ** 2))                # whole mouth
+    ck = math.exp(-(((ax - 0.19) / 0.085) ** 2 + ((h - 0.62) / 0.07) ** 2))         # cheek
+    d = Vector()
+    if smile:
+        d += Vector((sx * 0.007 * c, 0.009 * c - 0.002 * ck, 0.021 * c + 0.007 * ck)) * (smile * H)   # world z: up
+    if frown:
+        d += Vector((0.0, 0.002 * c, -0.016 * c)) * (frown * H)
+    if wide:
+        d += Vector((sx * 0.011 * c, 0.003 * c, 0.002 * c)) * (wide * H)
+    if round:
+        d += Vector((-sx * 0.30 * ax * m, -0.007 * m, 0.0)) * (round * H) + Vector((-sx * 0.0, 0, 0))
+        d.x = -sx * 0.30 * ax * m * round * H
+    return d
+
+
+def add_mouth_keys(head, lower_parts):
+    """PF- mouth keys on the head (and the jaw part on the lower teeth / tongue)."""
+    if head.data.shape_keys is None:
+        head.shape_key_add(name="Basis")
+    for name, prm in MOUTH_KEYS.items():
+        frac = prm.get("jaw", 0.0)
+        pos, R, pivot = _jaw_positions(head, frac)
+        k = head.shape_key_add(name=name); k.value = 0.0
+        for i, v in enumerate(head.data.vertices):
+            k.data[i].co = pos[i] + _mouth_offsets(v.co, prm.get("smile", 0), prm.get("frown", 0), prm.get("wide", 0),
+                                                   prm.get("round", 0), prm.get("side", 0))
+        for ob in lower_parts:
+            if ob.data.shape_keys is None:
+                ob.shape_key_add(name="Basis")
+            kk = ob.shape_key_add(name=name); kk.value = 0.0
+            for i, v in enumerate(ob.data.vertices):
+                kk.data[i].co = pivot + R @ (v.co - pivot)

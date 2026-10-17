@@ -196,6 +196,57 @@ def ear_shapes():
     return line, inner
 
 
+# ---- expression keys for the painted pieces (2D transforms, re-projected onto the face) ---------------------------
+def _lids():
+    up = smooth_curve(UPPER); lo = smooth_curve(LOWER)[::-1]          # both inner -> outer
+    U = lambda u: np.interp(u, up[:, 0], up[:, 1])
+    L = lambda u: np.interp(u, lo[:, 0], lo[:, 1])
+    return U, L
+
+
+EYE_KEYS = {
+    # name: (new upper lid as f(U, L, u), new lower lid)            (eye-width units, w up)
+    "PF-Blink": (lambda U, L, u: 0.62 * L + 0.38 * U - 0.05 * np.sin(np.pi * u),
+                 lambda U, L, u: 0.62 * L + 0.38 * U - 0.05 * np.sin(np.pi * u)),
+    "PF-Squint": (lambda U, L, u: U - 0.04, lambda U, L, u: L + 0.45 * (U - L)),
+    "PF-EyeWide": (lambda U, L, u: U + 0.07, lambda U, L, u: L - 0.03),
+    "PF-LidUpperDown": (lambda U, L, u: U - 0.35 * (U - L), lambda U, L, u: L),
+    "PF-LidLowerUp": (lambda U, L, u: U, lambda U, L, u: L + 0.25 * (U - L)),
+}
+
+
+def eye_key_uw(name, uw, key):
+    """Remap a piece's (u, w) for an eye key: lash / lower line / crease ride their lid, the rest is squeezed
+    between the new lids (closed eye = the lash line, curved down: anime closed eye)."""
+    U, L = _lids()
+    fu, fl = EYE_KEYS[key]
+    u = np.clip(uw[:, 0], 0, 1); w = uw[:, 1]
+    u0, l0 = U(u), L(u)
+    u1, l1 = fu(u0, l0, u), fl(u0, l0, u)
+    out = uw.copy()
+    if name == "lash":
+        out[:, 1] = w + (u1 - u0)
+    elif name == "lash_low":
+        out[:, 1] = w + (l1 - l0)
+    elif name == "crease":
+        out[:, 1] = w + 0.55 * (u1 - u0)
+    else:
+        t = np.clip((w - l0) / np.maximum(u0 - l0, 1e-6), 0, 1)
+        out[:, 1] = l1 + t * (u1 - l1)
+    return out
+
+
+BROW_KEYS = {   # world (x, h) offsets as f(t) where t = 0 inner end .. 1 outer end; h down is +
+    "PF-BrowInnerUp": lambda t: (0.0, -0.030 * (1 - t) ** 1.5),
+    "PF-BrowRaise": lambda t: (0.0, -0.024 + 0 * t),
+    "PF-BrowLower": lambda t: (0.0, 0.012 + 0.006 * (1 - t)),
+    "PF-BrowFurrow": lambda t: (-0.010 * (1 - t), 0.016 * (1 - t) ** 1.2),
+    "PF-BrowSad": lambda t: (0.0, -0.026 * (1 - t) ** 1.5 + 0.008 * t),
+    "PF-BrowOuterUp": lambda t: (0.0, -0.022 * t ** 1.5),
+}
+SIDED = ("PF-Blink", "PF-Squint", "PF-BrowInnerUp", "PF-BrowRaise", "PF-BrowLower", "PF-BrowFurrow")
+
+
 def build():
     pieces = {}
     for side, tag in ((1, "L"), (-1, "R")):
@@ -206,12 +257,27 @@ def build():
             xh = eye_to_xh(uv, side)
             if side < 0:
                 f = f[:, ::-1]
-            pieces["V2Eye_%s_%s" % (name, tag)] = (project(xh, LIFT[name]), f, COL[name])
+            keys = {}
+            for kname in EYE_KEYS:
+                P = project(eye_to_xh(eye_key_uw(name, uv, kname), side), LIFT[name])
+                keys[kname] = P
+                if kname in SIDED:
+                    keys["%s_%s" % (kname, tag)] = P
+            pieces["V2Eye_%s_%s" % (name, tag)] = (project(xh, LIFT[name]), f, COL[name], keys)
         poly = brow_shape(side)
         xy, f = tri_poly(poly, 0.00002)
         if side < 0:
             f = f[:, ::-1]
-        pieces["V2Brow_%s" % tag] = (project(xy, LIFT["brow"]), f, COL["brow"])
+        t = np.clip((np.abs(xy[:, 0]) - 0.044) / (0.357 - 0.044), 0, 1)
+        keys = {}
+        for kname, fn in BROW_KEYS.items():
+            d = np.array([fn(ti) for ti in t])
+            xy2 = xy + np.stack([side * d[:, 0], d[:, 1]], -1)
+            P = project(xy2, LIFT["brow"])
+            keys[kname] = P
+            if kname in SIDED:
+                keys["%s_%s" % (kname, tag)] = P
+        pieces["V2Brow_%s" % tag] = (project(xy, LIFT["brow"]), f, COL["brow"], keys)
     line, inner = ear_shapes()
     for side, tag in ((1, "L"), (-1, "R")):
         for nm, poly in (("ear_in", inner), ("ear_line", line)):
@@ -248,7 +314,10 @@ def build():
 if __name__ == "__main__":
     pieces = build()
     out = {}
-    for k, (v, f, c) in pieces.items():
+    for k, val in pieces.items():
+        v, f, c = val[:3]
         out[k + "__v"] = v.astype(np.float32); out[k + "__f"] = f.astype(np.int32); out[k + "__c"] = np.array(c)
+        for kn, P in (val[3] if len(val) > 3 else {}).items():
+            out[k + "__k" + kn] = P.astype(np.float32)
     np.savez_compressed(sys.argv[1], **out)
     print(len(pieces), "pieces:", ", ".join(sorted(pieces)))

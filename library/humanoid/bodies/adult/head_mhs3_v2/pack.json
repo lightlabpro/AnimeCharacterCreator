@@ -1,0 +1,8 @@
+{
+  "id": "head_mhs3_v2",
+  "display_name": "MHS3 head v2 (test, head only)",
+  "library": "humanoid",
+  "slot": "body_adult",
+  "socket": "SOC-Neck",
+  "notes": "Head only (v2): new sculpted head - real mouth cavity, tooth arches and tongue; face pieces on the curved face (no view keys). One mesh per element (CHR_*)."
+}
