@@ -1,0 +1,43 @@
+{
+ "region": "face_v2",
+ "subject": "front view of an adult male anime head (toon shaded, hair on) compared with the official MHS3 render of Leo, framed so the distance D from the pupil line to the chin bottom is 300 px in both pictures",
+ "reference_style": "Monster Hunter Stories 3 official character render (Leo): semi-realistic anime, flat toon colours with soft painted shadow edges, thin dark-brown outlines",
+ "features": {
+  "lower_face_width": {
+   "reference": "The visible face outline (between the side hair) is about 1.3 D wide at the nose and narrows smoothly with a convex curve to the chin; much of the upper cheek edge is covered by side hair and sideburns.",
+   "ours": "Face width 1.20 D at the nose, 1.06 D at the mouth line, 0.85 D at 0.75 D, 0.62 D at 0.85 D; the outline below the ear is a gently convex curve to the chin; the side hair covers only the temples, so the full cheek edge is visible."
+  },
+  "jaw_corner_and_chin": {
+   "reference": "Soft jaw corner low on the face, then a short rounded turn into a flat chin.",
+   "ours": "No distinct jaw corner; a straight diagonal into a narrow rounded chin about 0.25 D wide."
+  },
+  "cheek_and_face_planes": {
+   "reference": "The front of the face reads as one broad lit surface with soft rounded cheeks; a single soft-edged shadow band along the far cheek and a darker shadow under the fringe.",
+   "ours": "The front of the face is one lit surface; the far side has a hard-edged shadow strip from the temple to the jaw that turns sharply at the cheek, so the face reads as a front plane plus side planes."
+  },
+  "ears": {
+   "reference": "Ears small, close to the head, top at brow level and bottom at the nose bottom, the near ear partly covered by hair; inner ear drawn with darker shapes.",
+   "ours": "Ears small and close to the head, top at about the eye line, mostly covered by the side hair; only the lower edge shows below the hair at nose level."
+  },
+  "eyes": {
+   "reference": "Eye width 0.32 D, eyes 0.72 D apart; thick dark upper lash; iris about 0.65 of the eye width, little white showing; brows thick, about 0.10 D above the lash at the inner end and angled down toward the nose.",
+   "ours": "Eye width 0.33 D, eyes 0.72 D apart; thick dark upper lash with a short wing; iris about 0.55 of the eye width with white showing on both sides; brows thick, about 0.18 D above the upper lash and nearly level, only slightly lower at the inner end."
+  },
+  "nose_and_mouth": {
+   "reference": "Nose: a light highlight shape on the bridge and a small warm shadow under the tip at 0.49 D; mouth a thin dark line 0.49 D wide at 0.64 D with a short lower-lip shade below.",
+   "ours": "Nose: a thin light highlight on the bridge and a small warm shadow under the tip at 0.49 D; mouth a thin dark line 0.49 D wide at 0.64 D that breaks into small dots toward both ends, with a short lower-lip shade below."
+  },
+  "outline": {
+   "reference": "Thin dark-brown outline around the face, ears and jaw, plus interior lines in the ear and hair.",
+   "ours": "Very thin light-brown outline around the head, hard to see against the skin; no interior lines on the ear."
+  },
+  "neck": {
+   "reference": "Neck mostly hidden by the collar; where visible it is about 0.75 D wide and in shadow under the jaw.",
+   "ours": "Neck a long visible column about 0.62 D wide, shadow on the upper part under the jaw and a lit band lower down."
+  },
+  "hair_framing": {
+   "reference": "The hair is big and frames the face: the fringe comes down over the brows, the side hair covers the temples and the upper edge of the cheeks down to about the eye line on both sides.",
+   "ours": "The hair is larger and sits lower: the fringe falls over the brows between the eyes and to the near eye, the side hair covers the temples and the upper cheek edges down to about the eye line on both sides; the ears' tops are covered and only a small lower ear shows at nose level. The fringe is many thin spiky strands rather than a few broad clumps."
+  }
+ }
+}
