@@ -1,0 +1,6 @@
+[
+ {"id": "fl_head_box", "page": 106, "rule": "On a head in two-point perspective the turning edge between the front and side planes runs through the brow peak and temple, and the nose underside and upper lip each show their own planes."},
+ {"id": "fl_straight_curve", "page": 163, "rule": "Appealing shapes pair a straight side against a curved side; mirrored bulges (sausage, tube, pinch shapes) look lifeless."},
+ {"id": "fl_neck_oppose", "page": 85, "rule": "The neck opposes the curve of the back (shown by the sternocleidomastoid) and is never a straight tube."},
+ {"id": "fl_tangent", "page": 148, "rule": "Two lines that just touch (a tangent) flatten depth; one form should overlap the other in a T junction."}
+]
