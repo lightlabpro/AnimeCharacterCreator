@@ -309,9 +309,11 @@ def build():
     # mouth-line fix (q24): ends kept >= ~0.0045 H thick (sub-pixel ends rendered as dots), lifted to 0.50 mm
     # q25: drawn-line shape - heavier in the middle third, tapering to rounded ends (was an even bar)
     def th(u):
-        return 0.0036 + 0.0042 * (1 - np.clip(abs(u), 0, 1) ** 2) ** 1.5   # q25 ends 0.0036: cover corner flecks
-    top = [(u * ML.MW, ML.line(u * ML.MW) - 0.30 * th(u) - 0.0012) for u in xs]
-    bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.70 * th(u) - 0.0012) for u in xs[::-1]]
+        au = abs(u)
+        corner = 0.0048 * np.exp(-((au - 0.97) / 0.045) ** 2)       # q25: small rounded corner accents (cover the
+        return 0.0034 + 0.0042 * (1 - np.clip(au, 0, 1) ** 2) ** 1.5 + corner   # dark corner bridge faces at rest)
+    top = [(u * ML.MW, ML.line(u * ML.MW) - 0.42 * th(u) - 0.0010) for u in xs]
+    bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.58 * th(u) - 0.0010) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)
     pieces["V2MouthLine"] = (project(xy, LIFT["mouth"]), f, COL["mouth"])
     return pieces
