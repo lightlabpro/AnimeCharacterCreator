@@ -1,0 +1,39 @@
+{
+ "region": "face_v2",
+ "subject": "front view of an adult male anime head (toon shaded, hair on) compared with the official MHS3 render of Leo, framed so the distance D from the pupil line to the chin bottom is 300 px in both pictures",
+ "reference_style": "Monster Hunter Stories 3 official character render (Leo): semi-realistic anime, flat toon colours with soft painted shadow edges, thin dark-brown outlines",
+ "features": {
+  "lower_face_width": {
+   "reference": "Face width measured on the clean left half and doubled: 1.32 D at 0.5 D below the pupils (nose), 1.24 D at the mouth line (0.64 D), still about 1.2 D at 0.85 D; the cheek outline runs almost vertically from below the ear down to 0.85 D.",
+   "ours": "Face width: 1.41 D at 0.5 D below the pupils (nose), 1.24 D at the mouth line (0.64 D), 1.13 D at 0.75 D and 0.88 D at 0.85 D; the cheek outline runs nearly vertically below the ear to about 0.75 D, then turns inward."
+  },
+  "jaw_corner_and_chin": {
+   "reference": "Jaw corner low, at about 0.85 D below the pupils, then a short rounded turn into a broad flat chin about 0.37 D wide at the bottom.",
+   "ours": "Jaw corner at about 0.8 D below the pupils, then a rounded turn into a chin about 0.35 D wide at the bottom."
+  },
+  "cheek_and_face_planes": {
+   "reference": "The front of the face reads as one broad lit surface with soft rounded cheeks; a single soft-edged shadow band along the far cheek and a darker shadow under the fringe.",
+   "ours": "The front of the face is one lit surface; the far side has a hard-edged shadow strip from the temple to the jaw that turns sharply at the cheek, so the face reads as a front plane plus side planes."
+  },
+  "ears": {
+   "reference": "Ears small, close to the head, top at brow level and bottom at the nose bottom, the near ear partly covered by hair; inner ear drawn with darker shapes.",
+   "ours": "Ears stick out sideways from the head like flat fins in front view, top just under the eye line and bottom below the nose bottom, not covered by hair."
+  },
+  "eyes": {
+   "reference": "Eye width 0.32 D, eyes 0.72 D apart (pupil to pupil); thick dark upper lash line; iris large with a darker top band and one white highlight; brows thick, set low and angled down toward the nose.",
+   "ours": "Eye width 0.33 D, eyes 0.72 D apart; thick dark upper lash with a short wing; iris large with a darker top band, dark rim and one white highlight; brows thick, set a little higher above the eyes and nearly level."
+  },
+  "nose_and_mouth": {
+   "reference": "Nose: a light highlight shape on the bridge and a small warm shadow under the tip at 0.49 D; mouth a thin dark line 0.49 D wide at 0.64 D with a short lower-lip shade below.",
+   "ours": "Nose: a thin light highlight on the bridge and a small warm shadow under the tip at 0.49 D; mouth a thin dark line 0.49 D wide at 0.64 D with a short lower-lip shade below."
+  },
+  "outline": {
+   "reference": "Thin dark-brown outline around the face, ears and jaw, plus interior lines in the ear and hair.",
+   "ours": "Very thin light-brown outline around the head, hard to see against the skin; no interior lines on the ear."
+  },
+  "neck": {
+   "reference": "Neck mostly hidden by the collar; where visible it is about 0.75 D wide and in shadow under the jaw.",
+   "ours": "Neck a long visible column about 0.62 D wide, shadow on the upper part under the jaw and a lit band lower down."
+  }
+ }
+}

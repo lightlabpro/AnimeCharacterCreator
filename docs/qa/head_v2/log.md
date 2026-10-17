@@ -34,3 +34,20 @@ App: e2e_head_pack --id head_mhs3_v2 E2E OK. check_pack: head-only fails as n56,
 Known / not done: triangle budget; small white tooth ends at the corners of a wide-open mouth; no hair yet; a light
 stripe on the back of the neck in side view; ID- keys only for the four sliders the e2e checks.
 Boards: v2o_vs_n56_board.png, v2z_expressions_board.png, v2h_board.png, v2f_form_toon.png, v2_app_*.png.
+
+## q23 (2026-10-16/17) - "too blocky, nothing like anime": reference-match loop vs MHS3 Leo
+Sammy: "it looks too blocky and nothing like an anime or manga character. please keep iterating and use the
+references from mhs3 as target look. remember to use typesafe".
+- Softer form: jaw-line blend k 0.02 -> 0.05, rounder chin rows, smoother throat join (v3a).
+- Leo's hair (n56 hair) fitted onto v2 for the boards (pc_v2.attach_hair) - MHS3 heads read through their hair.
+- Reference-match judge (typesafe_visual_judge.py, menu blender/tools/visual_corrections/face_v2.json, analysis +
+  pictures in docs/qa/head_v2/judge, D = pupil-to-chin framed to 300 px in both):
+  - v3a: first_fix jaw_wider (both orders); every feature "off" except nose_mouth.
+  - v3b, v3c: jaw_wider again (my outline measurement of Leo: 1.24 D at the mouth, ~1.2 D at 0.85 D).
+  - v3c (jaw_wider excluded): ears_smaller_higher (both) -> applied (v3d): ears 0.01 -> 0.29.
+  - v3e: lower face set to Leo's measured widths -> looked square. Picture A/B against the Leo front
+    (typesafe_ab_compare.py): v3a beats v3c and v3e (overall, jaw_chin). Words and pictures disagreed: the outline
+    measurement includes Leo's cheek shadow / sideburn area. Jaw reverted to v3a, ears kept (v3f).
+  - v3f (jaw items excluded): face_rounder (both) -> applied (v3g); picture A/B v3f vs v3g: tie (no visible change).
+  - v3g (menu + hair_fit_lower_wider, brows_lower_angled, iris_bigger): hair_fit_lower_wider (both) -> applied in
+    pc_v2 (scale 0.90, 4 mm lower). Render v3h pending: Sammy's Blender stopped responding.

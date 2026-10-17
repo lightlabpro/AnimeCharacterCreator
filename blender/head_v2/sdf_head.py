@@ -47,16 +47,16 @@ SECT = knob("SECT", [
     [0.40,  0.3670, 0.408, 0.438, 2.9, 2.25],
     [0.45,  0.3630, 0.402, 0.418, 3.0, 2.25],
     [0.50,  0.3570, 0.394, 0.395, 2.8, 2.2],
-    [0.55,  0.3520, 0.393, 0.365, 2.5, 2.2],
-    [0.60,  0.3480, 0.393, 0.330, 2.3, 2.2],
-    [0.65,  0.3400, 0.390, 0.300, 2.3, 2.2],
-    [0.70,  0.3230, 0.386, 0.280, 2.3, 2.2],
-    [0.75,  0.3100, 0.382, 0.270, 2.3, 2.2],
-    [0.80,  0.2720, 0.376, 0.270, 2.3, 2.2],
-    [0.85,  0.2320, 0.364, 0.270, 2.4, 2.2],
-    [0.90,  0.1900, 0.350, 0.270, 2.6, 2.2],
-    [0.95,  0.1450, 0.330, 0.270, 2.8, 2.2],
-    [1.00,  0.0850, 0.295, 0.270, 2.8, 2.2],
+    [0.55,  0.3520, 0.393, 0.365, 2.20, 2.2],
+    [0.60,  0.3480, 0.393, 0.330, 2.00, 2.2],
+    [0.65,  0.3400, 0.390, 0.300, 2.00, 2.2],
+    [0.70,  0.3230, 0.386, 0.280, 2.00, 2.2],
+    [0.75,  0.3100, 0.382, 0.270, 2.00, 2.2],
+    [0.80,  0.2720, 0.376, 0.270, 2.00, 2.2],   # q23: jaw_wider tried (v3b-v3e) and reverted: picture A/B vs Leo preferred v3a
+    [0.85,  0.2320, 0.364, 0.270, 2.00, 2.2],
+    [0.90,  0.1900, 0.350, 0.270, 2.00, 2.2],
+    [0.95,  0.1450, 0.330, 0.270, 2.00, 2.2],
+    [1.00,  0.0850, 0.295, 0.270, 2.00, 2.2],
     [1.03,  0.0000, 0.000, 0.000, 2.4, 2.2],
 ])
 
@@ -71,13 +71,13 @@ NOSE = knob("NOSE", dict(
     ala=(0.030, 0.703, 0.020, 0.018, 0.0)))
 BROW = knob("BROW", dict(h=0.370, rh=0.050, halfw=0.33, A=0.006, glabella=0.0))
 SOCKET = knob("SOCKET", dict(x=0.185, h=0.447, rx=0.120, rh=0.070, A=-0.010))
-CHEEK = knob("CHEEK", dict(x=0.240, h=0.590, rx=0.125, rh=0.090, A=0.0))
+CHEEK = knob("CHEEK", dict(x=0.240, h=0.590, rx=0.125, rh=0.090, A=0.006))   # q23 TypeSafe face_rounder
 MUZZLE = knob("MUZZLE", dict(h=0.790, rx=0.185, rh=0.095, A=0.004))
 LIPS = knob("LIPS", dict(line=0.800, up_h=0.783, up_rh=0.020, up_w=0.130, up_A=0.004, bow=0.0,
                          lo_h=0.822, lo_rh=0.020, lo_w=0.105, lo_A=0.005, groove_A=-0.0015, groove_rh=0.005))
 CHIN = knob("CHIN", dict(h=0.94, rx=0.11, rh=0.05, A=0.008, labial_h=0.870, labial_A=0.0))
-JAW = knob("JAW", dict(gonion=(0.075, 0.800), chin=(-0.300, 1.000), k=0.020))   # (y, h) points of the jaw line
-NECK = knob("NECK", dict(c=(0.0, 0.100), rx=0.160, ry=0.180, h0=0.62, h1=1.40, k=0.045))
+JAW = knob("JAW", dict(gonion=(0.075, 0.800), chin=(-0.300, 1.000), k=0.050))   # (y, h) points of the jaw line
+NECK = knob("NECK", dict(c=(0.0, 0.100), rx=0.160, ry=0.180, h0=0.62, h1=1.40, k=0.065))
 
 
 def to_h(z):
@@ -137,7 +137,7 @@ def loft(p):
 
 # Ear: between the eye tops and the nose bottom (AnimeOutline ears; Leo), about 1/4 of the face tall, set back of the
 # middle of the head depth, flared out ~18 degrees and leaned back ~12 degrees. Rim (helix) kept, inside recessed.
-EAR = knob("EAR", dict(c=(0.0, 0.080, 0.560), a=0.072, b=0.160, top_flare=0.30, t=0.032, flare=20.0, lean=12.0,
+EAR = knob("EAR", dict(c=(0.0, 0.080, 0.540), a=0.072, b=0.145, top_flare=0.30, t=0.032, flare=14.0, lean=12.0,
                        recess=0.010, k=0.018, x_in=0.012))
 
 

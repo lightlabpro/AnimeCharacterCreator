@@ -1,0 +1,71 @@
+{
+ "region": "face_v2",
+ "note": "Head v2 (blender/head_v2). Each setting is one step; geometry steps need a rebuild (sdf_head.py SECT / knobs). Widths are half widths in head heights H.",
+ "corrections": [
+  {
+   "id": "jaw_wider",
+   "description": "Widen the lower face from the mouth down to the jaw corners so the cheeks run down more vertically and the jaw corner sits lower.",
+   "setting": "sdf_head.py SECT half width +0.035 at h 0.80-0.95"
+  },
+  {
+   "id": "jaw_narrower",
+   "description": "Narrow the lower face so it tapers more toward the chin.",
+   "setting": "sdf_head.py SECT half width -0.03 at h 0.80-0.95"
+  },
+  {
+   "id": "chin_wider_flatter",
+   "description": "Make the chin broader and flatter at the bottom instead of pointed.",
+   "setting": "sdf_head.py SECT half width +0.04 at h 0.97-1.0"
+  },
+  {
+   "id": "face_rounder",
+   "description": "Round the cheeks and jaw outline (softer curves, fewer flat planes).",
+   "setting": "sdf_head.py SECT NF -0.3 at h 0.55-1.0, CHEEK A +0.006"
+  },
+  {
+   "id": "face_flatter_front",
+   "description": "Make the front of the face flatter between the eyes and the cheeks.",
+   "setting": "sdf_head.py SECT NF +0.3 at h 0.45-0.65"
+  },
+  {
+   "id": "ears_smaller_higher",
+   "description": "Make the ears smaller, closer to the head and higher (top at brow level).",
+   "setting": "sdf_head.py EAR b -0.015, h -0.02, flare -6"
+  },
+  {
+   "id": "eyes_bigger",
+   "description": "Make the eyes larger (width and height together).",
+   "setting": "face_paint_v2.py E 0.33 D -> 0.36 D"
+  },
+  {
+   "id": "outline_thicker",
+   "description": "Make the dark outline around the head, jaw and ears thicker and more visible.",
+   "setting": "pc_v2.py head outline thickness 0.0009 -> 0.0016"
+  },
+  {
+   "id": "face_shadow_smaller",
+   "description": "Keep more of the face lit: the side shadow only a band at the far edge.",
+   "setting": "pc_v2.py face forward push 2.5 -> 3.2"
+  },
+  {
+   "id": "neck_thicker",
+   "description": "Make the neck thicker.",
+   "setting": "sdf_head.py NECK rx/ry +0.02"
+  },
+  {
+   "id": "hair_fit_lower_wider",
+   "description": "Fit the hair larger and lower on the head so the side hair covers the temples and the upper cheek edges and the fringe reaches the brows.",
+   "setting": "pc_v2.py attach_hair scale 0.845 -> 0.90, 4 mm lower"
+  },
+  {
+   "id": "brows_lower_angled",
+   "description": "Set the brows lower, closer to the eyes, and angle them down toward the nose (a determined look).",
+   "setting": "face_paint_v2.py brow inner end 0.012 H lower, outer end 0.004 H lower"
+  },
+  {
+   "id": "iris_bigger",
+   "description": "Make the iris larger inside the eye so less white shows.",
+   "setting": "face_paint_v2.py iris radii x1.15"
+  }
+ ]
+}

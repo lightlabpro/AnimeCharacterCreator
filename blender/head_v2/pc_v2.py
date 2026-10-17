@@ -172,8 +172,31 @@ def shots(name, expr="neutral", views=(("front", 0), ("34", 35), ("side", 90)), 
     return out
 
 
+def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 TypeSafe hair_fit_lower_wider
+    """Copy an n56 hair style onto v2 for the boards (MHS3 heads are read through their hair): every hair object is
+    moved from the n56 head (x 2.4, chin 1.4826, head height 0.262) onto v2 (x 0, chin ZT - H, H) and scaled by
+    H / 0.262 ~ 0.845 about the skull middle. Same materials / outline."""
+    from mathutils import Matrix
+    src = bpy.data.collections.get("NEW_HAIR_%s_%s" % (style, src_tag))
+    if src is None:
+        return 0
+    c0 = Vector((2.4, 0.0, 1.4826 + 0.5 * 0.262)); c1 = Vector((0.0, 0.006, ZT - 0.5 * H + dz))
+    M = Matrix.Translation(c1) @ Matrix.Scale(k, 4) @ Matrix.Translation(-c0)
+    n = 0
+    for o in src.all_objects:
+        if o.type != "MESH":
+            continue
+        cp = o.copy(); cp.data = o.data.copy(); cp.name = o.name.replace(src_tag, TAG) + "_v2"
+        cp.matrix_world = M @ o.matrix_world
+        cp.hide_render = False; cp.hide_viewport = False
+        col.objects.link(cp); n += 1
+    return n
+
+
 col = import_blend()
 shade(col)
+if globals().get("HAIR", "leo"):
+    print("hair objects:", attach_hair(col, globals().get("HAIR", "leo")))
 col.hide_render = True                     # n56 renders stay as they were
 bpy.app.driver_namespace["v2"] = {"shots": shots, "set_expr": set_expr, "col": col}
 print("v2 imported:", len(col.objects), "objects")
