@@ -157,7 +157,10 @@ def set_toon_normals(head, ell_mix=0.90):
     # the n56 skin material reads these: an_w (analytic-normal weight), shade (1 = lit), ear_f / ear_lw / ear_bowl
     # (ear line paint: the line shows where |ear_f - 1| < ear_lw, so ear_f = 0 means no line). v2 paints its ear
     # forms separately.
-    an_w = np.clip(1 - near_mouth, 0, 1) * (1 - ears) * (1 - neck)
+    # q25: no mouth falloff in an_w - at the seam vertices it dropped to 0, so the upper lip used its raw normals,
+    # which tilt down into the slit and fell in shadow (jagged patches above the mouth line). Cavity/lip-inner faces
+    # have their own flat materials, so the toon skin can keep the smooth analytic normal right up to the seam.
+    an_w = (1 - ears) * (1 - neck)
     for nm, arr in (("ell_w", w_ell), ("toon_w", w_toon), ("an_w", an_w), ("shade", np.ones(n)),
                     ("ear_f", np.zeros(n)), ("ear_lw", np.zeros(n)), ("ear_bowl", np.zeros(n))):
         a = me.attributes.get(nm) or me.attributes.new(nm, "FLOAT", "POINT")

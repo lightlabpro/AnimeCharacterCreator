@@ -305,11 +305,11 @@ def build():
     # mouth line (Leo: a thin dark-brown line, a touch heavier in the middle, ends fading), drawn just above the
     # geometry slit so it rides on the upper lip; it hides the slit's uneven rim when the mouth is closed
     import mouth_v2_line as ML
-    xs = np.linspace(-0.97, 0.97, 60)
+    xs = np.linspace(-1.03, 1.03, 64)   # q25: just past the slit corners (dark cavity wedges showed at the ends)
     # mouth-line fix (q24): ends kept >= ~0.0045 H thick (sub-pixel ends rendered as dots), lifted to 0.50 mm
     # q25: drawn-line shape - heavier in the middle third, tapering to rounded ends (was an even bar)
     def th(u):
-        return 0.0022 + 0.0042 * (1 - np.clip(abs(u), 0, 1) ** 2) ** 1.5
+        return 0.0027 + 0.0050 * (1 - np.clip(abs(u), 0, 1) ** 2) ** 1.5
     top = [(u * ML.MW, ML.line(u * ML.MW) - 0.30 * th(u) - 0.0012) for u in xs]
     bot = [(u * ML.MW, ML.line(u * ML.MW) + 0.70 * th(u) - 0.0012) for u in xs[::-1]]
     xy, f = tri_poly(Polygon(top + bot).buffer(0), 0.000004)

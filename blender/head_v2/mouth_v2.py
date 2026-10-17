@@ -26,7 +26,7 @@ import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 from mouth_v2_line import EYE_H, D, MY, MW  # noqa: E402  (one face layout for every script)
 M = dict(curve=0.006, sag=0.003, band=0.62, lip_in=0.0022, up_open=0.0060, lo_open=0.0075, depth1=0.0065,
-         depth2=0.024, x2=0.78, jaw_pivot=(0.055, 0.600), jaw_deg=11.0, bowl=0.0065, teeth_back=0.0040, teeth_rx=0.80,
+         depth2=0.024, x2=0.78, jaw_pivot=(0.055, 0.600), jaw_deg=11.0, bowl=0.0065, teeth_back=0.0040, teeth_rx=0.66,
          teeth_ry=0.0120, teeth_up=0.0055, teeth_vis=0.0005, lip_lift=0.0036, teeth_lo=0.0022, teeth_t=0.0012)
 
 
