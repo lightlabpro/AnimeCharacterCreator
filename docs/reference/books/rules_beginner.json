@@ -1,0 +1,8 @@
+[
+ {"id": "b_light_side", "page": 54, "rule": "A light source positioned at the top left or right gives more depth than one straight above the subject; light from below looks frightening."},
+ {"id": "b_front_props", "page": 84, "rule": "In the front view the head is about five eye-widths wide and seven high, the eyes are halfway from crown to chin, and there is one eye-width between the eyes."},
+ {"id": "b_mouth_line", "page": 84, "rule": "The line for the mouth is a little less than halfway between the line for the nose and the chin."},
+ {"id": "b_34_nose", "page": 85, "rule": "In the three-quarter view the nose bridge angles in toward the centre of the eyes and then angles out from the centre to the base of the nose."},
+ {"id": "b_profile_eye", "page": 86, "rule": "In the side view the eye is drawn as a triangle placed about a third of the way from the front edge of the head circle."},
+ {"id": "b_child", "page": 87, "rule": "A child's eyes are placed below the middle of the head, giving a bigger forehead, with a wide head and small features."}
+]

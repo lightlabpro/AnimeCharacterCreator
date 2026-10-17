@@ -28,7 +28,9 @@ VIEW = dict(
     IRIS_FAR=0.85,
     SIDE_C=0.50,       # profile: near eye screen width / front width (now about 0.79)
     IRIS_SIDE=0.55,
-    SIDE_GAP=0.10,     # profile: the eye keeps this gap behind the front silhouette
+    SIDE_GAP=0.10,
+    SIDE_SHIFT=0.0,    # q20: profile eye pushed toward the front line (eye half-widths, negative = forward); the soft clamp at
+                       # SIDE_GAP then flattens the inner corner into a blunt front edge (the cornea), not a pointed almond     # profile: the eye keeps this gap behind the front silhouette
     SOFT=0.10,         # soft clamp width at the bridge / silhouette (eye half-widths)
     R_IN=0.14, R_OUT=0.6, R_V=0.45, R_UP=0.8,   # skin falloff around the eye+brow box (eye half-widths)
     LIT_MM=0.0010, LIT_Y=-0.060, PUSH=0.0015, VIEW_LIT=1, MIN_SLOPE=0.35, BOX_FADE=0.3, FIT_DEPTH=0, PUSH_BACK=0.0035, SKIP=("NewNose", "NewMouth", "NewLip"), COLUMN=1,     # v2: skin moved this far (m) by a view key is drawn fully lit (eye_lit)
@@ -216,7 +218,7 @@ def _maps(g, br, th, near_only):
 
             def fe(x, z, u_in=u_in, c=c):
                 lo = np.array([g.sil(zz, br) for zz in np.atleast_1d(z)]) + VIEW["SIDE_GAP"] * w2m
-                return _soft_lo(u_in + c * (x - x_in), lo, k)
+                return _soft_lo(u_in + VIEW["SIDE_SHIFT"] * w2m + c * (x - x_in), lo, k)
             fb = fe
             ci = VIEW["IRIS_SIDE"]
             fi = (lambda x, z, fe=fe, ci=ci, x_ic=x_ic: fe(np.full(np.size(x), x_ic), z) + ci * (x - x_ic))

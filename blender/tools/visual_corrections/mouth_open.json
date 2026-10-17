@@ -1,0 +1,26 @@
+{
+ "region": "mouth_open",
+ "note": "q19 (2026-10-16): open mouth at 3/4 and front - placement inside the face at 3/4 (the far cheek line moves out on the VW-Yaw keys), teeth band, interior depth (throat band over the tongue), tongue height. Each entry is one step on one constant in blender/newhead/mouth_rig.py.",
+ "corrections": [
+  {"id": "far_cheek_further_out", "description": "At 3/4, move the far cheek and jaw outline further out so the mouth sits further inside the face.", "setting": "mouth_rig.py CHEEK_VIEW_PUSH +0.006"},
+  {"id": "far_cheek_less_out", "description": "At 3/4, bring the far cheek and jaw outline back in, closer to the mouth.", "setting": "mouth_rig.py CHEEK_VIEW_PUSH -0.006"},
+  {"id": "mouth_toward_near_side", "description": "At 3/4, slide the whole mouth toward the near cheek (away from the far outline).", "setting": "mouth_rig.py MOUTH_YAW_SHIFT -0.003"},
+  {"id": "mouth_toward_far_side", "description": "At 3/4, slide the whole mouth toward the far cheek.", "setting": "mouth_rig.py MOUTH_YAW_SHIFT +0.003"},
+  {"id": "teeth_thicker", "description": "Make the upper teeth band taller.", "setting": "mouth_rig.py MOUTH_TEETH_H +0.0015"},
+  {"id": "teeth_thinner", "description": "Make the upper teeth band thinner.", "setting": "mouth_rig.py MOUTH_TEETH_H -0.0015"},
+  {"id": "teeth_shorter", "description": "Make the teeth band stop further from the mouth corners.", "setting": "mouth_rig.py MOUTH_TEETH_W -0.08"},
+  {"id": "teeth_longer", "description": "Let the teeth band reach closer to the mouth corners.", "setting": "mouth_rig.py MOUTH_TEETH_W +0.08"},
+  {"id": "teeth_more_shade", "description": "Draw more of the teeth band (its lower part) in the cool grey shade.", "setting": "mouth_rig.py MOUTH_TEETH_SHADE +0.15"},
+  {"id": "teeth_less_shade", "description": "Draw less of the teeth band in the grey shade (whiter teeth).", "setting": "mouth_rig.py MOUTH_TEETH_SHADE -0.15"},
+  {"id": "teeth_ends_pointier", "description": "Taper the ends of the teeth band to sharper points.", "setting": "mouth_rig.py MOUTH_TEETH_TAPER +0.4"},
+  {"id": "teeth_ends_blunter", "description": "Make the ends of the teeth band rounder and blunter.", "setting": "mouth_rig.py MOUTH_TEETH_TAPER -0.4"},
+  {"id": "throat_band_taller", "description": "Make the medium red-brown band above the tongue taller.", "setting": "mouth_rig.py MOUTH_THROAT +0.08"},
+  {"id": "throat_band_smaller", "description": "Make the medium red-brown band above the tongue smaller.", "setting": "mouth_rig.py MOUTH_THROAT -0.08"},
+  {"id": "tongue_higher", "description": "Let the tongue fill more of the opening (higher top edge).", "setting": "mouth_rig.py MOUTH_TONGUE_FRAC +0.06"},
+  {"id": "tongue_lower", "description": "Make the tongue fill less of the opening (lower top edge).", "setting": "mouth_rig.py MOUTH_TONGUE_FRAC -0.06"},
+  {"id": "corners_rounder", "description": "Round the corners of open talking mouths more (the top edge curls down at the ends).", "setting": "mouth_rig.py MOUTH_CORNER_DIP +0.003"},
+  {"id": "corners_sharper", "description": "Make the corners of open talking mouths sharper (straighter top edge).", "setting": "mouth_rig.py MOUTH_CORNER_DIP -0.003"},
+  {"id": "mouth_higher", "description": "Move the mouth up, closer to the nose.", "setting": "build_head.py MOUTH_Z +0.008"},
+  {"id": "mouth_lower", "description": "Move the mouth down, closer to the chin.", "setting": "build_head.py MOUTH_Z -0.008"}
+ ]
+}

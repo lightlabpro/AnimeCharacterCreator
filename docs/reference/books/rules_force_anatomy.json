@@ -1,0 +1,47 @@
+[
+ {
+  "id": "f_jaw_lower_plane",
+  "page": 97,
+  "rule": "When drawing the jaw, keep in mind the lower plane of the jaw."
+ },
+ {
+  "id": "f_halves",
+  "page": 99,
+  "rule": "The facial features (eyes, nose and mouth) lie on lines that stay parallel to each other in perspective across the head."
+ },
+ {
+  "id": "f_parallel_lines",
+  "page": 100,
+  "rule": "The angles of the line across the eyes, the nostrils and the mouth line are parallel to one another."
+ },
+ {
+  "id": "f_masks",
+  "page": 101,
+  "rule": "The face can be simplified into an eye mask and a mouth mask to draw expressions."
+ },
+ {
+  "id": "f_lid_apex",
+  "page": 103,
+  "rule": "The peaks of the upper and lower eyelid edges are offset from each other; aligning them horizontally looks static."
+ },
+ {
+  "id": "f_iris_ellipse",
+  "page": 104,
+  "rule": "An iris seen at an angle is an asymmetrical ellipse where one side is wider or more curved than the other."
+ },
+ {
+  "id": "f_mouth_teeth",
+  "page": 105,
+  "rule": "The mouth wraps around the curvature of the teeth, and a centre line divides the lips into quadrants defining top and bottom surfaces."
+ },
+ {
+  "id": "f_profile_contour",
+  "page": 113,
+  "rule": "In profile, the face contour alternates convex and concave curves with crisp changes of direction; smoothing them out is a mistake."
+ },
+ {
+  "id": "f_ear",
+  "page": 116,
+  "rule": "The ear contains a Y-like shape, fits in a rectangle that shows its proportion, and has thickness."
+ }
+]

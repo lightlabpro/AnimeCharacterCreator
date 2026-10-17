@@ -1,0 +1,20 @@
+[
+ {"id": "r_eye_half", "page": 185, "rule": "Eye level is at about half of the whole head: eye level to chin equals eye level to the top of the skull."},
+ {"id": "r_small_features", "page": 196, "rule": "The main features (eye, nose, mouth) occupy a surprisingly small part of the whole head shape."},
+ {"id": "r_ear_profile", "page": 191, "rule": "In profile, the distance from eye level to chin equals the distance from the back of the eye to the back of the ear."},
+ {"id": "r_ear_bottom", "page": 192, "rule": "The bottom of the ear is level with the space between the nose and the mouth."},
+ {"id": "r_neck_join", "page": 192, "rule": "The back of the neck joins the skull at about the level of the nose or upper lip, higher than the chin."},
+ {"id": "r_mouth_centreline", "page": 200, "rule": "The centreline of the mouth is the only true edge of the mouth; the upper and lower lip contours are only colour changes and should be drawn lightly."},
+ {"id": "r_profile_mouth_descends", "page": 200, "rule": "In profile the centreline of the mouth often descends relative to horizontal toward the back."},
+ {"id": "r_profile_eye_slant", "page": 204, "rule": "In profile the whole eye shape slants back at an angle from the front of the profile, and the eyelids have visible thickness."},
+ {"id": "r_cast_shadow_lips", "page": 210, "rule": "Light logic: cast shadows are formed under the nose and under the lips, and these shadow shapes give the face its form."},
+ {"id": "r_eye_gap", "page": 226, "rule": "In the frontal view the space between the eyes is about one eye width."},
+ {"id": "r_mouth_third", "page": 227, "rule": "In the frontal view the centreline of the mouth is about a third of the way from the bottom of the nose to the chin."},
+ {"id": "r_mouth_width", "page": 227, "rule": "In the frontal view the outside corners of the mouth fall about under the centres of the pupils; mouths are wider than you think."},
+ {"id": "r_nose_width", "page": 227, "rule": "In the frontal view the edges of the nostrils fall under the inside corners of the eyes."},
+ {"id": "r_34_mouth_turned", "page": 229, "rule": "In three-quarter view the mouth from its centre to the corner is shorter on the turned side and shaped differently from the near side."},
+ {"id": "r_34_eye_turned", "page": 229, "rule": "In three-quarter view the eye on the turned side is narrower and shaped differently from the near eye."},
+ {"id": "r_34_axis", "page": 230, "rule": "In three-quarter view the central axis passes through the centre of the bridge of the nose and the middle of the upper lip, and the eye level line stays at right angles to it."},
+ {"id": "r_34_near_eye_gap", "page": 232, "rule": "In three-quarter view the near eye is set about one full eye width away from the edge of the nose."},
+ {"id": "r_34_ear", "page": 233, "rule": "In three-quarter view eye level to chin equals the front of the eye to the back of the ear."}
+]

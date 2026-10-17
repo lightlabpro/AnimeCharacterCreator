@@ -1,0 +1,27 @@
+[
+ {
+  "id": "p_diminish_both",
+  "page": 31,
+  "rule": "Depth needs both the size and the spacing of repeated objects to shrink as they recede."
+ },
+ {
+  "id": "p_foreshorten_flat",
+  "page": 36,
+  "rule": "The closer a surface is to the eye level or to the vanishing direction, the flatter it appears."
+ },
+ {
+  "id": "p_ellipse_offset",
+  "page": 84,
+  "rule": "A circle in perspective is an ellipse whose widest point is offset from the centre of its perspective square, toward the near side."
+ },
+ {
+  "id": "p_ellipse_no_points",
+  "page": 90,
+  "rule": "Ellipses do not have points: the ends of a foreshortened circle stay rounded."
+ },
+ {
+  "id": "p_block_first",
+  "page": 75,
+  "rule": "Establish the size and big proportions of the whole drawing in light lines first, before details."
+ }
+]

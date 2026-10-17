@@ -88,7 +88,11 @@ EAR_SPLIT = 1            # ear shells moved to their own object with a Subdivisi
 EAR_SUBDIV = 2           # its render/viewport level
 MOUTH_RIG = 1            # q14: mouth pieces + PF-Mouth* / PF-NoseSneer keys (mouth_rig.py)
 EAR_REBUILD = 1          # q13: rebuild the ear as a clean MHS3 ear mesh (ear_mhs3.py); 0 = the old shell
-EAR_LINE_W = 0.028       # half width of the ear C line in the bowl field (bigger = thicker)
+EAR_LINE_W = 0.028
+MOUTH_DZ = 0.0           # q20: moves the mouth (pieces + lip sculpt) down (-) / up (+) in H after the eyes json value
+LIP_UPPER = 0.0          # q20: upper lip pushed forward (H) - Buscema: the upper lip sits farther forward than the lower one
+LIP_LOWER = 0.0          # q20: lower lip pushed forward (H)
+LIP_W = 1.0              # q20: width of the lip push (share of the painted mouth half-width at full push)       # half width of the ear C line in the bowl field (bigger = thicker)
 
 
 def smooth(e0, e1, x):
@@ -122,6 +126,26 @@ def load(npz, tag, off_x):
         a = me.attributes.get(nm) or me.attributes.new(nm, "FLOAT", "POINT")
         a.data.foreach_set("value", np.asarray(val, np.float32))
     return ob, col, V, D, LID
+
+
+def lip_sculpt(me, V):
+    """q20: lip volume in profile. The head had no upper lip: from the nose base the skin ran straight down into the
+    mouth, so the side view showed a notch and the 3/4 outline no lip (Sammy q20). Pushes the skin forward (-y) in two
+    bumps: the upper lip (nose base down to the mouth line, peak just above it) and a smaller lower lip under it."""
+    P = head_coords(V)
+    x, y, z = P[:, 0], P[:, 1], P[:, 2]
+    hw = MOUTH_HW * MOUTH_LINE_W * LIP_W
+    wx = 1 - smooth(0.75 * hw, 1.45 * hw, np.abs(x))
+    wy = smooth(-0.26, -0.36, y)                                       # front skin only (not the cheeks behind)
+    zt, zp, zm = NOSE_Z - 0.010, MOUTH_Z + 0.010, MOUTH_Z - 0.002
+    up = np.where(z > zp, 1 - smooth(zp, zt, z), smooth(zm, zp, z))
+    lp, lb = MOUTH_Z - 0.020, MOUTH_Z - 0.048
+    lo = np.where(z > lp, 1 - smooth(lp, zm, z), smooth(lb, lp, z))
+    d = (LIP_UPPER * up + LIP_LOWER * lo) * wx * wy * S
+    V = V.copy(); V[:, 1] -= d
+    me.vertices.foreach_set("co", V.astype(np.float32).ravel()); me.update()
+    print("q20 lip sculpt: %d verts, max %.1f mm" % (int((d > 1e-5).sum()), 1000 * float(d.max())))
+    return V
 
 
 def head_coords(V):
@@ -656,6 +680,7 @@ def _strip(name, rows, mat, col, off_x):
 
 EYE_PAINT = {}       # knob overrides for eye_paint.py (the judge loop sets them here)
 EYE_VIEW = {}        # v1: knob overrides for view_keys.py (look_knobs.json "view")
+MOUTH_OVR = {}       # q20: look_knobs.json "mouth" -> mouth_rig.py constants
 
 
 def _target_normals(Ph):
@@ -1038,6 +1063,8 @@ def load_knobs(eyes_json):
             EYE_PAINT.update(val)
         elif name == "view":
             EYE_VIEW.update(val)
+        elif name == "mouth":                       # q20: mouth_rig.py constants (applied at the end of mouth_rig.py)
+            MOUTH_OVR.update(val)
         elif name in globals():
             globals()[name] = val
     return k
@@ -1050,8 +1077,11 @@ def run(npz, eyes_json, tag, off_x):
     EYE_X, EYE_Z = ej.get("eye_x", EYE_X), ej.get("eye_z", EYE_Z)
     EYE_HW, EYE_HH = ej.get("eye_hw", EYE_HW), ej.get("eye_hh", EYE_HH)
     MOUTH_Z, MOUTH_HW, NOSE_Z = ej.get("mouth_z", MOUTH_Z), ej.get("mouth_hw", MOUTH_HW), ej.get("nose_z", NOSE_Z)
+    MOUTH_Z = MOUTH_Z + MOUTH_DZ
     ob, col, V, D, LID = load(npz, tag, off_x)
     me = ob.data
+    if LIP_UPPER or LIP_LOWER:
+        V = lip_sculpt(me, V)
     P = head_coords(V)
     N = vertex_normals(me)
     global EAR_B

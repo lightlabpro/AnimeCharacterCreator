@@ -1,0 +1,9 @@
+[
+ {"id": "i_eyes_layer", "page": 29, "rule": "Start the head with a sphere and add the lower jaw, then guidelines for the eyes and nose; keep the eyes on a separate layer to adjust spacing and size."},
+ {"id": "i_profile_ear", "page": 36, "rule": "In profile the top of the ear is level with the start of the eyebrow and the bottom of the ear is level with the bottom of the nose; the ear is tilted, not vertical."},
+ {"id": "i_profile_mouth_corner", "page": 36, "rule": "In profile the corner of the mouth is in line with the front of the eye, and the bottom lip aligns with the forehead."},
+ {"id": "i_profile_nostril_mouth", "page": 36, "rule": "In profile the angle of the nostril line is generally parallel to the angle of the mouth."},
+ {"id": "i_front_thirds", "page": 38, "rule": "In the front view the distance from the brow line to the bottom of the nose is repeated below the nose to place the bottom of the chin."},
+ {"id": "i_front_mouth_iris", "page": 38, "rule": "In the front view the inner corner of the iris is in line with the corner of the mouth."},
+ {"id": "i_front_errors", "page": 38, "rule": "Common front-view errors are a face too large for the head, eyes too big or too wide, a forehead too small, and eyebrows too high."}
+]

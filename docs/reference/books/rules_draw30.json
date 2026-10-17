@@ -1,0 +1,11 @@
+[
+ {"id": "k_nook", "page": 19, "rule": "Draw dark nook-and-cranny shadows under and behind near objects to separate, define and identify them."},
+ {"id": "k_overlap_trumps", "page": 30, "rule": "Overlapping is always more powerful than size for making an object look closer."},
+ {"id": "k_thickness", "page": 37, "rule": "If the window or opening is on the right, its thickness is on the right; if it is on the left, the thickness is on the left."},
+ {"id": "k_peeking", "page": 56, "rule": "The short peeking line at the back interior of an opening is what makes the shape read as three-dimensional."},
+ {"id": "k_undershadow", "page": 57, "rule": "Undershadows under overlapping parts pull the near part forward and push the part under it deeper into the picture."},
+ {"id": "k_flat_vs_curved", "page": 155, "rule": "Flat surfaces facing away from the light take one smooth tone; curved surfaces take blended shading from dark to light."},
+ {"id": "k_upper_lip_dip", "page": 219, "rule": "The upper lip dips down in the centre and the ridges under the nose line up with this dip; the lower lip is made of two round shaded forms."},
+ {"id": "k_mouth_pupils", "page": 224, "rule": "In the front view vertical lines from the centre of the pupils position the corners of the lips."},
+ {"id": "k_iris_overlap", "page": 229, "rule": "The iris is a perfect circle tucked a little under the upper eyelid."}
+]

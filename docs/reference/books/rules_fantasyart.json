@@ -1,0 +1,10 @@
+[
+ {"id": "f_mouth_compare", "page": 12, "rule": "If the mouth looks off, compare with the reference to decide whether to move it up or down, make it smaller or larger, or change the values such as a darker top lip or a larger bottom lip."},
+ {"id": "f_angle_light", "page": 35, "rule": "Light the model from an angle rather than straight on; straight-on lighting makes the image look flat and hides the planes and contours of the form."},
+ {"id": "f_middle_shadow", "page": 37, "rule": "When lighting is too even from both sides it can cause a shadow that divides the model in half."},
+ {"id": "f_guidelines_tilt", "page": 58, "rule": "In the three-quarter view from below, the guidelines for the mouth, nose and eyes are not straight but tilted at about 15 degrees."},
+ {"id": "f_shadow_values", "page": 64, "rule": "Shadows are not just one tone but vary in lightness and darkness; subtle changes in shadow values create depth."},
+ {"id": "f_under_chin", "page": 65, "rule": "The area right under the chin is much darker than the middle section of the neck."},
+ {"id": "f_teeth_tongue", "page": 83, "rule": "Do not just create one big black shape for an open mouth; draw in the teeth and tongue to add energy to the expression."},
+ {"id": "f_no_pattern", "page": 130, "rule": "Never draw a face from a memorized pattern of an oval, dividing lines, almond eyes and a triangle nose, because it will not work from different angles."}
+]

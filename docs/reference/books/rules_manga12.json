@@ -1,0 +1,6 @@
+[
+ {"id": "r_open_mouth_shade", "page": 18, "rule": "If the mouth is open, shade the bottom of the opening to create a sense of depth."},
+ {"id": "r_lens_tones", "page": 15, "rule": "Several levels of tone plus a highlight make a round eye/lens read three-dimensional."},
+ {"id": "r_profile_eye", "page": 119, "rule": "In a manga profile the eye is a short wedge open toward the front, set back from the profile line, about as wide as it is tall, with the iris a narrow upright oval at its front."},
+ {"id": "r_ear_middle", "page": 20, "rule": "Ears placed near the middle of the head (front to back) make the head read human."}
+]

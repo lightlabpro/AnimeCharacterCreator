@@ -54,6 +54,10 @@ NAMES = [  # (prefix of the scene object, export name, material kind, colour fal
     ("NewMouthInside_", "CHR_MouthInside", "flat", (96, 56, 56)),
     ("NewMouthTeeth_", "CHR_TeethUpper", "flat", (240, 238, 232)),
     ("NewMouthTongue_", "CHR_Tongue", "flat", (210, 115, 95)),
+    ("NewMouthThroat_", "CHR_MouthThroat", "flat", (128, 60, 56)),        # q19
+    ("NewMouthTeethShade_", "CHR_TeethShade", "flat", (200, 198, 214)),   # q19
+    ("NewMouthDeep_", "CHR_MouthDeep", "flat", (60, 30, 30)),            # q20 (only when MOUTH_DEEP > 0)
+    ("NewUpperLip_", "CHR_UpperLipShade", "flat", (190, 130, 105)),      # q20 (only when UPPER_LIP_SHADE > 0)
     ("NewMouthLower_", "CHR_MouthLower", "flat", (90, 40, 35)),
     ("NewLipShadow_", "CHR_LipShadow", "flat", (190, 130, 105)),
 ]

@@ -1,0 +1,8 @@
+[
+ {"id": "d_flip", "page": 72, "rule": "Flip the image horizontally while working to catch features that drift or melt to one side."},
+ {"id": "d_skull_fit", "page": 114, "rule": "To draw heads well, know how the skull looks from every angle and fit the features piece by piece into that skull shape."},
+ {"id": "d_three_values", "page": 153, "rule": "Shade in three grey values (light, medium, dark); too many values break the balance of the shading."},
+ {"id": "d_flat_shadow", "page": 103, "rule": "After flat colours, pick a light source and add flat shadows using big simple shapes."},
+ {"id": "d_shaded_vs_dark", "page": 225, "rule": "Shaded areas are parts hidden from the light source, not areas that are simply dark coloured."},
+ {"id": "d_line_weight", "page": 109, "rule": "Thicker lines on parts such as the bottom of the arms give the character weight and the illusion of form."}
+]

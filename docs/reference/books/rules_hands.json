@@ -1,0 +1,7 @@
+[
+ {"id": "h_not_flat", "page": 7, "rule": "The hand is not a flat two-dimensional shape without volume but a three-dimensional body form."},
+ {"id": "h_palm_finger", "page": 22, "rule": "The palm from the centre of the wrist to the base of the middle finger is the same length as the middle finger."},
+ {"id": "h_face_hand", "page": 35, "rule": "If the base of the palm is level with the chin base, the fingers reach the brow and the middle finger touches the hairline."},
+ {"id": "h_brow_hand", "page": 36, "rule": "A hand laid sideways on the brow fits almost exactly between the hairline and the eyebrows; the palm placed sideways at the nose base reaches the base of the chin."},
+ {"id": "h_tonal_depth", "page": 82, "rule": "Advancing top surfaces are light, receding side planes take intermediate tones, and underplanes farthest from the light take the deepest values."}
+]

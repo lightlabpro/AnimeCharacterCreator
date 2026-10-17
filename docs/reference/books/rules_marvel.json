@@ -1,0 +1,13 @@
+[
+ {"id": "m_flatness", "page": 16, "rule": "Flatness ruins a drawing: everything you draw should seem to have thickness, bulk and depth."},
+ {"id": "m_face_cylinder", "page": 19, "rule": "The face is based upon a cylinder which has been cut off at the sides."},
+ {"id": "m_egyptian", "page": 66, "rule": "Without knowledge of foreshortening, figures end up looking like they were drawn on pyramids by the ancient Egyptians."},
+ {"id": "m_profile_square", "page": 74, "rule": "The head drawn in profile fits into a square with the nose and part of the chin protruding, and the eyes come midway between the top of the dome and the bottom of the chin."},
+ {"id": "m_nose_quarter", "page": 74, "rule": "If the skull is divided into four quarters from top to bottom, the nose is usually in the second quarter up from the chin, with the ears at about the same level."},
+ {"id": "m_mouth_triangle", "page": 76, "rule": "The width of the mouth is found with an equilateral triangle from the bridge of the nose through the outside of the nostrils to the mouth line."},
+ {"id": "m_mouth_forward", "page": 83, "rule": "In profile the mouth is placed well forward from the skull; the lower lip is fuller than the upper lip while the upper lip juts out farther forward."},
+ {"id": "m_nose_third", "page": 84, "rule": "In the female front view the nose is about one third of the way up from the top of the lip to the eye line."},
+ {"id": "m_eye_not_long", "page": 90, "rule": "Do not draw the eye too long and narrow; tilt it upward at the outside and draw the lashes as a mass."},
+ {"id": "m_upper_lip_forward", "page": 91, "rule": "Always place the upper lip farther forward than the lower one, without making the upper lip too thin."},
+ {"id": "m_underside_lines", "page": 126, "rule": "Lines heavier on the underside of the bodies, away from the light, give solidity to the figures."}
+]

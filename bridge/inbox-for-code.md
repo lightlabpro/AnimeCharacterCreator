@@ -128,5 +128,16 @@ Open items first. Claude Code reads this at session start and moves finished ite
   soft arc; teeth band narrower; open lens/shout corners rounded; open-mouth lip shadow closer and narrower.
   Still app-side: the skin shadow tint on the neck reads pink-mauve next to Blender's warm brown (toon skin shadow colour).
 
+- **2026-10-16 - new head pack meshes CHR_MouthThroat, CHR_TeethShade, CHR_MouthDeep, CHR_UpperLipShade (chat, q19/q20).**
+  Asset contract addition (docs/CLAUDE_BUILD_PROMPT.md names): four flat-colour mouth meshes in head_mhs3_n56, each its
+  own mesh with the same PF- / ID- keys as the other mouth strips:
+  CHR_TeethShade (200,198,214) sRGB - lower part of the teeth band; CHR_MouthDeep (60,30,30) - undershadow under the
+  teeth; CHR_UpperLipShade (190,130,105) - thin shade over the mouth line (upper lip plane); CHR_MouthThroat (128,60,56)
+  - throat band over the tongue, exported but zero-height while MOUTH_THROAT is 0. Deep / UpperLipShade only exist
+  when their knobs are on. Draw order is by small offsets off the skin (inside < throat < deep < tongue < teeth <
+  teeth shade < lower < line); the app's flat material must keep depth testing on for these to layer.
+  Please add the names to the contract / expected-contract.json if you keep them. e2e_head_pack passes (27 meshes).
+  Mouth is also lower and wider and the lips are pushed forward in the head mesh (same names).
+
 ## Done
 (none yet)

@@ -564,3 +564,40 @@ perspective is not right."
   still reads as "happy" (as in q17); with the smile corner dip it read "sad" at 3/4, hence the D exemption.
 - Process note: device_commit_files from a reused staging path wrote an older copy; stage every upload under a new path.
 Boards: q18_app_head.png, q18_mouth_refs.png.
+
+## q20 (2026-10-16) - teeth / tongue depth, upper lip, profile eye, mouth size and height; books
+Sammy: "fix the teeth and tongue, they look too flat and 2d (no depth) ... in perspective and side ... the eyes look
+elongated (like Egyptian drawings), the upper lip is not receiving shadows correctly ... looks like it has no upper
+lip, the mouth looks a bit smaller ... and the lower part of the face feels a bit stretched down." Plus: read every
+PDF in the Drawing folder with Claude and TypeSafe, and research anime face drawing online.
+- Book rules used (docs/reference/books/notes_*.md, rules_*.json): undershadow / nook shadows under overhangs make an
+  opening read deep (Kistler p57, manga12 p18 "if the mouth is open, the bottom should be shaded"); the upper lip has
+  its own down-facing plane and sits forward (Kistler p219, Buscema); profile eye = short wedge set back from the
+  profile, about as wide as tall, iris a narrow upright oval (manga12 p119, Chamba p36, online sources); mouth about
+  1/3 to 2/5 down from nose to chin (Chamba, Leo measured 38%); a long lower face ages the face (Rodgon p120).
+- Changes (look_knobs.json, all reversible knobs):
+  - mouth 3 mm lower (MOUTH_DZ -0.012 H) and wider (MOUTH_LINE_W 1.40 -> 1.62);
+  - upper / lower lip pushed forward in the mesh (apply_look.lip_sculpt, LIP_UPPER 0.022 H, LIP_LOWER 0.008 H, 234
+    verts, max 5.8 mm): the profile now shows an upper lip over the opening;
+  - painted upper-lip shade band over the top line (NewUpperLip -> CHR_UpperLipShade, lip-shadow colour) - shading on
+    the face front uses analytic normals, so the lip form needs paint as well as geometry;
+  - teeth band taller (MOUTH_TEETH_H 0.007 -> 0.022 H, cap 0.40 of the opening) with the lower 38% in the cool grey
+    (CHR_TeethShade), and a dark undershadow band right under the teeth (NewMouthDeep -> CHR_MouthDeep, (60,30,30));
+  - tongue arc rounder (DROOP 0.25 -> 0.75, FRAC 0.45); throat band left off (it z-fought into blocks);
+  - profile eye narrower (VIEW SIDE_C 0.68 -> 0.55, IRIS_SIDE 0.50);
+  - lip shadow uses exact skin depth (LIP_SHADOW_RAW) - the smoothed field put a spike past the profile.
+- TypeSafe A/B vs the q19 head (typesafe_ab_compare.py, both picture orders must agree; logs in q20_ab/):
+  final (m6): mouth_depth B, upper_lip B, profile_eye B, expression B; overall / eyes / nose_mouth / clean
+  "disagree" (no consistent winner), head_shape / jaw_chin tie; artifact scores equal or lower. Nothing got worse.
+  Three new aspects (profile_eye, mouth_depth, upper_lip) were added to the tool for this, because the references
+  (Leo front / 3/4, MHS3 mouths) show no profile.
+- Tried and dropped (TypeSafe said worse): v5 = the above plus NEAR_C 0.78, FAR_GAP_OUT 0.45, SIDE_C 0.36: A won
+  overall, head_shape, eyes, eye_layout, clean; artifacts 0.63 -> 0.87 (the far-eye gap and the very narrow side eye
+  deform the skin). e5 (eye knobs alone) the same. e7 (NEAR_C 0.78 alone) tie. SIDE_SHIFT (new knob, eye pushed to the
+  front line) hides the eye behind the brow ridge. A mid-band undershadow showed as a dark line through the teeth.
+- NOT fixed: the 3/4 near eye stretch and the far eye sitting at the cheek edge - every view-key setting tried made the
+  A/B worse. Needs a different approach (eye shape per view, not a compression of the front shape).
+- App: pack re-exported (27 meshes, + CHR_MouthDeep, CHR_UpperLipShade; inbox item), e2e_head_pack OK.
+- Books: Claude read (text + every page image) 14 of 32 so far; TypeSafe read all 32 books (run_q20a.log, 0 errors)
+  and checks every Claude rule against its page (run_q20b). Remaining Claude reads continue.
+Boards: q20_board.png (before / after: front, 3/4, side, mouth close-ups, eyes), q20_app_talk_aa_face*.png.

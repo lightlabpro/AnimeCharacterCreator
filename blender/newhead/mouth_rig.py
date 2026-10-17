@@ -45,6 +45,15 @@ def _mu():
 C_INSIDE = (0.117, 0.040, 0.040, 1)   # q17: MHS3 sampled (96,56,56) sRGB
 C_TEETH = (0.88, 0.86, 0.82, 1)
 C_TONGUE = (0.644, 0.171, 0.115, 1)   # q17: MHS3 sampled (210,115,95) sRGB
+C_THROAT = (0.216, 0.045, 0.04, 1)   # q19: MHS3 m02 / m08: a medium red-brown band at the back of the tongue, (128,60,56) sRGB
+C_TEETH_SHADE = (0.578, 0.565, 0.672, 1)   # q19: MHS3 m08 / m03: the lower part and the ends of the teeth band in a cool grey, (200,198,214) sRGB
+MOUTH_THROAT = 0.0        # q19: height of the throat band over the tongue arc (share of the centre opening); 0 = off
+MOUTH_TEETH_SHADE = 0.0   # q19: share of the teeth band (from its lower edge) drawn in C_TEETH_SHADE; 0 = off
+MOUTH_DEEP = 0.0          # q20: darker band at the top of the interior under the teeth (share of the opening); 0 = off
+C_DEEP = (0.045, 0.014, 0.014, 1)   # q20: (60,30,30) sRGB
+UPPER_LIP_SHADE = 0.0     # q20: thin shade band over the top line (upper lip plane); 0 = off
+LIP_SHADOW_RAW = 1        # q20: under-lip shadow follows the exact skin depth (no float / spike in profile)
+MOUTH_TEETH_TAPER = 0.5   # q19: exponent of the teeth band's end taper (0.5 round ends, 1.0+ pointed, thinner toward the corners)
 
 # each key: parameters of the mouth shape (anything not given stays at the closed default)
 MOUTH_KEYS = {
@@ -149,24 +158,30 @@ def build_mouth(ob, col, off_x, tag):
         y = (G[i0, j0] * (1 - ti) * (1 - tj) + G[i0 + 1, j0] * ti * (1 - tj) + G[i0, j0 + 1] * (1 - ti) * tj + G[i0 + 1, j0 + 1] * ti * tj)
         return Vector((x * S, float(y), O + z * S)) + Vector((0, -1, 0)) * lift
 
-    def rows_of(top, bot, lift):
+    def on_skin_raw(x, z, lift):
+        loc, _, _, _ = tree.ray_cast(Vector((x * S, -1.0, O + z * S)), Vector((0, 1, 0)))   # q20: one ray, no neighbour search
+        y = None if loc is None else loc.y
+        return None if y is None else Vector((x * S, float(y), O + z * S)) + Vector((0, -1, 0)) * lift
+
+    def rows_of(top, bot, lift, raw=False):
         """top / bot: lists of (x, z) - one row per sample; a missing skin hit reuses the last good row."""
         rows, last = [], None
+        f = on_skin_raw if raw else on_skin
         for (xa, za), (xb, zb) in zip(top, bot):
-            a_, b_ = on_skin(xa, za, lift), on_skin(xb, zb, lift)
+            a_, b_ = f(xa, za, lift), f(xb, zb, lift)
             if a_ is None or b_ is None:
                 a_, b_ = last if last else (Vector((xa * S, -0.05, O + za * S)), Vector((xb * S, -0.05, O + zb * S)))
             rows.append((a_, b_)); last = (a_, b_)
         return rows
 
-    def line_rows(x, z, width, lift):
+    def line_rows(x, z, width, lift, raw=False):
         top, bot = [], []
         for i in range(len(x)):
             j, k = min(i + 1, len(x) - 1), max(i - 1, 0)
             tx, tz = x[j] - x[k], z[j] - z[k]; L = math.hypot(tx, tz) or 1.0
             nx, nz = -tz / L, tx / L
             top.append((x[i] - nx * width[i] / 2, z[i] - nz * width[i] / 2)); bot.append((x[i] + nx * width[i] / 2, z[i] + nz * width[i] / 2))
-        return rows_of(top, bot, lift)
+        return rows_of(top, bot, lift, raw)
 
     def pieces(p):
         x, zu, zl = mouth_shape(p)
@@ -178,9 +193,20 @@ def build_mouth(ob, col, off_x, tag):
         out["NewMouthInside"] = rows_of(list(zip(x, zu)), list(zip(x, zl)), MOUTH_LIFT["inside"])
         uu = np.abs(_mu())
         # q15: smooth end taper (the hard cut at |u| 0.8 left white spikes at the band ends); the top sits just under the lip line
-        th = np.minimum(MOUTH_TEETH_H, MOUTH_TEETH_CAP * gap) * np.clip(1 - (uu / MOUTH_TEETH_W) ** 2, 0, 1) ** 0.5   # q16: rounded band ends
+        th = np.minimum(MOUTH_TEETH_H, MOUTH_TEETH_CAP * gap) * np.clip(1 - (uu / MOUTH_TEETH_W) ** 2, 0, 1) ** MOUTH_TEETH_TAPER   # q16: rounded band ends
         tt0 = zu - np.minimum(0.0015, 0.2 * gap)
         out["NewMouthTeeth"] = rows_of(list(zip(x, tt0)), list(zip(x, tt0 - th)), MOUTH_LIFT["teeth"])
+        ts = th * MOUTH_TEETH_SHADE                                    # q19: shaded lower part of the teeth (zero rows when off)
+        out["NewMouthTeethShade"] = rows_of(list(zip(x, tt0 - th + ts)), list(zip(x, tt0 - th)), 0.5 * (MOUTH_LIFT["teeth"] + MOUTH_LIFT["lower"]))
+        # q20: undershadow - the top of the interior under the teeth band is darker (the upper lip and teeth overhang it;
+        # Kistler / Hogarth: the part under an overhang takes the deepest value). Zero rows when MOUTH_DEEP is 0.
+        dp = MOUTH_DEEP * gap * np.clip(1 - (uu / 0.95) ** 2, 0, 1) ** 0.5
+        deep_rows = (x, tt0 - th * 0.95, tt0 - th - dp)   # starts just under the teeth band (from mid-band it showed as a dark line through the teeth)                # finished after the throat (its bottom stays above the throat band)
+        # q20: upper lip - a thin shade band over the top line (the upper lip's lower plane faces down, away from the light;
+        # Buscema: the upper lip has its own plane and sits forward). Follows the top edge as the mouth opens.
+        ul = 0.010 * UPPER_LIP_SHADE * np.clip(1 - (uu / 0.85) ** 2, 0, 1) ** 0.8 * (0.55 + 0.45 * (1 - np.exp(-((uu - 0.35) / 0.3) ** 2)))
+        if UPPER_LIP_SHADE:
+            out["NewUpperLip"] = rows_of(list(zip(x, zu + 0.6 * 0.006 * MOUTH_LINE * thin + ul)), list(zip(x, zu)), 0.5 * MOUTH_LIFT["inside"])
         uu_t = np.abs(_mu()) / MOUTH_TONGUE_W
         hump = np.sqrt(np.clip(1 - uu_t ** 2, 0, 1))                   # q18: a rounded hump in the middle (MHS3), not a band
         tg = np.minimum(MOUTH_TONGUE_H, MOUTH_TONGUE_CAP * gap) * hump
@@ -193,6 +219,16 @@ def build_mouth(ob, col, off_x, tag):
             ttop = np.minimum(ttop, zu - 0.35 * gap)                   # never over the teeth / upper interior
             tg = np.maximum(ttop - tb, 0.0)
         out["NewMouthTongue"] = rows_of(list(zip(x, tb + tg)), list(zip(x, tb)), MOUTH_LIFT["tongue"])
+        # q19: throat band - the same arc raised by MOUTH_THROAT of the opening, under the tongue, over the dark interior
+        g0_ = float(gap[MOUTH_N // 2])
+        on_t = np.clip(tg / max(0.12 * g0_, 1e-6), 0, 1)              # only over the tongue (no red rim up the sides)
+        thr = np.minimum(tb + tg + MOUTH_THROAT * g0_ * on_t, zu - 0.30 * gap)
+        thr = np.maximum(thr, tb)
+        out["NewMouthThroat"] = rows_of(list(zip(x, thr)), list(zip(x, tb)), MOUTH_LIFT["inside"] + 0.00015)
+        if MOUTH_DEEP:                                                 # q20: no overlap with the throat (0.1 mm layers z-fight into blocks)
+            dx_, dt_, db_ = deep_rows
+            db_ = np.minimum(np.maximum(db_, thr + 0.0004), dt_)
+            out["NewMouthDeep"] = rows_of(list(zip(dx_, dt_)), list(zip(dx_, db_)), MOUTH_LIFT["inside"] + 0.0003)
         lw = 0.0032 * MOUTH_LOWER_OPEN * np.clip(p.get("open", 0.0) / 0.02, 0, 1) * (0.2 + 0.8 * s)
         zlw = zl
         if p.get("lip"):                                               # q16: closed-mouth lower lip (pout): a short arc under the line
@@ -207,16 +243,22 @@ def build_mouth(ob, col, off_x, tag):
         sx = wd / 2 * tt * p.get("shadow_w", 1.0) * (1 - 0.35 * fo)
         sz = MOUTH_Z - 0.040 + p.get("shadow_up", 0.0) - drop * 0.9 + 0.016 * fo - 0.003 * (1 - tt ** 2)
         sw = ht * p.get("shadow_h", 1.0) * (0.1 + 0.9 * np.sin(np.pi * (tt + 1) / 2) ** 0.6)   # q16: pout raises a fuller, shorter lip shadow
-        out["NewLipShadow"] = line_rows(sx, sz, sw, 0.0006)
+        # q20: exact skin depth (the smoothed field takes the front-most neighbour, so in the hollow under the lower
+        # lip the shadow floated in front of the skin and showed as a spike past the profile)
+        out["NewLipShadow"] = line_rows(sx, sz, sw, 0.0006, raw=LIP_SHADOW_RAW)
         return out
 
     mats = {"NewMouthLine": _emission("MAT_PaintMouth_" + tag, (0.10, 0.025, 0.02, 1)),
             "NewMouthInside": _emission("MAT_MouthInside_" + tag, C_INSIDE),
             "NewMouthTeeth": _emission("MAT_MouthTeeth_" + tag, C_TEETH),
             "NewMouthTongue": _emission("MAT_MouthTongue_" + tag, C_TONGUE),
+            "NewMouthThroat": _emission("MAT_MouthThroat_" + tag, C_THROAT),
+            "NewMouthTeethShade": _emission("MAT_MouthTeethShade_" + tag, C_TEETH_SHADE),
+            "NewMouthDeep": _emission("MAT_MouthDeep_" + tag, C_DEEP),
             "NewMouthLower": _emission("MAT_PaintMouth_" + tag, (0.10, 0.025, 0.02, 1))}
     old_shadow = col.objects.get("NewLipShadow_" + tag)
     mats["NewLipShadow"] = old_shadow.data.materials[0] if old_shadow and old_shadow.data.materials else mats["NewMouthInside"]
+    mats["NewUpperLip"] = mats["NewLipShadow"]                         # q20: the same soft lens colour as the under-lip shadow
     for nm in mats:
         o = col.objects.get(nm + "_" + tag)
         if o is not None:
@@ -280,7 +322,8 @@ def add_mouth_view_keys(col, tag, shift=MOUTH_YAW_SHIFT):
         ys = [h[0].y for dz in (0.0, -0.0015, 0.0015, -0.003, 0.003)
               for h in [tree.ray_cast(Vector((float(p_[0]), -1.0, float(p_[2]) + dz)), Vector((0, 1, 0)))] if h[0] is not None]
         return min(ys) if ys else float(p_[1])
-    for nm in ("NewMouthLine", "NewMouthInside", "NewMouthTeeth", "NewMouthTongue", "NewMouthLower", "NewLipShadow"):
+    for nm in ("NewMouthLine", "NewMouthInside", "NewMouthTeeth", "NewMouthTeethShade", "NewMouthTongue", "NewMouthThroat",
+               "NewMouthLower", "NewLipShadow", "NewMouthDeep", "NewUpperLip"):
         o = col.objects.get(nm + "_" + tag)
         if o is None or not o.data.shape_keys:
             continue
@@ -315,6 +358,62 @@ def add_jaw_key(col, tag, theta=JAW_THETA):
     kb.data.foreach_set("co", Q.astype(np.float32).ravel())
     print("q15 PF-JawOpen: %d verts, chin drop %.1f mm" % (int((w > 0.01).sum()), 1000 * (P[:, 2] - Q[:, 2]).max()))
     add_mouth_view_keys(col, tag)
+    add_cheek_view_keys(col, tag)
+
+
+CHEEK_VIEW_PUSH = 0.0     # q19: m the far cheek / jaw line moves out at 3/4 (VW-Yaw keys) so the mouth sits inside the face
+CHEEK_X = (0.026, 0.050)  # q19: m from the centre line on the far side: no move inside (mouth / nose skin), full at the cheek edge
+CHEEK_Z = (0.02, 0.12, 0.20, 0.50)   # q19: H above the chin: fade in, full band, fade out (chin tip and eye box stay)
+CHEEK_SIL = 0.0           # q19: |normal . view| above which the skin stays (0 = off; e.g. 0.5 moves only near the outline)
+CHEEK_SMOOTH = 0           # q19: neighbour-average passes over the push weight
+CHEEK_Y = (0.04, 0.0)     # q19: m depth: full in front of y 0, nothing behind 0.04 (ear, back of the head)
+
+
+def add_cheek_view_keys(col, tag, push=None):
+    """q19: MHS3 3/4 frames keep the far mouth corner about 0.6 mouth widths inside the far cheek line (ours ~0.2: the
+    corner met the jaw outline). The far cheek and jaw skin slide out in the camera's screen direction on the VW-Yaw
+    keys, growing toward the silhouette, so the painted mouth and nose (which stay) end up well inside the face."""
+    push = CHEEK_VIEW_PUSH if push is None else push
+    if not push:
+        return
+    head = col.objects.get("NEW_Head_" + tag)
+    ks = head.data.shape_keys if head is not None else None
+    if ks is None:
+        return
+    P = np.empty(len(ks.key_blocks[0].data) * 3, np.float32); ks.key_blocks[0].data.foreach_get("co", P)
+    P = P.reshape(-1, 3).astype(float)
+    zh = (P[:, 2] - O) / S
+    z0, z1, z2, z3 = CHEEK_Z
+    wz = smooth(z0, z1, zh) * (1 - smooth(z2, z3, zh))
+    wy = smooth(CHEEK_Y[0], CHEEK_Y[1], P[:, 1])
+    th = math.radians(35.0)
+    N = np.empty(len(head.data.vertices) * 3, np.float32); head.data.vertices.foreach_get("normal", N)
+    N = N.reshape(-1, 3).astype(float)
+    n = 0
+    for kname, sgn in (("VW-Yaw_L", -1.0), ("VW-Yaw_R", 1.0)):    # VW-Yaw_L: camera on the character's left, far side -x
+        kb = ks.key_blocks.get(kname)
+        if kb is None:
+            continue
+        K = np.empty(len(kb.data) * 3, np.float32); kb.data.foreach_get("co", K); K = K.reshape(-1, 3).astype(float)
+        far = np.clip(sgn * P[:, 0], 0, None)
+        w = smooth(CHEEK_X[0], CHEEK_X[1], far) * wz * wy
+        if CHEEK_SIL:                                              # q19: only skin near this view's silhouette moves (a
+            v = np.array([-sgn * math.sin(th), -math.cos(th), 0.0])  # moved front-facing cheek showed as a lump at 20 deg)
+            w = w * (1 - smooth(0.0, CHEEK_SIL, np.abs(N @ v)))
+        if CHEEK_SMOOTH:                                           # q19: spread the weight over the mesh (single moved
+            E = np.empty(len(head.data.edges) * 2, np.int64); head.data.edges.foreach_get("vertices", E)   # verts made thorns)
+            E = E.reshape(-1, 2)
+            deg = np.bincount(E.ravel(), minlength=len(w)).astype(float) + 1.0
+            for _ in range(CHEEK_SMOOTH):
+                acc = w.copy()
+                np.add.at(acc, E[:, 0], w[E[:, 1]]); np.add.at(acc, E[:, 1], w[E[:, 0]])
+                w = acc / deg
+        # screen "away from the near side" for this camera: (-cos th, -sin th) mirrored by side
+        d = np.stack([sgn * math.cos(th) * np.ones(len(P)), -math.sin(th) * np.ones(len(P)), np.zeros(len(P))], 1)
+        K = K + push * w[:, None] * d
+        kb.data.foreach_set("co", K.astype(np.float32).ravel())
+        n = int((w > 0.01).sum())
+    print("q19 cheek view keys: %d verts, push %.1f mm" % (n, push * 1000))
 
 
 def add_nose_keys(col, tag, up=0.0020, widen=1.14):
@@ -332,3 +431,9 @@ def add_nose_keys(col, tag, up=0.0020, widen=1.14):
             cx = co[:, 0].mean(); k[:, 0] = cx + (co[:, 0] - cx) * widen
         kb = o.shape_key_add(name="PF-NoseSneer"); kb.value = 0.0
         kb.data.foreach_set("co", k.astype(np.float32).ravel())
+
+
+# q20: look_knobs.json "mouth" overrides any constant above (load_knobs stores them in MOUTH_OVR before this file runs)
+for _k, _v in globals().get("MOUTH_OVR", {}).items():
+    if _k in globals():
+        globals()[_k] = _v

@@ -1,0 +1,8 @@
+[
+ {"id": "c_profile_eye_quarter", "page": 36, "rule": "In the side view the eye stays inside the front quarter section of the head, drawn as a small wedge set back from the front."},
+ {"id": "c_mouth_third", "page": 34, "rule": "Divide nose-to-chin into thirds; the mouth sits about one third down from the nose."},
+ {"id": "c_eye_apart", "page": 33, "rule": "Eyes are typically one eye width apart."},
+ {"id": "c_jaw_age", "page": 120, "rule": "Stretching the jaw and lower face down ages a character; moving it up makes the character younger."},
+ {"id": "c_teeth_hint", "page": 174, "rule": "Avoid drawing every tooth; hint at the teeth as a shape."},
+ {"id": "c_volume_keep", "page": 96, "rule": "Squash and stretch keep the volume: a stretched part becomes thinner, a squashed part wider."}
+]

@@ -1,0 +1,87 @@
+[
+ {
+  "id": "c_circle_bands",
+  "page": 26,
+  "rule": "The lower half of the head circle is divided into four equal bands by three lines: eyebrows on the first, upper eyelashes on the second, irises on the third."
+ },
+ {
+  "id": "c_chin_quarter",
+  "page": 27,
+  "rule": "The chin sits about a quarter of the circle's diameter below the bottom of the circle."
+ },
+ {
+  "id": "c_eye_gap",
+  "page": 28,
+  "rule": "There is a blank space of one eye's width between the two eyes."
+ },
+ {
+  "id": "c_mouth_mid",
+  "page": 28,
+  "rule": "The mouth is midway between the bottom of the circle (where the nose rests) and the tip of the jaw."
+ },
+ {
+  "id": "c_ear",
+  "page": 29,
+  "rule": "The top of the ear is about level with the middle of the eye and its bottom is not quite as low as the mouth line."
+ },
+ {
+  "id": "c_34_centerline",
+  "page": 35,
+  "rule": "In three-quarter view a gently curving vertical centre line runs from the chin up to the brow line, off to one side."
+ },
+ {
+  "id": "c_34_features",
+  "page": 36,
+  "rule": "In three-quarter view the eyes, eyebrows, nose and mouth all touch the curving centre line, and the far eyebrow is not directly above the far eye but off to one side."
+ },
+ {
+  "id": "c_profile_lips",
+  "page": 54,
+  "rule": "In profile the face line goes to the nose tip and then down to the chin with small bumps for the lips midway down."
+ },
+ {
+  "id": "c_profile_eye",
+  "page": 55,
+  "rule": "In profile the eye sits between the 2nd and 3rd lines, close to but not touching the circle edge, and the mouth is near the midpoint between nose and chin."
+ },
+ {
+  "id": "c_adult_chin",
+  "page": 69,
+  "rule": "For an adult face the chin is about a third of the circle's diameter below the circle."
+ },
+ {
+  "id": "c_adult_eyes_higher",
+  "page": 70,
+  "rule": "An adult's eyebrows and eyes are a full line higher than a young character's, and the nose is more fully rendered."
+ },
+ {
+  "id": "c_adult34_mouth",
+  "page": 80,
+  "rule": "In the adult three-quarter view the mouth is a little less than halfway between chin and nose, just outside the circle edge."
+ },
+ {
+  "id": "c_cheerful",
+  "page": 130,
+  "rule": "In a cheerful expression the bottoms of the eyes are flattened, as if the cheeks rise."
+ },
+ {
+  "id": "c_joy_mouth",
+  "page": 131,
+  "rule": "In ecstatic joy the eyes are squeezed shut and the bottom of the mouth may be left unrendered."
+ },
+ {
+  "id": "c_determination",
+  "page": 136,
+  "rule": "Determination shows clenched teeth and a break in the line surrounding the mouth."
+ },
+ {
+  "id": "c_surprise",
+  "page": 139,
+  "rule": "Surprise shows small irises floating in the whites of the eyes and a small open gasping mouth."
+ },
+ {
+  "id": "c_ink_thin",
+  "page": 367,
+  "rule": "Most manga artists ink with comparatively thin lines that do not vary much in width."
+ }
+]

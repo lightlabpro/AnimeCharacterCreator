@@ -37,6 +37,15 @@ ASPECTS = {
                  "`reference_image`",
     "expression": "how clearly and appealingly the face shows the intended expression in the reference style (brows, "
                   "eyes and mouth working together)",
+    # q20 (Sammy 2026-10-16: "the eyes look elongated (like Egyptian drawings)", "teeth and tongue ... too flat and 2d",
+    # "it looks like it has no upper lip"); the references show no profile, so these ask about the drawing convention itself
+    "profile_eye": "the eye in the side (profile) view only: which is drawn the way anime artists draw an eye in profile - "
+                   "a short wedge or triangle set back from the profile line, the iris a narrow upright oval - rather than "
+                   "a long front-facing almond eye pasted onto a side view",
+    "mouth_depth": "the open mouth: which reads more as a three-dimensional opening with depth (shaded teeth under the upper "
+                   "lip, a dark recess, the tongue set back inside) rather than flat bands of colour",
+    "upper_lip": "the mouth in the turned and side views: which shows a believable upper lip (a lip form over the opening "
+                 "that sits forward of the lower lip) rather than a face with no upper lip",
     "clean": "drawing quality: which has fewer stray lines, broken outlines, odd shadow shapes or artifacts",
 }
 DEFECTS = {
