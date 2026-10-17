@@ -212,10 +212,29 @@ def attach_hair(col, style="leo", src_tag="n56", k=0.90, dz=-0.004):   # q23 Typ
     return n
 
 
+GATE_EXPR = ("happy", "laugh", "angry", "sad", "surprised", "talk_aa", "smile_open", "blink")
+
+
+def gate_shots(tag, exprs=GATE_EXPR, res=800):
+    """q26 face gate render set (typesafe_face_gate.py reads it): docs/qa/head_v2/gate/<tag>/front.png, 34.png,
+    side.png and expr_<name>.png, framed on the face (ortho 0.24 about the mid face) so features are readable."""
+    out = os.path.join(Q, "gate", tag); os.makedirs(out, exist_ok=True)
+    cz = ZT - 0.55 * H
+    shots("gate_tmp", "neutral", views=(("front", 0), ("34", 35), ("side", 90)), ortho=0.24, cz=cz, res=res)
+    for v in ("front", "34", "side"):
+        os.replace(os.path.join(Q, "gate_tmp_%s.png" % v), os.path.join(out, "%s.png" % v))
+    for e in exprs:
+        if e not in EXPR:
+            continue
+        shots("gate_tmp", e, views=(("front", 0),), ortho=0.24, cz=cz, res=res)
+        os.replace(os.path.join(Q, "gate_tmp_front.png"), os.path.join(out, "expr_%s.png" % e))
+    return out
+
+
 col = import_blend()
 shade(col)
 if globals().get("HAIR", "leo"):
     print("hair objects:", attach_hair(col, globals().get("HAIR", "leo"), k=globals().get("HAIR_K", 0.90), dz=globals().get("HAIR_DZ", -0.004)))
 col.hide_render = True                     # n56 renders stay as they were
-bpy.app.driver_namespace["v2"] = {"shots": shots, "set_expr": set_expr, "col": col}
+bpy.app.driver_namespace["v2"] = {"shots": shots, "set_expr": set_expr, "col": col, "gate_shots": gate_shots}
 print("v2 imported:", len(col.objects), "objects")

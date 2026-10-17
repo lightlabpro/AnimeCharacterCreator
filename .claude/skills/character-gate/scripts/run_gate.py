@@ -186,7 +186,9 @@ def run(a):
             checks.append(res("pack_check", "fail" if nf else "unknown" if nu else "pass", f"{nf} fail, {nu} unknown, {nw} warn", [[i["level"], i["pack"], i["code"], i["message"]] for i in R.items if i["level"] in ("FAIL", "UNKNOWN")]))
         except Missing as e: checks.append(res("pack_check", "unknown", str(e)))
     elif pack_mode: skipped.append("pack_check (by request)")
-    a.mesh_stats_data = a.manifest_data = a.head_audit_data = None
+    a.mesh_stats_data = a.manifest_data = a.head_audit_data = a.face_gate_data = None
+    if getattr(a, "face_gate", None):
+        with open(a.face_gate) as f: a.face_gate_data = json.load(f)
     for attr, p in (("mesh_stats_data", a.mesh_stats), ("manifest_data", a.manifest), ("head_audit_data", a.head_audit)):
         if p:
             with open(p) as f: setattr(a, attr, json.load(f))
@@ -222,6 +224,12 @@ def run(a):
                 mc, mu, _ = v.check_mesh(a.mesh_stats_data, v.DEFAULTS, contract); failing = [k for k, c in mc.items() if c["ok"] is False]
                 checks.append(res("mesh_stats", "fail" if failing else "unknown" if mu else "pass", ("failing: " + ", ".join(failing)) if failing else ("unmeasured: " + ", ".join(mu[:4]) if mu else "mesh gates pass")))
             except Missing as e: checks.append(res("mesh_stats", "unknown", str(e)))
+    if a.face_gate_data is not None or "face_gate" in a.require:
+        # face-gate skill: book rules + MHS3 look + no regression, judged by TypeSafe with images (typesafe_face_gate.py)
+        if a.face_gate_data is None: checks.append(res("face_gate", "unknown", "required but no --face-gate file supplied"))
+        else:
+            g = a.face_gate_data.get("gate", {}); st = {"pass": "pass", "fail": "fail"}.get(g.get("verdict"), "unknown")
+            checks.append(res("face_gate", st, "rule failures %s, MHS3-look failures %s, regressions %s" % (g.get("rule_failures"), g.get("look_failures"), g.get("regressions"))))
     if "manifest" in a.require and a.manifest_data is None: cross.append(res("manifest_height", "unknown", "required but no --manifest file supplied"))
     status = worst([c["status"] for c in checks + cross])
     if status == "skipped": status = "unknown"
@@ -244,8 +252,8 @@ def report_text(r):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("path"); ap.add_argument("--targets"); ap.add_argument("--contract"); ap.add_argument("--head-audit"); ap.add_argument("--mesh-stats"); ap.add_argument("--manifest")
-    ap.add_argument("--require", nargs="*", default=[], choices=["head_audit", "mesh_stats", "manifest"]); ap.add_argument("--skip", nargs="*", default=[]); ap.add_argument("--out")
+    ap.add_argument("path"); ap.add_argument("--targets"); ap.add_argument("--contract"); ap.add_argument("--head-audit"); ap.add_argument("--mesh-stats"); ap.add_argument("--manifest"); ap.add_argument("--face-gate")
+    ap.add_argument("--require", nargs="*", default=[], choices=["head_audit", "mesh_stats", "manifest", "face_gate"]); ap.add_argument("--skip", nargs="*", default=[]); ap.add_argument("--out")
     try: a = ap.parse_args(argv)
     except SystemExit as e: return EXIT_USAGE if e.code else 0
     if not os.path.exists(a.path): print(f"error: {a.path} does not exist", file=sys.stderr); return EXIT_USAGE

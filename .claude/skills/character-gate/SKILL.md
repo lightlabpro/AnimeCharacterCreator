@@ -22,6 +22,7 @@ python3 .claude/skills/character-gate/scripts/run_gate.py library/humanoid/bodie
 | `anatomy_rules`, `pose_stress`, `slider_sweep`, `body_proportions` | `body-proportion-audit` | rig and weight errors, bad deformation, broken shape keys, wrong proportions |
 | `head_audit` | `head-shape-audit` | head form (from its `head_audit.json`) |
 | `mesh_stats` | `render-validator` | triangle budget, non-manifold edges, loose parts |
+| `face_gate` | `face-gate` | head/face elements and expressions vs the anime/manga book rules and the MHS3 references, judged by TypeSafe with images (from its `face_gate.json`, `--face-gate`) |
 
 ## Cross-checks: the tools validating each other
 | Check | Compares | A failure means |

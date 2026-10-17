@@ -1,0 +1,754 @@
+[
+ {
+  "id": "aa_male_face_angular",
+  "page": 15,
+  "element": "face_by_type",
+  "rule": "Male faces are built from angular, straight-line forms: a longer, narrower face with a defined jaw corner and a chin that tapers to a fairly sharp point.",
+  "check": "Does the male head read as angular, with straight cheek-to-jaw planes and a visible jaw corner rather than a round, soft outline?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_female_face_rounded",
+  "page": 15,
+  "element": "face_by_type",
+  "rule": "Female faces use rounded, softly curved contours: a shorter, rounder lower face and a softer, smaller chin with no hard jaw corner.",
+  "check": "Does the female head have a soft, continuously curved cheek-jaw outline with no sharp jaw corner?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_male_female_same_feature_layout",
+  "page": 15,
+  "element": "face_by_type",
+  "rule": "In the neutral front view both sexes share the same feature layout (eyes at roughly mid-head, small nose, short mouth); the difference comes from outline shape and neck, not from moving features.",
+  "check": "Do the male and female neutral heads keep the same eye/nose/mouth placement, differing mainly in face outline and neck?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "aa_neutral_eyes_mid_head",
+  "page": 15,
+  "element": "head_shape",
+  "rule": "In the neutral front view the eyes sit at about the vertical middle of the whole head (crown to chin), with the nose roughly halfway between eyes and chin and the mouth a little below the nose.",
+  "check": "In front view are the eyes near the vertical midpoint of the head, with the nose about halfway from eyes to chin?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "aa_neutral_eye_spacing",
+  "page": 15,
+  "element": "eyes",
+  "rule": "Neutral realistic-leaning anime eyes are spaced about one eye-width apart, with a short almond shape, heavier upper lash line and a dark iris that touches the upper lid.",
+  "check": "Is the gap between the two eyes roughly one eye-width, with a darker/heavier upper lid line than the lower?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "aa_neutral_nose_minimal",
+  "page": 15,
+  "element": "nose",
+  "rule": "The neutral nose is reduced to a small mark: a short bridge hint and a small underside/nostril line, with no full outline.",
+  "check": "Is the nose represented minimally (small tip/underside shape), not a fully outlined realistic nose?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_neutral_mouth_short",
+  "page": 15,
+  "element": "mouth",
+  "rule": "The neutral mouth is short, narrower than the gap between the pupils, with a single lip line and at most a small lower-lip hint.",
+  "check": "In the neutral face, is the mouth narrower than the distance between the pupils and drawn as a simple line with a small lower-lip hint?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "aa_male_neck_thicker",
+  "page": 15,
+  "element": "jaw_chin_neck",
+  "rule": "Male necks are thick and sturdy with visible tendons running to the collarbone; female necks are slimmer and smoother, with fewer lines.",
+  "check": "Is the male neck noticeably thicker than the female one, and the female neck slender and smooth?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_ears_between_eye_and_nose",
+  "page": 15,
+  "element": "ears",
+  "rule": "Ears sit on the side of the head with their top near brow/eye height and their bottom near the base of the nose.",
+  "check": "Do the ears span roughly from eye/brow height down to nose-base height?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_bangs_frame_forehead",
+  "page": 15,
+  "element": "hair_framing",
+  "rule": "Bangs fall over the forehead down toward the brows and side locks frame the cheeks; the female bob reaches past the jaw to the neck, the male cut stays above the jawline.",
+  "check": "Do the bangs reach toward the brows and the side hair frame the cheeks (female to below jaw, male above jaw)?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_rage_whites_around_iris",
+  "page": 121,
+  "element": "expression_angry",
+  "rule": "For rage, open the eyes wide and shrink the iris so white shows all around it, and outline the eye area clearly and darkly.",
+  "check": "In the angry/rage expression, are the eyes opened wide with a small iris that has white visible on all sides?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_rage_mouth_wide_open",
+  "page": 121,
+  "element": "expression_angry",
+  "rule": "A rage shout uses a tall, wide-open mouth (taller than it is wide is fine) to build tension.",
+  "check": "In the rage expression, is the mouth open wide, taller than in a normal talking pose?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_rage_brows_raised_inner_down",
+  "page": 121,
+  "element": "expression_angry",
+  "rule": "Rage lifts the eyes and brows overall while the brows press down and together at the inner ends, forming a steep V over the nose.",
+  "check": "In the rage expression, do the brows form a steep V with inner ends pulled down toward the nose?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_rage_upper_lid_pulled",
+  "page": 121,
+  "element": "eyes",
+  "rule": "In anger the upper lid line is straightened/angled down toward the nose so the eye shape becomes a sharp, slanted wedge.",
+  "check": "In the angry expression, is the upper eyelid angled down toward the nose, making the eye a slanted wedge?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_holding_back_clenched_teeth",
+  "page": 121,
+  "element": "expression_other",
+  "rule": "Holding back tears or temper: teeth clenched behind slightly parted lips, a slight quiver, brows knitted, and wet eyes with a tear line.",
+  "check": "In the 'holding back' expression, are the teeth clenched with lips slightly apart and brows knitted?",
+  "views": [
+   "expression:holding_back"
+  ]
+ },
+ {
+  "id": "aa_holding_back_brow_crease",
+  "page": 121,
+  "element": "expression_other",
+  "rule": "The holding-back face adds short crease lines between the brows and sweat/tear marks on the cheek.",
+  "check": "Are there crease lines between the brows in the restrained/holding-back expression?",
+  "views": [
+   "expression:holding_back"
+  ]
+ },
+ {
+  "id": "aa_crying_brows_droop",
+  "page": 121,
+  "element": "expression_sad",
+  "rule": "For sobbing, the brows tilt down at the outer ends (inner ends raised), forming an upside-down V.",
+  "check": "In the crying expression, are the brows raised at the inner ends and drooping at the outer ends?",
+  "views": [
+   "expression:crying"
+  ]
+ },
+ {
+  "id": "aa_crying_mouth_open_wavy",
+  "page": 121,
+  "element": "expression_sad",
+  "rule": "A sobbing mouth is open wide with both rows of teeth showing and a wavy, downturned lower outline.",
+  "check": "In the crying expression, is the mouth open with teeth visible and the corners pulled down?",
+  "views": [
+   "expression:crying"
+  ]
+ },
+ {
+  "id": "aa_crying_huge_tears",
+  "page": 121,
+  "element": "expression_sad",
+  "rule": "Sobbing uses very large tears: streams running from the lower lids down the cheeks and big drops, plus a runny nose for loss of control.",
+  "check": "In the crying expression, are there large tear streams from the lower lids down the cheeks?",
+  "views": [
+   "expression:crying"
+  ]
+ },
+ {
+  "id": "aa_crying_eyes_squeezed",
+  "page": 121,
+  "element": "eyes",
+  "rule": "In hard crying the eyes are squeezed into narrowed, wet shapes with the lower lid pushed up and tear pools along the lid.",
+  "check": "In the crying expression, are the eyes narrowed/squeezed with the lower lid raised?",
+  "views": [
+   "expression:crying"
+  ]
+ },
+ {
+  "id": "aa_crying_blush",
+  "page": 121,
+  "element": "face_shading",
+  "rule": "Crying faces carry hatching/blush across the nose and cheeks to show flushing.",
+  "check": "Is there flush/blush shading across the nose and cheeks in the crying expression?",
+  "views": [
+   "expression:crying"
+  ]
+ },
+ {
+  "id": "aa_comic_dot_eyes_determined",
+  "page": 121,
+  "element": "expression_determined",
+  "rule": "A comic fighting face can use large solid dark round eyes, thick brows slanted steeply down toward the nose, and a small round 'o' mouth.",
+  "check": "In the comic determined variant, are the eyes large dark circles with thick steeply slanted brows and a small round mouth?",
+  "views": [
+   "expression:determined"
+  ]
+ },
+ {
+  "id": "aa_courageous_smile",
+  "page": 121,
+  "element": "expression_determined",
+  "rule": "A courageous smile (one corner raised, teeth showing slightly, eyes narrowed) adds levity in a fight.",
+  "check": "In the confident/courageous expression, is it a narrowed-eye smile with at least one mouth corner raised?",
+  "views": [
+   "expression:smug"
+  ]
+ },
+ {
+  "id": "aa_serious_straight_mouth",
+  "page": 121,
+  "element": "expression_determined",
+  "rule": "A mouth drawn as a straight horizontal line signals seriousness; combine it with level, slightly lowered brows and steady eyes.",
+  "check": "In the serious/determined expression, is the mouth a straight closed line with level or lowered brows?",
+  "views": [
+   "expression:determined"
+  ]
+ },
+ {
+  "id": "aa_battle_ready_defined_features",
+  "page": 121,
+  "element": "expression_determined",
+  "rule": "A battle-ready face uses crisp, well-defined features: narrowed eyes under lowered brows, closed mouth, with hair partly shading the face.",
+  "check": "In the battle-ready expression, are the eyes narrowed under lowered brows with a closed mouth?",
+  "views": [
+   "expression:determined"
+  ]
+ },
+ {
+  "id": "aa_scream_attack",
+  "page": 121,
+  "element": "expression_angry",
+  "rule": "A spirited attack scream: eyes squeezed or narrowed, brows down hard, mouth wide open showing teeth.",
+  "check": "In the battle-scream expression, are the brows hard down and the mouth wide open with teeth?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_exaggerate_expressions",
+  "page": 121,
+  "element": "expression_general",
+  "rule": "Action-manga expressions should be pushed beyond realism: eyes, brows and mouth change shape strongly for each emotion.",
+  "check": "Do the expression shapes visibly exaggerate the neutral face (strong changes in eye, brow and mouth shape)?",
+  "views": [
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_hit_eyes_squeeze_shut",
+  "page": 145,
+  "element": "expression_other",
+  "rule": "When the face is struck, the eyes squeeze shut into tight lines (often > < shapes) with heavy brow creases.",
+  "check": "In the pain/hit expression, are the eyes squeezed shut into tight lines with creased brows?",
+  "views": [
+   "expression:pain"
+  ]
+ },
+ {
+  "id": "aa_hit_eyes_roll_up",
+  "page": 145,
+  "element": "eyes",
+  "rule": "An alternative hit reaction rolls the irises upward so they touch or tuck under the upper lid, leaving lots of white below.",
+  "check": "In the stunned variant, are the irises rolled up under the upper lid with white showing below?",
+  "views": [
+   "expression:stunned"
+  ]
+ },
+ {
+  "id": "aa_hit_clenched_teeth_bitten_tongue",
+  "page": 145,
+  "element": "teeth_tongue",
+  "rule": "When the chin is struck the mouth jams shut: show clenched teeth (both rows meeting) with a wide, tense lip outline.",
+  "check": "In the pain expression, are both rows of teeth shown clenched together inside a wide, tense mouth?",
+  "views": [
+   "expression:pain"
+  ]
+ },
+ {
+  "id": "aa_hit_face_angle_shift",
+  "page": 131,
+  "element": "expression_other",
+  "rule": "The harder the blow, the more the head is turned or tilted away from the impact; the face angle itself carries the force.",
+  "check": "In the hit reaction, is the head turned or tilted away from the impact rather than facing straight forward?",
+  "views": [
+   "expression:pain"
+  ]
+ },
+ {
+  "id": "aa_comic_hit_eyes_pop",
+  "page": 145,
+  "element": "expression_other",
+  "rule": "Comic hit reactions can bulge the eyes out of the sockets as oversized ovals with tiny pupils, plus nosebleeds or flying teeth.",
+  "check": "In the comic hit variant, are the eyes enlarged ovals with tiny pupils?",
+  "views": [
+   "expression:comic_hit"
+  ]
+ },
+ {
+  "id": "aa_hit_blush_bruise_marks",
+  "page": 145,
+  "element": "face_shading",
+  "rule": "Mark where a blow landed with hatching/redness and graze lines on the cheek or chin.",
+  "check": "Is there localized redness/hatching on the struck area of the face?",
+  "views": [
+   "expression:pain"
+  ]
+ },
+ {
+  "id": "aa_faint_whites_of_eyes",
+  "page": 132,
+  "element": "eyes",
+  "rule": "Showing only the whites of the eyes (no visible iris) signals the character is losing consciousness.",
+  "check": "In the knocked-out expression, are the eyes shown as whites with no iris visible?",
+  "views": [
+   "expression:knocked_out"
+  ]
+ },
+ {
+  "id": "aa_pained_open_mouth_spit",
+  "page": 131,
+  "element": "expression_other",
+  "rule": "A pained reaction to a body blow opens the mouth with teeth showing, often with spit flying out.",
+  "check": "In the winded/pained expression, is the mouth open with teeth visible?",
+  "views": [
+   "expression:pain"
+  ]
+ },
+ {
+  "id": "aa_teeth_center_line",
+  "page": 95,
+  "element": "teeth_tongue",
+  "rule": "The gap between the two upper front teeth lines up with the vertical center line of the face.",
+  "check": "With teeth visible, does the gap between the upper front teeth sit on the face's vertical center line?",
+  "views": [
+   "front",
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_canine_third_tooth",
+  "page": 95,
+  "element": "teeth_tongue",
+  "rule": "Counting out from the middle, the canine is the third tooth on each side.",
+  "check": "Where individual teeth are modeled, is the canine the third tooth from the center on each side?",
+  "views": [
+   "front",
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_teeth_subtle_gaps",
+  "page": 95,
+  "element": "teeth_tongue",
+  "rule": "Teeth read better with small gaps and separation lines between them rather than as one solid white band.",
+  "check": "Do the visible teeth show some separation between individual teeth rather than a flat white strip?",
+  "views": [
+   "front",
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_open_mouth_shows_both_rows_and_tongue",
+  "page": 95,
+  "element": "teeth_tongue",
+  "rule": "A wide open mouth shows the upper teeth row, the lower teeth row, dark mouth corners, and a tongue filling the bottom of the opening.",
+  "check": "In a wide-open mouth, are both teeth rows, dark inner corners and a tongue in the lower part visible?",
+  "views": [
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_smile_teeth_arc",
+  "page": 95,
+  "element": "mouth",
+  "rule": "A grin shows the upper teeth along an upward-curving arc that follows the smile, with the mouth corners lifted.",
+  "check": "In a grin, do the visible upper teeth follow an upward-curving arc with lifted corners?",
+  "views": [
+   "expression:happy"
+  ]
+ },
+ {
+  "id": "aa_fangs_tongue_gallery",
+  "page": 14,
+  "element": "teeth_tongue",
+  "rule": "Pointed canines and an extended tongue are used to give wild, aggressive characters extra edge.",
+  "check": "If the character has a wild/feral design, are the canines pointed and visibly sharper than the other teeth?",
+  "views": [
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_laugh_arc_eyes",
+  "page": 31,
+  "element": "expression_laugh",
+  "rule": "A joyful laugh closes the eyes into upward-curving arcs (upside-down U shapes).",
+  "check": "In the laughing expression, are the eyes closed into upward-curving arcs?",
+  "views": [
+   "expression:laugh"
+  ]
+ },
+ {
+  "id": "aa_laugh_big_open_mouth",
+  "page": 31,
+  "element": "expression_laugh",
+  "rule": "The laughing mouth is a large open shape (rounded, wider at the bottom) with the upper teeth showing and tongue visible.",
+  "check": "In the laughing expression, is the mouth a large open rounded shape with upper teeth visible?",
+  "views": [
+   "expression:laugh"
+  ]
+ },
+ {
+  "id": "aa_laugh_face_center_focus",
+  "page": 31,
+  "element": "expression_laugh",
+  "rule": "Joy expressions are placed where the eye is drawn; the face tilts up slightly when jumping or cheering.",
+  "check": "In the cheering/laughing pose, is the face tilted slightly upward?",
+  "views": [
+   "expression:laugh"
+  ]
+ },
+ {
+  "id": "aa_happy_bright_smile",
+  "page": 98,
+  "element": "expression_happy",
+  "rule": "Bright, happy expressions use an open smile with raised cheeks and eyes closed or narrowed into curves.",
+  "check": "In the happy expression, is there an open smile with eyes curved/narrowed upward?",
+  "views": [
+   "expression:happy"
+  ]
+ },
+ {
+  "id": "aa_angry_running_squeezed",
+  "page": 28,
+  "element": "expression_angry",
+  "rule": "A worked-up angry face squeezes the eyes into slanted lines, pulls brows down hard, and bares clenched teeth in a wide rectangle mouth.",
+  "check": "In the strained-angry expression, are the eyes squeezed and slanted, with clenched teeth in a wide mouth?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_angry_mark",
+  "page": 28,
+  "element": "expression_angry",
+  "rule": "A cross-shaped anger vein mark on the temple or forehead can accent anger.",
+  "check": "If anger marks are used, is the cross-shaped vein mark placed on the temple/forehead?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_chase_desire_open_mouth",
+  "page": 27,
+  "element": "expression_determined",
+  "rule": "A pursuing character shows desire to catch up: brows down, eyes fixed forward, mouth open shouting.",
+  "check": "In the pursuing/determined variant, are the brows down and the eyes looking forward with an open shouting mouth?",
+  "views": [
+   "expression:determined"
+  ]
+ },
+ {
+  "id": "aa_same_pose_expression_flip",
+  "page": 29,
+  "element": "expression_general",
+  "rule": "The same head and pose can read as pursuer or fleeing victim purely by changing the expression, so expressions must be distinct enough to carry the meaning alone.",
+  "check": "Can the expression be identified correctly from the face alone without body cues?",
+  "views": [
+   "expression:any"
+  ]
+ },
+ {
+  "id": "aa_fear_open_mouth_squeezed_eyes",
+  "page": 29,
+  "element": "expression_scared",
+  "rule": "Fleeing in panic: eyes squeezed shut or wide with tiny pupils, mouth open wide in a scream.",
+  "check": "In the scared/panic expression, is the mouth wide open with eyes either squeezed shut or wide with tiny pupils?",
+  "views": [
+   "expression:scared"
+  ]
+ },
+ {
+  "id": "aa_danger_brow_crease_sweat",
+  "page": 126,
+  "element": "expression_scared",
+  "rule": "A sense of danger is shown with creases between the brows and drops of sweat on the face.",
+  "check": "In the alarmed/scared expression, are there crease lines between the brows and sweat drops on the face?",
+  "views": [
+   "expression:scared"
+  ]
+ },
+ {
+  "id": "aa_tension_clenched_teeth_closed_eyes",
+  "page": 126,
+  "element": "expression_other",
+  "rule": "Bracing for impact: eyes shut tight, brows knotted, teeth clenched and bared.",
+  "check": "In the bracing expression, are the eyes shut tight with teeth clenched and bared?",
+  "views": [
+   "expression:bracing"
+  ]
+ },
+ {
+  "id": "aa_endurance_face",
+  "page": 127,
+  "element": "expression_determined",
+  "rule": "An enduring/guarding face: gritted teeth, brows drawn together, eyes narrowed or squeezed.",
+  "check": "In the enduring expression, are the teeth gritted with brows drawn together?",
+  "views": [
+   "expression:enduring"
+  ]
+ },
+ {
+  "id": "aa_alert_gaze_tension",
+  "page": 104,
+  "element": "expression_surprised",
+  "rule": "Alertness: eyes move toward the threat, the eye shape is tensed (upper lid lowered and straight), with a sweat drop.",
+  "check": "In the alert/startled expression, are the eyes tensed and turned toward one side with a sweat drop?",
+  "views": [
+   "expression:surprised"
+  ]
+ },
+ {
+  "id": "aa_glare_brow_variation",
+  "page": 92,
+  "element": "brows",
+  "rule": "In a glare, the eyes meet; whether the brows are raised or the area between them is wrinkled changes the feel, so brows must be independently controllable.",
+  "check": "Can the brows be raised or knitted (with a crease between them) independently of the eyes?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_determined_grin_slanted",
+  "page": 143,
+  "element": "expression_determined",
+  "rule": "The hero's signature fighting look: brows slanted sharply down toward the nose, narrowed eyes with irises under the upper lid, and a wide grin of clenched teeth.",
+  "check": "In the determined grin, are the brows slanted down to the nose, the eyes narrowed, and the clenched teeth visible in a wide grin?",
+  "views": [
+   "expression:determined"
+  ]
+ },
+ {
+  "id": "aa_eye_airbrush_glow",
+  "page": 144,
+  "element": "eyes",
+  "rule": "Colored eyes get a soft airbrushed glow layer over the iris for intensity.",
+  "check": "Does the iris have a soft glow/gradient rather than a single flat color?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_iris_dark_upper_light_lower",
+  "page": 143,
+  "element": "eyes",
+  "rule": "The iris is darker toward the top (under the lid shadow) and lighter toward the bottom, with a small white highlight.",
+  "check": "Is the iris darker at the top and lighter at the bottom, with a small white highlight?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_small_irises_for_intensity",
+  "page": 143,
+  "element": "eyes",
+  "rule": "Intense fighting characters use relatively small irises inside wide whites so the gaze looks sharp.",
+  "check": "In intense expressions, is the iris small enough that white is visible on at least both sides?",
+  "views": [
+   "expression:determined",
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "aa_face_light_front_above",
+  "page": 143,
+  "element": "face_shading",
+  "rule": "Choose a light source and shade from it; the example is lit from the front and slightly above, so shadow falls under the bangs, below the chin onto the neck, and under the nose.",
+  "check": "With front-high light, is there shadow under the bangs on the forehead and under the chin onto the neck?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_highlight_protruding",
+  "page": 143,
+  "element": "face_shading",
+  "rule": "Add highlights only to protruding areas (nose tip/bridge, cheekbones, lower lip, hair crown).",
+  "check": "Are highlights limited to protruding forms such as nose bridge, cheekbones and hair crown?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_hair_shadow_on_face",
+  "page": 143,
+  "element": "face_shading",
+  "rule": "Hair casts a shadow shape onto the forehead and around the eyes beneath the bangs.",
+  "check": "Do the bangs cast a visible shadow shape onto the forehead/upper face?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_scars_as_accents",
+  "page": 144,
+  "element": "face_shading",
+  "rule": "Small scars or marks on the skin can be added as character accents.",
+  "check": "If the design includes scars, are they small accent marks that do not obscure the features?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_hair_from_crown",
+  "page": 105,
+  "element": "hair_framing",
+  "rule": "Hair strands must visibly grow from the crown and hairline, flowing outward from those points even when blown or moving.",
+  "check": "Do the hair strands flow outward from a clear crown point and hairline?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_bangs_cover_eyes_mysterious",
+  "page": 105,
+  "element": "hair_framing",
+  "rule": "Asymmetrical bangs that fall forward over the eyes, leaving only the mouth area visible, create a mysterious look.",
+  "check": "For a mysterious hairstyle variant, do the bangs fall asymmetrically over the eyes leaving the lower face visible?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "aa_bangs_fall_when_head_drops",
+  "page": 105,
+  "element": "hair_framing",
+  "rule": "When the head tilts down, bangs swing forward and hang ahead of the face rather than staying glued to the forehead.",
+  "check": "When the head tilts down, do the bangs hang forward away from the forehead?",
+  "views": [
+   "side",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_hair_lags_motion",
+  "page": 104,
+  "element": "hair_framing",
+  "rule": "Hair follows the head's motion with a delay, its ends trailing behind and even whipping back across the face during spins.",
+  "check": "In a turning/action pose, do the hair ends trail behind the head's motion?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "aa_hair_bouncy_even_still",
+  "page": 105,
+  "element": "hair_framing",
+  "rule": "Even with no wind, give hair a light, bouncy lift so it does not look pasted flat.",
+  "check": "Does the hair have some volume and lift rather than lying flat against the skull?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_hair_drifts_front",
+  "page": 105,
+  "element": "hair_framing",
+  "rule": "Long side locks can drift forward over the shoulders and partly across the face to frame it.",
+  "check": "Do long side locks fall forward to frame the face/shoulders?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_crown_hairline_layout",
+  "page": 103,
+  "element": "hair_framing",
+  "rule": "Place the crown and hairline first; all hair flow direction is derived from them, also when hair streams upward during a fall.",
+  "check": "Is there a consistent crown point from which all hair groups radiate?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_chin_tilt_up_jump",
+  "page": 31,
+  "element": "jaw_chin_neck",
+  "rule": "Lifting the chin slightly makes the character appear to rise higher and look triumphant.",
+  "check": "Does the head support a slight upward chin tilt with the neck stretching naturally?",
+  "views": [
+   "side",
+   "34"
+  ]
+ },
+ {
+  "id": "aa_blow_to_chin_head_back",
+  "page": 132,
+  "element": "jaw_chin_neck",
+  "rule": "An uppercut throws the head fully back so the underside of the jaw and chin faces the viewer and the neck stretches.",
+  "check": "In the chin-hit pose, is the head thrown back to show the underside of the jaw?",
+  "views": [
+   "expression:knocked_out"
+  ]
+ },
+ {
+  "id": "aa_head_toward_chest_duck",
+  "page": 126,
+  "element": "jaw_chin_neck",
+  "rule": "When ducking, the head tucks down toward the chest and the shoulders rise.",
+  "check": "In a ducking/flinch pose, does the head tuck toward the chest with the chin lowered?",
+  "views": [
+   "expression:scared"
+  ]
+ }
+]

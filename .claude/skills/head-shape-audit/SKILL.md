@@ -57,7 +57,7 @@ The `head_audit.json` it writes is read by `render-validator` (`validate.py --he
 
 ## Face form check (dataset pass 2, 2026-10-15)
 Proportions can pass while the face still looks "pushed in" (Sammy's words for the p-series head). Measure the
-cross-sections too: `body-proportion-audit/scripts/face_study.py` slices the head at brow (0.42 hh), eye (0.50),
+cross-sections too: `<body-proportion-audit>/scripts/face_study.py` slices the head at brow (0.42 hh), eye (0.50),
 cheek (0.62), mouth (0.76) and jaw (0.86) and reports `setback_k`, how far the face front at |x| = k hh lies behind
 the centre line. Bands from 7 verified anime heads are in `knowledge/dataset-study-pass2.md` (setback at 0.30 hh:
 0.10-0.19). Plot the slices of the mesh before and after any bake or morph: a concave bow beside the eyes is the

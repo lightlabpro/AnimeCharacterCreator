@@ -1,0 +1,8 @@
+{
+ "front": ["docs/qa/head_v2/judge/leo_ref_front.png", "docs/reference/mhs3/face_leia_front.png"],
+ "34": ["docs/reference/mhs3/face_eleanor_front.png"],
+ "expression:happy": ["docs/reference/mhs3/face_eleanor_front.png", "docs/reference/mhs3/mouth/m07_kid_smile.png"],
+ "expression:laugh": ["docs/reference/mhs3/mouth/m02_eleanor_laugh.png", "docs/reference/mhs3/mouth/m08_laugh_eyes_closed.png"],
+ "expression:talk_aa": ["docs/reference/mhs3/mouth/m01_eleanor_talk.png"],
+ "expression:angry": ["docs/reference/mhs3/mouth/m06_leo_grit.png"]
+}

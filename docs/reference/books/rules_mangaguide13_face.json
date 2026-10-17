@@ -1,0 +1,894 @@
+[
+ {
+  "id": "mg13_front_circle_cut_sides",
+  "page": 31,
+  "element": "head_shape",
+  "rule": "Front head is built from a circle whose left and right arcs are trimmed off, leaving near-vertical cheek sides; the jaw contour turns inward toward the chin at about mouth level.",
+  "check": "In the front view, are the cheek sides fairly straight/vertical down to about mouth level before the jaw turns in to the chin?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_upper_lid_half_head",
+  "page": 23,
+  "element": "head_shape",
+  "rule": "The upper eyelid line sits at half the head height, measured from the top of the skull (not the hair) to the chin tip.",
+  "check": "Is the top of the upper eyelid about halfway between the top of the skull and the chin tip?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_hairline_mid_crown_lid",
+  "page": 31,
+  "element": "head_shape",
+  "rule": "The hairline sits halfway between the top of the skull and the upper eyelid line.",
+  "check": "Is the hairline roughly midway between the top of the skull and the upper eyelid?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_nose_mouth_halving",
+  "page": 32,
+  "element": "head_shape",
+  "rule": "Below the eyes the face is halved twice: the nose bottom is halfway between the upper eyelid line and the chin tip, and the mouth is halfway between the nose bottom and the chin tip (p23 gives a close variant: lower lid-to-chin split into thirds, nose then mouth).",
+  "check": "Is the nose bottom about halfway from the upper eyelid to the chin, with the mouth about halfway from the nose to the chin?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_cranium_wider_than_face",
+  "page": 34,
+  "element": "head_shape",
+  "rule": "The back of the skull is wider than the face contour: in front view the cranium bulges out past the cheeks on both sides instead of the face outline running straight up into the skull outline.",
+  "check": "In front view, does the skull silhouette extend slightly wider than the cheek/face contour on both sides (no straight line from jaw up into the skull)?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_back_of_head_volume",
+  "page": 36,
+  "element": "head_shape",
+  "rule": "In profile there must be clear skull volume behind the ear; a flat, cliff-like back of head is a typical mistake, and the back of the skull should flow into the neck around the mouth line.",
+  "check": "In side/3/4 view, is there a full rounded back of the skull behind the ear rather than a flat drop into the neck?",
+  "views": [
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_profile_ear_center",
+  "page": 35,
+  "element": "head_shape",
+  "rule": "In profile the ear sits on the vertical center line of the head, at the same height as in front view (top at upper eyelid, lobe at nose bottom).",
+  "check": "In side view, is the ear roughly at the head's front-to-back midpoint and at eye-to-nose height?",
+  "views": [
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_forehead_overhangs_eyes",
+  "page": 35,
+  "element": "head_shape",
+  "rule": "In profile the forehead and brow protrude slightly beyond the eyes, the face dips in a little between the eyes at the bridge, and the eyes sit recessed.",
+  "check": "In side or 3/4 view, does the brow/forehead project slightly forward of the eye, with the eye set back?",
+  "views": [
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_p_shape_head",
+  "page": 139,
+  "element": "head_shape",
+  "rule": "Seen from the side the head reads like the letter P: a big rounded cranium behind and above, with the face plane and jaw as the stem; forehead protrudes and eyes are sunk.",
+  "check": "In side/3/4 view, does the head read as a large rounded cranium plus a narrower face/jaw below the front (a P shape), not an egg?",
+  "views": [
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_head_as_box_planes",
+  "page": 37,
+  "element": "head_shape",
+  "rule": "An angled head shows two planes, a front (face) plane and a side plane; the change from front to side runs down the outer eye corner area to the cheek, and the ear sits on the side plane.",
+  "check": "In the 3/4 view, can you see a distinct side plane of the head (between the outer eye corner/cheek and the ear) in addition to the face front?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_tilted_crown_flat",
+  "page": 37,
+  "element": "head_shape",
+  "rule": "When the head is angled or tilted, the top of the head is a gentle, slightly flattened curve that flows into rounder sides, not a perfect circle stuck on top.",
+  "check": "In the 3/4 or tilted view, does the top of the head curve gently (slightly flattened) rather than a tight round dome?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_face_not_too_big",
+  "page": 128,
+  "element": "head_shape",
+  "rule": "The face looks too big when the eyes are pushed out to the head's edge and no side plane is shown; keep a band of side of head (temple/cheek) visible outside the eyes, especially in 3/4.",
+  "check": "In 3/4 view, is there visible temple/cheek side area between the far eye and the head outline, so the face does not fill the whole head?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_level_symmetry",
+  "page": 28,
+  "element": "head_shape",
+  "rule": "Left and right eyes, brows, eye corners and chin must sit on lines perpendicular to the face's center line; any tilt of these guides between features makes the face look distorted.",
+  "check": "Are both eyes and brows level with each other and square to the face center line (no skew between left and right)?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_consistent_gaze",
+  "page": 26,
+  "element": "eyes",
+  "rule": "Both eyes must look in the same direction; covering one eye at a time is a quick way to catch mismatched gaze.",
+  "check": "Do both irises point in the same gaze direction?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_median_matches_contour",
+  "page": 41,
+  "element": "head_shape",
+  "rule": "On an angled face the curve of the center line (forehead-nose-mouth-chin) echoes the curve of the outer contour on the turned side; brow, cheek and jaw lines should repeat similar curvature.",
+  "check": "In 3/4 view, does the facial center line curve in the same way as the near/far face contour?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_34_centerline_nose_bridge",
+  "page": 38,
+  "element": "head_shape",
+  "rule": "In 3/4 the center line runs as a curve from crown to chin; the nose bridge is placed on that curve between brow height and the outer-eye/lower-lid level, and the mouth sits where the center line crosses the mouth line.",
+  "check": "In 3/4 view, do the nose and the middle of the mouth both lie on one smooth curved center line?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_34_far_cheek",
+  "page": 38,
+  "element": "face_by_type",
+  "rule": "In 3/4 the far-side contour bulges out for the cheek at a height about midway between the nose bottom and the mouth, then angles in to the chin.",
+  "check": "In 3/4 view, does the far cheek contour bulge outward around nose/mouth level before turning in to the chin?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_age_lower_face",
+  "page": 140,
+  "element": "face_by_type",
+  "rule": "Younger characters keep the crown, upper eyelid and nose at the same height but lower the lower eyelid (taller eyes), raise the mouth and chin (shorter lower face), and widen the face outline; adults have shorter eyes and a longer, narrower lower face.",
+  "check": "Does the face's age read correctly: for a younger look, are the eyes taller and the lower face shorter/wider; for an adult, eyes less tall and chin lower?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_2d_teen_child_balance",
+  "page": 140,
+  "element": "face_by_type",
+  "rule": "A 2D teen head has the proportions of a real five-year-old (large cranium, small lower face); a 2D grade-schooler matches a real newborn's proportions.",
+  "check": "Is the cranium large relative to a small lower face, as in a young child's skull, rather than realistic adult proportions?",
+  "views": [
+   "front",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_male_smaller_eyes_narrow",
+  "page": 88,
+  "element": "face_by_type",
+  "rule": "Males are typically drawn with smaller eyes than females, so the male face is narrowed to keep the balance; male shoulders are about 2 head widths versus about 1.5 for females.",
+  "check": "For a male head, are the eyes smaller and the face narrower than the female equivalent?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_thin_neck_type",
+  "page": 36,
+  "element": "face_by_type",
+  "rule": "A slender, thin-necked character is made by shortening the distances from the outer eye corner to the ear and from the ear to the back of the head in profile.",
+  "check": "For a slender character in side view, is the head shallow front-to-back (short eye-to-ear and ear-to-back distances) with a thin neck?",
+  "views": [
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_eye_height_third",
+  "page": 31,
+  "element": "eyes",
+  "rule": "Eye height (upper lid to lower lid) is about one third of the distance from the upper eyelid line to the chin tip in this large-eye style.",
+  "check": "Is each eye's height roughly one third of the upper-eyelid-to-chin distance?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_eye_gap_one_eye",
+  "page": 23,
+  "element": "eyes",
+  "rule": "Leave a gap of about one eye width between the two eyes.",
+  "check": "Is the space between the inner eye corners about one eye width?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_iris_dome_pupil",
+  "page": 45,
+  "element": "eyes",
+  "rule": "The dark part of the eye is a bowl-shaped iris with the pupil inside, covered by a dome cornea; in front view the iris is a full circle/oval, and as the face turns it becomes a narrower ellipse whose position shifts toward the turn.",
+  "check": "In 3/4 view, is the iris compressed horizontally into a narrower ellipse compared with front view?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_pupil_not_stuck",
+  "page": 46,
+  "element": "eyes",
+  "rule": "The iris/pupil should not stay centered like a sticker when the head turns: at a tight angle the iris edge on the near-corner side stays round while the other side flattens.",
+  "check": "In 3/4 view, is the iris shape asymmetric (flatter on one side) and shifted, rather than an unchanged centered decal?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_lid_five_blocks",
+  "page": 46,
+  "element": "eyes",
+  "rule": "An eye outline is made of five blocks: thick upper lid, inner corner, upper outer flick, lower outer corner, and lower lid; styles differ by which blocks are omitted, with the upper lid always the heaviest.",
+  "check": "Is the upper lid line the darkest/thickest part of the eye outline, with lighter or partial lower-lid and corner marks?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_eye_socket_hill",
+  "page": 46,
+  "element": "eyes",
+  "rule": "The area around the eye is shaped like a hill (a hexagonal mound); when the face turns, the eye on the far side narrows sharply while staying the same height.",
+  "check": "In 3/4 view, is the far eye much narrower than the near eye but about the same height?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_corner_angle_60",
+  "page": 47,
+  "element": "eyes",
+  "rule": "In front view the two eyes are mirror images and the upper and lower lid lines meet the corners at roughly 60 degrees; at angles the corner angles change but the vertical height of the eye does not.",
+  "check": "In front view, are both eyes mirror images with similar corner angles, and in 3/4 is the eye height unchanged while width changes?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_lashes_radial",
+  "page": 47,
+  "element": "eyes",
+  "rule": "Eyelashes grow radially from the lid edge, with curved roots and tapering, stretched tips; lashes pointing in random directions look wrong.",
+  "check": "Do the eyelash spikes fan out radially from the lid and taper to points?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_double_lid_highlight",
+  "page": 32,
+  "element": "eyes",
+  "rule": "Finished eyes get a double-eyelid crease line above the upper lid, eyelash flicks, and white highlights in the iris.",
+  "check": "Does each eye have a crease line above the upper lid and at least one white highlight in the iris?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_profile_eye_wedge",
+  "page": 47,
+  "element": "eyes",
+  "rule": "In profile the eye becomes a wedge/arrowhead shape set back from the face line, with the iris as a narrow vertical ellipse touching the front.",
+  "check": "In side view, is the eye a narrow wedge with a thin vertical-oval iris, set back from the face contour?",
+  "views": [
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_brow_eye_offset_34",
+  "page": 41,
+  "element": "brows",
+  "rule": "Because the eyes are recessed under the brow ridge, in 3/4 the far eyebrow and eye do not line up vertically; they appear shifted relative to each other, which keeps the face from looking flat.",
+  "check": "In 3/4 view, is the far brow offset horizontally from the far eye (brow sitting on the ridge outside the eye) rather than stacked flat above it?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_brow_height",
+  "page": 31,
+  "element": "brows",
+  "rule": "Eyebrows sit just above the eyes, about one quarter of the hairline-to-upper-eyelid distance above the upper lid.",
+  "check": "Are the brows close above the eyes (about a quarter of the hairline-to-eye distance)?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_brow_inner_past_eye",
+  "page": 31,
+  "element": "brows",
+  "rule": "The inner end of each eyebrow extends a little past the inner corner of the eye toward the center.",
+  "check": "Does the inner end of each brow reach slightly further toward the nose than the inner eye corner?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_34_near_brow_pos",
+  "page": 38,
+  "element": "brows",
+  "rule": "In 3/4 the far brow tip stops where the brow line meets the face's center-line curve; the near brow is placed over its eye on the brow guide.",
+  "check": "In 3/4 view, does the far brow end near the center line/bridge and not cross over it?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_brows_movable_mask",
+  "page": 166,
+  "element": "brows",
+  "rule": "Eyebrows are movable parts that drive expression; think of brows plus eye area as a hero's mask whose shape changes with emotion.",
+  "check": "Are the brows a separate, readable shape whose position/angle could change with expression (not hidden or fixed flat)?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_nose_triangle_minimal",
+  "page": 50,
+  "element": "nose",
+  "rule": "The anime nose has a triangular cross-section and is reduced to a line or a small mark; options are tip only, center line, nostril, one side line, or a small shadow under the nose.",
+  "check": "Is the nose a small, minimal triangular form or mark rather than a fully modeled realistic nose with wide nostrils?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_nose_on_centerline",
+  "page": 38,
+  "element": "nose",
+  "rule": "In 3/4 the nose bridge follows the face center line, and its side profile can break the far cheek outline at a tight angle.",
+  "check": "In 3/4 view, does the nose sit on the curved center line and point the direction the face turns?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_mouth_small_corners_even",
+  "page": 48,
+  "element": "mouth",
+  "rule": "The mouth is a short line with both corners drawn at the same height and the same shape; leaving out the corners makes the expression unreadable.",
+  "check": "Is the mouth a small line with clearly defined, matching left and right corners at equal height?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_mouth_center_tilt",
+  "page": 48,
+  "element": "mouth",
+  "rule": "The center of the mouth always sits on the face center line, even when the face is tilted or turned.",
+  "check": "Is the middle of the mouth on the facial center line in both front and 3/4 views?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_mouth_34_tight",
+  "page": 48,
+  "element": "mouth",
+  "rule": "In loose 3/4 the mouth is drawn without the vertical center line; at tight angles it shows as a small notch at the face contour.",
+  "check": "In 3/4 view, is the mouth a simple short shape positioned on the center line without a philtrum/split line?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_child_round_adult_straight",
+  "page": 48,
+  "element": "mouth",
+  "rule": "Children's mouths curve (rounded), adult mouths are straighter or a loose S-curve.",
+  "check": "Does the mouth line curvature match age (rounded for child, straighter/S-curve for adult)?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_profile_upper_lip",
+  "page": 36,
+  "element": "mouth",
+  "rule": "In profile the upper lip projects slightly in front of the lower lip and the chin juts out a little; a high upper lip improves balance.",
+  "check": "In side view, does the upper lip sit slightly forward of the lower lip, with a visible chin projection below?",
+  "views": [
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_open_mouth_upper_first",
+  "page": 48,
+  "element": "mouth",
+  "rule": "An open mouth is built from the upper lip line, with the lower lip curve coming out from under it, making a rounded opening wider at the top.",
+  "check": "When the mouth opens, is the opening shaped with a defined upper lip edge and a lower curve hanging under it?",
+  "views": [
+   "front",
+   "34",
+   "expression:open_mouth"
+  ]
+ },
+ {
+  "id": "mg13_teeth_by_opening",
+  "page": 49,
+  "element": "teeth_tongue",
+  "rule": "Closed mouth: thin lines and no teeth; slightly open: no tooth line or only the upper teeth; wide open: upper and lower teeth both show and the jaw drops, lengthening the face.",
+  "check": "As the mouth opens wider, do first the upper teeth and then the lower teeth appear, with the jaw lowering for a wide-open mouth?",
+  "views": [
+   "front",
+   "34",
+   "expression:open_mouth"
+  ]
+ },
+ {
+  "id": "mg13_tongue_in_open_mouth",
+  "page": 49,
+  "element": "teeth_tongue",
+  "rule": "Inside a wide-open mouth the tongue is a rounded mass sitting low on the floor of the mouth behind the lower teeth.",
+  "check": "In a wide-open mouth, is a tongue visible low in the mouth behind the lower teeth?",
+  "views": [
+   "expression:open_mouth"
+  ]
+ },
+ {
+  "id": "mg13_ear_eyelid_to_nose",
+  "page": 31,
+  "element": "ears",
+  "rule": "Ears span from the upper eyelid line (top) to the nose-bottom line (lobe).",
+  "check": "Do the ears run from upper-eyelid height down to nose-bottom height?",
+  "views": [
+   "front",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_ear_glasses_temple",
+  "page": 49,
+  "element": "ears",
+  "rule": "The ear's attachment point is where the temple arm of a pair of glasses would reach, level with the eyes.",
+  "check": "Is the front of each ear at eye level, where a glasses arm from the eye would land?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_ear_six_corners",
+  "page": 49,
+  "element": "ears",
+  "rule": "Simplify the ear's rim into about six corners (angular turns) for a more convincing shape.",
+  "check": "Does the ear have a defined, angular rim shape with inner fold detail rather than a plain blob?",
+  "views": [
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_34_ear_position",
+  "page": 38,
+  "element": "ears",
+  "rule": "In 3/4 the ear base sits halfway across the side plane of the head and the earlobe is level with the nose bottom.",
+  "check": "In 3/4 view, is the ear placed in the middle of the side plane with its lobe level with the nose bottom?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_neck_width_iris",
+  "page": 32,
+  "element": "jaw_chin_neck",
+  "rule": "Average neck width: the neck sides line up with the inner edges of the irises (dark of the eye) in front view; neck length is about a quarter of the head height for a 6-head body.",
+  "check": "In front view, do the neck sides fall roughly under the inner edges of the irises?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_shoulder_width",
+  "page": 32,
+  "element": "jaw_chin_neck",
+  "rule": "Shoulder width is about 1.5 times the ear-to-ear width for a typical (female) character, with the shoulder line starting where neck, trapezius and clavicle meet below the ear.",
+  "check": "In a bust render, are the shoulders about 1.5 times the head width (female) or about 2 times (male)?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_under_chin_plane",
+  "page": 43,
+  "element": "jaw_chin_neck",
+  "rule": "There is a visible underside plane connecting chin tip to neck; even a slightly turned face shows a little of it, and it is often filled with solid shadow.",
+  "check": "In 3/4 view, is there a visible underside of the jaw between chin and neck (often in shadow)?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_sphere_shield_cylinder",
+  "page": 43,
+  "element": "jaw_chin_neck",
+  "rule": "Simplify the head as a sphere, the face as a curved shield in front, and the neck as a cylinder plugged in under the back half of the head.",
+  "check": "Does the neck join the head under the rear half of the skull, behind the face, like a cylinder under a sphere?",
+  "views": [
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_neck_from_ear_base",
+  "page": 44,
+  "element": "jaw_chin_neck",
+  "rule": "In 3/4 and profile the neck rises from the ear base and angles forward; drawing it straight down from the jaw erases the chin underside and makes the head look flat.",
+  "check": "In 3/4 view, does the back line of the neck start near the ear base with the jawline clearly above the neck?",
+  "views": [
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_neck_parallel_lines",
+  "page": 39,
+  "element": "jaw_chin_neck",
+  "rule": "In 3/4 the left and right neck lines run roughly parallel; the front neck line runs from under the chin and the back line drops from the back of the head.",
+  "check": "In 3/4 view, are the two neck contour lines roughly parallel?",
+  "views": [
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_profile_neck_diagonal",
+  "page": 35,
+  "element": "jaw_chin_neck",
+  "rule": "In profile the neck is angled slightly forward (diagonal), and the back of the head meets the neck at about mouth height.",
+  "check": "In side view, does the neck slant forward rather than stand vertical?",
+  "views": [
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_neck_motion",
+  "page": 162,
+  "element": "jaw_chin_neck",
+  "rule": "Head movement pulls the shoulders: tilting the head sideways or turning it raises the shoulder on that side slightly; looking up stretches the throat, looking down tenses the back of the neck.",
+  "check": "In a tilted or turned pose, does the shoulder on the tilt/turn side rise slightly?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_hair_volume_above_skull",
+  "page": 32,
+  "element": "hair_framing",
+  "rule": "Hair sits outside the skull: its outline adds about 1/8 of the head height above the crown and wraps around the cranium.",
+  "check": "Does the hair outline stand clearly above and around the skull (about an eighth of the head height of volume) rather than hugging it like paint?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_hair_three_blocks",
+  "page": 106,
+  "element": "hair_framing",
+  "rule": "Hair is built from three blocks: bangs (front), middle/side hair, and back hair, each a separate mass; the hairline boundary is the reference.",
+  "check": "Can you distinguish bangs, side hair and back hair as separate masses?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_hair_ribbon_veil",
+  "page": 109,
+  "element": "hair_framing",
+  "rule": "Think of hair as ribbons hanging around the head like a birdcage/veil, with the face area cut out; side hair falls in front of the ears and frames the face.",
+  "check": "Does the hair fall around the head like a veil with the face cut out, side locks framing the cheeks?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_hair_from_part",
+  "page": 111,
+  "element": "hair_framing",
+  "rule": "All locks flow outward from the parting/whorl; drawing every lock from that point makes the hair look natural.",
+  "check": "Do the hair locks visibly radiate from a part or crown whorl?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_hair_depth_narrow",
+  "page": 110,
+  "element": "hair_framing",
+  "rule": "Locks get narrower toward the sides of the head sphere to show depth, and they overlap in order from front to back.",
+  "check": "Are the bang locks wider at the front center and narrower toward the sides, with front locks overlapping those behind?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_hair_highlight_band",
+  "page": 110,
+  "element": "hair_framing",
+  "rule": "Hair highlights are a horizontal band that follows a latitude line of the head sphere.",
+  "check": "Is the hair highlight a band running around the head following its curvature?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_lock_banana",
+  "page": 110,
+  "element": "hair_framing",
+  "rule": "Each lock has a triangular, banana-like cross-section with a gentle curve on the back; layering these gives 3D hair.",
+  "check": "Are the hair locks thick, curved wedge shapes with a ridge, rather than flat strips?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_lock_tips_random",
+  "page": 108,
+  "element": "hair_framing",
+  "rule": "Lock tips vary in length, gap and thickness; identical repeated spikes look copied and monotonous. Weight near the tip makes a lock look soft, weight mid-lock makes it look stiff.",
+  "check": "Do the hair tips vary in length and width rather than repeating identical spikes?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_lock_sizes_vary",
+  "page": 105,
+  "element": "hair_framing",
+  "rule": "Hair bundles should not all be the same size, and their flow should be consistent.",
+  "check": "Are the hair bundles of varied sizes with a consistent flow direction?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_hair_weight_position",
+  "page": 111,
+  "element": "hair_framing",
+  "rule": "Hair weight is where the volume is widest: low weight reads calm, high weight reads lively, even at the same length.",
+  "check": "Does the widest part of the hair sit where the character's mood needs it (low = calm, high = lively)?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_in_out_silhouette",
+  "page": 112,
+  "element": "hair_framing",
+  "rule": "Judge a hairstyle by its outer silhouette and its inner silhouette (the face-shaped window the bangs and side hair leave).",
+  "check": "Is the face opening framed by the hair a clean, readable shape?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_bangs_change_style",
+  "page": 114,
+  "element": "hair_framing",
+  "rule": "Changing only the bangs (or the knot position/height) changes the character's look strongly; bangs, middle and back hair can be mixed and matched.",
+  "check": "Are the bangs a deliberate, distinctive shape over the forehead?",
+  "views": [
+   "front"
+  ]
+ },
+ {
+  "id": "mg13_neck_shadow_only",
+  "page": 131,
+  "element": "face_shading",
+  "rule": "With light from above-front, the main shadow is a cast shadow on the neck under the jaw; the face itself stays mostly unshaded.",
+  "check": "Is there a clear shadow on the neck under the jaw while the face is mostly lit?",
+  "views": [
+   "front",
+   "34",
+   "side"
+  ]
+ },
+ {
+  "id": "mg13_cheek_blush",
+  "page": 32,
+  "element": "face_shading",
+  "rule": "Finished faces carry a soft pink blush on the cheeks just under the eyes, plus highlights in the eyes and hair.",
+  "check": "Is there a soft pink blush on the cheeks just below the eyes?",
+  "views": [
+   "front",
+   "34"
+  ]
+ },
+ {
+  "id": "mg13_face_down_shadow",
+  "page": 163,
+  "element": "face_shading",
+  "rule": "A head tilted down gets shadow across the upper face/eyes, which turns the feeling inward.",
+  "check": "When the head tilts down, is there shading over the upper face/eye area?",
+  "views": [
+   "expression:downcast"
+  ]
+ },
+ {
+  "id": "mg13_expr_three_parts",
+  "page": 165,
+  "element": "expression_general",
+  "rule": "Expressions come from three linked parts: eyebrows, eyelids and mouth. Moving one moves the next (brows push or pull the upper lid; mouth corners pull the lower lid).",
+  "check": "In each expression, do brows, eyelids and mouth all change together, not only one feature?",
+  "views": [
+   "expression:all"
+  ]
+ },
+ {
+  "id": "mg13_expr_height_control",
+  "page": 165,
+  "element": "expression_general",
+  "rule": "With the same brow and mouth shapes, simply changing their height changes the emotion.",
+  "check": "Do the expression shape keys move the brows and mouth up/down rather than only reshaping them?",
+  "views": [
+   "expression:all"
+  ]
+ },
+ {
+  "id": "mg13_expr_mouth_corners",
+  "page": 166,
+  "element": "expression_general",
+  "rule": "Mouth corners carry the mood: dropped corners look dissatisfied, straight corners look blank, raised corners look like a smile; always draw the corners.",
+  "check": "Do the mouth corners clearly turn up for positive and down for negative expressions?",
+  "views": [
+   "expression:all"
+  ]
+ },
+ {
+  "id": "mg13_expr_head_angle",
+  "page": 163,
+  "element": "expression_general",
+  "rule": "Head angle changes the impression: face tilted up looks outward and confrontational; tilted down looks inward and brooding.",
+  "check": "Does the expression's head angle fit it (up for outward emotions, down for inward ones)?",
+  "views": [
+   "expression:all"
+  ]
+ },
+ {
+  "id": "mg13_happy_corners_lower_lid",
+  "page": 165,
+  "element": "expression_happy",
+  "rule": "A smile raises the mouth corners and the lower eyelids rise with them, giving a gentle squint.",
+  "check": "In the happy expression, are the mouth corners up and the lower lids pushed up?",
+  "views": [
+   "expression:happy"
+  ]
+ },
+ {
+  "id": "mg13_laugh_brows_up",
+  "page": 165,
+  "element": "expression_laugh",
+  "rule": "Laughing/fun reads when the eyebrows are raised and separated from the eyes; the mouth opens with raised corners.",
+  "check": "In the laugh expression, are the brows raised away from the eyes with an open, upturned mouth?",
+  "views": [
+   "expression:laugh"
+  ]
+ },
+ {
+  "id": "mg13_angry_brows_v",
+  "page": 166,
+  "element": "expression_angry",
+  "rule": "Anger: brows pulled down toward the eyes with the inner ends lowered in a V and a furrow between them; the upper lid is pushed down and the lower lid rises.",
+  "check": "In the angry expression, are the brows angled down toward the center and pressing low onto the eyes?",
+  "views": [
+   "expression:angry"
+  ]
+ },
+ {
+  "id": "mg13_determined_brows_low",
+  "page": 165,
+  "element": "expression_determined",
+  "rule": "Serious/determined: lower the brows closer to the eyes (less tilt than anger) with a straight mouth, which narrows and strengthens the eyes.",
+  "check": "In the determined expression, are the brows lowered close to the eyes with a firm mouth?",
+  "views": [
+   "expression:determined"
+  ]
+ },
+ {
+  "id": "mg13_sad_corners_down",
+  "page": 165,
+  "element": "expression_sad",
+  "rule": "Sadness/displeasure: mouth corners drop and the lower eyelids drop with them; brows tilt up at the inner ends (worried mask shape).",
+  "check": "In the sad expression, do the mouth corners turn down with brows raised at the inner ends?",
+  "views": [
+   "expression:sad"
+  ]
+ },
+ {
+  "id": "mg13_surprised_lids_up",
+  "page": 165,
+  "element": "expression_surprised",
+  "rule": "Surprise: brows rise in high arches and pull the upper lids up so the eyes look wide open; the mouth opens wide.",
+  "check": "In the surprised expression, are the brows high and arched, eyes wide, mouth open?",
+  "views": [
+   "expression:surprised"
+  ]
+ },
+ {
+  "id": "mg13_relaxed_mouth_low",
+  "page": 165,
+  "element": "expression_other",
+  "rule": "Lowering the mouth on the face reads as relaxed or goofy; the mouth's height shows how relaxed the character is.",
+  "check": "In a relaxed/goofy expression, is the mouth set slightly lower and looser?",
+  "views": [
+   "expression:relaxed"
+  ]
+ },
+ {
+  "id": "mg13_wink_giggle",
+  "page": 164,
+  "element": "expression_other",
+  "rule": "A giggle/playful look closes one eye in a wink with an upturned mouth; a demure laugh covers the mouth with a hand.",
+  "check": "In the wink expression, is one eye closed with an upward-curved lid line while the other stays open with a smile?",
+  "views": [
+   "expression:wink"
+  ]
+ }
+]
