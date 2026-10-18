@@ -241,3 +241,14 @@ references from mhs3 as target look. remember to use typesafe".
   0.90 / 0.87-0.90. Every variant tried tonight sat at anime 0.88-0.92, MHS3 0.57-0.65, polished 0.20-0.28: tuning
   this pipeline (SDF head + flat-colour decal pieces + n56 toon shader + blade hair) does not move the polish gap.
   Culprits named: face shape, outline, eyes, hair (3/4).
+- Sammy chose to lift the no-VRoid rule ("Allow VRoid-standard base"). Five male VRoid exports (Sketchfab CC BY,
+  TexVerse) downloaded with his OK to datasets_work/vroid_male (credits in docs/reference/ATTRIBUTION.md). All share the
+  VRoid face mesh and UVs; the Sketchfab GLBs have no shape keys (expressions to rebuild).
+- typesafe_anime_check, unlit (raw textures): anime 0.88-0.92, face shape 0.92-0.93, but MHS3 0.05-0.17, polished
+  0.09-0.22 (culprit skin shading). With a toon set-up (blender/head_vroid/vroid_toon.py: texture lit / Leo-ratio
+  shadow tint, outline, MHS3 key light): 3f8f0119 front anime 0.93, face 0.92, MHS3 0.57, **polished 0.50** (h6 0.28),
+  3/4 0.46. Swapping 0fe1676a's face + iris onto it: polished 0.25 (worse, reverted). Warm skin tint + green iris by
+  hue shift: 0.43 / 0.34 (noise). Ellipsoid-blended face normals: 0.37 (cleaner, flatter). Smoothed-proxy normals:
+  blotchy (dropped). Ramp softness / light angle: 0.37-0.40, culprit still skin shading.
+- Board: q32/board_vroid_base.png. Next: MHS3 painted skin details on the VRoid face (nose highlight, cheek warmth,
+  painted shadow shapes), MHS3 eye/brow paint, hair highlight streaks, head pose, expressions rebuilt, export.
