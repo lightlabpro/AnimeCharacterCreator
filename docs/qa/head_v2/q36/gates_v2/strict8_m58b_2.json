@@ -1,0 +1,593 @@
+{
+ "cand": "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m58b_g1",
+ "bases": [
+  "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m26_g1"
+ ],
+ "reps": 3,
+ "views": [
+  "front",
+  "34",
+  "side",
+  "y70",
+  "eye_close",
+  "prof_close"
+ ],
+ "ab": {
+  "m26_g1": {
+   "front": {
+    "overall": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    },
+    "head_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eyes": {
+     "A": 0,
+     "B": 1,
+     "other": 2
+    },
+    "brows": {
+     "A": 0,
+     "B": 1,
+     "other": 2
+    },
+    "nose_mouth": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    },
+    "jaw_chin": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ears": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eye_layout": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ear_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "expression": {
+     "A": 1,
+     "B": 1,
+     "other": 1
+    },
+    "profile_eye": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "mouth_depth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "upper_lip": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "face_shading": {
+     "A": 0,
+     "B": 1,
+     "other": 2
+    },
+    "clean": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    }
+   },
+   "34": {
+    "overall": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "head_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eyes": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "brows": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "nose_mouth": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    },
+    "jaw_chin": {
+     "A": 1,
+     "B": 0,
+     "other": 2
+    },
+    "ears": {
+     "A": 0,
+     "B": 1,
+     "other": 2
+    },
+    "eye_layout": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ear_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "expression": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    },
+    "profile_eye": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "mouth_depth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "upper_lip": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "face_shading": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    },
+    "clean": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    }
+   },
+   "side": {
+    "overall": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "head_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eyes": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "brows": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "nose_mouth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "jaw_chin": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ears": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eye_layout": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ear_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "expression": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "profile_eye": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "mouth_depth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "upper_lip": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "face_shading": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "clean": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    }
+   },
+   "y70": {
+    "overall": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "head_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eyes": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "brows": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "nose_mouth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "jaw_chin": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ears": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eye_layout": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ear_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "expression": {
+     "A": 2,
+     "B": 0,
+     "other": 1
+    },
+    "profile_eye": {
+     "A": 0,
+     "B": 1,
+     "other": 2
+    },
+    "mouth_depth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "upper_lip": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "face_shading": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "clean": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    }
+   },
+   "eye_close": {
+    "overall": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    },
+    "head_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eyes": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "brows": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "nose_mouth": {
+     "A": 0,
+     "B": 1,
+     "other": 2
+    },
+    "jaw_chin": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ears": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eye_layout": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ear_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "expression": {
+     "A": 0,
+     "B": 2,
+     "other": 1
+    },
+    "profile_eye": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "mouth_depth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "upper_lip": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "face_shading": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "clean": {
+     "A": 0,
+     "B": 3,
+     "other": 0
+    }
+   },
+   "prof_close": {
+    "overall": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "head_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "eyes": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "brows": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "nose_mouth": {
+     "A": 0,
+     "B": 2,
+     "other": 1
+    },
+    "jaw_chin": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "ears": {
+     "A": 0,
+     "B": 2,
+     "other": 1
+    },
+    "eye_layout": {
+     "A": 1,
+     "B": 0,
+     "other": 2
+    },
+    "ear_shape": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "expression": {
+     "A": 1,
+     "B": 0,
+     "other": 2
+    },
+    "profile_eye": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "mouth_depth": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "upper_lip": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "face_shading": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    },
+    "clean": {
+     "A": 0,
+     "B": 0,
+     "other": 3
+    }
+   },
+   "views_won": 2
+  }
+ },
+ "anime": {
+  "mhs3": {
+   "m58b_g1": [
+    0.592,
+    0.018
+   ],
+   "m26_g1": [
+    0.461,
+    0.023
+   ]
+  },
+  "eyes_anime": {
+   "m58b_g1": [
+    0.457,
+    0.017
+   ],
+   "m26_g1": [
+    0.453,
+    0.018
+   ]
+  },
+  "face_anime": {
+   "m58b_g1": [
+    0.837,
+    0.004
+   ],
+   "m26_g1": [
+    0.836,
+    0.004
+   ]
+  },
+  "shading_anime": {
+   "m58b_g1": [
+    0.769,
+    0.007
+   ],
+   "m26_g1": [
+    0.729,
+    0.003
+   ]
+  },
+  "polished": {
+   "m58b_g1": [
+    0.397,
+    0.005
+   ],
+   "m26_g1": [
+    0.234,
+    0.007
+   ]
+  }
+ },
+ "defects": {
+  "vroid_look": {
+   "m58b_g1": 0.802,
+   "m26_g1": 0.827
+  },
+  "too_anime": {
+   "m58b_g1": 0.633,
+   "m26_g1": 0.708
+  },
+  "eyes_vroid": {
+   "m58b_g1": 0.847,
+   "m26_g1": 0.87
+  },
+  "artifacts": {
+   "m58b_g1": 0.867,
+   "m26_g1": 0.94
+  },
+  "eyes_mhs3": {
+   "m58b_g1": 0.282,
+   "m26_g1": 0.28
+  },
+  "brows_mhs3": {
+   "m58b_g1": 0.45,
+   "m26_g1": 0.37
+  },
+  "nose_mhs3": {
+   "m58b_g1": 0.8,
+   "m26_g1": 0.728
+  },
+  "mouth_mhs3": {
+   "m58b_g1": 0.698,
+   "m26_g1": 0.663
+  },
+  "face_adult": {
+   "m58b_g1": 0.495,
+   "m26_g1": 0.45
+  },
+  "skin_mhs3": {
+   "m58b_g1": 0.693,
+   "m26_g1": 0.603
+  }
+ },
+ "fails": [],
+ "notes": [],
+ "drift": {
+  "front": 0.0,
+  "34": 0.0,
+  "side": 0.0,
+  "y70": 0.0,
+  "eye_close": 0.0,
+  "prof_close": 0.0,
+  "cand_front": 0.0,
+  "cand_34": 0.0,
+  "cand_side": 0.0,
+  "cand_y70": 0.0,
+  "cand_eye_close": 0.0,
+  "cand_prof_close": 0.0
+ },
+ "verdict": "PASS"
+}

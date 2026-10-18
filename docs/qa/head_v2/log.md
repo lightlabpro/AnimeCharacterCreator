@@ -339,3 +339,26 @@ them was reported as success without comparing to the version Sammy had accepted
   detectors tuned under the frontal light) - not loosened, to be re-derived before they block. Still failing,
   marginally: profile P2/P3/P5 (err 1.0-1.3): the stronger profile that passes them does not reliably beat m26 in
   the side A/B - Sammy's call. Board q36/board_m48_1_vs_m26.png, gates q36/gates/.
+
+## q36c - "Try again, and make the validations even more strict and robust" (m50-m58)
+Strict gate v2 `blender/tools/mhs3_strict_gate.py` (rulebook `pass.regression_gate`, master-loop step 6b):
+6 renders (front, 3/4, side, 70 deg, eye close-up, profile close-up) x 3 runs x both picture orders vs every
+baseline - any overall/head_shape loss in any run fails, majority loss on eyes/nose_mouth/jaw_chin/shading/clean
+fails, >= 2 views must be won; anime check x 3 runs x 3 MHS3 references (no drop beyond 1 SE, mhs3 up > 2 SE);
+defect regression; `--sanity` (baseline vs itself: 0 false wins in 18 comparisons); baseline AND candidate rendered
+twice in the session (drift > 1.0 refuses); every render carries a spec sidecar + vroid_toon.py sha1 that must match
+each other and the locked shader.
+What the robustness checks caught:
+- the 1-run gate had passed m48_1; 3 runs showed it loses the 70-degree view 3/3 (and side 2/3).
+- a stale vroid_toon.py on the PC rendered 11:20-11:28 candidates with the rejected q36 shader; every "side loss"
+  of that window was a shader difference, not the model (now refused by the spec/sha1 check).
+- mouth: the narrower mouth / weaker lip (q36) lost mouth_mhs3 0.66 -> 0.55; q35 mouth restored.
+- profile strength sweep (prof_close/side/y70, 4 runs each): none -> side loss; nose 4.5-6.5 mm back -> prof_close
+  head_shape loss; **3 mm back + 2 mm root lift -> no loss** (m58b).
+Paint: eye whites bright like Leo with a grey lid shadow (3D, under the lid curve), skin crease line, iris from
+sampled Leo colours (muted green, dark top, bright lower crescent, slim dark-green pupil).
+**m58b** (m26 shape + shader, eye-shape standard, new eye paint, q35 mouth, ears +4 mm, nose 3 mm back + root 2 mm):
+strict gate run 2 PASS; run 1 FAIL only on face_anime 0.832 vs 0.839 (> 1 SE, SE 0.003); in both runs zero A/B losses
+in all 6 views, front and eye close-up won 3/3; mhs3 0.47 -> 0.58/0.59, polished 0.23 -> 0.40, shading 0.73 -> 0.77.
+Still failing (honest): profile mesh rules P2/P3/P5/P6 (err 1.0-1.8) - the stronger profile that meets them loses
+the profile close-up A/B; Sammy's call. Board q36/board_m58b_vs_m26.png, eyes q36/eyes_m58b_vs_m26.png, gates q36/gates_v2/.
