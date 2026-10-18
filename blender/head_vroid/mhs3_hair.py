@@ -59,8 +59,8 @@ K = dict(
     radial=0.40,                  # normal blend toward the skull centre
     cap_off=0.0022,
     hairline_a=(0, 30, 55, 75, 100, 130, 160, 180),       # cap edge: polar deg (from the top) per azimuth
-    hairline_p=(62, 70, 100, 96, 98, 108, 114, 118),      # (front high, down round the ears, low at the nape)
-    style="crop",
+    hairline_p=(62, 70, 86, 92, 98, 108, 114, 118),      # (front high, down round the ears, low at the nape)
+    style="crop", over_ears=False,
     ao_rays=24, ao_dist=0.02, ao_cone=0.6, ao_lo=0.25, ao_hi=0.85, ao_k=0.0,   # baked depth between clumps
     vol=0.45, wid=1.05, lng=1.0, base_k=0.3, th_k=0.55, taper_k=0.8, tip_k=1.4, bend_k=1.0,
     c_dz=0.0,                     # skull centre offsets (m)
@@ -79,9 +79,12 @@ def _side_crop(sc, P, sgn):
     rng, J = H._rng(P.get("seed", 13) + (sgn > 0))
     dp = P.get("len", 0.0)
     out = []
-    for a1, p1, w in ((48, 104, 0.062), (60, 112, 0.060), (72, 106, 0.064), (84, 98, 0.066), (96, 96, 0.066),
-                      (108, 104, 0.066), (120, 112, 0.066), (132, 116, 0.066)):
-        out.append(dict(a0=sgn * (a1 - 14) + J(2), p0=P.get("root", 12) + J(2), a1=sgn * a1 + J(2), p1=p1 + dp + J(2),
+    for a1, p1, w in ((48, 104, 0.062), (60, 112, 0.060), (72, 106, 0.064), (84, 98, 0.080), (96, 96, 0.084),
+                      (108, 104, 0.080), (120, 112, 0.070), (132, 116, 0.066)):
+        pe = p1 + (dp if a1 >= 80 else min(dp, 8.0))   # in front of the ear stay short (no VRoid-style sidelocks)
+        if 80 <= a1 <= 112 and not K.get("over_ears"):   # over the ear: the clumps follow the skull (ears excluded), so a longer
+            pe = min(pe, 97.0)               # one would run under the ear shell and the ear would poke through
+        out.append(dict(a0=sgn * (a1 - 14) + J(2), p0=P.get("root", 12) + J(2), a1=sgn * a1 + J(2), p1=pe + J(2),
                         w=w, vol=P.get("vol", 0.008), flick=0.002, drop=0.002, base=0.002, bend=0.0, asym=-sgn,
                         taper=0.62, tip=1.3, th=0.30, shade=0.0, side=1, ease=1.3))
     return out
@@ -152,8 +155,8 @@ def recipe(style):
             Front=("crop", {"part": 20, "len": 100, "count_l": 3, "reach_l": 36, "count_r": 5, "reach_r": 56, "width": 0.95,
                             "seed": 71}),
             Top=("flow", {"vol": 0.7, "p0": 14, "a_from": 125, "a_to": 235, "count": 8, "seed": 73}),
-            SideL=("crop", {"len": 24, "seed": 75}), SideR=("crop", {"len": 24, "seed": 77}),
-            Back=("flow", {"len": 22, "vol": 0.036, "seed": 79}), Base=("none", {}), attach=[])
+            SideL=("crop", {"len": 26, "seed": 75}), SideR=("crop", {"len": 26, "seed": 77}),
+            Back=("flow", {"len": 34, "vol": 0.046, "seed": 79}), Base=("none", {}), attach=[])
     return H.RECIPES[style]
 
 
@@ -183,6 +186,7 @@ class Scalp:
                         par[a_] = b_
                 root = np.array([f(i) for i in range(len(co))])
                 keep = root == np.bincount(root).argmax()
+                self._keep = keep
             for p in o.data.polygons:
                 vs = co[list(p.vertices)]
                 if vs[:, 2].min() < zmin or not keep[p.vertices[0]]:
@@ -190,14 +194,32 @@ class Scalp:
                 P.append(tuple(b + i for i in p.vertices))
         self.V = np.array(V); self.P = P
         self.tree = BVHTree.FromPolygons(V, P)
+        # m59y: optionally let the clumps ride over the ears (ears in the radius tree, not in the cap): with the ears
+        # exposed TypeSafe preferred the VRoid hair for ears / ear_shape in 4 of 6 views
+        self.ray_tree = self.tree
+        if K.get("over_ears"):
+            o = mesh_obj("Face_00_SKIN"); M = o.matrix_world
+            b = len(V); EP = [tuple(b + i for i in p.vertices) for p in o.data.polygons if not self._keep[p.vertices[0]]]
+            V2 = V + [tuple(M @ v.co) for v in o.data.vertices]
+            self.ray_tree = BVHTree.FromPolygons(V2, P + EP)
         self.cache = {}
 
     def radius(self, d):
         key = tuple(np.round(d, 3))
         if key not in self.cache:
             far = Vector(tuple(H.C + d * 0.5))
-            hit = self.tree.ray_cast(far, Vector(tuple(-d)), 0.5)
-            self.cache[key] = (0.5 - hit[3]) if hit[0] is not None else 0.09
+            hit = self.ray_tree.ray_cast(far, Vector(tuple(-d)), 0.5)
+            r = (0.5 - hit[3]) if hit[0] is not None else 0.09
+            if K.get("over_ears") and self.ray_tree is not self.tree:
+                # a blade is ~6 cm wide but the path samples one direction: take the highest skin in a small cone so
+                # a clump crossing the ear rides over the whole ear shell instead of cutting through it
+                t1 = np.cross(d, [0.0, 0.0, 1.0]); t1 /= np.linalg.norm(t1) + 1e-9; t2 = np.cross(d, t1)
+                for e in (t1, -t1, t2, -t2):
+                    d2 = d + 0.16 * e; d2 /= np.linalg.norm(d2)
+                    h2 = self.ray_tree.ray_cast(Vector(tuple(H.C + d2 * 0.5)), Vector(tuple(-d2)), 0.5)
+                    if h2[0] is not None:
+                        r = max(r, (0.5 - h2[3]) * float(d2 @ d))
+            self.cache[key] = r
         return self.cache[key]
 
 

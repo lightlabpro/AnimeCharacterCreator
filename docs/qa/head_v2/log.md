@@ -378,3 +378,10 @@ VRoid hair (blade thickness 0.3 x width = 17 mm on side clumps; now crown 10 / t
 tips 0.24); diagonal stroke highlights read as scratches (removed).
 Status m59w: screen A/B (6 views x 2 runs) still prefers m58b overall in every view - NOT passing. Remaining culprits:
 hair_short 0.53, patches 0.49, outline 0.47, back_flat 0.44, cranium_small 0.43. Board q37_board_m59w.png.
+
+q37 continued (m59x-m59z): medium length (sides 30 deg longer behind the ear, nape to the collar, fuller occiput);
+hair kept short in front of the ear (longer reads as VRoid sidelocks); over-the-ear variant (ears in the radius tree +
+cone max) left gaps and the ear poking through - off. Cap edge raised at the temples (its polygon staircase showed).
+m59z screen A/B (6 views x 2 runs): m58b still preferred overall in every view; new losses concentrate on ears /
+ear_shape (front, 3/4, side, profile close-up) - the exposed VRoid ear. Culprits: hair_short 0.55, patches 0.51,
+outline 0.48, back_flat 0.45, ears 0.43. NOT passing. Board q37_board_m59z.png, screens q37/.

@@ -46,6 +46,13 @@ must be validated and done until your margin of error threshold is at a minimum 
    - `--sanity` (baseline vs itself) must give zero winners; `--screen --views ...` is for diagnosis only.
    Nothing is shown to Sammy without a PASS. q36: m46 passed all measured rules and looked worse; q36c: a stale
    baseline render made every side-view verdict wrong.
+   q37: the A/B also asks `hair` (majority loss fails). After any A/B loss run the culprit probe
+   `blender/tools/typesafe_ab_culprit.py OUT A=<base>.png B=<cand>.png REF=<ref> visual_corrections/culprit_hair.json`
+   (why TypeSafe prefers one picture; sanity on two renders of one model gives |delta| <= 0.01) and fix the largest
+   delta first. Hair is built with `blender/head_vroid/mhs3_hair.py` (`--map` prints coverage and hair thickness
+   over the skull per zone - keep it near the measured VRoid hair: crown ~19, temple ~8.5, back ~16, front ~20 mm).
+   When committing files to the PC, stage each sync under a NEW output folder (a re-used staged path delivered an
+   old copy once).
 7. **Look.** Check the pupil-aligned eye crop, the board, and the profile next to face_profile_04. A detector that
    misreads gets fixed before its number is trusted. Note it in `lessons`.
 8. **Repeat or stop.**
