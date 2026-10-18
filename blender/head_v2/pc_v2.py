@@ -64,6 +64,10 @@ def skin_mat():
         surf = next((n for n in grp.node_tree.nodes if n.type == "GROUP" and n.node_tree.name.startswith("NG_ToonSurface")), None)
         if surf is not None:
             surf.inputs["Softness"].default_value = SKIN_SOFT
+            # q32 (sampled on Leo: lit 226,187,158 / shadow 183,149,132 -> ratio 0.81 0.80 0.84): the shadow is a soft
+            # greyish tan, ours (0.62, 0.48, 0.40) went saturated orange
+            if SHADOW_TINT:
+                surf.inputs["Shadow Tint"].default_value = tuple(SHADOW_TINT) + (1.0,)
             # q29 TypeSafe first_fix skin_soft_shadows (v7b vs Leo, both orders): MHS3's face shadows are painted with soft
             # edges; ours were razor hard, and the baked fringe band a jagged hard edge. v2 gets its own surface group
             # with a wider forced-shadow ramp (the 'shade' mask edge 0.45 +- 0.03 -> +- MASK_SOFT)
@@ -72,6 +76,8 @@ def skin_mat():
                 if n.type == "MATH" and len(n.inputs) > 1 and abs(n.inputs[0].default_value - 0.45) < 1e-4 \
                         and abs(n.inputs[1].default_value - 0.03) < 1e-4:
                     n.inputs[1].default_value = MASK_SOFT
+    if grp is not None and SKIN_COLOR:
+        grp.inputs["skin_color"].default_value = tuple(SKIN_COLOR) + (1.0,)
     add_blush(m)
     nd = m.node_tree.nodes.get("Math.005")
     if nd and nd.operation == "DIVIDE" and abs(nd.inputs[1].default_value - 0.16) < 1e-4:
@@ -125,6 +131,8 @@ OUTLINE_T = globals().get("OUTLINE_T", 0.0016)
 ELL_A = globals().get("ELL_A", 0.50)
 SKIN_SOFT = globals().get("SKIN_SOFT", 0.03)
 MASK_SOFT = globals().get("MASK_SOFT", 0.03)
+SHADOW_TINT = globals().get("SHADOW_TINT", None)   # q32: Leo-sampled (0.64, 0.60, 0.66) tried, not adopted (A/B)
+SKIN_COLOR = globals().get("SKIN_COLOR", None)     # q32: Leo lit cheek (0.76, 0.50, 0.34) tried, not adopted (A/B)
 
 
 def import_blend():
@@ -501,6 +509,11 @@ if globals().get("HAIR_FIT", True) and globals().get("HAIR", "leo"):
     print("fitted hair objects:", build_fitted_hair(col, globals().get("HAIR", "leo")))
 elif globals().get("HAIR", "leo"):
     print("hair objects:", attach_hair(col, globals().get("HAIR", "leo"), k=globals().get("HAIR_K", 0.90), dz=globals().get("HAIR_DZ", -0.004)))
+# q32: Sammy 'doesnt even look like anime' + TypeSafe defects (ears_missing 0.80, face_wide 0.74 vs controls 0.33-0.53):
+# the side locks hid the temples, cheeks and ears, so the visible face was narrow at the eyes and wide at the jaw.
+for o in list(col.objects):
+    if any(o.name.startswith(p) for p in globals().get("HAIR_DROP", ())):
+        bpy.data.objects.remove(o)
 if globals().get("HAIR", "leo") and FRINGE_SHADOW:
     print("fringe shadow verts:", bake_fringe_shadow(col))
 col.hide_render = True                     # n56 renders stay as they were

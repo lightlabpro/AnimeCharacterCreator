@@ -1,0 +1,93 @@
+{
+ "docs/qa/head_v2/gate/q32_p4s0/front.png": {
+  "anime": 0.88,
+  "mhs3": 0.6,
+  "eyes_anime": 0.745,
+  "hair_anime": 0.75,
+  "face_anime": 0.865,
+  "shading_anime": 0.88,
+  "polished": 0.21,
+  "culprit": [
+   "outline",
+   "eyes"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4s1/front.png": {
+  "anime": 0.89,
+  "mhs3": 0.595,
+  "eyes_anime": 0.755,
+  "hair_anime": 0.765,
+  "face_anime": 0.875,
+  "shading_anime": 0.865,
+  "polished": 0.26,
+  "culprit": [
+   "outline",
+   "eyes"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4s2/front.png": {
+  "anime": 0.905,
+  "mhs3": 0.605,
+  "eyes_anime": 0.785,
+  "hair_anime": 0.74,
+  "face_anime": 0.85,
+  "shading_anime": 0.87,
+  "polished": 0.215,
+  "culprit": [
+   "outline",
+   "outline"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4s3/front.png": {
+  "anime": 0.875,
+  "mhs3": 0.565,
+  "eyes_anime": 0.74,
+  "hair_anime": 0.755,
+  "face_anime": 0.865,
+  "shading_anime": 0.87,
+  "polished": 0.2,
+  "culprit": [
+   "outline",
+   "outline"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4s4/front.png": {
+  "anime": 0.895,
+  "mhs3": 0.635,
+  "eyes_anime": 0.77,
+  "hair_anime": 0.77,
+  "face_anime": 0.87,
+  "shading_anime": 0.87,
+  "polished": 0.265,
+  "culprit": [
+   "outline",
+   "eyes"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4s0/34.png": {
+  "anime": 0.92,
+  "mhs3": 0.58,
+  "eyes_anime": 0.77,
+  "hair_anime": 0.75,
+  "face_anime": 0.835,
+  "shading_anime": 0.865,
+  "polished": 0.21,
+  "culprit": [
+   "outline",
+   "face_shape"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4s4/34.png": {
+  "anime": 0.925,
+  "mhs3": 0.65,
+  "eyes_anime": 0.79,
+  "hair_anime": 0.79,
+  "face_anime": 0.85,
+  "shading_anime": 0.885,
+  "polished": 0.245,
+  "culprit": [
+   "face_shape",
+   "face_shape"
+  ]
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "docs/qa/head_v2/gate/q32_p4/front.png": {
+  "anime": 0.89,
+  "mhs3": 0.595,
+  "eyes_anime": 0.73,
+  "hair_anime": 0.77,
+  "face_anime": 0.86,
+  "shading_anime": 0.885,
+  "polished": 0.22,
+  "culprit": [
+   "outline",
+   "face_shape"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4/34.png": {
+  "anime": 0.92,
+  "mhs3": 0.65,
+  "eyes_anime": 0.81,
+  "hair_anime": 0.74,
+  "face_anime": 0.85,
+  "shading_anime": 0.875,
+  "polished": 0.275,
+  "culprit": [
+   "hair",
+   "hair"
+  ]
+ }
+}

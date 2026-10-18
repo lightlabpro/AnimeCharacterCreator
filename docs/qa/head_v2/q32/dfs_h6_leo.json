@@ -1,0 +1,23 @@
+{
+ "image": "docs/qa/head_v2/gate/q31_h6/front.png",
+ "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+ "yes": {
+  "too_long": 0.615,
+  "too_short": 0.595,
+  "cheekbones_wide": 0.515,
+  "angular_outline": 0.365,
+  "jaw_corners": 0.4,
+  "chin_pointed": 0.45,
+  "chin_broad": 0.55,
+  "cheeks_flat": 0.545,
+  "face_narrow": 0.315,
+  "face_wide": 0.735,
+  "forehead_big": 0.38,
+  "lumpy": 0.575,
+  "neck_wrong": 0.64,
+  "features_low": 0.44,
+  "features_small": 0.3,
+  "features_spread": 0.495,
+  "ears_missing": 0.68
+ }
+}

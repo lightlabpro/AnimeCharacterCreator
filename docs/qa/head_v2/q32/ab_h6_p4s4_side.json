@@ -1,0 +1,120 @@
+{
+ "A": "docs/qa/head_v2/gate/q31_h6/side.png",
+ "B": "docs/qa/head_v2/gate/q32_p4s4/side.png",
+ "REF": "docs/qa/head_v2/judge/leo_ref_front.png",
+ "aspects": {
+  "overall": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "head_shape": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "eyes": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "brows": {
+   "winner": "disagree",
+   "orders": [
+    "tie",
+    "A"
+   ]
+  },
+  "nose_mouth": {
+   "winner": "disagree",
+   "orders": [
+    "B",
+    "A"
+   ]
+  },
+  "jaw_chin": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "ears": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "eye_layout": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "ear_shape": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "expression": {
+   "winner": "disagree",
+   "orders": [
+    "A",
+    "B"
+   ]
+  },
+  "profile_eye": {
+   "winner": "disagree",
+   "orders": [
+    "tie",
+    "A"
+   ]
+  },
+  "mouth_depth": {
+   "winner": "tie",
+   "orders": [
+    "tie",
+    "tie"
+   ]
+  },
+  "upper_lip": {
+   "winner": "B",
+   "orders": [
+    "B",
+    "B"
+   ]
+  },
+  "face_shading": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  },
+  "clean": {
+   "winner": "A",
+   "orders": [
+    "A",
+    "A"
+   ]
+  }
+ },
+ "defects": {
+  "A_dented": 0.3,
+  "B_dented": 0.435,
+  "A_artifacts": 0.525,
+  "B_artifacts": 0.83,
+  "A_adult": 0.69,
+  "B_adult": 0.605
+ }
+}

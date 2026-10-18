@@ -1,0 +1,23 @@
+{
+ "image": "docs/qa/head_v2/gate/q32_p3/front.png",
+ "ref": "docs/reference/mhs3/face_leia_front.png",
+ "yes": {
+  "too_long": 0.655,
+  "too_short": 0.695,
+  "cheekbones_wide": 0.59,
+  "angular_outline": 0.515,
+  "jaw_corners": 0.47,
+  "chin_pointed": 0.42,
+  "chin_broad": 0.65,
+  "cheeks_flat": 0.595,
+  "face_narrow": 0.36,
+  "face_wide": 0.755,
+  "forehead_big": 0.355,
+  "lumpy": 0.545,
+  "neck_wrong": 0.72,
+  "features_low": 0.41,
+  "features_small": 0.345,
+  "features_spread": 0.495,
+  "ears_missing": 0.64
+ }
+}

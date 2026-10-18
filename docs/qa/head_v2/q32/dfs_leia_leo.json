@@ -1,0 +1,23 @@
+{
+ "image": "docs/reference/mhs3/face_leia_front.png",
+ "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+ "yes": {
+  "too_long": 0.435,
+  "too_short": 0.53,
+  "cheekbones_wide": 0.505,
+  "angular_outline": 0.165,
+  "jaw_corners": 0.3,
+  "chin_pointed": 0.39,
+  "chin_broad": 0.35,
+  "cheeks_flat": 0.455,
+  "face_narrow": 0.415,
+  "face_wide": 0.53,
+  "forehead_big": 0.37,
+  "lumpy": 0.38,
+  "neck_wrong": 0.535,
+  "features_low": 0.35,
+  "features_small": 0.26,
+  "features_spread": 0.415,
+  "ears_missing": 0.81
+ }
+}

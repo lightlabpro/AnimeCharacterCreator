@@ -1,0 +1,106 @@
+{
+ "docs/qa/head_v2/gate/q31_h6/front.png": {
+  "anime": 0.91,
+  "mhs3": 0.625,
+  "eyes_anime": 0.7,
+  "hair_anime": 0.805,
+  "face_anime": 0.88,
+  "shading_anime": 0.845,
+  "polished": 0.28,
+  "culprit": [
+   "face_shape",
+   "face_shape"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p3/front.png": {
+  "anime": 0.895,
+  "mhs3": 0.605,
+  "eyes_anime": 0.79,
+  "hair_anime": 0.765,
+  "face_anime": 0.855,
+  "shading_anime": 0.85,
+  "polished": 0.205,
+  "culprit": [
+   "face_shape",
+   "face_shape"
+  ]
+ },
+ "docs/qa/head_v2/gate/q31_v8b/front.png": {
+  "anime": 0.88,
+  "mhs3": 0.56,
+  "eyes_anime": 0.615,
+  "hair_anime": 0.83,
+  "face_anime": 0.885,
+  "shading_anime": 0.85,
+  "polished": 0.28,
+  "culprit": [
+   "outline",
+   "face_shape"
+  ]
+ },
+ "docs/reference/mhs3/face_leia_front.png": {
+  "anime": 0.96,
+  "mhs3": 0.905,
+  "eyes_anime": 0.865,
+  "hair_anime": 0.89,
+  "face_anime": 0.9,
+  "shading_anime": 0.835,
+  "polished": 0.865,
+  "culprit": [
+   "nothing",
+   "nothing"
+  ]
+ },
+ "docs/reference/mhs3/face_eleanor_front.png": {
+  "anime": 0.96,
+  "mhs3": 0.895,
+  "eyes_anime": 0.88,
+  "hair_anime": 0.925,
+  "face_anime": 0.915,
+  "shading_anime": 0.78,
+  "polished": 0.9,
+  "culprit": [
+   "nothing",
+   "nothing"
+  ]
+ },
+ "docs/qa/head_v2/q32/ds_face_1.png": {
+  "anime": 0.67,
+  "mhs3": 0.05,
+  "eyes_anime": 0.14,
+  "hair_anime": 0.7,
+  "face_anime": 0.695,
+  "shading_anime": 0.105,
+  "polished": 0.17,
+  "culprit": [
+   "skin_shading",
+   "skin_shading"
+  ]
+ },
+ "docs/qa/head_v2/q32/ds_face_9.png": {
+  "anime": 0.93,
+  "mhs3": 0.07,
+  "eyes_anime": 0.79,
+  "hair_anime": 0.87,
+  "face_anime": 0.88,
+  "shading_anime": 0.18,
+  "polished": 0.265,
+  "culprit": [
+   "skin_shading",
+   "skin_shading"
+  ]
+ },
+ "docs/qa/head_v2/q32/ds_face_19.png": {
+  "anime": 0.935,
+  "mhs3": 0.085,
+  "eyes_anime": 0.7,
+  "hair_anime": 0.63,
+  "face_anime": 0.91,
+  "shading_anime": 0.12,
+  "polished": 0.18,
+  "culprit": [
+   "skin_shading",
+   "skin_shading"
+  ]
+ }
+}

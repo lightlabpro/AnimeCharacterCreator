@@ -1,0 +1,23 @@
+{
+ "image": "docs/reference/mhs3/face_eleanor_front.png",
+ "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+ "yes": {
+  "too_long": 0.415,
+  "too_short": 0.47,
+  "cheekbones_wide": 0.44,
+  "angular_outline": 0.175,
+  "jaw_corners": 0.33,
+  "chin_pointed": 0.395,
+  "chin_broad": 0.265,
+  "cheeks_flat": 0.32,
+  "face_narrow": 0.38,
+  "face_wide": 0.42,
+  "forehead_big": 0.36,
+  "lumpy": 0.295,
+  "neck_wrong": 0.395,
+  "features_low": 0.345,
+  "features_small": 0.22,
+  "features_spread": 0.37,
+  "ears_missing": 0.33
+ }
+}

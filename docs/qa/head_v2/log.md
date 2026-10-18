@@ -223,3 +223,21 @@ references from mhs3 as target look. remember to use typesafe".
   New for h6: ear position rules (mg13_ear_eyelid_to_nose, cr_ear_position) and cr_profile_face_line; cleared:
   aa_highlight_protruding, mg13_median_matches_contour, cr_lash_lines_tilt_center.
 - Boards: q31/board_v8b_h6.png, board_h5_h6.png, board_h6_h8.png, clay_h5.png.
+
+## q32 (2026-10-17) - "analyze the images ... it still looks bad ... doesnt even look like anime"
+- New measuring tools: pupil_align_board.py (our render scaled/moved so the pupils land on the reference's pupils,
+  side by side + overlay + eye and nose/mouth crops), pupil_align_widths.py (face widths at matched heights in
+  pupil-distance units), typesafe_anime_check.py (does it read as anime / MHS3 / polished, and which element breaks it;
+  the MHS3 refs are run through it as the ceiling), typesafe_defects.py + visual_corrections/defects_face_shape.json
+  (yes/no defect statements, with Leia/Eleanor-vs-Leo as controls).
+- Pupil-aligned vs Leo (IPD units): eye width 0.46 vs 0.44, opening 0.21 vs 0.26, mouth 0.54 vs 0.67 wide at the same
+  height, nose tip / mouth heights within 0.03, face width close at cheek/jaw, chin 0.66 vs 0.81 at 1.2 IPD.
+- Tried and measured (all TypeSafe A/B vs h6, both orders): taller eye opening + fuller iris + no spokes + sparkles +
+  lash hook; nose wedge highlight + wing tip; mouth 0.48 D; broader chin; Leo-sampled skin / shadow tint; key light
+  rotations; narrower face; volume smoothing; fuller neck; side hair dropped; thinner outline; softer fringe shadow.
+  h6 won overall in front, 3/4 and side against every combination (p3, p4, p4s4) -> all defaults back to h6; the
+  knobs stay (SHADOW_TINT, SKIN_COLOR, HAIR_DROP, face_sx, chin_back, VOL_SMOOTH; paint changes reverted).
+- typesafe_anime_check (yes-probability): h6 anime 0.91, MHS3 match 0.63, polished 0.28. MHS3 Leia / Eleanor: 0.96 /
+  0.90 / 0.87-0.90. Every variant tried tonight sat at anime 0.88-0.92, MHS3 0.57-0.65, polished 0.20-0.28: tuning
+  this pipeline (SDF head + flat-colour decal pieces + n56 toon shader + blade hair) does not move the polish gap.
+  Culprits named: face shape, outline, eyes, hair (3/4).

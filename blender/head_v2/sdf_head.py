@@ -254,7 +254,8 @@ BASE_BLEND = knob("BASE_BLEND", dict(face_y=-0.05, face_dy=0.10, h0=0.28, h1=0.4
                                       ear_move=((-0.060, 0.500), (-0.060, 0.565), 1.30),
                                       front_scale=0.94,
                                       eye_c=(0.18, 0.47), eye_r=(0.21, 0.15),
-                                      jaw_narrow=(0.58, 0.78, 0.90), nose=(0.53, 0.75, 0.09, 0.0)))
+                                      jaw_narrow=(0.58, 0.78, 0.90), chin_back=0.90, face_sx=1.0, nose=(0.53, 0.75, 0.09, 0.0)))
+# q32 trials (jaw 0.50-0.85 x0.92, chin_back 0.94-1.0, face_sx 0.93) lost the TypeSafe A/B to these values.
 # jaw_narrow: x scale 1 -> 0.90 over h 0.58-0.78 (Leo 0.97 D wide at the mouth, h5 1.12 D; TypeSafe A/B h6 > h5).
 # nose: h0, h1, half-width, share of our small nose (q31 h7: 0.5 lost the TypeSafe A/B to 0).
 
@@ -299,6 +300,10 @@ def sdf_hybrid(p):
     b = BASE_BLEND
     h0j, h1j, sj = b.get("jaw_narrow", (0.6, 0.8, 1.0))
     sx = 1 - (1 - sj) * _sstep((p[..., 2] - h0j) / (h1j - h0j))
+    cb = b.get("chin_back", sj)                                       # q32: Leo's chin is broader (0.81 vs 0.66 IPD)
+    sx = sx + (cb - sj) * _sstep((p[..., 2] - 0.84) / 0.12)
+    # q32 TypeSafe defects vs Leo (controls Leia / Eleanor 0.42-0.53): face_wide 0.73-0.77 -> the face below the brow narrower
+    sx = sx * (1 - (1 - b.get("face_sx", 1.0)) * _sstep((p[..., 2] - 0.30) / 0.25))
     p = np.stack([p[..., 0] / sx, p[..., 1], p[..., 2]], -1)
     x, y, h = p[..., 0], p[..., 1], p[..., 2]
     q = p.copy()
@@ -370,6 +375,9 @@ def sdf_proc(p, ears=True):
     return d
 
 
+VOL_SMOOTH = knob("VOL_SMOOTH", 0.0)   # q32: 0.004 tried (lumpy defect), lost the A/B   # Gaussian sigma in H units over the final distance volume (q32)
+
+
 def build(vox=0.0012):
     from skimage.measure import marching_cubes
     lo = np.array([-0.45, -0.62, -0.06]); hi = np.array([0.45, 0.55, 1.56])      # H units, h down
@@ -380,6 +388,9 @@ def build(vox=0.0012):
     for k, h in enumerate(hs):
         p = np.stack([X, Y, np.full_like(X, h)], -1)
         vol[:, :, k] = sdf(p)
+    if VOL_SMOOTH:                                     # q32 TypeSafe 'lumpy' 0.53-0.57 (controls 0.29-0.38)
+        from scipy.ndimage import gaussian_filter
+        vol = gaussian_filter(vol, VOL_SMOOTH / st)        # sigma in voxels
     v, f, _, _ = marching_cubes(vol, 0.0, spacing=(st, st, st))
     v = v + lo
     P_m = np.stack([v[:, 0] * H, v[:, 1] * H, ZT - v[:, 2] * H], 1)

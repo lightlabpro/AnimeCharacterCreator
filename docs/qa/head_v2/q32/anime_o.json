@@ -1,0 +1,41 @@
+{
+ "docs/qa/head_v2/gate/q32_p4o7/front.png": {
+  "anime": 0.905,
+  "mhs3": 0.595,
+  "eyes_anime": 0.765,
+  "hair_anime": 0.775,
+  "face_anime": 0.875,
+  "shading_anime": 0.865,
+  "polished": 0.22,
+  "culprit": [
+   "outline",
+   "eyes"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4o4/front.png": {
+  "anime": 0.885,
+  "mhs3": 0.58,
+  "eyes_anime": 0.755,
+  "hair_anime": 0.725,
+  "face_anime": 0.87,
+  "shading_anime": 0.87,
+  "polished": 0.215,
+  "culprit": [
+   "eyes",
+   "eyes"
+  ]
+ },
+ "docs/qa/head_v2/gate/q32_p4o7/34.png": {
+  "anime": 0.915,
+  "mhs3": 0.635,
+  "eyes_anime": 0.745,
+  "hair_anime": 0.795,
+  "face_anime": 0.84,
+  "shading_anime": 0.86,
+  "polished": 0.265,
+  "culprit": [
+   "face_shape",
+   "face_shape"
+  ]
+ }
+}

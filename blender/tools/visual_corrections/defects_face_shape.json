@@ -1,0 +1,19 @@
+{
+ "too_long": "Compared with `reference_image`, the face in `image` is too long from the eyes to the chin.",
+ "too_short": "Compared with `reference_image`, the face in `image` is too short from the eyes to the chin.",
+ "cheekbones_wide": "The face in `image` is too wide at the cheekbones / temples compared with its jaw.",
+ "angular_outline": "The face outline in `image` is angular or polygonal (straight segments and corners) instead of one smooth convex curve.",
+ "jaw_corners": "The jaw in `image` has visible corners or a kink below the ears.",
+ "chin_pointed": "The chin in `image` is too pointed / V-shaped.",
+ "chin_broad": "The chin in `image` is too broad or square.",
+ "cheeks_flat": "The cheeks in `image` look flat or hollow instead of softly rounded.",
+ "face_narrow": "The face in `image` is too narrow overall.",
+ "face_wide": "The face in `image` is too wide overall.",
+ "forehead_big": "The forehead / skull in `image` looks too big for the face.",
+ "lumpy": "The face surface in `image` has lumps, dents or uneven patches in the shading.",
+ "neck_wrong": "The neck in `image` is too thick, too thin or wrongly placed.",
+ "features_low": "The eyes, nose and mouth in `image` sit too low on the face.",
+ "features_small": "The eyes in `image` are too small for the face.",
+ "features_spread": "The facial features in `image` are spread too far apart.",
+ "ears_missing": "The ears in `image` are hidden or look wrong."
+}

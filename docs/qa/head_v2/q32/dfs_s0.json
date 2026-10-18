@@ -1,0 +1,23 @@
+{
+ "image": "docs/qa/head_v2/gate/q32_p4s0/front.png",
+ "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+ "yes": {
+  "too_long": 0.615,
+  "too_short": 0.61,
+  "cheekbones_wide": 0.525,
+  "angular_outline": 0.605,
+  "jaw_corners": 0.56,
+  "chin_pointed": 0.48,
+  "chin_broad": 0.525,
+  "cheeks_flat": 0.58,
+  "face_narrow": 0.36,
+  "face_wide": 0.71,
+  "forehead_big": 0.395,
+  "lumpy": 0.565,
+  "neck_wrong": 0.7,
+  "features_low": 0.47,
+  "features_small": 0.26,
+  "features_spread": 0.48,
+  "ears_missing": 0.68
+ }
+}
