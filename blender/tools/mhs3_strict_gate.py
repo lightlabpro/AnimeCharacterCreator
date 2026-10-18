@@ -34,7 +34,7 @@ BAD = ("vroid_look", "too_anime", "eyes_vroid", "artifacts")
 GOOD = ("eyes_mhs3", "brows_mhs3", "nose_mhs3", "mouth_mhs3", "face_adult", "skin_mhs3")
 ANIME = ("mhs3", "eyes_anime", "face_anime", "shading_anime", "polished")
 STRICT0 = ("overall", "head_shape")
-MAJ = ("eyes", "nose_mouth", "jaw_chin", "face_shading", "clean")
+MAJ = ("eyes", "nose_mouth", "jaw_chin", "face_shading", "clean", "hair")   # q37: hair
 
 
 def run(args):

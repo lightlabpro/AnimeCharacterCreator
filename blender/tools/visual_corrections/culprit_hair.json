@@ -1,0 +1,19 @@
+{
+ "hair_tips": "the hair has jagged, torn-looking or messy clump tips and edges",
+ "hair_flat": "the hair is a flat, evenly lit mass with few or no shadow shapes",
+ "hair_bulky": "the hair silhouette is bulky and round, like a helmet",
+ "hair_short": "the hair is too short, exposing too much of the forehead, temples or ears",
+ "hair_colour": "the hair colour is too orange, too yellow or too light",
+ "hair_patches": "the hair shows odd patches, overlapping slivers, gaps or holes",
+ "hair_noisy": "the hair has noisy little marks or scratches",
+ "fringe": "the fringe looks unnatural over the forehead and brows",
+ "ears": "the ears look odd or too exposed",
+ "head_wide": "the head or face looks wider or rounder",
+ "face_plain": "the face looks plainer or less framed by the hair",
+ "outline": "the outlines look broken, uneven or too thick",
+ "cranium_small": "the cranium (top and back of the head with the hair) looks too small or flat for the face",
+ "back_flat": "the back of the head looks flat, cut off or oddly shaped",
+ "forehead_big": "the forehead looks too high or too large",
+ "face_long": "the face looks longer or the jaw heavier",
+ "hairline_odd": "the hairline or the hair edge around the face looks odd"
+}

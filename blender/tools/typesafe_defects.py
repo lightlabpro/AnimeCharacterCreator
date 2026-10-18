@@ -1,6 +1,6 @@
 """Yes/no defect probe against a style reference (q32): which concrete statements about `image` are true?
 
-    python typesafe_defects.py out.json IMG REF defects.json
+    python typesafe_defects.py out.json IMG REF defects.json [--note "context for the judge"]
 
 defects.json: {"id": "statement about `image` compared with `reference_image`", ...}. Each statement is asked as a
 TypeSafe yes/no (noul) question twice (two requests, statement order reversed); the mean yes-probability is reported.
@@ -22,9 +22,10 @@ def main():
     defects = json.load(open(dfile))
     pi, pr = "img-" + uuid.uuid4().hex, "ref-" + uuid.uuid4().hex
     assets = {pi: image_asset(img), pr: image_asset(ref)}
-    state = {"image": pi, "reference_image": pr,
-             "note": "image is a render being fixed; reference_image is the style target (a different character from "
-                     "the same kind of game). Judge form and style, not identity, hair style or clothes."}
+    note = sys.argv[sys.argv.index("--note") + 1] if "--note" in sys.argv else (
+        "image is a render being fixed; reference_image is the style target (a different character from "
+        "the same kind of game). Judge form and style, not identity, hair style or clothes.")
+    state = {"image": pi, "reference_image": pr, "note": note}
     votes = {k: [] for k in defects}
     for order in (0, 1):
         items = list(defects.items())

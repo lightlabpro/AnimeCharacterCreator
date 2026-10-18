@@ -362,3 +362,19 @@ strict gate run 2 PASS; run 1 FAIL only on face_anime 0.832 vs 0.839 (> 1 SE, SE
 in all 6 views, front and eye close-up won 3/3; mhs3 0.47 -> 0.58/0.59, polished 0.23 -> 0.40, shading 0.73 -> 0.77.
 Still failing (honest): profile mesh rules P2/P3/P5/P6 (err 1.0-1.8) - the stronger profile that meets them loses
 the profile close-up A/B; Sammy's call. Board q36/board_m58b_vs_m26.png, eyes q36/eyes_m58b_vs_m26.png, gates q36/gates_v2/.
+
+## q37 - "change the hairstyle, i dont want anything the same as vroid" (m59a-m59w, in progress)
+`blender/head_vroid/mhs3_hair.py IN.glb OUT.glb`: deletes Hair_00_HAIR + HairBack_00_HAIR (10 299 verts) and their
+texture, builds an original cut on the warped skull with the newhead clump generator (hair_nh, front turned to +Y):
+scalp = Face_00_SKIN main island (ears are 4 separate islands) + head part of Body_00_SKIN; own painted atlas (one
+cell per clump: root->tip gradient, darker underside) on a `*_HAIR` material so the locked render spec is unchanged;
+`--map` prints the coverage map (clump / cap / bald) and hair thickness over the skull per zone.
+New validators: A/B aspect `hair` (strict gate MAJ list), `defects_hair_mhs3.json` (+ `typesafe_defects.py --note`),
+`typesafe_ab_culprit.py` + `culprit_hair.json` (why TypeSafe prefers one picture; sanity m58b g1 vs g2: all deltas
+|d| <= 0.01).
+What the culprit check drove: colour too orange/light (0.65 -> 0.0: base sRGB 128,90,70); bulk 5-8 mm thicker than the
+VRoid hair (blade thickness 0.3 x width = 17 mm on side clumps; now crown 10 / temple 8 / front 17 mm vs VRoid
+19 / 8.5 / 19.5); crossing clump directions in the side view (patches/tips/outline 0.8-0.9 -> one flow down the side,
+tips 0.24); diagonal stroke highlights read as scratches (removed).
+Status m59w: screen A/B (6 views x 2 runs) still prefers m58b overall in every view - NOT passing. Remaining culprits:
+hair_short 0.53, patches 0.49, outline 0.47, back_flat 0.44, cranium_small 0.43. Board q37_board_m59w.png.

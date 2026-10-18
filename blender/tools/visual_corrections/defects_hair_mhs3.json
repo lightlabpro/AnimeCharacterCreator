@@ -1,0 +1,10 @@
+{
+ "hair_vroid": "The hair in `image` looks like a stock VRoid Studio / 3D-avatar preset hairstyle.",
+ "hair_mhs3": "The hair in `image` is designed and shaded like the hair in `reference_image` (tapered clumps with pointed tips, flat colour with hard-edged shadow shapes, a few thin light strokes).",
+ "hair_clean": "The hair in `image` is cleanly built: no torn-looking patches, slivers, holes showing the scalp or stray pieces.",
+ "hair_helmet": "The hair in `image` sits on the head like a stiff helmet or wig instead of growing from the scalp.",
+ "hair_scratchy": "The hair in `image` has scratchy or noisy marks instead of clean highlight strokes.",
+ "hair_flat": "The hair in `image` looks flat or plastic, with no depth between the clumps.",
+ "hair_colour": "The hair colour in `image` looks natural and fits the skin the way it does in `reference_image`.",
+ "hair_framing": "The hair in `image` frames the face well (fringe, sides and silhouette balanced with the face)."
+}

@@ -48,6 +48,10 @@ ASPECTS = {
                  "that sits forward of the lower lip) rather than a face with no upper lip",
     "face_shading": "the shading on the face and neck (shadow shapes under the fringe, along the side of the face and under the "
                     "jaw, their colour and edges): which is closer to how `reference_image` is shaded",
+    # q37 (Sammy 2026-10-18: "change the hairstyle, i dont want anything the same as vroid")
+    "hair": "the hair (the cut, the clump shapes and their pointed tips, the silhouette, the colour, the shadow shapes "
+            "and highlight strokes): which looks more like hand-designed hair in the style of `reference_image` rather "
+            "than a stock 3D-avatar preset",
     "clean": "drawing quality: which has fewer stray lines, broken outlines, odd shadow shapes or artifacts",
 }
 DEFECTS = {
