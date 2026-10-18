@@ -142,7 +142,9 @@ def vt_setup(key, rot180=False, light=(0.72, -0.5, 0.48), outline=0.0012):
     return sc
 
 
-def vt_skin(key, tint=(0.90, 0.80, 0.74), ramp=(0.24, 0.36)):
+def vt_skin(key, tint=(0.90, 0.80, 0.74), ramp=(0.24, 0.36), body_scale=1.0):
+    """body_scale: the q33 MHS3 face texture is darkened (skin_scale) for highlight headroom; the body texture is not,
+    so the body tint is scaled to match at the neck seam."""
     sc = bpy.data.scenes["VT_" + key]
     for m in set(_mats(sc, "Face_00_SKIN") + _mats(sc, "Body_00_SKIN")):
         nt = m.node_tree
@@ -154,7 +156,8 @@ def vt_skin(key, tint=(0.90, 0.80, 0.74), ramp=(0.24, 0.36)):
             nt.links.new(tx.outputs["Color"], mul.inputs[6])
             for l in links:
                 to = l.to_socket; nt.links.remove(l); nt.links.new(mul.outputs[2], to)
-        nt.nodes["VT_Tint"].inputs[7].default_value = tuple(tint) + (1,)
+        k = body_scale if "Body_00" in m.name else 1.0
+        nt.nodes["VT_Tint"].inputs[7].default_value = tuple(c * k for c in tint) + (1,)
         for n in nt.nodes:
             if n.type == "VALTORGB":
                 n.color_ramp.elements[0].position, n.color_ramp.elements[1].position = ramp

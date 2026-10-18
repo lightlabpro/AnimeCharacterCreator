@@ -252,3 +252,22 @@ references from mhs3 as target look. remember to use typesafe".
   blotchy (dropped). Ramp softness / light angle: 0.37-0.40, culprit still skin shading.
 - Board: q32/board_vroid_base.png. Next: MHS3 painted skin details on the VRoid face (nose highlight, cheek warmth,
   painted shadow shapes), MHS3 eye/brow paint, hair highlight streaks, head pose, expressions rebuilt, export.
+
+## q33 (2026-10-17) - "tweak them ... resemble mhs3 ... a bit of realism ... facial features must not look like vroid"
+- blender/head_vroid/mhs3_paint.py repaints the VRoid face textures in their own UV layouts (any VRoid export takes them):
+  MHS3 iris painted by 3D position (VRoid's iris art is pre-distorted; a UV circle rendered as a keyhole), grey sclera,
+  smooth heavy upper lash with a short outer turn (no VRoid flicks/dots), lid crease, solid stern brushed brows (a
+  hatch pattern scored brows_hatch 0.88), VRoid bandage and mouth line erased, wider darker mouth line, lower-lip
+  shade, nose = pale wedge on the lit side + soft shape under the tip, warm skin baked in.
+- blender/head_vroid/mhs3_reshape.py warps every mesh with one field (seams stay closed): longer lower face (nose 0.49 ->
+  0.62, mouth 0.76 -> 0.86, chin 1.30 -> 1.42 IPD below the pupils, Leo-measured), identity through the eyes, broader
+  jaw/chin, higher nose bridge, smaller eye region, rounder lower / more arched upper lid, brows lowered 18.5 mm.
+- Caught by close-up renders / UV overlays: the depth remap stretched the iris x1.27 (tall pupil), lid offsets moved the
+  iris, the brow mesh's lower UV row is tiny in 3D (brow drawn in the top row only rendered as a sliver).
+- TypeSafe defect probe vs Leo (defects_vroid_mhs3.json; Leia control in brackets), VRoid toon -> m15:
+  too_anime 0.84 -> 0.68 (0.58), nose_mhs3 0.46 -> 0.72 (0.40), mouth_mhs3 0.41 -> 0.72 (0.69), skin 0.53 -> 0.64
+  (0.81), face_adult 0.38 -> 0.46 (0.55); still high: vroid_look 0.74 -> 0.84 (0.43), eyes_vroid 0.89 (0.58),
+  artifacts 0.92-0.94 (0.59); eyes_mhs3 0.24-0.30 (0.57). Anime check: polished 0.50 (toon VRoid) -> 0.31, MHS3 0.57
+  -> 0.52; culprit skin shading on every lighting / normal / ramp variant tried (best: original normals, hard ramp,
+  MHS3 0.625, polished 0.37, but it shows a blotch under the eye).
+- Board: q33/board_vroid_mhs3_m15.png, q33/aligned_m15_vs_leo.png, q33/eye_close_m15.png.

@@ -1,0 +1,180 @@
+"""q33 MHS3 reshape of a VRoid export + MHS3 textures -> new GLB (bpy, headless).
+
+    python mhs3_reshape.py IN.glb TEX_DIR OUT.glb [--knobs knobs.json]
+
+One smooth warp field is applied to EVERY mesh (face, eyes, mouth, brows, hair, body neck): vertices that two meshes share
+(the face / body neck seam) move identically, so nothing opens. Measured on the VRoid face (3f8f0119) in pupil-distance
+units (IPD = 0.0796 m, pupil line z = 1.6093 m): nose tip 0.49, mouth 0.76, chin 1.30 below the pupils - a short VRoid
+lower face. MHS3 Leo (pupil-aligned): nose 0.63, mouth 0.85; MHS3 adult faces are longer. The warp maps depth below the
+pupils d -> g(d) through MAP (Pchip), widens the jaw/chin a little (Leo 0.81 IPD wide 1.2 below the pupils, VRoid a V),
+lifts the nose bridge (VRoid nose is almost flat) and lowers the brows onto the eyes (VRoid brows 0.40 IPD above the
+pupils, Leo ~0.2).
+"""
+import json
+import os
+import sys
+
+import bpy
+import numpy as np
+
+
+def pchip(xk, yk):
+    """Monotone cubic (Fritsch-Carlson) - no scipy in Blender's Python."""
+    xk = np.asarray(xk, float); yk = np.asarray(yk, float)
+    h = np.diff(xk); dlt = np.diff(yk) / h
+    m = np.zeros_like(yk)
+    for i in range(1, len(xk) - 1):
+        if dlt[i - 1] * dlt[i] > 0:
+            w1, w2 = 2 * h[i] + h[i - 1], h[i] + 2 * h[i - 1]
+            m[i] = (w1 + w2) / (w1 / dlt[i - 1] + w2 / dlt[i])
+    m[0], m[-1] = dlt[0], dlt[-1]
+
+    def f(x):
+        x = np.asarray(x, float); xc = np.clip(x, xk[0], xk[-1])
+        i = np.clip(np.searchsorted(xk, xc) - 1, 0, len(h) - 1)
+        t = (xc - xk[i]) / h[i]
+        h00, h10, h01, h11 = 2 * t**3 - 3 * t**2 + 1, t**3 - 2 * t**2 + t, -2 * t**3 + 3 * t**2, t**3 - t**2
+        v = h00 * yk[i] + h10 * h[i] * m[i] + h01 * yk[i + 1] + h11 * h[i] * m[i + 1]
+        # outside the table: keep the end offset (m1: clamping flattened everything above the brow into one plane)
+        return np.where(x < xk[0], x - xk[0] + yk[0], np.where(x > xk[-1], x - xk[-1] + yk[-1], v))
+    return f
+
+K = dict(
+    z0=1.6093, ipd=0.0796,
+    MAP=[[-1.0, -1.0], [0.0, 0.0], [0.22, 0.22], [0.49, 0.62], [0.76, 0.86], [1.30, 1.42], [2.0, 2.12], [3.0, 3.0], [9.0, 9.0]],   # m14: (0,0)->(0.49,0.62) stretched the lower iris x1.27 (tall pupil) - identity through the eyes
+    jaw=[[0.5, 0.0], [0.95, 0.09], [1.25, 0.20], [1.6, 0.08], [2.2, 0.0]],   # m3: still a narrow V      # extra x scale by depth (front half)
+    nose_lift=0.0050, nose_z=(0.15, 0.50), nose_w=0.12,                        # metres forward along +y on the bridge
+    brow_dz=-0.0185,   # m11 brows_far 0.74 (control 0.60)
+      # m5: still high above the eyes (Leo ~0.12 IPD gap)
+                                                             # metres (brow mesh only)
+    eye_sz=0.90,                                                              # eye opening height scale (almond)
+    # q33 TypeSafe (m2 vs Leo; Leia control): eyes_vroid 0.87 (0.58), too_anime 0.85 (0.58) -> smaller eye region:
+    # everything round each eye (eye parts AND the face's eye hole) scaled toward the eye centre, fading out
+    eye_c=(0.0424, 1.6061), eye_r=(0.034, 0.024), eye_s=0.88, eye_fall=0.9, iris_s=1.0,   # m3: iris 0.93 read small (Leo's fills the opening)
+    iris_c=0.0398, iris_sx=1.0, iris_dx=0.0,   # m13: iris painted in 3D instead (iris_sx 1.22 / dx 0.0012 tried)     # m12 close-up: the iris rendered as a tall narrow oval set inward
+    lid_low=0.0018, lid_up=0.0026,   # m11 TypeSafe shape_flat_top 0.77 (control 0.65)
+                       # m6: round the lower lid (VRoid flat), lift the inner-mid upper lid
+    mouth_c=(0.0, 1.5493), mouth_r=(0.032, 0.012), mouth_sx=1.0,   # m3: 1.16 dented the cheeks by the mouth - the line is widened in paint instead
+    mouth_fall=1.2,
+)
+
+
+def local_fields(P, key):
+    """Eye-region shrink (toward each eye centre, in x and z) and mouth widening, before the global warp."""
+    x, y, z = P[:, 0].copy(), P[:, 1].copy(), P[:, 2].copy()
+    ex, ez = K["eye_c"]; rx, rz = K["eye_r"]
+    for sgn in (1, -1):
+        r = np.hypot((x - sgn * ex) / rx, (z - ez) / rz)
+        w = np.clip((1 + K["eye_fall"] - r) / K["eye_fall"], 0, 1); w = w * w * (3 - 2 * w)
+        s = 1 - (1 - K["eye_s"]) * w
+        if key.startswith("EyeIris"):
+            s = s * K["iris_s"]
+        if key.startswith(("EyeIris", "EyeHighlight")):
+            ic = sgn * K["iris_c"]
+            x = np.where((x * sgn) > 0, ic + (x - ic) * K["iris_sx"] + sgn * K["iris_dx"], x)
+        side = (x * sgn) > 0
+        x = np.where(side, sgn * ex + (x - sgn * ex) * s, x)
+        z = np.where(side, ez + (z - ez) * s, z)
+        # lid shape: relative position across the eye (-1 inner .. +1 outer) and above / below the centre
+        rel = np.clip((x * sgn - ex) / rx, -1.2, 1.2); wl = np.clip((1.6 - r) / 0.8, 0, 1)
+        lowb = (z < ez) * K["lid_low"] * np.clip(1 - rel ** 2, 0, 1) * wl
+        upb = (z > ez) * K["lid_up"] * np.exp(-((rel + 0.25) / 0.5) ** 2) * wl
+        if not key.startswith(("EyeIris", "EyeHighlight")):    # m14: the lid offsets also stretched the iris
+            z = np.where(side, z - lowb + upb, z)
+    mx, mz = K["mouth_c"]; mrx, mrz = K["mouth_r"]
+    r = np.hypot((x - mx) / (mrx * 1.4), (z - mz) / (mrz * 2.5))
+    w = np.clip((1 + K["mouth_fall"] - r) / K["mouth_fall"], 0, 1); w = w * w * (3 - 2 * w)
+    x = x * (1 + (K["mouth_sx"] - 1) * w * (y > 0.0))
+    return np.stack([x, y, z], 1)
+
+
+def warp(P, key):
+    P = local_fields(P, key)
+    z0, u = K["z0"], K["ipd"]
+    m = np.array(K["MAP"], float); g = pchip(m[:, 0], m[:, 1])
+    j = np.array(K["jaw"], float); jaw0 = pchip(j[:, 0], j[:, 1]); jaw = lambda d: np.where((d < j[0, 0]) | (d > j[-1, 0]), 0.0, jaw0(d))
+    x, y, z = P[:, 0].copy(), P[:, 1].copy(), P[:, 2].copy()
+    d = (z0 - z) / u
+    dn = g(d)
+    front = np.clip((y + 0.01) / 0.05, 0, 1)                  # jaw widening only on the front half
+    sx = 1 + np.nan_to_num(jaw(d)) * front
+    x2 = x * sx
+    z2 = z0 - dn * u
+    # nose bridge lift
+    t = (d - K["nose_z"][0]) / (K["nose_z"][1] - K["nose_z"][0])
+    bump = np.exp(-(x / u / K["nose_w"]) ** 2) * np.clip(t, 0, 1) * np.clip((1.15 - t) / 0.3, 0, 1)
+    y2 = y + K["nose_lift"] * bump * (y > 0.04)
+    if key.startswith("FaceBrow"):
+        z2 = z2 + K["brow_dz"]
+    if key.startswith(("EyeWhite", "EyeIris", "EyeHighlight", "FaceEyeline")) and K["eye_sz"] != 1.0:
+        zc = z0 - 0.0005
+        z2 = zc + (z2 - zc) * K["eye_sz"]
+    return np.stack([x2, y2, z2], 1)
+
+
+def _world(o):
+    mw = np.array(o.matrix_world); co = np.array([v.co[:] for v in o.data.vertices])
+    return (np.c_[co, np.ones(len(co))] @ mw.T)[:, :3], mw
+
+
+def seat_brows(lift=0.0007):
+    """m7: brows lowered 12 mm sank under the brow ridge (only a sliver showed). Put each brow vertex on the warped
+    face surface (front projection, max y of the face triangles under it) + lift."""
+    objs = {o.data.materials[0].name.split("_Instance")[0]: o for o in bpy.context.scene.objects
+            if o.type == "MESH" and o.data.materials}
+    face = next(o for k, o in objs.items() if k.endswith("Face_00_SKIN"))
+    brow = next(o for k, o in objs.items() if k.endswith("FaceBrow_00_FACE"))
+    FV, _ = _world(face); face.data.calc_loop_triangles()
+    T = np.array([t.vertices[:] for t in face.data.loop_triangles])
+    A, B, C = FV[T[:, 0]], FV[T[:, 1]], FV[T[:, 2]]
+    BV, mw = _world(brow)
+    for i, p in enumerate(BV):
+        # barycentric in the x-z plane
+        v0, v1 = B - A, C - A; v2 = np.array([p[0], 0, p[2]]) - A
+        d00 = v0[:, 0] ** 2 + v0[:, 2] ** 2; d01 = v0[:, 0] * v1[:, 0] + v0[:, 2] * v1[:, 2]; d11 = v1[:, 0] ** 2 + v1[:, 2] ** 2
+        d20 = v2[:, 0] * v0[:, 0] + v2[:, 2] * v0[:, 2]; d21 = v2[:, 0] * v1[:, 0] + v2[:, 2] * v1[:, 2]
+        den = d00 * d11 - d01 ** 2; den[np.abs(den) < 1e-14] = np.nan
+        v = (d11 * d20 - d01 * d21) / den; w = (d00 * d21 - d01 * d20) / den; u = 1 - v - w
+        hit = (u >= 0) & (v >= 0) & (w >= 0)
+        if hit.any():
+            y = (u * A[:, 1] + v * B[:, 1] + w * C[:, 1])[hit].max()
+            BV[i, 1] = max(BV[i, 1], y + lift)
+    L = (np.c_[BV, np.ones(len(BV))] @ np.linalg.inv(mw).T)[:, :3]
+    brow.data.vertices.foreach_set("co", L.astype(np.float32).ravel()); brow.data.update()
+    print("brows seated")
+
+
+def main():
+    src, texd, out = sys.argv[1:4]
+    if "--knobs" in sys.argv:
+        K.update(json.load(open(sys.argv[sys.argv.index("--knobs") + 1])))
+    for o in list(bpy.data.objects):
+        bpy.data.objects.remove(o)
+    bpy.ops.import_scene.gltf(filepath=src)
+    for o in bpy.context.scene.objects:
+        if o.type != "MESH" or not o.data.materials:
+            continue
+        m = o.data.materials[0]
+        key = m.name.split("_Instance")[0].replace("N00_000_00_", "").replace("N00_000_", "")
+        mw = np.array(o.matrix_world); inv = np.linalg.inv(mw)
+        co = np.array([v.co[:] for v in o.data.vertices]); W = (np.c_[co, np.ones(len(co))] @ mw.T)[:, :3]
+        W2 = warp(W, key)
+        L = (np.c_[W2, np.ones(len(W2))] @ inv.T)[:, :3]
+        o.data.vertices.foreach_set("co", L.astype(np.float32).ravel())
+        if o.data.shape_keys:
+            print("note: shape keys on", key, "not warped")
+        tp = os.path.join(texd, m.name.split("_Instance")[0] + ".png")
+        if os.path.exists(tp):
+            img = bpy.data.images.load(tp); img.pack()
+            for n in m.node_tree.nodes:
+                if n.type == "TEX_IMAGE":
+                    n.image = img
+            print("texture", key)
+        o.data.update()
+    seat_brows()
+    bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_image_format="AUTO")
+    print("wrote", out)
+
+
+if __name__ == "__main__":
+    main()
