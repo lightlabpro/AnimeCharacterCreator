@@ -49,13 +49,14 @@ K = dict(
     brow_dz=-0.0185,   # m11 brows_far 0.74 (control 0.60)
       # m5: still high above the eyes (Leo ~0.12 IPD gap)
                                                              # metres (brow mesh only)
-    eye_sz=0.96,   # q34b Sammy: eyes must be a bit bigger, not smaller (0.86 'looked almost evil')   # q34: narrower opening (realism)
+    eye_sz=1.06,   # q35 Sammy 'eyes too elongated / egyptian': taller, rounder opening   # q34b Sammy: eyes must be a bit bigger, not smaller (0.86 'looked almost evil')   # q34: narrower opening (realism)
                                                                  # eye opening height scale (almond)
     # q33 TypeSafe (m2 vs Leo; Leia control): eyes_vroid 0.87 (0.58), too_anime 0.85 (0.58) -> smaller eye region:
     # everything round each eye (eye parts AND the face's eye hole) scaled toward the eye centre, fading out
-    eye_c=(0.0424, 1.6061), eye_r=(0.034, 0.024), eye_s=1.04, eye_sx=0.96,   # q34b: bigger than m15 (0.88); a little shorter sideways only   # q34: eye_sx - opening shorter sideways (VRoid's long white outer corner; Leo's eye is compact)
+    eye_c=(0.0424, 1.6061), eye_r=(0.034, 0.024), eye_s=1.04, eye_sx=0.92, eye_sx_out=0.80,   # q35: the outer half pulled in harder (VRoid's long outer tail)   # q34b: bigger than m15 (0.88); a little shorter sideways only   # q34: eye_sx - opening shorter sideways (VRoid's long white outer corner; Leo's eye is compact)
       # q34: smaller eyes (realism; m15 0.88)
-    eye_fall=0.9, iris_s=1.0,   # m3: iris 0.93 read small (Leo's fills the opening)
+    eye_fall=0.9, iris_s=1.12,   # q35: Leo's iris fills more of the opening (less white each side)
+      # m3: iris 0.93 read small (Leo's fills the opening)
     iris_c=0.0398, iris_sx=1.0, iris_dx=0.0,   # m13: iris painted in 3D instead (iris_sx 1.22 / dx 0.0012 tried)     # m12 close-up: the iris rendered as a tall narrow oval set inward
     lid_low=0.0004, lid_up=0.0026,   # q34b: open, friendly (raised lower lid + heavy lid read as a glare)   # q34: lower lid up to the iris (m19 showed a white band under the iris - staring)
       # m11 TypeSafe shape_flat_top 0.77 (control 0.65)
@@ -79,7 +80,9 @@ def local_fields(P, key):
             ic = sgn * K["iris_c"]
             x = np.where((x * sgn) > 0, ic + (x - ic) * K["iris_sx"] + sgn * K["iris_dx"], x)
         side = (x * sgn) > 0
-        sxx = s * (1 - (1 - K.get("eye_sx", 1.0)) * w)
+        outer = np.clip((x * sgn - ex) / (0.5 * rx), 0, 1)          # 0 at the eye centre .. 1 on the outer half
+        sx_e = K.get("eye_sx", 1.0) * (1 - outer) + K.get("eye_sx_out", K.get("eye_sx", 1.0)) * outer
+        sxx = s * (1 - (1 - sx_e) * w)
         if key.startswith(("EyeIris", "EyeHighlight")):
             sxx = s
         x = np.where(side, sgn * ex + (x - sgn * ex) * sxx, x)
@@ -92,6 +95,11 @@ def local_fields(P, key):
         upb = upb - (z > ez) * K.get("lid_drop", 0.0010) * np.clip(1 - (rel / 1.1) ** 2, 0, 1) * wl
         if not key.startswith(("EyeIris", "EyeHighlight")):    # m14: the lid offsets also stretched the iris
             z = np.where(side, z - lowb + upb, z)
+    # q35 Sammy 'the nose looks too thin': widen the nose (bridge to wings) about the midline
+    nz0, nz1 = K.get("nose_zr", (1.5700, 1.5960))
+    nwz = np.clip((nz1 - z) / 0.004, 0, 1) * np.clip((z - nz0) / 0.004, 0, 1)
+    nwx = np.exp(-(x / K.get("nose_wr", 0.016)) ** 2)
+    x = x * (1 + (K.get("nose_sx", 1.45) - 1) * nwz * nwx * (y > 0.03))
     mx, mz = K["mouth_c"]; mrx, mrz = K["mouth_r"]
     r = np.hypot((x - mx) / (mrx * 1.4), (z - mz) / (mrz * 2.5))
     w = np.clip((1 + K["mouth_fall"] - r) / K["mouth_fall"], 0, 1); w = w * w * (3 - 2 * w)

@@ -148,16 +148,18 @@ def eyeline(img):
             return x if side == 0 else W - 1 - x
         x_out, x_in, lid = 104, 470, 119
         top, bot = [], []
-        for x in np.linspace(x_out + 6, x_in, 80):
+        for x in np.linspace(x_out + 28, x_in, 80):   # m23: the mesh's outer corner hangs down - stop before it
             s = (x - x_out) / (x_in - x_out)          # 0 outer .. 1 inner
-            t = K["lash_t_inner"] + (K["lash_t_outer"] - K["lash_t_inner"]) * (1 - s) ** 1.4
+            t = K["lash_t_inner"] + (K["lash_t_outer"] - K["lash_t_inner"]) * np.sin(np.pi * np.clip(s * 0.9 + 0.1, 0, 1)) ** 0.6
+            t *= np.clip(s / 0.10, 0.35, 1)                  # rounded end at the outer corner
             t *= 1 - 0.75 * np.clip((s - 0.85) / 0.15, 0, 1)   # taper at the inner corner
             top.append((X(x), lid - t)); bot.append((X(x), lid + 1))
         # outer corner turns down (hook), smooth
         hook = [(X(x_out + 6), lid - K["lash_t_outer"] * 0.8), (X(x_out), lid - 6), (X(x_out + 4), lid + 6),
                 (X(x_out + 12), lid + 9), (X(x_out + 22), lid + 3)]   # m3: the hook hung low like a flick
         d.polygon(top + bot[::-1], fill=K["lash"] + (255,))
-        d.polygon(hook, fill=K["lash"] + (255,))
+        # q35 (book rule / Sammy 'egyptian eyes'): no tail past the outer corner - the hook is gone, the lash ends
+        # at the corner, rounded
         # lower lid line, thin, light, outer two thirds
         pts = [(X(x), 124 - 2.2 * (1 - (x - 200) / 216)) for x in np.linspace(200, 416, 40)]
         pts2 = [(X(x), 124 + 0.8 + 1.2 * (1 - (x - 200) / 216)) for x in np.linspace(416, 200, 40)]
@@ -248,6 +250,11 @@ def face(img, mesh):
     a[..., :3] *= warm                               # m4/m7: warm skin baked in (Leo lit cheek 226,187,158) so the
     skin = skin * warm                               # shader tint stays neutral and pale highlights stay pale
 
+    if K.get("flat_skin", True):                     # q35 'shading rubbery': VRoid's baked soft gradients off
+        flat = front | (ok & (y > -0.03))
+        mf = (np.clip((y + 0.03) / 0.03, 0, 1) * ok)[..., None] * 1.0   # m22: 0.9 left a bandage ghost
+        a[..., :3] = a[..., :3] * (1 - mf) + skin * mf
+
     def blend(mask, col, alpha):
         m = (np.clip(mask, 0, 1) * alpha)[..., None]
         a[..., :3] = a[..., :3] * (1 - m) + np.array(col, np.float32) * m
@@ -269,9 +276,11 @@ def face(img, mesh):
     blend(wedge, K["nose_hl"], 0.75)
     # m3: the wing read as a sharp boomerang bar -> MHS3: a small soft rounded shape under the tip, darker in the middle
     au = np.abs(u)
-    r = np.hypot(u / 0.115, (dd - 0.505) / 0.030)
-    tip = front * np.clip((1.0 - r) / 0.35, 0, 1)
-    blend(tip, K["nose_tip"], 0.65)
+    # q35: crisp MHS3 nose base - a wide shallow shape under the tip, flat top dipping at the centre, rounded bottom
+    top_e = 0.488 + 0.010 * np.exp(-(u / 0.05) ** 2) - 0.03 * (u / 0.16) ** 2
+    bot_e = 0.518 - 0.035 * (u / 0.16) ** 2
+    tip = front * np.clip((dd - top_e) / 0.003, 0, 1) * np.clip((bot_e - dd) / 0.003, 0, 1) * (np.abs(u) < 0.17)
+    blend(tip, K["nose_tip"], 0.75)
     core = front * np.clip((1.0 - np.hypot(u / 0.05, (dd - 0.515) / 0.016)) / 0.5, 0, 1)
     blend(core, (170, 112, 92), 0.45)
     # erase VRoid's own mouth line (measured: dd 0.79-0.80, |u| < 0.22) before drawing ours on the same row
@@ -279,8 +288,12 @@ def face(img, mesh):
     old = front & (np.abs(u) < 0.26) & (np.abs(dd - 0.796) < 0.03) & (lum < skin.mean() - 12)
     blend(np.where(old, 1.0, 0.0), skin, 1.0)
     # mouth line: darker, wider than VRoid's (Leo 0.67 IPD), tapered ends, a touch heavier in the middle
-    ml = front * np.exp(-((u / 0.30) ** 8)) * np.exp(-(((dd - 0.796) / (0.006 + 0.004 * np.exp(-(u / 0.15) ** 2))) ** 2))
-    blend(ml, K["mouth"], 0.85)
+    # q35: crisp painted line (MHS3 lines are clean-edged; a Gaussian read soft / thin): half-width 0.016 IPD in the
+    # middle tapering to the corners, gently curving down at the ends
+    half = 0.006 + 0.012 * np.clip(1 - (u / 0.32) ** 2, 0, 1) ** 0.7
+    cy = 0.796 + 0.012 * (u / 0.32) ** 2
+    ml = front * np.clip((half - np.abs(dd - cy)) / 0.003, 0, 1) * (np.abs(u) < 0.33)
+    blend(ml, (74, 38, 34), 0.95)
     # q33 m15: MHS3 face shading is PAINTED - clean soft shapes that do not depend on the mesh normals (TypeSafe culprit
     # skin_shading on every dynamic-light variant). Shadow side = -u. (1) a band down the far side of the face, narrow
     # at the temple, wider over the cheek and jaw, soft inner edge; (2) the nose's shadow side + a small cast shadow
@@ -300,18 +313,29 @@ def face(img, mesh):
     if K.get("realism", True):
         for s_ in (-1, 1):
             nos = front * np.exp(-(((u - s_ * 0.068) / 0.022) ** 2 + ((dd - 0.493) / 0.010) ** 2))
-            blend(nos, (150, 96, 80), 0.55)
+            blend(nos, (150, 96, 80), 0.30)
             sock = front * np.exp(-(((u - s_ * 0.53) / 0.24) ** 2 + ((dd + 0.17) / 0.06) ** 2))
             blend(sock, skin * np.array([0.90, 0.84, 0.86]), 0.55)
-        phil = front * np.exp(-((u / 0.035) ** 2)) * np.exp(-(((dd - 0.66) / 0.06) ** 2))
-        blend(phil, skin * np.array([0.93, 0.88, 0.88]), 0.45)
-        cb = front * np.exp(-(((u + 0.62) / 0.12) ** 2 + ((dd - 0.62) / 0.14) ** 2))
-        blend(cb, skin * np.array([0.86, 0.80, 0.84]), 0.40)
+        # m22: the philtrum mark read as a smudge - off
+        # m22: the cheekbone shade read as a dirty blob - off
     # lower-lip shade (mouth line at dd ~0.76)
-    lip = front * np.exp(-((u / 0.19) ** 6)) * np.exp(-(((dd - 0.885) / 0.028) ** 2))
-    blend(lip, K["lip"], 0.75)
+    # q35 Sammy 'mouth too thin': MHS3 lower lip = a clear soft-edged shape under the line (Leo), plus a faint upper lip
+    lip = front * np.exp(-((u / 0.17) ** 6)) * np.clip((0.040 - np.abs(dd - 0.885)) / 0.015, 0, 1)
+    blend(lip, K["lip"], 0.70)
+    ulip = front * np.exp(-((u / 0.24) ** 6)) * np.clip((0.022 - np.abs(dd - 0.772)) / 0.008, 0, 1)
+    blend(ulip, K["lip"], 0.35)
     out = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
     return out
+
+
+def mouth_inside(img):
+    """q35: the closed mouth's seam showed VRoid's pink interior as a sliver inside the painted line - MHS3 mouths are a
+    dark line, so the interior (bottom half of the texture) and the tongue go dark red-brown; teeth stay."""
+    a = np.asarray(img).astype(np.float32); H, W = a.shape[:2]
+    dark = np.array([92, 44, 40], np.float32)
+    a[H // 2:, :, :3] = dark
+    a[:H // 2, W // 2:, :3] = dark * 1.25                  # tongue too (m23: its pink showed in the seam)
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
 
 
 def main():
@@ -325,6 +349,7 @@ def main():
     iris(load(n("EyeIris_00_EYE"))).save(o("EyeIris_00_EYE"))
     highlight(load(n("EyeHighlight_00_EYE"))).save(o("EyeHighlight_00_EYE"))
     eyewhite(load(n("EyeWhite_00_EYE"))).save(o("EyeWhite_00_EYE"))
+    mouth_inside(load(n("FaceMouth_00_FACE"))).save(o("FaceMouth_00_FACE"))
     eyeline(load(n("FaceEyeline_00_FACE"))).save(o("FaceEyeline_00_FACE"))
     brow(load(n("FaceBrow_00_FACE"))).save(o("FaceBrow_00_FACE"))
     if arg("--mesh"):

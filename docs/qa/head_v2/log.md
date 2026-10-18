@@ -280,3 +280,14 @@ references from mhs3 as target look. remember to use typesafe".
   only slightly shorter sideways. eyes_mhs3 0.21 -> 0.33 (best so far), too_anime 0.66.
 - VRoid Studio face sliders read on the PC (docs/reference/vroid_face_sliders.md): the head is a default; every face
   part must be slider-editable in the creator like VRoid.
+
+## q35 (2026-10-18) - "eyes too elongated (egyptian) ... mouth too thin ... shading rubbery ... nose too thin"
+- Eyes: outer half pulled in harder (eye_sx_out 0.80), taller opening (eye_sz 1.06), lash ends at the corner with no
+  hook/tail (book rule from q30), iris 12% larger so less white shows each side.
+- Mouth: crisp painted line (hard edge, 0.016 IPD half-width mid, tapering, ends curving down), VRoid's pink interior /
+  tongue darkened so the seam reads as part of the line, clear soft lower-lip shape + faint upper lip.
+- Nose: widened 45% (bridge to wings) in geometry, crisp MHS3 nose base shape under the tip.
+- Shading: VRoid's baked skin gradients flattened (MHS3 skin is flat colour + clean shapes), face normals 95% toward a
+  smooth ellipsoid, hard two-tone ramp (0.285-0.315), key light (0.55,-0.75,0.40). Cheekbone / philtrum blobs removed.
+- TypeSafe anime check: shading_anime 0.55 (m21) -> 0.735 (m25), MHS3 0.55 -> 0.57; defects: mouth_mhs3 0.69,
+  nose_mhs3 0.74, skin 0.60.
