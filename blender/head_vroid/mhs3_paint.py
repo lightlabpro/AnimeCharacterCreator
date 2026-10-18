@@ -26,14 +26,14 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 K = dict(
-    iris=(110, 144, 94), iris_dark=(52, 80, 50), iris_rim=(30, 52, 34), pupil=(38, 58, 40), iris_ring=(170, 204, 146),   # q36 R-iris_lum: Leo 121 vs 141
+    iris=(110, 140, 110), iris_dark=(54, 73, 64), iris_low=(158, 202, 136), iris_rim=(30, 52, 34), pupil=(40, 61, 40), iris_ring=(170, 204, 146),   # q36 R-iris_lum: Leo 121 vs 141
     lash=(42, 26, 20), lash_low=(150, 104, 84), crease=(168, 112, 92), brow=(112, 74, 52),   # q36: Leo brow is mid brown
     nose_hl=(255, 236, 222), nose_tip=(196, 140, 112), lip=(198, 132, 108), mouth=(96, 52, 44), cheek=(232, 160, 140),
     lash_t_outer=34, lash_t_inner=20, brow_drop=10,                      # q36 R-lash_th: Leo 0.041 IPD vs 0.018
-    pupil_rx=0.14, pupil_ry=0.16,                                         # q36: Leo's pupil is a big dark-green oval (not black)                                        # q36 R-pupil: Leo pupil 4-6% of the iris, ours 17%
-    white_base=(196, 194, 194), white_shade=(140, 134, 138),             # q36 R-white_warm: Leo neutral-warm, ours blue (-8)
+    pupil_rx=0.12, pupil_ry=0.24,                                         # q36: Leo's pupil is a big dark-green oval (not black)                                        # q36 R-pupil: Leo pupil 4-6% of the iris, ours 17%
+    white_base=(228, 226, 225), white_shade=(168, 166, 170),   # q36c sampled Leo: bright white low, shadowed top             # q36 R-white_warm: Leo neutral-warm, ours blue (-8)
     brow_top0=76, brow_bot0=110,                                         # q36 R-brow_th: Leo 0.063 IPD vs 0.045
-    mouth_hw=0.262,                                                      # q36 R-mouth_w: Leo 0.43 D vs 0.485
+    mouth_hw=0.32,                                                       # q36 R-mouth_w: Leo 0.43 D vs 0.485
 )
 
 
@@ -101,6 +101,8 @@ def iris3d(img, mesh):
         col = col * (1 + (0.025 * np.sin(th * 26 + 1.3) * np.clip((r - 0.35) / 0.4, 0, 1))[..., None])
         ring = np.exp(-((r - 0.60) / 0.07) ** 2) * 0.22
         col = col * (1 - ring[..., None]) + np.array(K["iris_ring"], np.float32) * ring[..., None]
+        low = np.clip((v - 0.40) / 0.25, 0, 1) * np.clip((0.90 - r) / 0.1, 0, 1)   # q36c Leo: bright lower crescent
+        col = col * (1 - low[..., None]) + np.array(K.get("iris_low", (158, 202, 136)), np.float32) * low[..., None]
         rim = np.clip((r - 0.80) / 0.10, 0, 1)
         col = col * (1 - rim[..., None]) + np.array(K["iris_rim"], np.float32) * rim[..., None]
         pm = np.clip((1.0 - np.hypot(u / K["pupil_rx"], (v + 0.02) / K["pupil_ry"])) / 0.08, 0, 1)
@@ -211,6 +213,28 @@ def eyewhite(img):
     t = t ** K.get("white_shade_pow", 1.8)                   # q36 TS white_big/white_bright: a wider lid shadow (Leo)
     col = shade * (1 - t) + base * t
     a[..., :3] = col
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+
+
+LID_TOP = [(0.0236, 1.6020), (0.0272, 1.6085), (0.0308, 1.6115), (0.0344, 1.6128), (0.0380, 1.6137), (0.0416, 1.6145),
+           (0.0452, 1.6152), (0.0488, 1.6155), (0.0524, 1.6155), (0.0560, 1.6154), (0.0596, 1.6148), (0.0632, 1.6134),
+           (0.0644, 1.6120)]   # q36c: upper-lid edge of the unwarped VRoid eye hole (front view, mhs3_eye_proxy top_abs)
+
+
+def lid_top(ax):
+    lx = np.array([p[0] for p in LID_TOP]); lz = np.array([p[1] for p in LID_TOP])
+    return np.interp(ax, lx, lz, left=np.nan, right=np.nan)
+
+
+def eyewhite3d(img, mesh):
+    """q36c TypeSafe white_big 0.80 / white_bright 0.78 (MHS3 controls <= 0.62): Leo's whites carry a soft grey lid
+    shadow over their top part. Painted by 3D position under the upper-lid curve (EyeWhite UVs are not lid-aligned)."""
+    a = np.asarray(img).astype(np.float32).copy(); H, W = a.shape[:2]
+    P = tex3d(mesh, "EyeWhite_00_EYE", W, H); ok = ~np.isnan(P[..., 0])
+    X = np.abs(np.nan_to_num(P[..., 0])); Z = np.nan_to_num(P[..., 2])
+    lt = lid_top(X); band = K.get("white_lid_band", 0.0070)
+    t = np.clip((Z - (np.nan_to_num(lt, nan=9.0) - band)) / 0.0015, 0, 1) * ok * ~np.isnan(lt)
+    a[..., :3] = a[..., :3] * (1 - t[..., None] * (1 - np.array(K.get("white_lid_mul", (0.72, 0.72, 0.75)), np.float32)))
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
 
 
@@ -327,9 +351,17 @@ def face(img, mesh):
     # lower-lip shade (mouth line at dd ~0.76)
     # q35 Sammy 'mouth too thin': MHS3 lower lip = a clear soft-edged shape under the line (Leo), plus a faint upper lip
     lip = front * np.exp(-((u / 0.17) ** 6)) * np.clip((0.040 - np.abs(dd - 0.885)) / 0.015, 0, 1)
-    blend(lip, K["lip"], K.get("lip_alpha", 0.45))       # q36: 0.70 read as a red blob (Leo: subtle)
+    blend(lip, K["lip"], K.get("lip_alpha", 0.70))       # q36c: the strict gate preferred the q35 lip (mouth_mhs3 0.66 vs 0.55 at 0.45)
     ulip = front * np.exp(-((u / 0.24) ** 6)) * np.clip((0.022 - np.abs(dd - 0.772)) / 0.008, 0, 1)
     blend(ulip, K["lip"], 0.35)
+    # q36c TypeSafe crease_missing 0.69 (MHS3 <= 0.55): Leo has a thin lid crease over the outer two thirds of the
+    # upper lid. The eyeline strip did not reach it, so it is painted on the skin, parallel to the lid edge.
+    if K.get("crease3d", True):
+        ax = np.abs(x); lt = lid_top(ax)
+        off = K.get("crease_off", 0.0028); th = K.get("crease_th", 0.00035)
+        s_ = np.clip((ax - 0.030) / 0.012, 0, 1) * np.clip((0.0655 - ax) / 0.004, 0, 1)    # fades in from the inner side
+        cr = ok * ~np.isnan(lt) * np.clip((th - np.abs(z - (np.nan_to_num(lt) + off))) / 0.00025, 0, 1) * s_
+        blend(cr, K["crease"], K.get("crease_alpha", 0.65))
     out = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
     return out
 
@@ -362,6 +394,8 @@ def main():
         mesh = np.load(arg("--mesh"))
         face(load(n("Face_00_SKIN")), mesh).save(o("Face_00_SKIN"))
         iris3d(load(n("EyeIris_00_EYE")), mesh).save(o("EyeIris_00_EYE"))          # replaces the UV-space iris
+        if K.get("white_lid", True):
+            eyewhite3d(load(o("EyeWhite_00_EYE")), mesh).save(o("EyeWhite_00_EYE"))
         # highlight3d: the highlight mesh only has quads where VRoid's blobs were - placed in 3D it mostly fell off them
         # (kept in UV space, highlight())
     print("painted ->", dst)

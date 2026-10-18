@@ -19,10 +19,13 @@
   "typesafe_all_thresholds": true,
   "regression_vs_last_approved": "no rule may get worse by more than 0.25 tol",
   "regression_gate": {
-   "tool": "blender/tools/mhs3_ab_gate.py",
-   "baseline": "m26 (last version Sammy accepted before q36; replace when he accepts a newer one)",
-   "rule": "TypeSafe A/B with pictures, both orders, front + 3/4 + side: no view may give overall or head_shape to the baseline; mhs3, face_anime, shading_anime, polished may not drop >0.02; at least one overall win. Hard gate: nothing is shown to Sammy without it.",
-   "why": "q36: m46 passed all 47 measured rules but Sammy said it looked worse, and TypeSafe agreed when asked afterwards (side and 3/4 head shape, mhs3 0.56 -> 0.48, shading 0.71 -> 0.58)."
+   "tool": "blender/tools/mhs3_strict_gate.py (v2; mhs3_ab_gate.py is the old single-run gate, screening only)",
+   "baselines": "every accepted / best-so-far version given with --base (comma list); currently m26 re-rendered with the locked spec (m26_r)",
+   "drift_check": "--base-fresh and --cand-fresh: a second render of baseline and candidate made in the same session; mean pixel difference > 1.0 refuses. Every render carries <prefix>_spec.json (vroid_toon.vt_go2): spec and vroid_toon.py sha1 must be identical across all renders and equal to shader.spec, or the gate refuses.",
+   "ab": "6 renders (front, 3/4, side, 70 deg, eye close-up, profile close-up) x 3 runs x both picture orders per baseline: overall/head_shape lost in ANY run = FAIL; eyes/nose_mouth/jaw_chin/face_shading/clean lost in most runs = FAIL; PASS needs overall won (majority) in >= 2 views vs every baseline",
+   "anime": "anime check x 3 runs x 3 MHS3 references (Leo, Leia, Eleanor): no metric may drop by more than 1 SE; mhs3 must rise by > 2 SE (else UNDECIDED)",
+   "defects": "defects_vroid_mhs3 x 2 runs: no bad statement up / good statement down by > 0.05",
+   "sanity": "--sanity judges the baseline against itself: must give zero winners (verified q36c: 0 false wins over 6 views x 3 runs)"
   },
   "note": "Blocking = every rule without 'advisory': true. A rule the A/B-accepted version contradicts is not a standard (like a TypeSafe threshold MHS3 itself cannot meet): it is marked advisory with the reason, never silently loosened, and must be re-derived before it blocks again."
  },
@@ -596,7 +599,9 @@
   "q36: EEVEE sun cast shadows rendered as speckled grey patches (nose shadow on the philtrum, lip shadow on the chin, faceted neck) - TypeSafe artifacts 0.93. Cast shadows off; MHS3 cast shadows are clean painted shapes (future: paint them).",
   "q36b: passing every measured rule does not mean it looks better - rules measured one view (front/side) and pushed the jaw +56%, making a lumpy jowl in 3/4. The A/B regression gate against the accepted version is mandatory before showing anything.",
   "q36b: crisp (jitter-free) cast shadows scored higher on 'shading' but lost every A/B view; the original soft sun shadows stay.",
-  "q36b: shortening the lower face (MAP chin 1.42 -> 1.38) lost the side/3/4 A/B; keep the m26 length."
+  "q36b: shortening the lower face (MAP chin 1.42 -> 1.38) lost the side/3/4 A/B; keep the m26 length.",
+  "q36c: a gate is only as good as its baseline - always re-render the baseline with the current pipeline and refuse on drift; one-run A/B 'disagree' results hid real side-view losses that 3 repeated runs exposed.",
+  "q36c: a stale vroid_toon.py on the PC (the relocked spec was edited locally but not synced) rendered half the candidates with the rejected q36 shader; comparisons against correctly-rendered baselines were invalid (every 'side loss' 11:20-11:28). Fix: spec sidecar + sha1 check in the gate; sync the file and print its sha1 before rendering."
  ],
  "eye_shape_template": {
   "note": "Leo (mean of both eyes), opening outline inner->outer at 9 fractions of its width, edge height from the opening centre in units of its width (+ = down). Sammy q36: eye shape matching MHS3 is a standard.",

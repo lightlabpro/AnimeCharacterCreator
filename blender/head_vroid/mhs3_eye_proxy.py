@@ -43,5 +43,10 @@ def opening(parts, res=0.00015):
         # z grows upward; image rows grow downward -> flip signs so + = down like the render
         top.append(-(col.max() - yc) / wpx); bot.append(-(col.min() - yc) / wpx)
     inner = jj[ii <= ii.min() + 2].mean(); outer = jj[ii >= ii.max() - 2].mean()
+    top_abs = []
+    for c_ in range(ii.min(), ii.max() + 1, 4):
+        col = np.where(m[:, c_])[0]
+        if len(col):
+            top_abs.append((float(xs[c_]), float(zs[col.max()])))
     return {"shape_top": top, "shape_bot": bot, "corner_tilt": (outer - inner) / wpx,
-            "w_mm": wpx * res * 1000, "h_mm": (jj.max() - jj.min()) * res * 1000}
+            "w_mm": wpx * res * 1000, "h_mm": (jj.max() - jj.min()) * res * 1000, "top_abs": top_abs}

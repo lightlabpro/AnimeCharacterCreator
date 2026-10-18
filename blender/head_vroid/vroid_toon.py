@@ -267,6 +267,15 @@ def vt_go2(key, glb=None, tag="a", spec=None):
                 setattr(ee, attr, val)
     outs = vt_shoot(key, tag, yaw0=180, light=s["light"])
     outs += vt_close(key, tag)
+    # q36c: every judged render carries its spec; the gate refuses renders whose spec differs from each other or
+    # from the rulebook (a stale vroid_toon.py on the PC rendered half a morning with a rejected shader)
+    import hashlib, json as _json
+    srcp = ns.get("VT_SRC", os.path.join(os.path.dirname(DW), "AnimeCharacterCreator-main", "blender", "head_vroid",
+                                         "vroid_toon.py"))
+    src = open(srcp, "rb").read() if os.path.exists(srcp) else b""
+    side = {"key": key, "tag": tag, "spec": {k: (list(v) if isinstance(v, tuple) else v) for k, v in s.items()},
+            "vroid_toon_sha1": hashlib.sha1(src).hexdigest() if src else None}
+    _json.dump(side, open(os.path.join(OUT, "%s_%s_spec.json" % (key, tag)), "w"), indent=1, default=str)
     return outs
 
 
