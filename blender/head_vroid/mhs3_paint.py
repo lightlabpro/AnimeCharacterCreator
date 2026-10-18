@@ -295,6 +295,18 @@ def face(img, mesh):
         blend(nose_sh, sh_col, 0.55)
         chin_sh = front * np.exp(-((u / 0.16) ** 2)) * np.exp(-(((dd - 0.97) / 0.05) ** 2))
         blend(chin_sh, sh_col, 0.35)
+    # q34 realism (MHS3 faces carry small painted anatomy): nostril marks, a soft upper-lid / socket shade under the
+    # brow, a faint philtrum, a soft shade under the cheekbone on the shadow side
+    if K.get("realism", True):
+        for s_ in (-1, 1):
+            nos = front * np.exp(-(((u - s_ * 0.068) / 0.022) ** 2 + ((dd - 0.493) / 0.010) ** 2))
+            blend(nos, (150, 96, 80), 0.55)
+            sock = front * np.exp(-(((u - s_ * 0.53) / 0.24) ** 2 + ((dd + 0.17) / 0.06) ** 2))
+            blend(sock, skin * np.array([0.90, 0.84, 0.86]), 0.55)
+        phil = front * np.exp(-((u / 0.035) ** 2)) * np.exp(-(((dd - 0.66) / 0.06) ** 2))
+        blend(phil, skin * np.array([0.93, 0.88, 0.88]), 0.45)
+        cb = front * np.exp(-(((u + 0.62) / 0.12) ** 2 + ((dd - 0.62) / 0.14) ** 2))
+        blend(cb, skin * np.array([0.86, 0.80, 0.84]), 0.40)
     # lower-lip shade (mouth line at dd ~0.76)
     lip = front * np.exp(-((u / 0.19) ** 6)) * np.exp(-(((dd - 0.885) / 0.028) ** 2))
     blend(lip, K["lip"], 0.75)

@@ -42,17 +42,23 @@ def pchip(xk, yk):
 K = dict(
     z0=1.6093, ipd=0.0796,
     MAP=[[-1.0, -1.0], [0.0, 0.0], [0.22, 0.22], [0.49, 0.62], [0.76, 0.86], [1.30, 1.42], [2.0, 2.12], [3.0, 3.0], [9.0, 9.0]],   # m14: (0,0)->(0.49,0.62) stretched the lower iris x1.27 (tall pupil) - identity through the eyes
-    jaw=[[0.5, 0.0], [0.95, 0.09], [1.25, 0.20], [1.6, 0.08], [2.2, 0.0]],   # m3: still a narrow V      # extra x scale by depth (front half)
-    nose_lift=0.0050, nose_z=(0.15, 0.50), nose_w=0.12,                        # metres forward along +y on the bridge
+    jaw=[[0.40, 0.0], [0.65, -0.05], [0.95, 0.02], [1.15, 0.16], [1.32, 0.26], [1.6, 0.12], [2.2, 0.0]],   # q34 realism: cheeks in (pupil-aligned 1.63 vs Leo 1.43 IPD), chin broader/squarer (0.74 vs 0.81)
+    neck_sx=0.16, neck_d=(1.45, 1.75, 2.15, 2.5),   # q34: thicker adult neck (all round), ramps in/out over d
+      # m3: still a narrow V      # extra x scale by depth (front half)
+    nose_lift=0.0070, nose_z=(0.15, 0.50), nose_w=0.12,                        # metres forward along +y on the bridge
     brow_dz=-0.0185,   # m11 brows_far 0.74 (control 0.60)
       # m5: still high above the eyes (Leo ~0.12 IPD gap)
                                                              # metres (brow mesh only)
-    eye_sz=0.90,                                                              # eye opening height scale (almond)
+    eye_sz=0.96,   # q34b Sammy: eyes must be a bit bigger, not smaller (0.86 'looked almost evil')   # q34: narrower opening (realism)
+                                                                 # eye opening height scale (almond)
     # q33 TypeSafe (m2 vs Leo; Leia control): eyes_vroid 0.87 (0.58), too_anime 0.85 (0.58) -> smaller eye region:
     # everything round each eye (eye parts AND the face's eye hole) scaled toward the eye centre, fading out
-    eye_c=(0.0424, 1.6061), eye_r=(0.034, 0.024), eye_s=0.88, eye_fall=0.9, iris_s=1.0,   # m3: iris 0.93 read small (Leo's fills the opening)
+    eye_c=(0.0424, 1.6061), eye_r=(0.034, 0.024), eye_s=1.04, eye_sx=0.96,   # q34b: bigger than m15 (0.88); a little shorter sideways only   # q34: eye_sx - opening shorter sideways (VRoid's long white outer corner; Leo's eye is compact)
+      # q34: smaller eyes (realism; m15 0.88)
+    eye_fall=0.9, iris_s=1.0,   # m3: iris 0.93 read small (Leo's fills the opening)
     iris_c=0.0398, iris_sx=1.0, iris_dx=0.0,   # m13: iris painted in 3D instead (iris_sx 1.22 / dx 0.0012 tried)     # m12 close-up: the iris rendered as a tall narrow oval set inward
-    lid_low=0.0018, lid_up=0.0026,   # m11 TypeSafe shape_flat_top 0.77 (control 0.65)
+    lid_low=0.0004, lid_up=0.0026,   # q34b: open, friendly (raised lower lid + heavy lid read as a glare)   # q34: lower lid up to the iris (m19 showed a white band under the iris - staring)
+      # m11 TypeSafe shape_flat_top 0.77 (control 0.65)
                        # m6: round the lower lid (VRoid flat), lift the inner-mid upper lid
     mouth_c=(0.0, 1.5493), mouth_r=(0.032, 0.012), mouth_sx=1.0,   # m3: 1.16 dented the cheeks by the mouth - the line is widened in paint instead
     mouth_fall=1.2,
@@ -73,12 +79,17 @@ def local_fields(P, key):
             ic = sgn * K["iris_c"]
             x = np.where((x * sgn) > 0, ic + (x - ic) * K["iris_sx"] + sgn * K["iris_dx"], x)
         side = (x * sgn) > 0
-        x = np.where(side, sgn * ex + (x - sgn * ex) * s, x)
+        sxx = s * (1 - (1 - K.get("eye_sx", 1.0)) * w)
+        if key.startswith(("EyeIris", "EyeHighlight")):
+            sxx = s
+        x = np.where(side, sgn * ex + (x - sgn * ex) * sxx, x)
         z = np.where(side, ez + (z - ez) * s, z)
         # lid shape: relative position across the eye (-1 inner .. +1 outer) and above / below the centre
         rel = np.clip((x * sgn - ex) / rx, -1.2, 1.2); wl = np.clip((1.6 - r) / 0.8, 0, 1)
         lowb = (z < ez) * K["lid_low"] * np.clip(1 - rel ** 2, 0, 1) * wl
         upb = (z > ez) * K["lid_up"] * np.exp(-((rel + 0.25) / 0.5) ** 2) * wl
+        # q34: heavy MHS3 upper lid - the lid (skin edge, lash, white's top) comes down over the top of the iris
+        upb = upb - (z > ez) * K.get("lid_drop", 0.0010) * np.clip(1 - (rel / 1.1) ** 2, 0, 1) * wl
         if not key.startswith(("EyeIris", "EyeHighlight")):    # m14: the lid offsets also stretched the iris
             z = np.where(side, z - lowb + upb, z)
     mx, mz = K["mouth_c"]; mrx, mrz = K["mouth_r"]
@@ -98,12 +109,21 @@ def warp(P, key):
     dn = g(d)
     front = np.clip((y + 0.01) / 0.05, 0, 1)                  # jaw widening only on the front half
     sx = 1 + np.nan_to_num(jaw(d)) * front
+    a0, a1, a2, a3 = K["neck_d"]
+    nk = np.clip((d - a0) / (a1 - a0), 0, 1) * np.clip((a3 - d) / (a3 - a2), 0, 1)
+    nk = nk * nk * (3 - 2 * nk)
+    sx = sx * (1 + K["neck_sx"] * nk)
     x2 = x * sx
+    yc = 0.0                                              # neck depth too (about the neck axis)
+    y = yc + (y - yc) * (1 + 0.6 * K["neck_sx"] * nk)
     z2 = z0 - dn * u
     # nose bridge lift
     t = (d - K["nose_z"][0]) / (K["nose_z"][1] - K["nose_z"][0])
     bump = np.exp(-(x / u / K["nose_w"]) ** 2) * np.clip(t, 0, 1) * np.clip((1.15 - t) / 0.3, 0, 1)
     y2 = y + K["nose_lift"] * bump * (y > 0.04)
+    # q34: a stronger chin in profile (MHS3 adult chin projects; VRoid's recedes)
+    cz = np.clip((d - 1.05) / 0.15, 0, 1) * np.clip((1.55 - d) / 0.2, 0, 1)
+    y2 = y2 + K.get("chin_fwd", 0.0045) * cz * np.exp(-(x / (0.5 * u)) ** 2) * (y > 0.0)
     if key.startswith("FaceBrow"):
         z2 = z2 + K["brow_dz"]
     if key.startswith(("EyeWhite", "EyeIris", "EyeHighlight", "FaceEyeline")) and K["eye_sz"] != 1.0:

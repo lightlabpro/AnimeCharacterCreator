@@ -271,3 +271,12 @@ references from mhs3 as target look. remember to use typesafe".
   -> 0.52; culprit skin shading on every lighting / normal / ramp variant tried (best: original normals, hard ramp,
   MHS3 0.625, polished 0.37, but it shows a blotch under the eye).
 - Board: q33/board_vroid_mhs3_m15.png, q33/aligned_m15_vs_leo.png, q33/eye_close_m15.png.
+
+## q34 (2026-10-18) - "make it resemble mhs3 a bit more ... a bit of realism" / "eyes must be a bit bigger ... look almost evil"
+- Realism pass kept: cheeks in, broader squarer chin (pupil-aligned chin 0.74 -> Leo 0.81 IPD), chin forward in
+  profile, thicker neck, higher nose bridge, painted nostrils, upper-lid socket shade, faint philtrum, cheekbone shade.
+  TypeSafe too_anime 0.69 -> 0.57-0.61, brows_mhs3 0.35 -> 0.45.
+- Smaller / hooded eyes (m18-m20) read as a glare (Sammy: "almost evil") -> m21: eyes 4% bigger than base, open lids,
+  only slightly shorter sideways. eyes_mhs3 0.21 -> 0.33 (best so far), too_anime 0.66.
+- VRoid Studio face sliders read on the PC (docs/reference/vroid_face_sliders.md): the head is a default; every face
+  part must be slider-editable in the creator like VRoid.
