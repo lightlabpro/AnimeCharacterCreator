@@ -9,7 +9,7 @@
  },
  "sources": {
   "leo_front": "docs/qa/head_v2/judge/leo_ref_front.png (MHST3-Leo_Render_001, front, neutral) - p-series measurements in D (docs/qa/newhead/visual_judge_log.md) and mhs3_render_measure.py",
-  "mhs3_04": "docs/reference/mhs3/face_profile_04.png (crop of 04-egg-lantern.jpg, ~70 deg near-profile), landmarks hand-read on a 1 px grid (q36), +-0.02 D",
+  "mhs3_04": "docs/reference/mhs3/profile/face_profile_04.png (crop of 04-egg-lantern.jpg, ~70 deg near-profile), landmarks hand-read on a 1 px grid (q36), +-0.02 D",
   "dataset": "knowledge/head-targets-dataset.json behind_nose bands, 18 visually verified anime heads (median, p10-p90)",
   "sammy": "Sammy's own picks (override books and MHS3): q34b eyes a bit bigger, not smaller, never a glare; q35 no egyptian / elongated eyes, fuller mouth, wider nose, neat (non-rubbery) shading; q36 features not too forward in profile"
  },
@@ -387,7 +387,7 @@
     "min": {}
    },
    "defects_profile.json": {
-    "ref": "docs/reference/mhs3/face_profile_04.png",
+    "ref": "docs/reference/mhs3/profile/face_profile_04.png",
     "view": "prof_close",
     "max": {
      "features_forward": 0.45,

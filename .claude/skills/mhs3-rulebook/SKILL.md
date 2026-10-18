@@ -26,7 +26,7 @@ judge a face against memory or taste when a rule exists. Never loosen a toleranc
    - q36: features not too far forward in profile; the eye shape is a standard.
 2. **Official MHS3 renders.** Leo front (`docs/qa/head_v2/judge/leo_ref_front.png`) is measured by the same code as our
    renders (`blender/tools/mhs3_render_measure.py`), so every render rule has a like-for-like reference value.
-3. **MHS3 in-game profile.** `docs/reference/mhs3/face_profile_04.png` is a ~70-degree near-profile crop of
+3. **MHS3 in-game profile.** `docs/reference/mhs3/profile/face_profile_04.png` is a ~70-degree near-profile crop of
    04-egg-lantern. Its landmarks were hand-read on a 1 px grid to about +-0.02 D.
 4. **Dataset bands.** These come from 18 verified anime heads. Where MHS3 and the dataset agree (forehead 0.039 H
    behind the nose tip), the rule is firm.

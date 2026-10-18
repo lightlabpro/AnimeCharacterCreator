@@ -302,7 +302,7 @@ please make them match, this is also a standard."
   standard) + lessons. Skills: `mhs3-rulebook`, `mhs3-shader-match`, `mhs3-master-loop` (master rule, also in
   CLAUDE.md). Tools: `mhs3_measure.py` (mesh, per region), `mhs3_render_measure.py` (render vs Leo, same code),
   `mhs3_validate.py` (one verdict, exit 0/12/13), `mhs3_fit_profile.py`, `mhs3_fit_eyes.py` + `mhs3_eye_proxy.py`,
-  `mhs3_warp_np.py`. New MHS3 profile reference: `docs/reference/mhs3/face_profile_04.png`.
+  `mhs3_warp_np.py`. New MHS3 profile reference: `docs/reference/mhs3/profile/face_profile_04.png`.
 - Profile: m26 failed 10 profile rules - the nose sat 0.07 H ahead of the forehead (dataset median 0.053,
   MHS3-04 0.039 at brow level). nose_back 6 mm + nose-root lift in the band above the pupils; lower face shortened
   (MAP chin 1.42 -> 1.38: Leo pupils-to-chin 1.347 IPD). TypeSafe features_forward 0.41 -> 0.38 (passes 0.45).
