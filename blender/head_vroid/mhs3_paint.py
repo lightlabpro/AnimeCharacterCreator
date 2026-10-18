@@ -26,10 +26,14 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 K = dict(
-    iris=(146, 176, 124), iris_dark=(74, 104, 70), iris_rim=(38, 62, 40), pupil=(20, 34, 24), iris_ring=(196, 226, 170),
-    lash=(42, 26, 20), lash_low=(150, 104, 84), crease=(168, 112, 92), brow=(74, 48, 32),
+    iris=(110, 144, 94), iris_dark=(52, 80, 50), iris_rim=(30, 52, 34), pupil=(38, 58, 40), iris_ring=(170, 204, 146),   # q36 R-iris_lum: Leo 121 vs 141
+    lash=(42, 26, 20), lash_low=(150, 104, 84), crease=(168, 112, 92), brow=(112, 74, 52),   # q36: Leo brow is mid brown
     nose_hl=(255, 236, 222), nose_tip=(196, 140, 112), lip=(198, 132, 108), mouth=(96, 52, 44), cheek=(232, 160, 140),
-    lash_t_outer=36, lash_t_inner=18, brow_drop=10,
+    lash_t_outer=34, lash_t_inner=20, brow_drop=10,                      # q36 R-lash_th: Leo 0.041 IPD vs 0.018
+    pupil_rx=0.14, pupil_ry=0.16,                                         # q36: Leo's pupil is a big dark-green oval (not black)                                        # q36 R-pupil: Leo pupil 4-6% of the iris, ours 17%
+    white_base=(196, 194, 194), white_shade=(140, 134, 138),             # q36 R-white_warm: Leo neutral-warm, ours blue (-8)
+    brow_top0=76, brow_bot0=110,                                         # q36 R-brow_th: Leo 0.063 IPD vs 0.045
+    mouth_hw=0.262,                                                      # q36 R-mouth_w: Leo 0.43 D vs 0.485
 )
 
 
@@ -92,14 +96,14 @@ def iris3d(img, mesh):
         base = np.array(K["iris"], np.float32)
         col = base[None, None] * np.ones((H, W, 1), np.float32)
         col = col * (1 + 0.12 * np.clip(v, 0, 1)[..., None]) * (1 - 0.30 * np.clip(-v, 0, 1)[..., None])
-        top = np.clip((-v - 0.35) / 0.35, 0, 1)
+        top = np.clip((-v - 0.15) / 0.40, 0, 1) ** 0.8          # q36: Leo's lid shadow covers the top third
         col = col * (1 - top[..., None]) + np.array(K["iris_dark"], np.float32) * top[..., None]
         col = col * (1 + (0.025 * np.sin(th * 26 + 1.3) * np.clip((r - 0.35) / 0.4, 0, 1))[..., None])
         ring = np.exp(-((r - 0.60) / 0.07) ** 2) * 0.22
         col = col * (1 - ring[..., None]) + np.array(K["iris_ring"], np.float32) * ring[..., None]
         rim = np.clip((r - 0.80) / 0.10, 0, 1)
         col = col * (1 - rim[..., None]) + np.array(K["iris_rim"], np.float32) * rim[..., None]
-        pm = np.clip((1.0 - np.hypot(u / 0.34, (v + 0.02) / 0.40)) / 0.08, 0, 1)
+        pm = np.clip((1.0 - np.hypot(u / K["pupil_rx"], (v + 0.02) / K["pupil_ry"])) / 0.08, 0, 1)
         col = col * (1 - pm[..., None]) + np.array(K["pupil"], np.float32) * pm[..., None]
         for dx, dy, s in ((-0.45, 0.55, 0.08), (0.05, 0.68, 0.06), (0.42, 0.50, 0.06)):
             sm = np.exp(-(((u - dx) / s) ** 2 + ((v - dy) / s) ** 2)) * 0.7
@@ -153,7 +157,7 @@ def eyeline(img):
             t = K["lash_t_inner"] + (K["lash_t_outer"] - K["lash_t_inner"]) * np.sin(np.pi * np.clip(s * 0.9 + 0.1, 0, 1)) ** 0.6
             t *= np.clip(s / 0.10, 0.35, 1)                  # rounded end at the outer corner
             t *= 1 - 0.75 * np.clip((s - 0.85) / 0.15, 0, 1)   # taper at the inner corner
-            top.append((X(x), lid - t)); bot.append((X(x), lid + 1))
+            top.append((X(x), lid - t)); bot.append((X(x), lid + K.get('lash_down', 12)))   # q36 E1: no skin between lash and opening
         # outer corner turns down (hook), smooth
         hook = [(X(x_out + 6), lid - K["lash_t_outer"] * 0.8), (X(x_out), lid - 6), (X(x_out + 4), lid + 6),
                 (X(x_out + 12), lid + 9), (X(x_out + 22), lid + 3)]   # m3: the hook hung low like a flick
@@ -165,8 +169,8 @@ def eyeline(img):
         pts2 = [(X(x), 124 + 0.8 + 1.2 * (1 - (x - 200) / 216)) for x in np.linspace(416, 200, 40)]
         d.polygon(pts + pts2, fill=K["lash_low"] + (230,))
         # crease line above the lid (MHS3 double-lid line), thin
-        cr = [(X(x), 56 + 10 * ((x - 290) / 140) ** 2) for x in np.linspace(170, 420, 40)]
-        d.line(cr, fill=K["crease"] + (200,), width=3)
+        cr = [(X(x), K.get("crease_row", 84) + 10 * ((x - 290) / 140) ** 2) for x in np.linspace(170, 420, 40)]   # q36 TS crease_missing 0.72: row 56 sat off the visible strip
+        d.line(cr, fill=K["crease"] + (230,), width=4)
     return out.filter(ImageFilter.GaussianBlur(0.6))
 
 
@@ -183,8 +187,8 @@ def brow(img):
         xs = np.linspace(185, 448, 80); s = (xs - 185) / 263            # 0 outer .. 1 inner
         # m8 (ray-cast check: the brow sits in front of the skin): the strip's lower row is tiny in 3D, so only the top
         # row (rows 68-128) shows - the whole brow is drawn inside it
-        top = 86 - 8 * np.sin(np.pi * s) + 22 * s ** 1.6                # slight arch, then down toward the nose
-        bot = 104 - 6 * np.sin(np.pi * s) + 48 * s ** 1.3               # thick inner end (VRoid's own brow: rows 81-155)
+        top = K["brow_top0"] - 8 * np.sin(np.pi * s) + 22 * s ** 1.6    # slight arch, then down toward the nose
+        bot = np.minimum(K["brow_bot0"] - 6 * np.sin(np.pi * s) + 48 * s ** 1.3, 127)   # thick inner end (strip rows 68-128)
         d.polygon([(X(x), t) for x, t in zip(xs, top)] + [(X(x), b) for x, b in zip(xs[::-1], bot[::-1])],
                   fill=K["brow"] + (255,))
         # m10 TypeSafe brows_hatch 0.88 (Leia control 0.34): no stroke pattern - a solid stroke, darker along the lower edge
@@ -201,9 +205,10 @@ def eyewhite(img):
     H = a.shape[0]
     rows = np.arange(H, dtype=np.float32)[:, None]
     lum = a[..., :3].mean(-1, keepdims=True)
-    base = np.array([198, 198, 208], np.float32)   # m10 white_bright 0.81 (control 0.61)
-    shade = np.array([140, 142, 162], np.float32)
+    base = np.array(K["white_base"], np.float32)   # m10 white_bright 0.81 (control 0.61)
+    shade = np.array(K["white_shade"], np.float32)
     t = np.clip((lum - 120) / 135, 0, 1)                    # the VRoid gradient: dark cap -> white
+    t = t ** K.get("white_shade_pow", 1.8)                   # q36 TS white_big/white_bright: a wider lid shadow (Leo)
     col = shade * (1 - t) + base * t
     a[..., :3] = col
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
@@ -290,9 +295,10 @@ def face(img, mesh):
     # mouth line: darker, wider than VRoid's (Leo 0.67 IPD), tapered ends, a touch heavier in the middle
     # q35: crisp painted line (MHS3 lines are clean-edged; a Gaussian read soft / thin): half-width 0.016 IPD in the
     # middle tapering to the corners, gently curving down at the ends
-    half = 0.006 + 0.012 * np.clip(1 - (u / 0.32) ** 2, 0, 1) ** 0.7
-    cy = 0.796 + 0.012 * (u / 0.32) ** 2
-    ml = front * np.clip((half - np.abs(dd - cy)) / 0.003, 0, 1) * (np.abs(u) < 0.33)
+    mw = K["mouth_hw"]
+    half = 0.006 + 0.012 * np.clip(1 - (u / mw) ** 2, 0, 1) ** 0.7
+    cy = 0.796 + 0.012 * (u / mw) ** 2
+    ml = front * np.clip((half - np.abs(dd - cy)) / 0.003, 0, 1) * (np.abs(u) < mw + 0.01)
     blend(ml, (74, 38, 34), 0.95)
     # q33 m15: MHS3 face shading is PAINTED - clean soft shapes that do not depend on the mesh normals (TypeSafe culprit
     # skin_shading on every dynamic-light variant). Shadow side = -u. (1) a band down the far side of the face, narrow
@@ -321,7 +327,7 @@ def face(img, mesh):
     # lower-lip shade (mouth line at dd ~0.76)
     # q35 Sammy 'mouth too thin': MHS3 lower lip = a clear soft-edged shape under the line (Leo), plus a faint upper lip
     lip = front * np.exp(-((u / 0.17) ** 6)) * np.clip((0.040 - np.abs(dd - 0.885)) / 0.015, 0, 1)
-    blend(lip, K["lip"], 0.70)
+    blend(lip, K["lip"], K.get("lip_alpha", 0.45))       # q36: 0.70 read as a red blob (Leo: subtle)
     ulip = front * np.exp(-((u / 0.24) ** 6)) * np.clip((0.022 - np.abs(dd - 0.772)) / 0.008, 0, 1)
     blend(ulip, K["lip"], 0.35)
     out = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")

@@ -1,0 +1,15 @@
+{
+ "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m46_s_front.png": {
+  "anime": 0.89,
+  "mhs3": 0.465,
+  "eyes_anime": 0.43,
+  "hair_anime": 0.57,
+  "face_anime": 0.765,
+  "shading_anime": 0.625,
+  "polished": 0.28,
+  "culprit": [
+   "hair",
+   "eyes"
+  ]
+ }
+}

@@ -136,6 +136,54 @@
    "kind": "doc",
    "consumer_file": "face-gate/SKILL.md",
    "via": "typesafe_visual_judge.py"
+  },
+  {
+   "from": "mhs3-rulebook",
+   "to": "mhs3-master-loop",
+   "artifact": "knowledge/mhs3_face_rules.json (rules, eye_shape_template, lessons)",
+   "kind": "doc",
+   "consumer_file": "mhs3-master-loop/SKILL.md",
+   "via": "mhs3-rulebook"
+  },
+  {
+   "from": "mhs3-shader-match",
+   "to": "mhs3-master-loop",
+   "artifact": "MHS3_SPEC render spec + S rules",
+   "kind": "doc",
+   "consumer_file": "mhs3-master-loop/SKILL.md",
+   "via": "mhs3-shader-match"
+  },
+  {
+   "from": "face-gate",
+   "to": "mhs3-master-loop",
+   "artifact": "face_gate.json",
+   "kind": "doc",
+   "consumer_file": "mhs3-master-loop/SKILL.md",
+   "via": "face-gate"
+  },
+  {
+   "from": "head-shape-audit",
+   "to": "mhs3-master-loop",
+   "artifact": "head_audit.json",
+   "kind": "doc",
+   "consumer_file": "mhs3-master-loop/SKILL.md",
+   "via": "head-shape-audit"
+  },
+  {
+   "from": "reference-match-judge",
+   "to": "mhs3-master-loop",
+   "artifact": "TypeSafe correction pick",
+   "kind": "doc",
+   "consumer_file": "mhs3-master-loop/SKILL.md",
+   "via": "reference-match-judge"
+  },
+  {
+   "from": "mhs3-shader-match",
+   "to": "mhs3-rulebook",
+   "artifact": "shader rules S1-S8",
+   "kind": "doc",
+   "consumer_file": "mhs3-rulebook/SKILL.md",
+   "via": "mhs3-shader-match"
   }
  ]
 }

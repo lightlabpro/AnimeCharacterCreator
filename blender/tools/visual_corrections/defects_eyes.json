@@ -1,0 +1,15 @@
+{
+ "white_bright": "The eye whites in `image` are brighter / whiter and cleaner than in `reference_image`.",
+ "white_big": "Too much eye white shows in `image` compared with `reference_image`.",
+ "iris_small": "The irises in `image` are smaller relative to the eye opening than in `reference_image`.",
+ "iris_flat": "The irises in `image` look flat or glassy-cartoon instead of painted with a dark upper part and a dark rim.",
+ "pupil_odd": "The pupils in `image` have an odd shape (slit, notch or keyhole).",
+ "lash_thin": "The upper lash line in `image` is thinner or lighter than in `reference_image`.",
+ "lash_flick": "The upper lash in `image` ends in a VRoid-style flick or hook at the outer corner.",
+ "lower_lid": "The lower lid line in `image` is missing or weaker than in `reference_image`.",
+ "shape_tilted": "The eye openings in `image` are more tilted / almond-cat shaped than in `reference_image`.",
+ "shape_flat_top": "The upper lid in `image` is flatter (less arched) than in `reference_image`.",
+ "brows_far": "The eyebrows in `image` sit further above the eyes than in `reference_image`.",
+ "brows_hatch": "The eyebrows in `image` show regular stripes or hatching that `reference_image` does not have.",
+ "crease_missing": "`image` lacks the upper-lid crease line that `reference_image` has."
+}

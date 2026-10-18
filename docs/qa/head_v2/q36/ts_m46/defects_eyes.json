@@ -1,0 +1,19 @@
+{
+ "image": "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m46_s_eye_close.png",
+ "ref": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\head_v2\\judge\\leo_ref_front.png",
+ "yes": {
+  "white_bright": 0.775,
+  "white_big": 0.8,
+  "iris_small": 0.45,
+  "iris_flat": 0.58,
+  "pupil_odd": 0.19,
+  "lash_thin": 0.325,
+  "lash_flick": 0.515,
+  "lower_lid": 0.525,
+  "shape_tilted": 0.75,
+  "shape_flat_top": 0.69,
+  "brows_far": 0.675,
+  "brows_hatch": 0.11,
+  "crease_missing": 0.685
+ }
+}

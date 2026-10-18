@@ -47,7 +47,7 @@ def vt_import(key, path):
     return sc
 
 
-def toon(m, shadow_tint, thr=0.30, soft=0.06, kind="skin"):
+def toon(m, shadow_tint, thr=0.30, soft=0.06, kind="skin", deep=None):
     """Texture colour lit / texture x shadow_tint in shadow (Diffuse -> Shader to RGB -> ramp), emission out; alpha
     from the texture. kind='unlit' for eyes, brows, lash lines, mouth (MToon draws these unlit)."""
     nt = m.node_tree
@@ -77,7 +77,22 @@ def toon(m, shadow_tint, thr=0.30, soft=0.06, kind="skin"):
         nt.links.new(sh.outputs[2], mx.inputs[6])
         if col:
             nt.links.new(col, mx.inputs[7])
-        nt.links.new(mx.outputs[2], em.inputs["Color"])
+        if deep is not None:                        # q36: MHS3 skin has a third, deep tone in the core of the shadow
+            dthr, dtint = deep                     # (jaw side / under the jaw; Leo: 0.57 of lit, ~5% of the lower face)
+            r2n = nt.nodes.new("ShaderNodeValToRGB"); r2n.name = "VT_DeepRamp"; r2 = r2n.color_ramp
+            r2.elements[0].position = max(dthr - 0.01, 0.0); r2.elements[0].color = (0, 0, 0, 1)
+            r2.elements[1].position = dthr + 0.01; r2.elements[1].color = (1, 1, 1, 1)
+            nt.links.new(bw.outputs[0], r2n.inputs[0])
+            dm = nt.nodes.new("ShaderNodeMix"); dm.name = "VT_DeepTint"; dm.data_type = "RGBA"; dm.blend_type = "MULTIPLY"
+            dm.inputs[0].default_value = 1.0
+            if col:
+                nt.links.new(col, dm.inputs[6])
+            dm.inputs[7].default_value = tuple(dtint) + (1,)
+            mx2 = nt.nodes.new("ShaderNodeMix"); mx2.data_type = "RGBA"; nt.links.new(r2n.outputs[0], mx2.inputs[0])
+            nt.links.new(dm.outputs[2], mx2.inputs[6]); nt.links.new(mx.outputs[2], mx2.inputs[7])
+            nt.links.new(mx2.outputs[2], em.inputs["Color"])
+        else:
+            nt.links.new(mx.outputs[2], em.inputs["Color"])
     tr = nt.nodes.new("ShaderNodeBsdfTransparent"); ms = nt.nodes.new("ShaderNodeMixShader")
     if alpha:
         nt.links.new(alpha, ms.inputs[0])
@@ -118,7 +133,7 @@ def vt_setup(key, rot180=False, light=(0.72, -0.5, 0.48), outline=0.0012):
                 continue
             n = m.name
             if "SKIN" in n:
-                toon(m, (0.62, 0.58, 0.66))           # Leo-sampled shadow / lit ratio
+                toon(m, tuple(ns.get("VT_SKIN_SHADOW", (0.62, 0.58, 0.66))), deep=ns.get("VT_SKIN_DEEP"))   # linear tints (sRGB ratio**2.2)
             elif "HAIR" in n:
                 toon(m, (0.55, 0.50, 0.58), thr=0.35)
             elif "CLOTH" in n:
@@ -159,7 +174,7 @@ def vt_skin(key, tint=(0.90, 0.80, 0.74), ramp=(0.24, 0.36), body_scale=1.0):
         k = body_scale if "Body_00" in m.name else 1.0
         nt.nodes["VT_Tint"].inputs[7].default_value = tuple(c * k for c in tint) + (1,)
         for n in nt.nodes:
-            if n.type == "VALTORGB":
+            if n.type == "VALTORGB" and n.name != "VT_DeepRamp":
                 n.color_ramp.elements[0].position, n.color_ramp.elements[1].position = ramp
 
 
@@ -215,6 +230,54 @@ def vt_shoot(key, tag, yaw0=0, light=(0.72, -0.5, 0.48), scale=0.36):
     return outs
 
 
+# --- q36: the locked MHS3 shader / render spec (knowledge/mhs3_face_rules.json "shader"). Every head render that is
+# judged uses exactly these settings, so a change in the score is a change in the model, never in the lighting.
+MHS3_SPEC = dict(skin_tint=(1.0, 1.0, 1.0), body_tint=(0.78, 0.60, 0.46), ramp=(0.285, 0.315), nrm=0.95,
+                 light=(0.30, -0.90, 0.35), outline=0.0012,                    # q36 S6: Leo's shadow is 16% of the face
+                 skin_shadow=(0.66, 0.58, 0.56),                                # q36 S1/S2: warm, sRGB ratio ~0.80
+                 skin_deep=(0.19, (0.35, 0.27, 0.27)),                          # q36 S8: deep core tone (BW thr, tint)
+                 cast_shadows=False)    # q36: EEVEE shadow-map noise made grey speckled patches (philtrum, chin, neck)
+
+
+def vt_go2(key, glb=None, tag="a", spec=None):
+    """Fresh scene from mNN.glb with the MHS3 spec, then front / 34 / side + eye close-up + profile close-up."""
+    s = dict(MHS3_SPEC, **(spec or {}))
+    old = bpy.data.scenes.get("VT_" + key)
+    if old:
+        for o in list(old.objects):
+            bpy.data.objects.remove(o, do_unlink=True)
+        bpy.data.scenes.remove(old)
+    ns["VT_SKIN_SHADOW"] = s["skin_shadow"]; ns["VT_SKIN_DEEP"] = s["skin_deep"]
+    vt_import(key, glb or os.path.join(DW, key + ".glb"))
+    vt_setup(key, rot180=True, light=s["light"], outline=s["outline"])
+    vt_skin(key, tint=s["skin_tint"], ramp=s["ramp"])
+    sc = bpy.data.scenes["VT_" + key]
+    for m in set(_mats(sc, "Body_00_SKIN")):
+        m.node_tree.nodes["VT_Tint"].inputs[7].default_value = tuple(s["body_tint"]) + (1,)
+    vt_facenrm(key, w=s["nrm"])
+    bpy.data.objects["VT_Sun_" + key].data.use_shadow = s["cast_shadows"]
+    outs = vt_shoot(key, tag, yaw0=180, light=s["light"])
+    outs += vt_close(key, tag)
+    return outs
+
+
+def vt_close(key, tag="a"):
+    """Close-ups judged per region: eyes/nose/mouth front (eye_close) and the profile (prof_close)."""
+    main = bpy.context.window.scene
+    sc = bpy.data.scenes["VT_" + key]; bpy.context.window.scene = sc
+    f = _face(sc); c = sum((f.matrix_world @ Vector(b) for b in f.bound_box), Vector()) / 8
+    cam = sc.camera; outs = []
+    for lab, yaw, sc_, dz in (("eye_close", 0, 0.16, 0.0), ("prof_close", 90, 0.20, -0.01)):
+        a = math.radians(180 + yaw); cam.data.ortho_scale = sc_
+        cam.location = c + Vector((math.sin(a), -math.cos(a), 0)) * 3; cam.location.z = c.z + dz
+        cam.rotation_euler = (math.radians(90), 0, a)
+        sc.render.filepath = os.path.join(OUT, "%s_%s_%s.png" % (key, tag, lab))
+        bpy.ops.render.render(write_still=True); outs.append(sc.render.filepath)
+    cam.data.ortho_scale = 0.36
+    bpy.context.window.scene = main
+    return outs
+
+
 ns.update(vt_import=vt_import, vt_setup=vt_setup, vt_skin=vt_skin, vt_iris_hue=vt_iris_hue, vt_facenrm=vt_facenrm,
-          vt_shoot=vt_shoot, vt_toon=toon)
+          vt_shoot=vt_shoot, vt_toon=toon, vt_go2=vt_go2, vt_close=vt_close, MHS3_SPEC=MHS3_SPEC)
 print("vroid_toon: vt_import, vt_setup, vt_skin, vt_iris_hue, vt_facenrm, vt_shoot ready")

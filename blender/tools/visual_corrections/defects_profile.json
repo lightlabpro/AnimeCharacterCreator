@@ -1,0 +1,10 @@
+{
+ "features_forward": "In `image` the nose, mouth and chin stick out further in front of the eyes and forehead than in `reference_image` (the face looks pushed forward / muzzle-like in profile).",
+ "nose_long": "The nose in `image` is longer and projects further from the face in profile than in `reference_image`.",
+ "nose_pointed": "The nose tip in `image` is sharper and more pointed in profile than in `reference_image`.",
+ "deep_root": "In `image` the nose bridge dips deeper between the eyes (a deep notch below the brow) than in `reference_image`.",
+ "mouth_protrudes": "The lips / mouth area in `image` push further forward in profile than in `reference_image`.",
+ "chin_forward": "The chin in `image` juts further forward than in `reference_image`.",
+ "eye_deep": "The eye in `image` sits further back from the front of the face in profile than in `reference_image`.",
+ "profile_mhs3": "The side profile of the face in `image` (forehead, nose, lips, chin line) has the same flat, gentle semi-realistic anime shape as `reference_image`."
+}

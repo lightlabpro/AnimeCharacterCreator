@@ -1,0 +1,12 @@
+{
+ "vroid_look": "The face in `image` looks like a default VRoid Studio avatar face.",
+ "too_anime": "The face in `image` is more cartoon-anime (childlike, big simple eyes, tiny nose) than the semi-realistic anime of `reference_image`.",
+ "eyes_vroid": "The eyes in `image` are drawn in the generic VRoid / VTuber style rather than the painted style of `reference_image`.",
+ "eyes_mhs3": "The eyes in `image` are drawn like the eyes in `reference_image` (lid shadow on the iris, thick upper lash line, small catch lights).",
+ "brows_mhs3": "The eyebrows in `image` look like the eyebrows in `reference_image` (heavy painted strokes, close to the eyes).",
+ "nose_mhs3": "The nose in `image` is drawn like the nose in `reference_image` (pale highlight down the bridge, small shaded shape under the tip).",
+ "mouth_mhs3": "The mouth in `image` is drawn like the mouth in `reference_image` (thin line with a soft lower-lip shade).",
+ "face_adult": "The face in `image` reads as an adult with semi-realistic proportions like `reference_image`.",
+ "skin_mhs3": "The skin colour and shading in `image` look like `reference_image` (warm skin, soft painted shadow shapes).",
+ "artifacts": "`image` has visible artifacts (marks, seams, smudges, stray lines) on the face."
+}

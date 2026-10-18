@@ -1,0 +1,593 @@
+{
+ "version": "q36",
+ "note": "Measured MHS3 face rulebook for the VRoid-based head (Sammy 2026-10-18: 'establish rules as to per acceptable dimensions for the head and elements ... the shader must always match the mhs3 shader. Validation is always strictly necessary ... extremely strict'). Every rule has a measured target, a tolerance and its source. A version passes only when EVERY rule is within tolerance (err_tol <= 1.0) and the TypeSafe rules clear their thresholds. Run blender/head_vroid/mhs3_validate.py; skill mhs3-master-loop.",
+ "units": {
+  "D": "pupil line to chin bottom (front), mesh or pupil-aligned render",
+  "H": "skull top (highest skin vertex) to chin bottom - the dataset's unit (knowledge/head-targets-dataset.json)",
+  "IPD": "pupil distance of the aligned reference (render rules)",
+  "behind_tip": "how far a midline profile point sits behind the nose tip (pure side view)"
+ },
+ "sources": {
+  "leo_front": "docs/qa/head_v2/judge/leo_ref_front.png (MHST3-Leo_Render_001, front, neutral) - p-series measurements in D (docs/qa/newhead/visual_judge_log.md) and mhs3_render_measure.py",
+  "mhs3_04": "docs/reference/mhs3/face_profile_04.png (crop of 04-egg-lantern.jpg, ~70 deg near-profile), landmarks hand-read on a 1 px grid (q36), +-0.02 D",
+  "dataset": "knowledge/head-targets-dataset.json behind_nose bands, 18 visually verified anime heads (median, p10-p90)",
+  "sammy": "Sammy's own picks (override books and MHS3): q34b eyes a bit bigger, not smaller, never a glare; q35 no egyptian / elongated eyes, fuller mouth, wider nose, neat (non-rubbery) shading; q36 features not too forward in profile"
+ },
+ "pass": {
+  "every_rule_err_tol_max": 1.0,
+  "rms_err_tol_max": 0.5,
+  "typesafe_all_thresholds": true,
+  "regression_vs_last_approved": "no rule may get worse by more than 0.25 tol"
+ },
+ "rules": {
+  "P1_forehead_0.3H": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "behind_nose_0.3_H",
+   "target": 0.053,
+   "tol": 0.01,
+   "source": "dataset median 0.053 (p10 0.026, p90 0.100)",
+   "why": "forehead vs nose tip: a nose far ahead of the forehead reads 'too forward' (m26 0.072)"
+  },
+  "P2_brow_0.4H": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "behind_nose_0.4_H",
+   "target": 0.039,
+   "tol": 0.008,
+   "source": "dataset 0.038 and MHS3-04 eye-level 0.09 D = 0.039 H agree"
+  },
+  "P3_root_0.5H": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "behind_nose_0.5_H",
+   "target": 0.05,
+   "tol": 0.01,
+   "source": "between dataset 0.4/0.6 bands; MHS3 high, continuous nose root"
+  },
+  "P4_eyelevel_0.6H": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "behind_nose_0.6_H",
+   "target": 0.052,
+   "tol": 0.012,
+   "source": "dataset 0.062 (p10 0.020), MHS3-04 0.039"
+  },
+  "P5_underNose_0.8H": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "behind_nose_0.8_H",
+   "target": 0.045,
+   "tol": 0.01,
+   "source": "MHS3-04 upper lip 0.115 D = 0.050 H, dataset 0.036"
+  },
+  "P6_chin_0.9H": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "behind_nose_0.9_H",
+   "target": 0.088,
+   "tol": 0.01,
+   "source": "MHS3-04 0.087 H, dataset 0.090"
+  },
+  "P7_lowerlip_D": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "lower_lip_behind_tip_D",
+   "target": 0.18,
+   "tol": 0.02,
+   "source": "MHS3-04 fine grid: lower lip 0.18 D behind the tip"
+  },
+  "P8_chin_D": {
+   "kind": "mesh",
+   "region": "profile",
+   "metric": "chin_behind_tip_D",
+   "target": 0.23,
+   "tol": 0.025,
+   "source": "MHS3-04 chin front 0.23 D behind the tip"
+  },
+  "F1_ipd": {
+   "kind": "mesh",
+   "region": "eyes",
+   "metric": "ipd_D",
+   "target": 0.728,
+   "tol": 0.015,
+   "source": "Leo render: pupils-to-chin-outline 1.347 IPD; the outline sits ~2% above the mesh chin bottom -> mesh ipd/D ~0.73 (p-series 0.70-0.73)"
+  },
+  "F2_mouth_height": {
+   "kind": "mesh",
+   "region": "mouth",
+   "metric": "mouth_below_D",
+   "target": 0.635,
+   "tol": 0.02,
+   "source": "Leo 0.64 D, MHS3-04 0.625 D"
+  },
+  "F3_nose_tip_height": {
+   "kind": "mesh",
+   "region": "nose",
+   "metric": "nose_tip_below_D",
+   "target": 0.43,
+   "tol": 0.03,
+   "source": "MHS3-04 tip 0.375-0.43 D (head tilt), Leo nose bottom 0.49 D"
+  },
+  "R1_eye_width": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "eye_w",
+   "target": 0.42,
+   "tol": 0.02,
+   "source": "Leo 0.38-0.41 IPD; Sammy q34b 'a bit bigger'"
+  },
+  "R2_eye_height": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "eye_h",
+   "target": 0.27,
+   "tol": 0.015,
+   "source": "Leo 0.25-0.26 IPD; Sammy q34b bigger, q35 not elongated"
+  },
+  "R3_eye_aspect": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "eye_aspect",
+   "target": 1.56,
+   "tol": 0.08,
+   "source": "Leo 1.47-1.64; Sammy q35 'too elongated' at 1.79"
+  },
+  "R4_eye_white": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "eye_white_frac",
+   "target": 0.38,
+   "tol": 0.04,
+   "source": "Leo 0.39-0.41 of the opening is white (iris smaller than ours)"
+  },
+  "S3_lit_skin_r": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "lit_r",
+   "target": 227,
+   "tol": 8,
+   "source": "Leo lit skin (227,190,161)"
+  },
+  "S4_lit_skin_g": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "lit_g",
+   "target": 190,
+   "tol": 8,
+   "source": "Leo"
+  },
+  "S5_lit_skin_b": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "lit_b",
+   "target": 161,
+   "tol": 8,
+   "source": "Leo"
+  },
+  "S7_terminator": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "terminator_soft",
+   "target": 0.089,
+   "tol": 0.03,
+   "source": "Leo: hard cel edge (few pixels between lit and shadow)"
+  },
+  "S1_shadow_ratio": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "shadow_ratio",
+   "target": 0.803,
+   "tol": 0.025,
+   "source": "Leo main cel-shadow band / lit peak (sRGB luminance, histogram)"
+  },
+  "S2_shadow_warm": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "shadow_warmth",
+   "target": 0.049,
+   "tol": 0.02,
+   "source": "Leo main shadow R ratio minus mean(G,B): warm, never grey or blue"
+  },
+  "S6_shadow_area": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "shadow_area",
+   "target": 0.16,
+   "tol": 0.04,
+   "source": "Leo: 16% of the lower-face skin below 0.9 of lit - one clean strip on the far side + under nose / lip"
+  },
+  "S8_deep_tone": {
+   "kind": "render",
+   "region": "shader",
+   "metric": "deep_frac",
+   "target": 0.046,
+   "tol": 0.015,
+   "source": "Leo: a third, deep tone (<0.68 of lit) in the core of the shadow along the jaw - 4.6% of the lower face"
+  },
+  "R5_ears_0.40D": {
+   "kind": "render",
+   "region": "ears",
+   "metric": "wD_0.40",
+   "target": 1.31,
+   "tol": 0.05,
+   "source": "Leo face width 0.40 D below the pupils (D = pupils to chin outline, render): his ears end above this row; ours hung lower (1.55)"
+  },
+  "R6_cheek_0.48D": {
+   "kind": "render",
+   "region": "cheeks",
+   "metric": "wD_0.48",
+   "target": 1.227,
+   "tol": 0.035,
+   "source": "Leo"
+  },
+  "R7_cheek_0.56D": {
+   "kind": "render",
+   "region": "cheeks",
+   "metric": "wD_0.56",
+   "target": 1.144,
+   "tol": 0.035,
+   "source": "Leo"
+  },
+  "R8_jaw_0.80D": {
+   "kind": "render",
+   "region": "jaw",
+   "metric": "wD_0.80",
+   "target": 0.98,
+   "tol": 0.04,
+   "source": "Leo square adult jaw: still 0.98 D wide at 0.80 D (ours tapered to 0.79)"
+  },
+  "R9_face_length": {
+   "kind": "render",
+   "region": "proportion",
+   "metric": "D_ipd",
+   "target": 1.347,
+   "tol": 0.03,
+   "source": "Leo pupils-to-chin outline / IPD in the render"
+  },
+  "F4_ear_lobe": {
+   "kind": "mesh",
+   "region": "ears",
+   "metric": "ear_bottom_below_D",
+   "target": 0.3,
+   "tol": 0.04,
+   "source": "Leo ear lobe 0.41 IPD = 0.30 D below the pupils (VRoid 0.35-0.47)"
+  },
+  "E1_lash_gap": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "lash_gap",
+   "target": 0.0,
+   "tol": 0.008,
+   "source": "Leo: the upper lash sits directly on the iris top at the pupil column (no white or skin between) - the lid covers the top of the iris"
+  },
+  "E2_lash_thick": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "lash_th",
+   "target": 0.041,
+   "tol": 0.01,
+   "source": "Leo upper lash 0.041 IPD on the pupil column"
+  },
+  "E3_brow_gap": {
+   "kind": "render",
+   "region": "brows",
+   "metric": "brow_gap",
+   "target": 0.02,
+   "tol": 0.015,
+   "source": "Leo brow sits on the lid (0.009 IPD at the pupil column)"
+  },
+  "E4_brow_thick": {
+   "kind": "render",
+   "region": "brows",
+   "metric": "brow_th",
+   "target": 0.063,
+   "tol": 0.012,
+   "source": "Leo brow 0.063 IPD thick at the pupil column"
+  },
+  "E5_pupil": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "pupil_frac",
+   "target": 0.021,
+   "tol": 0.012,
+   "source": "Leo: inside the iris core (0.62 R) 2% of the iris area is much darker than the iris (<0.42 x median) - a dark-green pupil, not VRoid's big black one (m27 0.145)"
+  },
+  "E6_iris_dark": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "iris_lum",
+   "target": 121.6,
+   "tol": 8,
+   "source": "Leo iris mean luminance 121-123"
+  },
+  "E7_white_tone": {
+   "kind": "render",
+   "region": "eyes",
+   "metric": "white_warm",
+   "target": 1.9,
+   "tol": 4,
+   "source": "Leo eye white R-B +1..+2 (never blue)"
+  },
+  "M1_mouth_width": {
+   "kind": "render",
+   "region": "mouth",
+   "metric": "mouth_w",
+   "target": 0.431,
+   "tol": 0.03,
+   "source": "Leo mouth line 0.43 D (render, same detector)"
+  },
+  "M2_mouth_height": {
+   "kind": "render",
+   "region": "mouth",
+   "metric": "mouth_y",
+   "target": 0.642,
+   "tol": 0.02,
+   "source": "Leo mouth line 0.64 D below the pupils"
+  },
+  "ES1_eye_tilt": {
+   "kind": "render",
+   "region": "eye_shape",
+   "metric": "corner_tilt",
+   "target": 0.03,
+   "tol": 0.04,
+   "source": "Leo: the corners are nearly level (-0.02..+0.09 of the width); an outer corner set high reads cat / egyptian (Sammy q35, q36)"
+  },
+  "ES2_eye_outline": {
+   "kind": "render",
+   "region": "eye_shape",
+   "metric": "eye_shape_rms",
+   "target": 0.0,
+   "tol": 0.03,
+   "source": "RMS of the upper and lower lid outline against the Leo template (eye_shape_template), units of the opening width"
+  },
+  "F6_no_poke": {
+   "kind": "mesh",
+   "region": "artifacts",
+   "metric": "mouth_poke_mm",
+   "target": 0.0,
+   "tol": 0.05,
+   "source": "q36: mouth interior/teeth vertices stood up to the skin surface after the profile warps (grey patches on the philtrum and chin; TypeSafe artifacts 0.93)"
+  }
+ },
+ "typesafe": {
+  "note": "TypeSafe jev-1.14 with images, both orders. Thresholds are CALIBRATED on real MHS3 faces judged the same way (Leia, Eleanor vs Leo, q36): a 'max' statement must be <= the worst MHS3 control + 0.03, a 'min' statement >= the weakest control - 0.05. A threshold MHS3 itself cannot meet is not a standard. defects_profile has no profile control yet: its thresholds stay provisional (0.45 / 0.55) until a second MHS3 profile is measured.",
+  "sets": {
+   "defects_vroid_mhs3.json": {
+    "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+    "view": "front",
+    "max": {
+     "vroid_look": 0.48,
+     "too_anime": 0.61,
+     "eyes_vroid": 0.61,
+     "artifacts": 0.62
+    },
+    "min": {
+     "eyes_mhs3": 0.49,
+     "brows_mhs3": 0.17,
+     "nose_mhs3": 0.31,
+     "mouth_mhs3": 0.17,
+     "face_adult": 0.5,
+     "skin_mhs3": 0.75
+    }
+   },
+   "defects_eyes.json": {
+    "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+    "view": "eye_close",
+    "max": {
+     "white_big": 0.62,
+     "iris_small": 0.61,
+     "pupil_odd": 0.37,
+     "lash_thin": 0.72,
+     "lash_flick": 0.79,
+     "shape_tilted": 0.79,
+     "brows_far": 0.73,
+     "crease_missing": 0.55
+    },
+    "min": {}
+   },
+   "defects_profile.json": {
+    "ref": "docs/reference/mhs3/face_profile_04.png",
+    "view": "prof_close",
+    "max": {
+     "features_forward": 0.45,
+     "nose_long": 0.45,
+     "nose_pointed": 0.45,
+     "deep_root": 0.45,
+     "mouth_protrudes": 0.45,
+     "chin_forward": 0.45,
+     "eye_deep": 0.45
+    },
+    "min": {
+     "profile_mhs3": 0.55
+    }
+   },
+   "anime_check": {
+    "ref": "docs/qa/head_v2/judge/leo_ref_front.png",
+    "view": "front",
+    "min": {
+     "anime": 0.91,
+     "mhs3": 0.825,
+     "shading_anime": 0.72,
+     "polished": 0.79
+    },
+    "max": {}
+   }
+  },
+  "controls": {
+   "defects_vroid_mhs3.json": {
+    "leia": {
+     "skin_mhs3": 0.8,
+     "mouth_mhs3": 0.69,
+     "artifacts": 0.59,
+     "too_anime": 0.58,
+     "eyes_vroid": 0.58,
+     "eyes_mhs3": 0.56,
+     "face_adult": 0.55,
+     "vroid_look": 0.45,
+     "brows_mhs3": 0.45,
+     "nose_mhs3": 0.36
+    },
+    "eleanor": {
+     "skin_mhs3": 0.81,
+     "nose_mhs3": 0.8,
+     "face_adult": 0.61,
+     "eyes_vroid": 0.57,
+     "too_anime": 0.56,
+     "eyes_mhs3": 0.54,
+     "artifacts": 0.52,
+     "vroid_look": 0.43,
+     "brows_mhs3": 0.22,
+     "mouth_mhs3": 0.22
+    }
+   },
+   "defects_eyes.json": {
+    "leia": {
+     "white_bright": 0.7,
+     "lash_flick": 0.7,
+     "lash_thin": 0.69,
+     "iris_flat": 0.67,
+     "shape_tilted": 0.65,
+     "shape_flat_top": 0.64,
+     "brows_hatch": 0.56,
+     "white_big": 0.55,
+     "brows_far": 0.53,
+     "iris_small": 0.52,
+     "crease_missing": 0.52,
+     "lower_lid": 0.51,
+     "pupil_odd": 0.34
+    },
+    "eleanor": {
+     "white_bright": 0.78,
+     "lash_flick": 0.76,
+     "shape_tilted": 0.76,
+     "brows_far": 0.7,
+     "iris_flat": 0.69,
+     "brows_hatch": 0.66,
+     "shape_flat_top": 0.64,
+     "lash_thin": 0.6,
+     "white_big": 0.59,
+     "iris_small": 0.58,
+     "lower_lid": 0.53,
+     "crease_missing": 0.47,
+     "pupil_odd": 0.12
+    }
+   },
+   "anime_check": {
+    "leia": {
+     "anime": 0.96,
+     "mhs3": 0.89,
+     "eyes_anime": 0.865,
+     "hair_anime": 0.89,
+     "face_anime": 0.895,
+     "shading_anime": 0.84,
+     "polished": 0.84
+    },
+    "eleanor": {
+     "anime": 0.96,
+     "mhs3": 0.875,
+     "eyes_anime": 0.885,
+     "hair_anime": 0.92,
+     "face_anime": 0.91,
+     "shading_anime": 0.77,
+     "polished": 0.9
+    }
+   }
+  }
+ },
+ "shader": {
+  "note": "Locked render spec (vroid_toon.MHS3_SPEC). Judging renders always use it; tune the model, not the light. Change the spec only through the shader rules S1-S7 and record the change here.",
+  "spec": {
+   "skin_tint": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "body_tint": [
+    0.78,
+    0.6,
+    0.46
+   ],
+   "ramp": [
+    0.285,
+    0.315
+   ],
+   "face_normals_ellipsoid_w": 0.95,
+   "light": [
+    0.3,
+    -0.9,
+    0.35
+   ],
+   "outline_m": 0.0012,
+   "outline_rgb": [
+    92,
+    58,
+    44
+   ],
+   "skin_shadow_tint_linear": [
+    0.66,
+    0.58,
+    0.56
+   ],
+   "skin_deep": {
+    "bw_threshold": 0.19,
+    "tint_linear": [
+     0.35,
+     0.27,
+     0.27
+    ]
+   },
+   "cast_shadows": false
+  },
+  "style": [
+   "two tones only on skin (lit, shadow), hard terminator, no gradients baked in the texture",
+   "three skin tones like Leo: lit, cel shadow (~0.80 of lit), a deep core tone (~0.57) along the jaw side; tints are linear (sRGB ratio ** 2.2)",
+   "shadow is warm (red ratio above green/blue)",
+   "one clean shadow shape per form, no blotches (ellipsoid-blended normals)",
+   "flat lit skin, painted details only: nose wedge, under-lip, lid shade",
+   "dark warm outline, thin"
+  ]
+ },
+ "lessons": [
+  "Measure in D/H/IPD units only; pixel comparisons between different renders are meaningless.",
+  "Keep the warp identity through the eyes: depth remaps stretched the iris (m14 keyhole pupil); lid offsets must skip EyeIris/EyeHighlight.",
+  "Paint the iris in 3D (UV iris distorted); highlights stay in UV (3D fell off the quads).",
+  "Erase VRoid's own mouth line and darken the mouth interior (pink slivers in the seam).",
+  "Flat skin texture (mf=1.0) - VRoid gradients and the bandage made the shading rubbery.",
+  "Ellipsoid face normals w 0.95 - smoothed proxies gave blotchy shadows.",
+  "Small hooded eyes read evil (q34b): never shrink the eye opening below the Leo size; never a raised lower lid glare.",
+  "No lash tail past the outer corner, outer half pulled in (q35 'egyptian eyes').",
+  "q34 nose_lift + chin_fwd pushed the nose 0.07 H ahead of the forehead (m26): the profile rules P1-P8 now catch it.",
+  "TypeSafe A/B has a position bias: always ask both orders.",
+  "One warp field for every mesh so the seams stay closed.",
+  "q36: the face-mesh eye-hole boundary is NOT the visible lid edge - the lid's inner skin shows as a band under the lash; place the lash by the render rule E1, not by mesh alignment.",
+  "q36: mesh and render chin differ (render = outline top): compare like with like (F1 mesh vs R9 render), never mix.",
+  "q36: every warp gated by skin depth (y > ...) must move the mouth interior with the skin, or it pokes through (grey patches).",
+  "q36: EEVEE sun cast shadows rendered as speckled grey patches (nose shadow on the philtrum, lip shadow on the chin, faceted neck) - TypeSafe artifacts 0.93. Cast shadows off; MHS3 cast shadows are clean painted shapes (future: paint them)."
+ ],
+ "eye_shape_template": {
+  "note": "Leo (mean of both eyes), opening outline inner->outer at 9 fractions of its width, edge height from the opening centre in units of its width (+ = down). Sammy q36: eye shape matching MHS3 is a standard.",
+  "top": [
+   -0.12,
+   -0.2,
+   -0.282,
+   -0.31,
+   -0.315,
+   -0.299,
+   -0.272,
+   -0.232,
+   -0.152
+  ],
+  "bot": [
+   0.158,
+   0.243,
+   0.283,
+   0.305,
+   0.315,
+   0.305,
+   0.283,
+   0.236,
+   0.151
+  ]
+ }
+}

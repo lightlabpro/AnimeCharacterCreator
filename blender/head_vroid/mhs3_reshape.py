@@ -79,6 +79,8 @@ def local_fields(P, key):
         if key.startswith(("EyeIris", "EyeHighlight")):
             ic = sgn * K["iris_c"]
             x = np.where((x * sgn) > 0, ic + (x - ic) * K["iris_sx"] + sgn * K["iris_dx"], x)
+        if key.startswith(("EyeIris", "EyeHighlight")):           # q36 E1: the lid covers the iris top (Leo)
+            z = np.where((x * sgn) > 0, z + K.get("iris_dz", 0.0) * np.clip(1 - r, 0, 1) ** 0, z)
         side = (x * sgn) > 0
         outer = np.clip((x * sgn - ex) / (0.5 * rx), 0, 1)          # 0 at the eye centre .. 1 on the outer half
         sx_e = K.get("eye_sx", 1.0) * (1 - outer) + K.get("eye_sx_out", K.get("eye_sx", 1.0)) * outer
@@ -89,17 +91,56 @@ def local_fields(P, key):
         z = np.where(side, ez + (z - ez) * s, z)
         # lid shape: relative position across the eye (-1 inner .. +1 outer) and above / below the centre
         rel = np.clip((x * sgn - ex) / rx, -1.2, 1.2); wl = np.clip((1.6 - r) / 0.8, 0, 1)
+        wl2 = np.clip((2.3 - r) / 0.8, 0, 1)
         lowb = (z < ez) * K["lid_low"] * np.clip(1 - rel ** 2, 0, 1) * wl
-        upb = (z > ez) * K["lid_up"] * np.exp(-((rel + 0.25) / 0.5) ** 2) * wl
+        upb = (z > ez) * K["lid_up"] * np.exp(-((rel - K.get("lid_up_c", -0.25)) / K.get("lid_up_w", 0.5)) ** 2) * wl
+        # q36 ES2: Leo's upper lid is low at the inner corner and stays high over the outer half (a lens, peak mid)
+        wl2 = np.clip((2.3 - r) / 0.8, 0, 1)                    # the corners sit at rel ~ +-0.53 (opening 36 mm, eye_r 34 mm)
+        upb = upb - (z > ez) * K.get("lid_in_drop", 0.0) * np.exp(-((rel + 0.40) / 0.15) ** 2) * wl2 \
+                  + (z > ez) * K.get("lid_out_up", 0.0) * np.exp(-((rel - 0.30) / 0.15) ** 2) * wl2
+        # q36 ES2: the lower lid's outer half sat low against Leo's lens-shaped opening - lift it
+        lowb = lowb - (z < ez) * K.get("lid_low_out", 0.0) * np.clip((rel - 0.05) / 0.40, 0, 1) * wl2
         # q34: heavy MHS3 upper lid - the lid (skin edge, lash, white's top) comes down over the top of the iris
         upb = upb - (z > ez) * K.get("lid_drop", 0.0010) * np.clip(1 - (rel / 1.1) ** 2, 0, 1) * wl
         if not key.startswith(("EyeIris", "EyeHighlight")):    # m14: the lid offsets also stretched the iris
             z = np.where(side, z - lowb + upb, z)
+        # q36 ES1 (Sammy: 'the eye shape is not matching the mhs3 one ... a standard'): VRoid's opening is tilted
+        # (outer corner 0.27 of the width higher than the inner; Leo ~level) - rotate the opening, not the iris
+        et = K.get("eye_tilt", 0.0)
+        if et and not key.startswith(("EyeIris", "EyeHighlight", "FaceBrow")):
+            wt = np.clip((1.9 - r) / 0.7, 0, 1); wt = wt * wt * (3 - 2 * wt)
+            z = np.where(side, z - et * np.clip(rel, -1.2, 1.2) * wt, z)
     # q35 Sammy 'the nose looks too thin': widen the nose (bridge to wings) about the midline
     nz0, nz1 = K.get("nose_zr", (1.5700, 1.5960))
     nwz = np.clip((nz1 - z) / 0.004, 0, 1) * np.clip((z - nz0) / 0.004, 0, 1)
     nwx = np.exp(-(x / K.get("nose_wr", 0.016)) ** 2)
     x = x * (1 + (K.get("nose_sx", 1.45) - 1) * nwz * nwx * (y > 0.03))
+    # q36 ear rule (Leo: ear top ~0.15 D above the pupils, lobe ~0.31 D below; VRoid lobe 0.47 D): shorten the ear
+    # about its top, outer shell only (|x| past the head side), blended in over 1 cm so the root does not tear
+    esz = K.get("ear_sz", 1.0)
+    if esz != 1.0 and key.startswith(("Face_00_SKIN", "Body_00_SKIN")):   # (kept for old versions; prefer ear_dz)
+        x0, x1 = K.get("ear_x", (0.078, 0.089)); etop = K["z0"] + K.get("ear_top", 0.020)
+        we = np.clip((np.abs(x) - x0) / (x1 - x0), 0, 1) * (y < 0.005) * (z < etop + 0.01)
+        we = we * we * (3 - 2 * we)
+        z = z + we * ((etop + (z - etop) * esz) - z)
+    edz = K.get("ear_dz", 0.0)                 # q36: squashing (ear_sz < 1) made the ear top pointed - lift instead
+    if edz and key.startswith(("Face_00_SKIN", "Body_00_SKIN")):
+        x0, x1 = K.get("ear_x", (0.078, 0.089))
+        we2 = np.clip((np.abs(x) - x0) / (x1 - x0), 0, 1) * (y < 0.005)
+        we2 = we2 * we2 * (3 - 2 * we2)
+        z = z + edz * we2
+    # q36 R5: behind the jaw, under the ear, VRoid's head side sticks out past the jaw line in the front view (1.49 D
+    # wide at 0.40 D below the pupils; Leo's jaw contour is the outline there, 1.31 D) - pull that side in
+    hs = K.get("headside_sx", 1.0)
+    if hs != 1.0:
+        za, zb, zc, zd = K.get("headside_z", (0.010, 0.025, 0.070, 0.095))     # metres below the pupils
+        dz = K["z0"] - z
+        wz = np.clip((dz - za) / (zb - za), 0, 1) * np.clip((zd - dz) / (zd - zc), 0, 1)
+        wy = np.clip((0.002 - y) / 0.018, 0, 1)
+        wx = np.clip((np.abs(x) - 0.058) / 0.016, 0, 1)
+        w = wz * wy * wx; w = w * w * (3 - 2 * w)
+        w = w * (1 - np.clip((np.abs(x) - 0.083) / 0.005, 0, 1) * (dz < 0.045))   # q36: leave the ear shell (pulling
+        x = x * (1 - (1 - hs) * w)                                               # its lobe in left a pointed top)
     mx, mz = K["mouth_c"]; mrx, mrz = K["mouth_r"]
     r = np.hypot((x - mx) / (mrx * 1.4), (z - mz) / (mrz * 2.5))
     w = np.clip((1 + K["mouth_fall"] - r) / K["mouth_fall"], 0, 1); w = w * w * (3 - 2 * w)
@@ -117,6 +158,11 @@ def warp(P, key):
     dn = g(d)
     front = np.clip((y + 0.01) / 0.05, 0, 1)                  # jaw widening only on the front half
     sx = 1 + np.nan_to_num(jaw(d)) * front
+    ct = K.get("cheek_tab")                   # q36 R6/R7: the cheek silhouette (front view) is on the side of the head,
+    if ct:                                   # behind the jaw table's front-half weight - scale x at all depths
+        c_ = np.array(ct, float); gc = pchip(c_[:, 0], c_[:, 1])
+        inr = (d >= c_[0, 0]) & (d <= c_[-1, 0])
+        sx = sx * (1 + np.where(inr, gc(np.clip(d, c_[0, 0], c_[-1, 0])), 0.0))
     a0, a1, a2, a3 = K["neck_d"]
     nk = np.clip((d - a0) / (a1 - a0), 0, 1) * np.clip((a3 - d) / (a3 - a2), 0, 1)
     nk = nk * nk * (3 - 2 * nk)
@@ -128,15 +174,40 @@ def warp(P, key):
     # nose bridge lift
     t = (d - K["nose_z"][0]) / (K["nose_z"][1] - K["nose_z"][0])
     bump = np.exp(-(x / u / K["nose_w"]) ** 2) * np.clip(t, 0, 1) * np.clip((1.15 - t) / 0.3, 0, 1)
-    y2 = y + K["nose_lift"] * bump * (y > 0.04)
+    # q36 artifacts: the mouth interior / teeth sit behind the skin at small y - with the skin-depth gates they stayed
+    # put while the skin moved back and poked through the philtrum and chin (grey patches). They follow the skin.
+    inner = key.startswith("FaceMouth")
+    G = (lambda c: np.ones_like(y)) if inner else (lambda c: c.astype(float))
+    y2 = y + K["nose_lift"] * bump * G(y > 0.04)
+    # q36 Sammy 'the side view shows that the face features are too forward': the nose tip sat 0.20 D ahead of the
+    # eye-level profile (MHS3-04 / dataset ~0.08-0.11 D) - push the nose back (narrow, tip-centred) and lift the root
+    nb = K.get("nose_back", 0.0)
+    if nb:
+        d0, d1, d2, d3 = K.get("nose_back_d", (0.10, 0.50, 0.60, 0.72))
+        gb = np.clip((d - d0) / (d1 - d0), 0, 1) * np.clip((d3 - d) / (d3 - d2), 0, 1); gb = gb * gb * (3 - 2 * gb)
+        y2 = y2 - nb * gb * np.exp(-(x / K.get("nose_back_w", 0.020)) ** 2) * G(y > 0.03)
+    rl = K.get("root_lift", 0.0)
+    if rl:
+        r0, r1, r2, r3 = K.get("root_d", (-0.30, -0.05, 0.20, 0.45))
+        gr = np.clip((d - r0) / (r1 - r0), 0, 1) * np.clip((r3 - d) / (r3 - r2), 0, 1); gr = gr * gr * (3 - 2 * gr)
+        y2 = y2 + rl * gr * np.exp(-(x / K.get("root_w", 0.012)) ** 2) * G(y > 0.03)
+    lf = K.get("lowface_fwd", None)
+    if lf:
+        lt = np.array(lf, float); g3 = pchip(lt[:, 0], lt[:, 1])
+        inr = (d >= lt[0, 0]) & (d <= lt[-1, 0])
+        y2 = y2 + np.where(inr, g3(np.clip(d, lt[0, 0], lt[-1, 0])), 0.0) * np.exp(-(x / (0.9 * u)) ** 2) * G(y > 0.0)
     # q34: a stronger chin in profile (MHS3 adult chin projects; VRoid's recedes)
     cz = np.clip((d - 1.05) / 0.15, 0, 1) * np.clip((1.55 - d) / 0.2, 0, 1)
-    y2 = y2 + K.get("chin_fwd", 0.0045) * cz * np.exp(-(x / (0.5 * u)) ** 2) * (y > 0.0)
+    y2 = y2 + K.get("chin_fwd", 0.0045) * cz * np.exp(-(x / (0.5 * u)) ** 2) * G(y > 0.0)
     if key.startswith("FaceBrow"):
         z2 = z2 + K["brow_dz"]
     if key.startswith(("EyeWhite", "EyeIris", "EyeHighlight", "FaceEyeline")) and K["eye_sz"] != 1.0:
         zc = z0 - 0.0005
-        z2 = zc + (z2 - zc) * K["eye_sz"]
+        # q36 R-lash_gap: the lash floated 1 mm above the opening when the eye parts were scaled more than the lid hole
+        sz = K.get("eyeline_sz", K["eye_sz"]) if key.startswith("FaceEyeline") else K["eye_sz"]
+        z2 = zc + (z2 - zc) * sz
+        if key.startswith("FaceEyeline"):                  # q36 E1: the lid's inner skin showed under the lash
+            z2 = z2 + K.get("eyeline_dz", 0.0) * (z2 > zc)
     return np.stack([x2, y2, z2], 1)
 
 

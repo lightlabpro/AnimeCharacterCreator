@@ -1,0 +1,16 @@
+{
+ "image": "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m46_s_front.png",
+ "ref": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\qa\\head_v2\\judge\\leo_ref_front.png",
+ "yes": {
+  "vroid_look": 0.855,
+  "too_anime": 0.805,
+  "eyes_vroid": 0.895,
+  "eyes_mhs3": 0.235,
+  "brows_mhs3": 0.395,
+  "nose_mhs3": 0.85,
+  "mouth_mhs3": 0.385,
+  "face_adult": 0.435,
+  "skin_mhs3": 0.56,
+  "artifacts": 0.7
+ }
+}

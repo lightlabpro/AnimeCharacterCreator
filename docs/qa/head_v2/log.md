@@ -291,3 +291,30 @@ references from mhs3 as target look. remember to use typesafe".
   smooth ellipsoid, hard two-tone ramp (0.285-0.315), key light (0.55,-0.75,0.40). Cheekbone / philtrum blobs removed.
 - TypeSafe anime check: shading_anime 0.55 (m21) -> 0.735 (m25), MHS3 0.55 -> 0.57; defects: mouth_mhs3 0.69,
   nose_mhs3 0.74, skin 0.60.
+
+## q36 - MHS3 rulebook, master loop, profile fix, eye-shape standard (m27-m46)
+Sammy: "the side view shows that the face features are too forward ... make skills and rules ... a master rule ...
+validation is always strictly necessary ... extremely strict". Mid-way: "The eye shape is not matching the mhs3 one,
+please make them match, this is also a standard."
+- Rulebook `knowledge/mhs3_face_rules.json`: 47 measured rules (profile P1-P8, proportions F1-F6, face outline R5-R9,
+  eyes R1-R4/E1-E7, eye shape ES1-ES2 with a Leo outline template, mouth M1-M2, shader S1-S8) + TypeSafe sets with
+  thresholds calibrated on real MHS3 faces (Leia, Eleanor judged the same way: a threshold MHS3 cannot meet is not a
+  standard) + lessons. Skills: `mhs3-rulebook`, `mhs3-shader-match`, `mhs3-master-loop` (master rule, also in
+  CLAUDE.md). Tools: `mhs3_measure.py` (mesh, per region), `mhs3_render_measure.py` (render vs Leo, same code),
+  `mhs3_validate.py` (one verdict, exit 0/12/13), `mhs3_fit_profile.py`, `mhs3_fit_eyes.py` + `mhs3_eye_proxy.py`,
+  `mhs3_warp_np.py`. New MHS3 profile reference: `docs/reference/mhs3/face_profile_04.png`.
+- Profile: m26 failed 10 profile rules - the nose sat 0.07 H ahead of the forehead (dataset median 0.053,
+  MHS3-04 0.039 at brow level). nose_back 6 mm + nose-root lift in the band above the pupils; lower face shortened
+  (MAP chin 1.42 -> 1.38: Leo pupils-to-chin 1.347 IPD). TypeSafe features_forward 0.41 -> 0.38 (passes 0.45).
+- Eye shape: VRoid's opening was tilted (outer corner 0.27 of the width higher). eye_tilt + lid knobs fitted to the
+  Leo template (pattern search on a mesh proxy, bias-corrected from the render): tilt 0.27 -> 0.05, outline RMS
+  0.046 -> 0.024 (tol 0.03). Lash on the iris (was floating 1 mm: eyeline_sz/eyeline_dz), Leo-sized dark-green pupil,
+  darker iris with lid shadow, thicker lower-set brows, crease row moved onto the visible strip.
+- Face: square adult jaw (0.98 D at 0.80 D), cheeks via a full-depth cheek table, head side behind the jaw pulled in,
+  ears lifted (squashing made them pointed), thinner neck, mouth 0.43 D.
+- Shader: three skin tones like Leo (warm cel shadow 0.80, deep core tone along the jaw), light near-frontal (shadow
+  area 16% like Leo), cast shadows off (EEVEE shadow noise made grey speckled patches - TypeSafe artifacts 0.93 -> 0.70).
+- m46 verdict: all 47 measured mesh/render rules pass (rms 0.47 of tolerance). TypeSafe still fails 17 calibrated
+  thresholds: polished 0.28 (MHS3 0.84-0.90), mhs3 0.47 (0.88), eyes_vroid 0.90 (<=0.61), vroid_look 0.86 (<=0.48),
+  nose_pointed 0.82 / nose_long 0.72 in profile, skin 0.56, white_big 0.80, crease_missing 0.69; culprits hair, eyes.
+  Board q36/board_m46_vs_m26_mhs3.png, eyes q36/eyes_m46_vs_leo.png, report q36/validate_m46.json.

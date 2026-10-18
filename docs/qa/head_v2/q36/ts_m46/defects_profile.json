@@ -1,0 +1,14 @@
+{
+ "image": "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m46_s_prof_close.png",
+ "ref": "D:\\Game Development\\Tools\\Anime Character Creator\\AnimeCharacterCreator-main\\docs\\reference\\mhs3\\face_profile_04.png",
+ "yes": {
+  "features_forward": 0.38,
+  "nose_long": 0.72,
+  "nose_pointed": 0.82,
+  "deep_root": 0.48,
+  "mouth_protrudes": 0.38,
+  "chin_forward": 0.405,
+  "eye_deep": 0.515,
+  "profile_mhs3": 0.58
+ }
+}
