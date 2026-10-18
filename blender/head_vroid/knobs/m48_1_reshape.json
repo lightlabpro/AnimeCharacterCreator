@@ -1,0 +1,28 @@
+{
+"nose_back": 0.004,
+"root_lift": 0.0025,
+"root_d": [
+-0.5,
+-0.28,
+0.05,
+0.35
+],
+"root_w": 0.014,
+"eye_tilt": 0.00925,
+"lid_up": 0.00407,
+"lid_up_c": -0.03125,
+"lid_up_w": 0.5,
+"lid_low": 0.0024,
+"lid_low_out": 0.0025,
+"eye_sx_out": 0.825,
+"lid_in_drop": 0.00235,
+"lid_out_up": 0.00225,
+"eye_sx": 0.9,
+"eyeline_sz": 1.04,
+"eyeline_dz": -0.0012,
+"eye_sz": 1.15,
+"iris_dz": 0.001,
+"iris_s": 1.0,
+"brow_dz": -0.023,
+"ear_dz": 0.004
+}

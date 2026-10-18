@@ -35,6 +35,10 @@ must be validated and done until your margin of error threshold is at a minimum 
 6. **Face gate.** Run the `face-gate` skill (book rules, MHS3 look per element, no regression against the version
    Sammy approved). Use the `head-shape-audit` skill when the form looks wrong but the rules pass. Use the
    `reference-match-judge` skill when TypeSafe names an element but not the fix.
+6b. **Regression gate (hard, q36b).** `blender/tools/mhs3_ab_gate.py OUT.json --base <accepted>_s --cand <new>_s`
+   on the PC: TypeSafe A/B with pictures, both orders, front + 3/4 + side, plus the anime check. Any view giving
+   `overall` or `head_shape` to the accepted version, or a drop in mhs3 / face_anime / shading_anime / polished,
+   is a FAIL. Nothing is shown to Sammy without a PASS. q36: m46 passed all 47 measured rules and still looked worse.
 7. **Look.** Check the pupil-aligned eye crop, the board, and the profile next to face_profile_04. A detector that
    misreads gets fixed before its number is trusted. Note it in `lessons`.
 8. **Repeat or stop.**
@@ -47,7 +51,7 @@ must be validated and done until your margin of error threshold is at a minimum 
    rulebook. Then commit.
 
 ## Never
-- Show Sammy a version that skipped step 3, 5 or 6.
+- Show Sammy a version that skipped step 3, 5, 6 or 6b (the A/B gate against the version he accepted).
 - Judge by eye when a rule exists.
 - Change the light or shader to rescue a model rule.
 - Compare mesh-D with render-D, or pixels between differently framed renders.

@@ -1,0 +1,609 @@
+{
+ "verdict": "FAIL",
+ "fails": 3,
+ "unknown": 30,
+ "rms_err_tol": 0.514,
+ "worst_err_tol": 1.28,
+ "rows": {
+  "P1_forehead_0.3H": {
+   "status": "pass",
+   "value": 0.0566,
+   "target": 0.053,
+   "tol": 0.01,
+   "err_tol": 0.36,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P2_brow_0.4H": {
+   "status": "FAIL",
+   "value": 0.0492,
+   "target": 0.039,
+   "tol": 0.008,
+   "err_tol": 1.28,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P3_root_0.5H": {
+   "status": "FAIL",
+   "value": 0.0612,
+   "target": 0.05,
+   "tol": 0.01,
+   "err_tol": 1.12,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P4_eyelevel_0.6H": {
+   "status": "pass",
+   "value": 0.053,
+   "target": 0.052,
+   "tol": 0.012,
+   "err_tol": 0.08,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P5_underNose_0.8H": {
+   "status": "FAIL",
+   "value": 0.0552,
+   "target": 0.045,
+   "tol": 0.01,
+   "err_tol": 1.02,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P6_chin_0.9H": {
+   "status": "pass",
+   "value": 0.0946,
+   "target": 0.088,
+   "tol": 0.01,
+   "err_tol": 0.66,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P7_lowerlip_D": {
+   "status": "pass",
+   "value": 0.188,
+   "target": 0.18,
+   "tol": 0.02,
+   "err_tol": 0.4,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "P8_chin_D": {
+   "status": "pass",
+   "value": 0.233,
+   "target": 0.23,
+   "tol": 0.025,
+   "err_tol": 0.12,
+   "region": "profile",
+   "kind": "mesh"
+  },
+  "F1_ipd": {
+   "status": "advisory",
+   "value": 0.7088,
+   "target": 0.728,
+   "tol": 0.015,
+   "err_tol": 1.28,
+   "region": "eyes",
+   "kind": "mesh"
+  },
+  "F2_mouth_height": {
+   "status": "pass",
+   "value": 0.6274,
+   "target": 0.635,
+   "tol": 0.02,
+   "err_tol": 0.38,
+   "region": "mouth",
+   "kind": "mesh"
+  },
+  "F3_nose_tip_height": {
+   "status": "pass",
+   "value": 0.4464,
+   "target": 0.43,
+   "tol": 0.03,
+   "err_tol": 0.55,
+   "region": "nose",
+   "kind": "mesh"
+  },
+  "R1_eye_width": {
+   "status": "pass",
+   "value": 0.432,
+   "target": 0.42,
+   "tol": 0.02,
+   "err_tol": 0.6,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "R2_eye_height": {
+   "status": "pass",
+   "value": 0.2745,
+   "target": 0.27,
+   "tol": 0.015,
+   "err_tol": 0.3,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "R3_eye_aspect": {
+   "status": "pass",
+   "value": 1.5738,
+   "target": 1.56,
+   "tol": 0.08,
+   "err_tol": 0.17,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "R4_eye_white": {
+   "status": "pass",
+   "value": 0.3615,
+   "target": 0.38,
+   "tol": 0.04,
+   "err_tol": 0.46,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "S3_lit_skin_r": {
+   "status": "pass",
+   "value": 227.7,
+   "target": 227,
+   "tol": 8,
+   "err_tol": 0.09,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S4_lit_skin_g": {
+   "status": "pass",
+   "value": 189.2,
+   "target": 190,
+   "tol": 8,
+   "err_tol": 0.1,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S5_lit_skin_b": {
+   "status": "pass",
+   "value": 159.9,
+   "target": 161,
+   "tol": 8,
+   "err_tol": 0.14,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S7_terminator": {
+   "status": "pass",
+   "value": 0.082,
+   "target": 0.089,
+   "tol": 0.03,
+   "err_tol": 0.23,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S1_shadow_ratio": {
+   "status": "pass",
+   "value": 0.795,
+   "target": 0.803,
+   "tol": 0.025,
+   "err_tol": 0.32,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S2_shadow_warm": {
+   "status": "advisory",
+   "value": 0.009,
+   "target": 0.049,
+   "tol": 0.02,
+   "err_tol": 2.0,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S6_shadow_area": {
+   "status": "advisory",
+   "value": 0.404,
+   "target": 0.16,
+   "tol": 0.04,
+   "err_tol": 6.1,
+   "region": "shader",
+   "kind": "render"
+  },
+  "S8_deep_tone": {
+   "status": "advisory",
+   "value": 0.011,
+   "target": 0.046,
+   "tol": 0.015,
+   "err_tol": 2.33,
+   "region": "shader",
+   "kind": "render"
+  },
+  "R5_ears_0.40D": {
+   "status": "advisory",
+   "value": 1.482,
+   "target": 1.31,
+   "tol": 0.05,
+   "err_tol": 3.44,
+   "region": "ears",
+   "kind": "render"
+  },
+  "R6_cheek_0.48D": {
+   "status": "pass",
+   "value": 1.226,
+   "target": 1.227,
+   "tol": 0.035,
+   "err_tol": 0.03,
+   "region": "cheeks",
+   "kind": "render"
+  },
+  "R7_cheek_0.56D": {
+   "status": "pass",
+   "value": 1.141,
+   "target": 1.144,
+   "tol": 0.035,
+   "err_tol": 0.09,
+   "region": "cheeks",
+   "kind": "render"
+  },
+  "R8_jaw_0.80D": {
+   "status": "advisory",
+   "value": 0.807,
+   "target": 0.98,
+   "tol": 0.04,
+   "err_tol": 4.32,
+   "region": "jaw",
+   "kind": "render"
+  },
+  "R9_face_length": {
+   "status": "pass",
+   "value": 1.374,
+   "target": 1.347,
+   "tol": 0.03,
+   "err_tol": 0.9,
+   "region": "proportion",
+   "kind": "render"
+  },
+  "F4_ear_lobe": {
+   "status": "pass",
+   "value": 0.2891,
+   "target": 0.3,
+   "tol": 0.04,
+   "err_tol": 0.27,
+   "region": "ears",
+   "kind": "mesh"
+  },
+  "E1_lash_gap": {
+   "status": "pass",
+   "value": 0.0,
+   "target": 0.0,
+   "tol": 0.008,
+   "err_tol": 0.0,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "E2_lash_thick": {
+   "status": "advisory",
+   "value": 0.086,
+   "target": 0.041,
+   "tol": 0.01,
+   "err_tol": 4.5,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "E3_brow_gap": {
+   "status": "advisory",
+   "value": 0.115,
+   "target": 0.02,
+   "tol": 0.015,
+   "err_tol": 6.33,
+   "region": "brows",
+   "kind": "render"
+  },
+  "E4_brow_thick": {
+   "status": "advisory",
+   "value": 0.106,
+   "target": 0.063,
+   "tol": 0.012,
+   "err_tol": 3.58,
+   "region": "brows",
+   "kind": "render"
+  },
+  "E5_pupil": {
+   "status": "pass",
+   "value": 0.0235,
+   "target": 0.021,
+   "tol": 0.012,
+   "err_tol": 0.21,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "E6_iris_dark": {
+   "status": "pass",
+   "value": 122.85,
+   "target": 121.6,
+   "tol": 8,
+   "err_tol": 0.16,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "E7_white_tone": {
+   "status": "pass",
+   "value": 2.9,
+   "target": 1.9,
+   "tol": 4,
+   "err_tol": 0.25,
+   "region": "eyes",
+   "kind": "render"
+  },
+  "M1_mouth_width": {
+   "status": "advisory",
+   "value": 0.377,
+   "target": 0.431,
+   "tol": 0.03,
+   "err_tol": 1.8,
+   "region": "mouth",
+   "kind": "render"
+  },
+  "M2_mouth_height": {
+   "status": "pass",
+   "value": 0.633,
+   "target": 0.642,
+   "tol": 0.02,
+   "err_tol": 0.45,
+   "region": "mouth",
+   "kind": "render"
+  },
+  "ES1_eye_tilt": {
+   "status": "pass",
+   "value": 0.047,
+   "target": 0.03,
+   "tol": 0.04,
+   "err_tol": 0.43,
+   "region": "eye_shape",
+   "kind": "render"
+  },
+  "ES2_eye_outline": {
+   "status": "pass",
+   "value": 0.0229,
+   "target": 0.0,
+   "tol": 0.03,
+   "err_tol": 0.76,
+   "region": "eye_shape",
+   "kind": "render"
+  },
+  "F6_no_poke": {
+   "status": "pass",
+   "value": 0.0,
+   "target": 0.0,
+   "tol": 0.05,
+   "err_tol": 0.0,
+   "region": "artifacts",
+   "kind": "mesh"
+  },
+  "TS_vroid_mhs3_vroid_look": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_too_anime": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_eyes_vroid": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_artifacts": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_eyes_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_brows_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_nose_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_mouth_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_face_adult": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_vroid_mhs3_skin_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_white_big": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_iris_small": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_pupil_odd": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_lash_thin": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_lash_flick": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_shape_tilted": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_brows_far": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_eyes_crease_missing": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_features_forward": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_nose_long": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_nose_pointed": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_deep_root": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_mouth_protrudes": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_chin_forward": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_eye_deep": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_profile_profile_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_anime_check_anime": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_anime_check_mhs3": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_anime_check_shading_anime": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  },
+  "TS_anime_check_polished": {
+   "status": "unknown",
+   "region": "typesafe",
+   "kind": "typesafe"
+  }
+ },
+ "values": {
+  "D_m": 0.112,
+  "ipd_D": 0.7088,
+  "nose_tip_below_D": 0.4464,
+  "subnasale_below_D": 0.6518,
+  "chin_below_D": 1.0,
+  "brow_behind_tip_D": 0.1438,
+  "eye_level_behind_tip_D": 0.1372,
+  "bridge_behind_tip_D": 0.1013,
+  "subnasale_behind_tip_D": 0.1892,
+  "upper_lip_behind_tip_D": 0.1776,
+  "mouth_line_behind_tip_D": 0.1397,
+  "lower_lip_behind_tip_D": 0.188,
+  "chin_behind_tip_D": 0.233,
+  "eye_white_front_behind_tip_D": 0.2458,
+  "mouth_below_D": 0.6274,
+  "chin_front_below_D": 0.9554,
+  "y70_eye_ahead_D": 0.2792,
+  "y70_upper_nose_ahead_D": 0.34,
+  "y70_tip_ahead_D": 0.4068,
+  "y70_mouth_ahead_D": 0.2965,
+  "y70_lower_lip_ahead_D": 0.2616,
+  "y70_chin_front_ahead_D": 0.1936,
+  "H_m": 0.2573,
+  "heads_D_per_H": 0.4354,
+  "skull_depth_0.3_H": 0.5639,
+  "nose_ahead_of_forehead_0.3_H": 0.1191,
+  "behind_nose_0.1_H": 0.1753,
+  "behind_nose_0.2_H": 0.0936,
+  "behind_nose_0.3_H": 0.0566,
+  "behind_nose_0.4_H": 0.0492,
+  "behind_nose_0.5_H": 0.0612,
+  "behind_nose_0.6_H": 0.053,
+  "behind_nose_0.7_H": 0.0263,
+  "behind_nose_0.8_H": 0.0552,
+  "behind_nose_0.9_H": 0.0946,
+  "lash_gap_mm": -1.0233,
+  "mouth_poke_mm": 0.0,
+  "ear_top_above_D": 0.6661,
+  "ear_bottom_below_D": 0.2891,
+  "face_width_eye_D": 1.9106,
+  "face_width_mouth_D": 1.0976,
+  "face_width_chin85_D": 0.6569,
+  "mesh_eyewhite_w_D": 0.42,
+  "mesh_eyewhite_h_D": 0.4672,
+  "mesh_eyewhite_aspect": 0.8989,
+  "eye_w": 0.432,
+  "eye_h": 0.2745,
+  "eye_aspect": 1.5737704918032784,
+  "eye_white_frac": 0.3615,
+  "pupil_frac": 0.0235,
+  "iris_lum": 122.85,
+  "white_warm": 2.9,
+  "lash_gap": 0.0,
+  "lash_th": 0.086,
+  "brow_gap": 0.115,
+  "brow_th": 0.106,
+  "eye_shape_rms": 0.022861296745567364,
+  "corner_tilt": 0.047,
+  "mouth_w": 0.377,
+  "mouth_y": 0.633,
+  "w_0.60": 1.955,
+  "w_0.75": 1.586,
+  "w_0.90": 1.369,
+  "w_1.05": 1.081,
+  "w_1.20": 1.099,
+  "wD_0.40": 1.482,
+  "wD_0.48": 1.226,
+  "wD_0.56": 1.141,
+  "wD_0.72": 0.872,
+  "wD_0.80": 0.807,
+  "D_ipd": 1.374,
+  "shadow_ratio": 0.795,
+  "shadow_warmth": 0.009,
+  "deep_frac": 0.011,
+  "lit_r": 227.7,
+  "lit_g": 189.2,
+  "lit_b": 159.9,
+  "shadow_area": 0.404,
+  "terminator_soft": 0.082
+ }
+}

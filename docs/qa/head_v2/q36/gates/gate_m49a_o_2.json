@@ -1,0 +1,55 @@
+{
+ "base": "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m26_s",
+ "cand": "D:\\Game Development\\Tools\\Anime Character Creator\\datasets_work\\vroid_male\\renders\\m49a_o",
+ "views": {
+  "front": {
+   "overall": "B",
+   "head_shape": "tie",
+   "eyes": "disagree",
+   "nose_mouth": "B",
+   "jaw_chin": "tie",
+   "face_shading": "B",
+   "clean": "B"
+  },
+  "34": {
+   "overall": "disagree",
+   "head_shape": "disagree",
+   "eyes": "disagree",
+   "nose_mouth": "B",
+   "jaw_chin": "B",
+   "face_shading": "disagree",
+   "clean": "B"
+  },
+  "side": {
+   "overall": "A",
+   "head_shape": "disagree",
+   "eyes": "disagree",
+   "nose_mouth": "disagree",
+   "jaw_chin": "tie",
+   "face_shading": "disagree",
+   "clean": "A"
+  }
+ },
+ "anime": {
+  "mhs3": {
+   "base": 0.57,
+   "cand": 0.675
+  },
+  "face_anime": {
+   "base": 0.845,
+   "cand": 0.845
+  },
+  "shading_anime": {
+   "base": 0.75,
+   "cand": 0.735
+  },
+  "polished": {
+   "base": 0.24,
+   "cand": 0.39
+  }
+ },
+ "fails": [
+  "side overall: base preferred"
+ ],
+ "verdict": "FAIL"
+}

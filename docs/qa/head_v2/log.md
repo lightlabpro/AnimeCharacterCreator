@@ -318,3 +318,24 @@ please make them match, this is also a standard."
   thresholds: polished 0.28 (MHS3 0.84-0.90), mhs3 0.47 (0.88), eyes_vroid 0.90 (<=0.61), vroid_look 0.86 (<=0.48),
   nose_pointed 0.82 / nose_long 0.72 in profile, skin 0.56, white_big 0.80, crease_missing 0.69; culprits hair, eyes.
   Board q36/board_m46_vs_m26_mhs3.png, eyes q36/eyes_m46_vs_leo.png, report q36/validate_m46.json.
+
+## q36b - "you made it look worse": A/B regression gate, rebuilt from m26 (m47-m49)
+Sammy: "you made it look worse... are you really validating or hallucinating?" Asked afterwards, TypeSafe agreed:
+m26 vs m46 A/B preferred m26's side and 3/4 head shape; mhs3 0.56 -> 0.48, shading 0.71 -> 0.58. Cause: the
+measured rules were single-view targets (front widths, Leo's face length, a frontal-light shader) and passing all of
+them was reported as success without comparing to the version Sammy had accepted.
+- New hard gate `blender/tools/mhs3_ab_gate.py` (rulebook `pass.regression_gate`, master-loop step 6b): TypeSafe A/B
+  with pictures, both orders, front + 3/4 + side, + anime check; FAIL if any view gives overall/head_shape to the
+  accepted version or mhs3/face_anime/shading/polished drop > 0.02; PASS needs one overall win and no loss.
+- Screened (all vs m26): m47a_o (q36 profile + eyes, short face) FAIL side; m47a_c / m47b_c (crisp cast shadows)
+  FAIL front/3/4/side; m47b_o FAIL side; m48_2/m48_3 (no root lift) FAIL side; m48_4 FAIL side + shading;
+  m49a (nose_back 5 mm) PASS once, FAIL once (side) - not stable; **m48_1 PASS twice** (front overall win, no loss;
+  mhs3 0.565 -> 0.66 / 0.55 -> 0.695, polished 0.23 -> 0.39, face_anime and shading equal).
+- m48_1 = m26 shape + shader, with the eye-shape standard (level corners, Leo outline), lash on the iris, Leo pupil and
+  iris, lower brows, softer profile fix (nose back 4 mm + root lift 2.5 mm), ears lifted 4 mm. Knobs
+  `blender/head_vroid/knobs/m48_1_reshape.json`, paint `m46_paint.json`.
+- Rulebook: the m26 shader is the locked spec again (MHS3_SPEC); rules the accepted version contradicts are marked
+  advisory with the reason (front jaw/cheek/ear widths, face length, the 3-tone shader rules, eye/brow/mouth
+  detectors tuned under the frontal light) - not loosened, to be re-derived before they block. Still failing,
+  marginally: profile P2/P3/P5 (err 1.0-1.3): the stronger profile that passes them does not reliably beat m26 in
+  the side A/B - Sammy's call. Board q36/board_m48_1_vs_m26.png, gates q36/gates/.

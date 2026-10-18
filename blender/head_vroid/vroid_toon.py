@@ -233,10 +233,9 @@ def vt_shoot(key, tag, yaw0=0, light=(0.72, -0.5, 0.48), scale=0.36):
 # --- q36: the locked MHS3 shader / render spec (knowledge/mhs3_face_rules.json "shader"). Every head render that is
 # judged uses exactly these settings, so a change in the score is a change in the model, never in the lighting.
 MHS3_SPEC = dict(skin_tint=(1.0, 1.0, 1.0), body_tint=(0.78, 0.60, 0.46), ramp=(0.285, 0.315), nrm=0.95,
-                 light=(0.30, -0.90, 0.35), outline=0.0012,                    # q36 S6: Leo's shadow is 16% of the face
-                 skin_shadow=(0.66, 0.58, 0.56),                                # q36 S1/S2: warm, sRGB ratio ~0.80
-                 skin_deep=(0.19, (0.35, 0.27, 0.27)),                          # q36 S8: deep core tone (BW thr, tint)
-                 cast_shadows=False)    # q36: EEVEE shadow-map noise made grey speckled patches (philtrum, chin, neck)
+                 light=(0.55, -0.75, 0.40), outline=0.0012,
+                 skin_shadow=(0.62, 0.58, 0.66), skin_deep=None, cast_shadows=True,
+                 clean_shadows=False)   # q36b: the m26 shader won every A/B view against the q36 3-tone/frontal/no-shadow spec
 
 
 def vt_go2(key, glb=None, tag="a", spec=None):
@@ -255,7 +254,17 @@ def vt_go2(key, glb=None, tag="a", spec=None):
     for m in set(_mats(sc, "Body_00_SKIN")):
         m.node_tree.nodes["VT_Tint"].inputs[7].default_value = tuple(s["body_tint"]) + (1,)
     vt_facenrm(key, w=s["nrm"])
-    bpy.data.objects["VT_Sun_" + key].data.use_shadow = s["cast_shadows"]
+    sun = bpy.data.objects["VT_Sun_" + key].data
+    sun.use_shadow = s["cast_shadows"]
+    if s.get("clean_shadows"):                 # q36b: crisp cast shadows instead of EEVEE's noisy soft ones
+        sun.angle = 0.0
+        for attr, val in (("use_shadow_jitter", False), ("shadow_maximum_resolution", 0.0002), ("shadow_filter_radius", 0.0)):
+            if hasattr(sun, attr):
+                setattr(sun, attr, val)
+        ee = bpy.data.scenes["VT_" + key].eevee
+        for attr, val in (("shadow_ray_count", 1), ("shadow_step_count", 1), ("use_shadow_jitter_viewport", False)):
+            if hasattr(ee, attr):
+                setattr(ee, attr, val)
     outs = vt_shoot(key, tag, yaw0=180, light=s["light"])
     outs += vt_close(key, tag)
     return outs

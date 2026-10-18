@@ -17,7 +17,14 @@
   "every_rule_err_tol_max": 1.0,
   "rms_err_tol_max": 0.5,
   "typesafe_all_thresholds": true,
-  "regression_vs_last_approved": "no rule may get worse by more than 0.25 tol"
+  "regression_vs_last_approved": "no rule may get worse by more than 0.25 tol",
+  "regression_gate": {
+   "tool": "blender/tools/mhs3_ab_gate.py",
+   "baseline": "m26 (last version Sammy accepted before q36; replace when he accepts a newer one)",
+   "rule": "TypeSafe A/B with pictures, both orders, front + 3/4 + side: no view may give overall or head_shape to the baseline; mhs3, face_anime, shading_anime, polished may not drop >0.02; at least one overall win. Hard gate: nothing is shown to Sammy without it.",
+   "why": "q36: m46 passed all 47 measured rules but Sammy said it looked worse, and TypeSafe agreed when asked afterwards (side and 3/4 head shape, mhs3 0.56 -> 0.48, shading 0.71 -> 0.58)."
+  },
+  "note": "Blocking = every rule without 'advisory': true. A rule the A/B-accepted version contradicts is not a standard (like a TypeSafe threshold MHS3 itself cannot meet): it is marked advisory with the reason, never silently loosened, and must be re-derived before it blocks again."
  },
  "rules": {
   "P1_forehead_0.3H": {
@@ -91,7 +98,9 @@
    "metric": "ipd_D",
    "target": 0.728,
    "tol": 0.015,
-   "source": "Leo render: pupils-to-chin-outline 1.347 IPD; the outline sits ~2% above the mesh chin bottom -> mesh ipd/D ~0.73 (p-series 0.70-0.73)"
+   "source": "Leo render: pupils-to-chin-outline 1.347 IPD; the outline sits ~2% above the mesh chin bottom -> mesh ipd/D ~0.73 (p-series 0.70-0.73)",
+   "advisory": true,
+   "advisory_why": "q36b: same as R9 (face length)"
   },
   "F2_mouth_height": {
    "kind": "mesh",
@@ -171,7 +180,9 @@
    "metric": "terminator_soft",
    "target": 0.089,
    "tol": 0.03,
-   "source": "Leo: hard cel edge (few pixels between lit and shadow)"
+   "source": "Leo: hard cel edge (few pixels between lit and shadow)",
+   "advisory": true,
+   "advisory_why": "q36b: measured under the old spec only"
   },
   "S1_shadow_ratio": {
    "kind": "render",
@@ -187,7 +198,9 @@
    "metric": "shadow_warmth",
    "target": 0.049,
    "tol": 0.02,
-   "source": "Leo main shadow R ratio minus mean(G,B): warm, never grey or blue"
+   "source": "Leo main shadow R ratio minus mean(G,B): warm, never grey or blue",
+   "advisory": true,
+   "advisory_why": "q36b: the warm 3-tone shader lost the A/B (shading_anime 0.71 -> 0.58); spec back to the m26 shader"
   },
   "S6_shadow_area": {
    "kind": "render",
@@ -195,7 +208,9 @@
    "metric": "shadow_area",
    "target": 0.16,
    "tol": 0.04,
-   "source": "Leo: 16% of the lower-face skin below 0.9 of lit - one clean strip on the far side + under nose / lip"
+   "source": "Leo: 16% of the lower-face skin below 0.9 of lit - one clean strip on the far side + under nose / lip",
+   "advisory": true,
+   "advisory_why": "q36b: the frontal light it drove lost the A/B"
   },
   "S8_deep_tone": {
    "kind": "render",
@@ -203,7 +218,9 @@
    "metric": "deep_frac",
    "target": 0.046,
    "tol": 0.015,
-   "source": "Leo: a third, deep tone (<0.68 of lit) in the core of the shadow along the jaw - 4.6% of the lower face"
+   "source": "Leo: a third, deep tone (<0.68 of lit) in the core of the shadow along the jaw - 4.6% of the lower face",
+   "advisory": true,
+   "advisory_why": "q36b: the deep core tone lost the A/B"
   },
   "R5_ears_0.40D": {
    "kind": "render",
@@ -211,7 +228,9 @@
    "metric": "wD_0.40",
    "target": 1.31,
    "tol": 0.05,
-   "source": "Leo face width 0.40 D below the pupils (D = pupils to chin outline, render): his ears end above this row; ours hung lower (1.55)"
+   "source": "Leo face width 0.40 D below the pupils (D = pupils to chin outline, render): his ears end above this row; ours hung lower (1.55)",
+   "advisory": true,
+   "advisory_why": "q36b: the head-side narrowing it drove made pointed ears; the A/B-accepted version fails it"
   },
   "R6_cheek_0.48D": {
    "kind": "render",
@@ -219,7 +238,9 @@
    "metric": "wD_0.48",
    "target": 1.227,
    "tol": 0.035,
-   "source": "Leo"
+   "source": "Leo",
+   "advisory": true,
+   "advisory_why": "q36b: front-only width; the cheek table it drove lost the 3/4 A/B"
   },
   "R7_cheek_0.56D": {
    "kind": "render",
@@ -227,7 +248,9 @@
    "metric": "wD_0.56",
    "target": 1.144,
    "tol": 0.035,
-   "source": "Leo"
+   "source": "Leo",
+   "advisory": true,
+   "advisory_why": "q36b: front-only width; the cheek table it drove lost the 3/4 A/B"
   },
   "R8_jaw_0.80D": {
    "kind": "render",
@@ -235,7 +258,9 @@
    "metric": "wD_0.80",
    "target": 0.98,
    "tol": 0.04,
-   "source": "Leo square adult jaw: still 0.98 D wide at 0.80 D (ours tapered to 0.79)"
+   "source": "Leo square adult jaw: still 0.98 D wide at 0.80 D (ours tapered to 0.79)",
+   "advisory": true,
+   "advisory_why": "q36b: pushing the jaw +56% to 0.98 D made a lumpy jowl in 3/4 (Sammy: 'you made it look worse'; A/B preferred m26)"
   },
   "R9_face_length": {
    "kind": "render",
@@ -243,7 +268,9 @@
    "metric": "D_ipd",
    "target": 1.347,
    "tol": 0.03,
-   "source": "Leo pupils-to-chin outline / IPD in the render"
+   "source": "Leo pupils-to-chin outline / IPD in the render",
+   "advisory": true,
+   "advisory_why": "q36b: shortening the lower face to Leo's length lost the side/3/4 A/B"
   },
   "F4_ear_lobe": {
    "kind": "mesh",
@@ -267,7 +294,9 @@
    "metric": "lash_th",
    "target": 0.041,
    "tol": 0.01,
-   "source": "Leo upper lash 0.041 IPD on the pupil column"
+   "source": "Leo upper lash 0.041 IPD on the pupil column",
+   "advisory": true,
+   "advisory_why": "q36b: detector tuned under the frontal light; under the accepted shader the shadowed eye misreads - re-calibrate before it blocks"
   },
   "E3_brow_gap": {
    "kind": "render",
@@ -275,7 +304,9 @@
    "metric": "brow_gap",
    "target": 0.02,
    "tol": 0.015,
-   "source": "Leo brow sits on the lid (0.009 IPD at the pupil column)"
+   "source": "Leo brow sits on the lid (0.009 IPD at the pupil column)",
+   "advisory": true,
+   "advisory_why": "q36b: same detector issue (shadowed brow side)"
   },
   "E4_brow_thick": {
    "kind": "render",
@@ -283,7 +314,9 @@
    "metric": "brow_th",
    "target": 0.063,
    "tol": 0.012,
-   "source": "Leo brow 0.063 IPD thick at the pupil column"
+   "source": "Leo brow 0.063 IPD thick at the pupil column",
+   "advisory": true,
+   "advisory_why": "q36b: same detector issue"
   },
   "E5_pupil": {
    "kind": "render",
@@ -315,7 +348,9 @@
    "metric": "mouth_w",
    "target": 0.431,
    "tol": 0.03,
-   "source": "Leo mouth line 0.43 D (render, same detector)"
+   "source": "Leo mouth line 0.43 D (render, same detector)",
+   "advisory": true,
+   "advisory_why": "q36b: mouth paint width re-tuned for the shortened face; re-check on the accepted length"
   },
   "M2_mouth_height": {
    "kind": "render",
@@ -498,46 +533,41 @@
  "shader": {
   "note": "Locked render spec (vroid_toon.MHS3_SPEC). Judging renders always use it; tune the model, not the light. Change the spec only through the shader rules S1-S7 and record the change here.",
   "spec": {
-   "skin_tint": [
-    1.0,
-    1.0,
-    1.0
+   "light": [
+    0.55,
+    -0.75,
+    0.4
    ],
-   "body_tint": [
-    0.78,
-    0.6,
-    0.46
+   "skin_shadow_tint_linear": [
+    0.62,
+    0.58,
+    0.66
    ],
+   "skin_deep": null,
+   "cast_shadows": true,
+   "clean_shadows": false,
    "ramp": [
     0.285,
     0.315
    ],
    "face_normals_ellipsoid_w": 0.95,
-   "light": [
-    0.3,
-    -0.9,
-    0.35
-   ],
    "outline_m": 0.0012,
    "outline_rgb": [
     92,
     58,
     44
    ],
-   "skin_shadow_tint_linear": [
-    0.66,
-    0.58,
-    0.56
+   "skin_tint": [
+    1,
+    1,
+    1
    ],
-   "skin_deep": {
-    "bw_threshold": 0.19,
-    "tint_linear": [
-     0.35,
-     0.27,
-     0.27
-    ]
-   },
-   "cast_shadows": false
+   "body_tint": [
+    0.78,
+    0.6,
+    0.46
+   ],
+   "why": "q36b A/B: the q36 3-tone / frontal-light / no-shadow spec lost to the m26 shader in every view; crisp shadows lost too. The m26 shader is the locked spec until a change wins the A/B gate."
   },
   "style": [
    "two tones only on skin (lit, shadow), hard terminator, no gradients baked in the texture",
@@ -563,7 +593,10 @@
   "q36: the face-mesh eye-hole boundary is NOT the visible lid edge - the lid's inner skin shows as a band under the lash; place the lash by the render rule E1, not by mesh alignment.",
   "q36: mesh and render chin differ (render = outline top): compare like with like (F1 mesh vs R9 render), never mix.",
   "q36: every warp gated by skin depth (y > ...) must move the mouth interior with the skin, or it pokes through (grey patches).",
-  "q36: EEVEE sun cast shadows rendered as speckled grey patches (nose shadow on the philtrum, lip shadow on the chin, faceted neck) - TypeSafe artifacts 0.93. Cast shadows off; MHS3 cast shadows are clean painted shapes (future: paint them)."
+  "q36: EEVEE sun cast shadows rendered as speckled grey patches (nose shadow on the philtrum, lip shadow on the chin, faceted neck) - TypeSafe artifacts 0.93. Cast shadows off; MHS3 cast shadows are clean painted shapes (future: paint them).",
+  "q36b: passing every measured rule does not mean it looks better - rules measured one view (front/side) and pushed the jaw +56%, making a lumpy jowl in 3/4. The A/B regression gate against the accepted version is mandatory before showing anything.",
+  "q36b: crisp (jitter-free) cast shadows scored higher on 'shading' but lost every A/B view; the original soft sun shadows stay.",
+  "q36b: shortening the lower face (MAP chin 1.42 -> 1.38) lost the side/3/4 A/B; keep the m26 length."
  ],
  "eye_shape_template": {
   "note": "Leo (mean of both eyes), opening outline inner->outer at 9 fractions of its width, edge height from the opening centre in units of its width (+ = down). Sammy q36: eye shape matching MHS3 is a standard.",

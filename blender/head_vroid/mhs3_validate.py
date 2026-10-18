@@ -81,7 +81,8 @@ def main():
         if v is None or (isinstance(v, float) and not np.isfinite(v)):
             rows[rid] = {"status": "unknown", "region": r["region"], "kind": r["kind"]}; continue
         e = abs(v - r["target"]) / r["tol"]
-        rows[rid] = {"status": "pass" if e <= 1.0 else "FAIL", "value": round(float(v), 4), "target": r["target"],
+        adv = r.get("advisory", False)
+        rows[rid] = {"status": ("pass" if e <= 1.0 else ("advisory" if adv else "FAIL")), "value": round(float(v), 4), "target": r["target"],
                      "tol": r["tol"], "err_tol": round(float(e), 2), "region": r["region"], "kind": r["kind"]}
     tsd = arg("--ts")
     for sname, sd in rules["typesafe"]["sets"].items():
@@ -105,7 +106,8 @@ def main():
             if "err_tol" in r and rid in p and "err_tol" in p[rid] and r["err_tol"] > p[rid]["err_tol"] + 0.25:
                 r["regressed_from"] = p[rid]["err_tol"]
                 r["status"] = "FAIL"
-    errs = [r["err_tol"] for r in rows.values() if "err_tol" in r]
+    errs = [r["err_tol"] for rid, r in rows.items() if "err_tol" in r and r["status"] != "advisory"
+            and not rules["rules"].get(rid, {}).get("advisory")]
     nfail = sum(r["status"] == "FAIL" for r in rows.values()); nunk = sum(r["status"] == "unknown" for r in rows.values())
     rms = float(np.sqrt(np.mean(np.square(errs)))) if errs else None
     verdict = "PASS" if nfail == 0 and nunk == 0 and rms is not None and rms <= rules["pass"]["rms_err_tol_max"] else (
