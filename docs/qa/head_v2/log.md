@@ -409,3 +409,17 @@ Repeat runs: m61q run 2 again zero A/B losses, mhs3 0.599 -> 0.646, fails only t
 nose length trades the two failing metrics: tip_up 1.2 mm (m61s) keeps too_anime (+0.03) but shading_anime drops
 0.026 (twice); 1.9 mm (m61u) too_anime +0.045 but shading -0.008 / polished -0.014 (> 1 SE). Best overall: m61q.
 Boards q38/board_m58b_vs_m61q.png, eyes q38/eyes_m58b_m61q_leo.png, turned-view iris q38/concave_iris_turned.png.
+
+### q38 eye borders (Sammy: "the eyes still look distorted around the borders")
+- `smooth_eye_borders` now subdivides only the faces round the eyes (Catmull-Clark blended to 'simple' by an
+  ellipse mask), splits the matching seam edges of the rest (single-edge pattern + beauty triangulation), welds,
+  and transfers the original custom normals back (weight 1 - mask). UVs stay linear outside the eyes; ears untouched.
+- Bugs found on the way: the mask multiplied r by the in-front test, so everything >3 cm behind the eye was fully
+  smoothed (ear-front strip changed, 'clean' lost in side/70/profile); whole-face subdivision changed the outline
+  even with the shape kept; dissolving seam midpoints / plain edge splits left outline strokes on cheeks and forehead.
+- Rim pulled 0.4 mm forward (`eye_rim_back` -0.0004) removes the scalloped pink band under the lower lid;
+  eye_s 0.99, eye_sz 1.10, iris_s 1.0 keep R1/R2/R4.
+- **m62h21** strict gate vs m58b: zero A/B losses in 6 views x 3 runs, too_anime no longer fails, only fail
+  polished 0.393 -> 0.357; mhs3 0.594 -> 0.627 (not > 2 SE). Culprit vs m61q (eye close-up): better on every
+  eye-border item (lash -0.13, faceted outline -0.10, ragged white edge -0.07). Rulebook: P2/P3 carried over from
+  m58b, M2 mouth height at the edge (err 1.00, 0.622 vs 0.642; render-measured from the pupil line).
