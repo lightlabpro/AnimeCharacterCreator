@@ -269,9 +269,9 @@ def seat_brows(lift=0.0007):
     print("brows seated")
 
 
-def _apply_subsurf(o, kind="CATMULL_CLARK", levels=1):
+def _apply_subsurf(o, kind="CATMULL_CLARK", levels=1, uv_smooth="PRESERVE_BOUNDARIES"):
     md = o.modifiers.new("q38_tmp", "SUBSURF"); md.levels = md.render_levels = levels; md.subdivision_type = kind
-    md.uv_smooth = "PRESERVE_BOUNDARIES"; md.boundary_smooth = "PRESERVE_CORNERS"
+    md.uv_smooth = uv_smooth; md.boundary_smooth = "PRESERVE_CORNERS"
     while o.modifiers[0].name != md.name:
         with bpy.context.temp_override(object=o, active_object=o):
             bpy.ops.object.modifier_move_up(modifier=md.name)
@@ -310,7 +310,7 @@ def smooth_eye_borders(levels=1):
     orig = bpy.data.objects.new("q38_orig", face.data.copy()); bpy.context.scene.collection.objects.link(orig)
     orig.matrix_world = face.matrix_world
     n0 = len(face.data.vertices)
-    _apply_subsurf(face, "CATMULL_CLARK", levels); _apply_subsurf(tmp, "SIMPLE", levels)
+    _apply_subsurf(face, "CATMULL_CLARK", levels); _apply_subsurf(tmp, "SIMPLE", levels, uv_smooth="NONE")
     if len(tmp.data.vertices) != len(face.data.vertices):
         print("eye-border smoothing skipped: topology differs"); bpy.data.objects.remove(tmp); bpy.data.objects.remove(orig); return
     cc = np.array([v.co[:] for v in face.data.vertices]); sp = np.array([v.co[:] for v in tmp.data.vertices])
@@ -318,7 +318,10 @@ def smooth_eye_borders(levels=1):
     rx, rz = K.get("eye_smooth_r", (0.030, 0.020)); fall = K.get("eye_smooth_fall", 0.6)
     m = np.zeros(len(W))
     for c in cents:
-        r = np.hypot((W[:, 0] - c[0]) / rx, (W[:, 2] - c[2]) / rz) * (W[:, 1] > c[1] - 0.03)
+        # q38g bug fix: this used to MULTIPLY r by the in-front test, so every vertex more than 3 cm behind the eye
+        # got r = 0 = full Catmull-Clark - the sides of the head in front of the ears were smoothed (the ragged
+        # strip in front of the ear changed; 'clean' lost in side / 70 / profile)
+        r = np.hypot((W[:, 0] - c[0]) / rx, (W[:, 2] - c[2]) / rz) + 99.0 * (W[:, 1] <= c[1] - 0.03)
         w = np.clip((1 + fall - r) / fall, 0, 1); m = np.maximum(m, w * w * (3 - 2 * w))
     out = sp + (cc - sp) * m[:, None]
     rb = K.get("eye_rim_back", 0.0)
@@ -348,6 +351,22 @@ def smooth_eye_borders(levels=1):
         out[ring & sel] += back * rb * K.get("eye_rim_ring", 0.35)
         print("  eye rim tucked back:", int((bnd & sel).sum()), "border verts")
     face.data.vertices.foreach_set("co", out.astype(np.float32).ravel()); face.data.update()
+    # q38g: Catmull-Clark also smoothed the UVs of the whole face, which slid the face texture (blush, nose and
+    # hairline shading) everywhere - m62h lost 'clean' in 4 views and skin_mhs3 fell. Take the UVs of the 'simple'
+    # copy (linear, the original mapping) outside the eyes and blend to the smoothed UVs inside them.
+    nl = len(face.data.loops)
+    if len(tmp.data.loops) == nl:
+        cv = np.zeros(nl, np.int32); face.data.loops.foreach_get("vertex_index", cv)
+        ml = m[cv][:, None]
+        for uvl in face.data.uv_layers:
+            ul = tmp.data.uv_layers.get(uvl.name)
+            if ul is None:
+                continue
+            a_ = np.zeros(nl * 2); b_ = np.zeros(nl * 2)
+            uvl.data.foreach_get("uv", a_); ul.data.foreach_get("uv", b_)
+            a_ = a_.reshape(-1, 2); b_ = b_.reshape(-1, 2)
+            uvl.data.foreach_set("uv", (b_ + (a_ - b_) * ml).astype(np.float32).ravel())
+        print("  UVs kept linear outside the eye regions")
     for p in face.data.polygons:
         p.use_smooth = True
     if K.get("eye_keep_normals", True) and orig.data.has_custom_normals:
