@@ -405,3 +405,7 @@ face comparison fair). New probes: `defects_nose_chin_eyes.json` (vs Leo / face_
 **m61q** strict gate: zero A/B losses in 6 views x 3 runs, eye close-up won; mhs3 0.593 -> 0.634, eyes_anime
 0.46 -> 0.60, face_anime 0.84 -> 0.86, shading 0.774 -> 0.798, polished 0.395 -> 0.409; FAIL only on too_anime
 0.62 -> 0.69 (limit +0.05). Rulebook: fails 4 (m58b 7) - P2/P3/M2 carried over, R2 eye height 0.288 (0.285 max).
+Repeat runs: m61q run 2 again zero A/B losses, mhs3 0.599 -> 0.646, fails only too_anime 0.635 -> 0.693. The
+nose length trades the two failing metrics: tip_up 1.2 mm (m61s) keeps too_anime (+0.03) but shading_anime drops
+0.026 (twice); 1.9 mm (m61u) too_anime +0.045 but shading -0.008 / polished -0.014 (> 1 SE). Best overall: m61q.
+Boards q38/board_m58b_vs_m61q.png, eyes q38/eyes_m58b_m61q_leo.png, turned-view iris q38/concave_iris_turned.png.
