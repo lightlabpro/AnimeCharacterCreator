@@ -218,6 +218,9 @@ def warp(P, key):
         z2 = zc + (z2 - zc) * sz
         if key.startswith("FaceEyeline"):                  # q36 E1: the lid's inner skin showed under the lash
             z2 = z2 + K.get("eyeline_dz", 0.0) * (z2 > zc)
+    if key.startswith("FaceEyeline") and K.get("eyeline_fwd", 0.0):
+        # q38f: with the eye-hole rim brought forward (no pink rim band) the skin edge hid the lash mesh - lash forward
+        y2 = y2 + K["eyeline_fwd"]
     if key.startswith("EyeIris") and K.get("iris_concave", 0.0):
         # q38 (Sammy: "in the mhs3 game the iris is a bit concave, just like real eyes"): dish each iris - the centre
         # set back by iris_concave (m), falling off as 1 - r^2 to 0 at the iris edge (elliptic radius from the iris'
@@ -264,6 +267,111 @@ def seat_brows(lift=0.0007):
     L = (np.c_[BV, np.ones(len(BV))] @ np.linalg.inv(mw).T)[:, :3]
     brow.data.vertices.foreach_set("co", L.astype(np.float32).ravel()); brow.data.update()
     print("brows seated")
+
+
+def _apply_subsurf(o, kind="CATMULL_CLARK", levels=1):
+    md = o.modifiers.new("q38_tmp", "SUBSURF"); md.levels = md.render_levels = levels; md.subdivision_type = kind
+    md.uv_smooth = "PRESERVE_BOUNDARIES"; md.boundary_smooth = "PRESERVE_CORNERS"
+    while o.modifiers[0].name != md.name:
+        with bpy.context.temp_override(object=o, active_object=o):
+            bpy.ops.object.modifier_move_up(modifier=md.name)
+    with bpy.context.temp_override(object=o, active_object=o):
+        bpy.ops.object.modifier_apply(modifier=md.name)
+
+
+def smooth_eye_borders(levels=1):
+    """q38f (Sammy: "the eyes still look distorted around the borders"): the eye holes of the face skin are a coarse
+    polygon - the lid edges, the skin rim showing between lash and white and the outlines along them are faceted.
+    Whole-face subdivision lost the profile views (q38), so subdivide the face with Catmull-Clark AND with 'simple'
+    (same topology, shape unchanged) and keep the smooth result only round the eyes: an ellipse round each eye
+    (K eye_smooth_r, metres) fading to the unchanged shape - ears, nose, mouth and the profile stay as they were."""
+    face = next((o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+                 and "Face_00_SKIN" in o.data.materials[0].name), None)
+    iris = next((o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+                 and "EyeIris" in o.data.materials[0].name), None)
+    if face is None or iris is None:
+        return
+    # the ears are loose islands of the face mesh; subdividing them (even with 'simple') changed their border
+    # normals and the outline drew a ragged pale edge in front of each ear (ears / ear_shape lost 3/3 in the profile
+    # views) - split them off, subdivide only the face itself, join back
+    bpy.ops.object.select_all(action="DESELECT"); face.select_set(True); bpy.context.view_layer.objects.active = face
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
+    parts = [o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+             and "Face_00_SKIN" in o.data.materials[0].name]
+    face = max(parts, key=lambda o: len(o.data.vertices))
+    Mi = np.array(iris.matrix_world); I = (np.c_[np.array([v.co[:] for v in iris.data.vertices]), np.ones(len(iris.data.vertices))] @ Mi.T)[:, :3]
+    cents = [I[I[:, 0] > 0].mean(0), I[I[:, 0] < 0].mean(0)]
+    tmp = bpy.data.objects.new("q38_simple", face.data.copy()); bpy.context.scene.collection.objects.link(tmp)
+    tmp.matrix_world = face.matrix_world
+    # the VRoid face carries custom (split) normals that the toon shading and the outline shell use; subdivision
+    # drops them, which changed the outline and terminator all over the profile even with the shape unchanged
+    # (m62f vs m62g pixel diff). Keep an untouched copy to transfer them back outside the eye regions.
+    orig = bpy.data.objects.new("q38_orig", face.data.copy()); bpy.context.scene.collection.objects.link(orig)
+    orig.matrix_world = face.matrix_world
+    n0 = len(face.data.vertices)
+    _apply_subsurf(face, "CATMULL_CLARK", levels); _apply_subsurf(tmp, "SIMPLE", levels)
+    if len(tmp.data.vertices) != len(face.data.vertices):
+        print("eye-border smoothing skipped: topology differs"); bpy.data.objects.remove(tmp); bpy.data.objects.remove(orig); return
+    cc = np.array([v.co[:] for v in face.data.vertices]); sp = np.array([v.co[:] for v in tmp.data.vertices])
+    Mf = np.array(face.matrix_world); W = (np.c_[sp, np.ones(len(sp))] @ Mf.T)[:, :3]
+    rx, rz = K.get("eye_smooth_r", (0.030, 0.020)); fall = K.get("eye_smooth_fall", 0.6)
+    m = np.zeros(len(W))
+    for c in cents:
+        r = np.hypot((W[:, 0] - c[0]) / rx, (W[:, 2] - c[2]) / rz) * (W[:, 1] > c[1] - 0.03)
+        w = np.clip((1 + fall - r) / fall, 0, 1); m = np.maximum(m, w * w * (3 - 2 * w))
+    out = sp + (cc - sp) * m[:, None]
+    rb = K.get("eye_rim_back", 0.0)
+    if rb:
+        # the hole's inner rim (the skin's thickness round the eye) showed as a pink band with stray texture between
+        # lash and white (worse after rounding the hole): tuck the hole's border loop and the ring next to it back
+        # behind the eye white, so the visible lid edge is the skin's front surface (anime lids have no thickness)
+        import bmesh
+        bm = bmesh.new(); bm.from_mesh(face.data); bm.verts.ensure_lookup_table()
+        bnd = np.zeros(len(out), bool)
+        for e in bm.edges:
+            if e.is_boundary:
+                for v in e.verts:
+                    bnd[v.index] = True
+        ring = np.zeros(len(out), bool)
+        for e in bm.edges:
+            a_, b_ = e.verts[0].index, e.verts[1].index
+            if bnd[a_] and not bnd[b_]:
+                ring[b_] = True
+            if bnd[b_] and not bnd[a_]:
+                ring[a_] = True
+        bm.free()
+        Minv = np.linalg.inv(Mf)[:3, :3]
+        back = (Minv @ np.array([0.0, -1.0, 0.0])); back /= np.linalg.norm(back)
+        sel = m > 0.5
+        out[bnd & sel] += back * rb
+        out[ring & sel] += back * rb * K.get("eye_rim_ring", 0.35)
+        print("  eye rim tucked back:", int((bnd & sel).sum()), "border verts")
+    face.data.vertices.foreach_set("co", out.astype(np.float32).ravel()); face.data.update()
+    for p in face.data.polygons:
+        p.use_smooth = True
+    if K.get("eye_keep_normals", True) and orig.data.has_custom_normals:
+        vg = face.vertex_groups.new(name="q38_keepn")
+        keep = 1.0 - m
+        for w in np.unique(np.round(keep, 2)):
+            if w > 0:
+                vg.add([int(i) for i in np.where(np.round(keep, 2) == w)[0]], float(w), "REPLACE")
+        dt = face.modifiers.new("q38_nrm", "DATA_TRANSFER")
+        dt.object = orig; dt.use_loop_data = True; dt.data_types_loops = {"CUSTOM_NORMAL"}
+        dt.loop_mapping = "POLYINTERP_NEAREST"; dt.vertex_group = vg.name; dt.mix_mode = "REPLACE"; dt.mix_factor = 1.0
+        bpy.ops.object.select_all(action="DESELECT"); face.select_set(True); bpy.context.view_layer.objects.active = face
+        bpy.ops.object.modifier_apply(modifier=dt.name)
+        face.vertex_groups.remove(face.vertex_groups["q38_keepn"])
+        print("  custom normals transferred back outside the eye regions")
+    bpy.data.objects.remove(tmp); bpy.data.objects.remove(orig)
+    if len(parts) > 1:
+        bpy.ops.object.select_all(action="DESELECT")
+        for o in parts:
+            o.select_set(True)
+        bpy.context.view_layer.objects.active = face
+        bpy.ops.object.join()
+    print("eye borders smoothed: face", n0, "->", len(out), "verts,", int((m > 0.5).sum()), "in the eye regions;",
+          len(parts) - 1, "ear islands left as they were")
 
 
 def smooth_parts(keys, levels=1):
@@ -389,6 +497,8 @@ def main():
         o.data.update()
     seat_brows()
     smooth_parts(K.get("smooth", []), K.get("smooth_levels", 1))
+    if K.get("eye_border_smooth"):
+        smooth_eye_borders(K.get("smooth_levels", 1))
     bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_image_format="AUTO")
     print("wrote", out)
 

@@ -1,0 +1,84 @@
+{
+ "nose_back": 0.003,
+ "root_lift": 0.002,
+ "root_d": [
+  -0.5,
+  -0.28,
+  0.05,
+  0.35
+ ],
+ "root_w": 0.014,
+ "eye_tilt": 0.00925,
+ "lid_up": 0.00407,
+ "lid_up_c": -0.03125,
+ "lid_up_w": 0.5,
+ "lid_low": 0.0024,
+ "lid_low_out": 0.0025,
+ "eye_sx_out": 0.825,
+ "lid_in_drop": 0.00235,
+ "lid_out_up": 0.00225,
+ "eye_sx": 0.9,
+ "eyeline_sz": 1.04,
+ "eyeline_dz": -0.0012,
+ "eye_sz": 1.09,
+ "iris_dz": 0.001,
+ "iris_s": 1.0,
+ "brow_dz": -0.023,
+ "ear_dz": 0.004,
+ "iris_concave": 0.0035,
+ "jaw": [
+  [
+   0.4,
+   0.0
+  ],
+  [
+   0.65,
+   -0.05
+  ],
+  [
+   0.95,
+   0.03
+  ],
+  [
+   1.15,
+   0.24
+  ],
+  [
+   1.32,
+   0.42
+  ],
+  [
+   1.5,
+   0.4
+  ],
+  [
+   1.7,
+   0.16
+  ],
+  [
+   2.2,
+   0.0
+  ]
+ ],
+ "nose_tip_up": 0.0025,
+ "nose_tip_back": 0.0008,
+ "smooth": [
+  "EyeWhite",
+  "FaceEyeline",
+  "FaceBrow",
+  "EyeIris"
+ ],
+ "smooth_crease_deg": 0,
+ "smooth_mode": "laplace",
+ "smooth_skip_ears": false,
+ "eye_border_smooth": true,
+ "eye_smooth_r": [
+  0.026,
+  0.016
+ ],
+ "eye_smooth_fall": 0.5,
+ "eye_rim_back": -0.0012,
+ "eye_rim_ring": 0.3,
+ "eye_s": 0.98,
+ "eyeline_fwd": 0.0016
+}
