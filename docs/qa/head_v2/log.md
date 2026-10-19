@@ -436,3 +436,21 @@ Boards q38/board_m58b_vs_m61q.png, eyes q38/eyes_m58b_m61q_leo.png, turned-view 
 - **m63q**: rulebook - all eye rules pass, ES2 0.0194 (was 0.0226), M2 passes; only P2/P3 (from m58b).
   Strict gate vs m58b: zero A/B losses (6 views x 3 runs); absolute-score fails shading_anime -0.013,
   polished -0.017, skin_mhs3 -0.07. Culprit vs m62h21 (eye close-up): better on every eye-border item.
+
+## q39 head built from scratch (Sammy: "start again with a new model" -> "Build head from scratch")
+- `blender/head_scratch/build_head.py`: no VRoid face mesh. All-quad parametric head: horizontal sections (two half
+  super-ellipses, front / back widths, depths, exponents as C2 splines of z from the rulebook numbers), nose and lip
+  displacement fields, eye-socket dip; each eye opening rebuilt as concentric quad rings from the grid patch to the
+  Leo eye-shape curve (periodic spline) - smooth openings by construction. Flattened ellipsoid eyeballs covering the
+  opening, concave iris (dish measured rim-minus-centre), painted MHS3 iris, highlight discs; lash / lower line /
+  brows as ribbons swept along curves and draped on the skin; mouth, nose highlight + tip shadow, lower lip, lid
+  crease and chin line painted into a 2048 planar skin texture; parametric closed ears. Split like VRoid into the
+  face mask (Face_00_SKIN, + ears) and a back-of-skull / neck object (Body_01_SKIN_HeadBack) because the locked
+  renderer fits its face-normal ellipsoid to the face object's bounding box. Hair: mhs3_hair.py crop (scalp now
+  includes the HeadBack object; skull centre uses the lowest front face vertex).
+- n14 rulebook: every rule passes except ES2 (0.0319 vs tol 0.03); profile P2/P3 now pass (failed on every VRoid
+  version). Advisories: shadow area 0.43 (0.16; hair cast shadow), jaw width at 0.80D 0.84 (0.98), brow measured
+  thick.
+- Strict gate (n13 vs m58b): FAIL - lost every view; mhs3 0.20 vs 0.60, polished 0.09 vs 0.40, shading_anime
+  0.46 vs 0.77, nose 0.65 vs 0.80, mouth 0.52 vs 0.71. n7 (before the face paint) scored mhs3 0.31, nose 0.14.
+  Board q39/compare_m63q_n14.png.

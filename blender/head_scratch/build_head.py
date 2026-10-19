@@ -42,13 +42,13 @@ K = {
     "tip_y": 0.0905,                                       # nose tip depth (y)
     "ncols": 128,
     # eye opening (R1 width, R2 height in IPD; template from Leo)
-    "eye_w_ipd": 0.405, "eye_h_scale": 1.07, "eye_dx": 0.0008, "eye_dz": -0.0008, "eye_tilt": 0.06,
+    "eye_w_ipd": 0.398, "eye_h_scale": 1.07, "eye_dx": 0.0008, "eye_dz": -0.0008, "eye_tilt": 0.06,
     "socket": 0.0012,                                      # how far the skin dips into the opening edge
     "eyeball_r": 0.0125, "eyeball_back": 0.0016,           # eyeball radius, its front behind the opening plane
     "iris_r": 0.0112, "iris_aspect": 1.10, "iris_dish": 0.003,
     "lash_th": (0.0016, 0.0034), "lash_wing": 0.0028, "lowline_th": 0.00035,
     "brow_th": 0.0052, "brow_len": 0.050,
-    "mouth_w": 0.0351, "mouth_th": 0.0008,
+    "mouth_w": 0.046, "mouth_th": 0.0009,
     "skin": (228, 190, 160), "brow_col": (80, 53, 37), "lash_col": (42, 24, 18), "mouth_col": (120, 52, 44),
     "iris_col": (118, 160, 104), "iris_dark": (44, 80, 46),
 }
@@ -82,8 +82,8 @@ def tables():
          (zc - 0.002, -0.0510)]
     Wf = [(zt, 0.004), (zt - 0.006, 0.040), (zt - 0.016, 0.062), (zt - 0.04, 0.080), (zt - 0.08, 0.0866),
           (zp + 0.022, 0.0864), (zp, K.get("w_eye", 0.0835)), (zp - 0.25 * D, K.get("w_cheek", 0.0715)),
-          (zp - 0.48 * D, K.get("w_cheek2", 0.0615)), (zp - 0.70 * D, K.get("w_jaw", 0.0478)),
-          (zp - 0.88 * D, 0.032), (zc + 0.001, K.get("w_chin", 0.019)), (zc - 0.002, K.get("w_chin", 0.019) - 0.003)]
+          (zp - 0.48 * D, K.get("w_cheek2", 0.0615)), (zp - 0.70 * D, K.get("w_jaw", 0.0500)),
+          (zp - 0.88 * D, K.get("w_jaw2", 0.0365)), (zc + 0.001, K.get("w_chin", 0.019)), (zc - 0.002, K.get("w_chin", 0.019) - 0.003)]
     Wb = [(zt, 0.004), (zt - 0.006, 0.040), (zt - 0.016, 0.062), (zt - 0.04, 0.080), (zt - 0.08, 0.0866),
           (zp + 0.022, 0.0866), (zp, 0.0855), (zp - 0.30 * D, 0.078), (zp - 0.60 * D, 0.062),
           (zp - 0.85 * D, 0.045), (zc, 0.0375), (zc - 0.002, 0.0368)]
@@ -345,7 +345,7 @@ def mouth_curve_pts(n=81):
     D = K["D"]; zm = K["z_chin"] + D - K["mouth_D"] * D; hw = K["mouth_w"] / 2
     xs = np.linspace(-hw, hw, n)
     zz = zm - K.get("mouth_curve", 0.0006) * (xs / hw) ** 2
-    tw = K["mouth_th"] * (1 - 0.65 * (xs / hw) ** 2)
+    tw = K["mouth_th"] * (1 - 0.55 * (xs / hw) ** 4)
     return xs, zz, tw
 
 
@@ -375,7 +375,7 @@ def skin_img(back=False):
     lit = K.get("light_side", 1)                            # viewer's left = the lit side in the locked rig
     hl = [P(lit * 0.0010, zp - 0.05 * D), P(lit * 0.0050, zt_ + 0.011), P(lit * 0.0060, zt_ + 0.0025),
           P(lit * 0.0030, zt_ + 0.0012), P(lit * 0.0002, zp - 0.10 * D)]
-    dp.polygon(hl, fill=tuple(K.get("nose_hl", (250, 226, 204))) + (K.get("nose_hl_a", 200),))
+    dp.polygon(hl, fill=tuple(K.get("nose_hl", (248, 222, 200))) + (K.get("nose_hl_a", 150),))
     sh = [P(-lit * 0.0005, zt_ + 0.002), P(-lit * 0.0050, zt_ - 0.0005), P(-lit * 0.0030, zt_ - 0.0032),
           P(lit * 0.0020, zt_ - 0.0034)]
     dp.polygon(sh, fill=tuple(K.get("nose_sh", (204, 152, 128))) + (120,))
