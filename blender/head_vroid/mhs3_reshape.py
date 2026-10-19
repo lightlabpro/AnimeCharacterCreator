@@ -186,6 +186,16 @@ def warp(P, key):
         d0, d1, d2, d3 = K.get("nose_back_d", (0.10, 0.50, 0.60, 0.72))
         gb = np.clip((d - d0) / (d1 - d0), 0, 1) * np.clip((d3 - d) / (d3 - d2), 0, 1); gb = gb * gb * (3 - 2 * gb)
         y2 = y2 - nb * gb * np.exp(-(x / K.get("nose_back_w", 0.020)) ** 2) * G(y > 0.03)
+    nu = K.get("nose_tip_up", 0.0)
+    if nu:
+        # q38 (TypeSafe vs Leo / face_profile_04: nose_tip_sharp 0.71-0.83 in 3/4 and side, nose reads long): lift the
+        # lower nose (tip and base, d 0.38-0.62 below the pupils) up and slightly back - a shorter, softer, a touch
+        # upturned MHS3 nose; the cheeks and lip stay (narrow x and depth gates)
+        t0, t1, t2, t3 = K.get("nose_tip_d", (0.30, 0.44, 0.56, 0.68))
+        gt = np.clip((d - t0) / (t1 - t0), 0, 1) * np.clip((t3 - d) / (t3 - t2), 0, 1); gt = gt * gt * (3 - 2 * gt)
+        wx = np.exp(-(x / K.get("nose_tip_w", 0.018)) ** 2) * G(y > 0.035)
+        z2 = z2 + nu * gt * wx
+        y2 = y2 - K.get("nose_tip_back", 0.0) * gt * wx
     rl = K.get("root_lift", 0.0)
     if rl:
         r0, r1, r2, r3 = K.get("root_d", (-0.30, -0.05, 0.20, 0.45))
@@ -208,6 +218,19 @@ def warp(P, key):
         z2 = zc + (z2 - zc) * sz
         if key.startswith("FaceEyeline"):                  # q36 E1: the lid's inner skin showed under the lash
             z2 = z2 + K.get("eyeline_dz", 0.0) * (z2 > zc)
+    if key.startswith("EyeIris") and K.get("iris_concave", 0.0):
+        # q38 (Sammy: "in the mhs3 game the iris is a bit concave, just like real eyes"): dish each iris - the centre
+        # set back by iris_concave (m), falling off as 1 - r^2 to 0 at the iris edge (elliptic radius from the iris'
+        # own extent). The highlight mesh stays on the surface, so it floats in front of the iris (cornea) and the
+        # iris shifts toward the viewer in turned views. The eye white has a hole behind the iris, nothing occludes.
+        for sgn in (1, -1):
+            m = (x2 * sgn) > 0
+            if not m.any():
+                continue
+            cx, cz = x2[m].mean(), z2[m].mean()
+            ax = max(np.abs(x2[m] - cx).max(), 1e-6); az = max(np.abs(z2[m] - cz).max(), 1e-6)
+            rn = np.clip(np.hypot((x2 - cx) / ax, (z2 - cz) / az), 0, 1)
+            y2 = np.where(m, y2 - K["iris_concave"] * (1 - rn ** 2), y2)
     return np.stack([x2, y2, z2], 1)
 
 
@@ -243,6 +266,100 @@ def seat_brows(lift=0.0007):
     print("brows seated")
 
 
+def smooth_parts(keys, levels=1):
+    """q38 (Sammy: "the shapes and lines are not smooth like in the mhs3 model ... smooth those edges"): VRoid's face,
+    eye and mouth meshes are low-poly, so the silhouette, the toon terminator and the outline (a shell of the same
+    polygons) show every facet - the jaw line, lid lines, eye-white edge, nose tip. Catmull-Clark subdivision applied
+    to the mesh data (UVs smoothed with boundaries kept, open edges' corners kept, vertex groups interpolated) before
+    export. keys: material keys that contain any of these strings, e.g. ["Face_00_SKIN", "EyeWhite", ...]."""
+    if not keys:
+        return
+    if K.get("smooth_skip_ears", True):
+        # q38c: the ears are four loose islands of the face mesh; smoothed they read wrong (ears / ear_shape lost 3/3
+        # in the side, 70-degree and profile views) - split them off so only the face itself is subdivided
+        for o in list(bpy.context.scene.objects):
+            if o.type == "MESH" and o.data.materials and o.data.materials[0] and "Face_00_SKIN" in o.data.materials[0].name:
+                bpy.ops.object.select_all(action="DESELECT"); o.select_set(True); bpy.context.view_layer.objects.active = o
+                bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
+                bpy.ops.mesh.separate(type="LOOSE"); bpy.ops.object.mode_set(mode="OBJECT")
+    min_v = K.get("smooth_min_verts", 400)
+    for o in list(bpy.context.scene.objects):
+        if o.type != "MESH" or not o.data.materials or not o.data.materials[0]:
+            continue
+        if not any(k in o.data.materials[0].name for k in keys):
+            continue
+        n0 = len(o.data.vertices)
+        if "Face_00_SKIN" in o.data.materials[0].name and n0 < min_v:
+            continue                                                # an ear island
+        ang = K.get("smooth_crease_deg", 0.0)
+        if ang:
+            # q38b: plain subdivision rounded the profile's small sharp features (lip notch, nostril, nose tip) and
+            # the profile close-up lost 3/3 to m58b - keep edges whose faces meet at more than `ang` degrees sharp
+            import bmesh, math
+            bm = bmesh.new(); bm.from_mesh(o.data)
+            cl = bm.edges.layers.float.get("crease_edge") or bm.edges.layers.float.new("crease_edge")
+            nc = 0
+            for e in bm.edges:
+                if len(e.link_faces) == 2 and e.calc_face_angle(0.0) > math.radians(ang):
+                    e[cl] = K.get("smooth_crease", 0.8); nc += 1
+            bm.to_mesh(o.data); bm.free(); o.data.update()
+            print("  creased", nc, "edges >", ang, "deg")
+        mode = K.get("smooth_mode", "cc")
+        stack = []
+        md = o.modifiers.new("q38_smooth", "SUBSURF")
+        md.levels = md.render_levels = levels
+        md.uv_smooth = "PRESERVE_BOUNDARIES"; md.boundary_smooth = "PRESERVE_CORNERS"
+        if mode == "laplace":
+            # q38d: Catmull-Clark shrinks the surface away from its open borders - the head pulled off the ears
+            # (a doubled ear edge; ears / ear_shape lost in the turned views) and the lips / nose tip rounded off.
+            # Simple subdivision (shape unchanged) + volume-preserving Laplacian smoothing with the borders pinned:
+            # the facets round off, the volume stays, every seam (ears, neck, eye holes) stays where it was.
+            md.subdivision_type = "SIMPLE"
+            lp = o.modifiers.new("q38_lap", "LAPLACIANSMOOTH")
+            lp.iterations = K.get("lap_iter", 4); lp.lambda_factor = K.get("lap_lambda", 0.6); lp.lambda_border = 0.0
+            lp.use_volume_preserve = True; lp.use_normalized = True
+            if "Face_00_SKIN" in o.data.materials[0].name and K.get("smooth_keep_profile", True):
+                # q38e: smoothing the midline (nose, philtrum, lips, chin) rounded the profile - the profile close-up
+                # and the side view were lost 3/3 to m58b with any face smoothing, won 2/3 without. Weight the
+                # smoothing to zero along the front midline below the brows.
+                Mw = np.array(o.matrix_world); co = np.array([v.co[:] for v in o.data.vertices])
+                W = (np.c_[co, np.ones(len(co))] @ Mw.T)[:, :3]
+                mid = np.exp(-(W[:, 0] / K.get("profile_keep_w", 0.016)) ** 2) * (W[:, 1] > 0.02) * \
+                    (W[:, 2] < K["z0"] - 0.005) * (W[:, 2] > K["z0"] - 0.14)
+                vg = o.vertex_groups.new(name="q38_smooth_w")
+                for i, w in enumerate(1.0 - mid):
+                    vg.add([i], float(w), "REPLACE")
+                lp.vertex_group = vg.name
+            stack.append(lp)
+        for mm in [md] + stack:
+            while o.modifiers[[m_.name for m_ in o.modifiers].index(mm.name) - 1].type == "ARMATURE" if \
+                    [m_.name for m_ in o.modifiers].index(mm.name) > 0 else False:
+                with bpy.context.temp_override(object=o, active_object=o):
+                    bpy.ops.object.modifier_move_up(modifier=mm.name)
+        for mm in [md] + stack:                                     # apply on the rest shape (before the armature)
+            while o.modifiers[0].name != mm.name:
+                with bpy.context.temp_override(object=o, active_object=o):
+                    bpy.ops.object.modifier_move_up(modifier=mm.name)
+            with bpy.context.temp_override(object=o, active_object=o):
+                bpy.ops.object.modifier_apply(modifier=mm.name)
+        if o.vertex_groups.get("q38_smooth_w"):
+            o.vertex_groups.remove(o.vertex_groups["q38_smooth_w"])
+        for p in o.data.polygons:
+            p.use_smooth = True
+        print("smoothed", o.data.materials[0].name.split("_Instance")[0], n0, "->", len(o.data.vertices))
+    # join the face islands back into one object (vroid_toon, the measure scripts and the creator expect one face mesh)
+    faces = [o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+             and "Face_00_SKIN" in o.data.materials[0].name]
+    if len(faces) > 1:
+        main = max(faces, key=lambda o: len(o.data.vertices))
+        bpy.ops.object.select_all(action="DESELECT")
+        for o in faces:
+            o.select_set(True)
+        bpy.context.view_layer.objects.active = main
+        bpy.ops.object.join()
+        print("face islands joined:", len(main.data.vertices), "verts")
+
+
 def main():
     src, texd, out = sys.argv[1:4]
     if "--knobs" in sys.argv:
@@ -271,6 +388,7 @@ def main():
             print("texture", key)
         o.data.update()
     seat_brows()
+    smooth_parts(K.get("smooth", []), K.get("smooth_levels", 1))
     bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_image_format="AUTO")
     print("wrote", out)
 

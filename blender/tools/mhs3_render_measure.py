@@ -91,6 +91,11 @@ def eye_box(a, m, px, py, ipd):
     iris = (sat > 0.15) & ~sk & (L < 200) & (sub[..., 1] >= sub[..., 0] - 4)   # green / grey irises (brows are brown)
     dark = L < 70
     e = white | (iris & ~dark)
+    # q38: a concave iris is painted with a dark green crescent under the top rim and a dark green pupil; the old
+    # mask dropped every dark pixel, so the opening's top edge was read at the bottom of the crescent (eye-shape RMS
+    # 0.029 -> 0.08 with the lid mesh unchanged). Dark pixels count when they are green (g > r: iris / pupil); lash and
+    # brow are brown (r > g) and stay out.
+    e = e | (~sk & dark & (sub[..., 1] > sub[..., 0] + 3) & (L > 15))
     from scipy import ndimage
     lab, n = ndimage.label(e)
     if n == 0:

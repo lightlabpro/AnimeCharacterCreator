@@ -1,0 +1,20 @@
+{
+ "nose_long": "The nose in `image` looks longer than the nose in `reference_image` (relative to the face).",
+ "nose_highlight_big": "The highlight down the nose bridge in `image` is larger or brighter than in `reference_image`.",
+ "nose_tip_sharp": "The nose tip in `image` is sharper or more pointed than in `reference_image`.",
+ "nose_tip_low": "The nose tip in `image` sits lower (closer to the mouth) than in `reference_image`.",
+ "nose_shadow_weak": "The small shadow under / beside the nose in `image` is weaker or missing compared with `reference_image`.",
+ "nose_ok": "The nose in `image` is drawn like the nose in `reference_image`.",
+ "chin_pointed": "The chin in `image` is more pointed (V-shaped) than the chin in `reference_image`.",
+ "chin_narrow": "The chin and jaw in `image` are narrower than in `reference_image`.",
+ "chin_long": "The chin in `image` is longer (more face below the mouth) than in `reference_image`.",
+ "chin_short": "The chin in `image` is shorter or weaker than in `reference_image`.",
+ "chin_ok": "The chin and jaw in `image` are shaped like the chin and jaw in `reference_image`.",
+ "eyes_small": "The eyes in `image` are smaller than the eyes in `reference_image` (relative to the face).",
+ "eyes_low_open": "The eyes in `image` are less open (shorter top to bottom) than in `reference_image`.",
+ "iris_flat": "The irises in `image` look flat and pasted-on, without the depth of the irises in `reference_image`.",
+ "iris_small": "The irises in `image` are smaller within the eye than in `reference_image`.",
+ "lids_heavy": "The upper eyelids in `image` are heavier or lower over the eyes than in `reference_image`.",
+ "whites_little": "Less eye white shows in `image` than in `reference_image`.",
+ "eyes_ok": "The eyes in `image` are drawn like the eyes in `reference_image`."
+}

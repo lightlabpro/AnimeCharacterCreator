@@ -212,6 +212,17 @@ def measure(parts):
     def width_at(dD, V=FV):
         z = zp - dD * D; s = V[np.abs(V[:, 2] - z) < 0.002]
         return (s[:, 0].max() - s[:, 0].min()) / D if len(s) else float("nan")
+    # q38 iris dish (Sammy: the MHS3 iris is concave): rim (outer 20 % of radius) forward of the centre, mm, per eye
+    dish = []
+    for sgn in (1, -1):
+        I = IR[IR[:, 0] * sgn > 0]
+        if len(I) > 10:
+            cx, cz = I[:, 0].mean(), I[:, 2].mean()
+            rn = np.hypot((I[:, 0] - cx) / max(np.abs(I[:, 0] - cx).max(), 1e-6), (I[:, 2] - cz) / max(np.abs(I[:, 2] - cz).max(), 1e-6))
+            if (rn > 0.8).any() and (rn < 0.3).any():
+                dish.append((I[rn > 0.8, 1].mean() - I[rn < 0.3, 1].mean()) * 1000)
+    if dish:
+        m["iris_dish_mm"] = float(np.mean(dish))
     m["face_width_eye_D"] = width_at(0.0)
     m["face_width_mouth_D"] = width_at(m["mouth_below_D"])
     m["face_width_chin85_D"] = width_at(0.85)

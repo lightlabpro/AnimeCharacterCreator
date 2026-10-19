@@ -1,0 +1,12 @@
+{
+ "eye_marks": "the eyes have stray marks, odd spots or smudges",
+ "catchlight_odd": "the catch lights (white highlights) in the eyes look odd, doubled or misplaced",
+ "iris_target": "the irises look like a target or a set of rings",
+ "pupil_odd": "the pupils look odd (too big, too dark, wrong shape)",
+ "lash_broken": "the lash or lid lines look broken, jagged or uneven",
+ "white_odd": "the whites of the eyes have odd shapes or edges",
+ "iris_flat": "the irises look flat and pasted-on",
+ "eyes_lifeless": "the eyes look lifeless or glassy",
+ "nose_odd": "the nose looks odd (shape, highlight or line)",
+ "brow_odd": "the eyebrows look odd"
+}

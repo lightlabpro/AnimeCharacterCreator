@@ -385,3 +385,23 @@ cone max) left gaps and the ear poking through - off. Cap edge raised at the tem
 m59z screen A/B (6 views x 2 runs): m58b still preferred overall in every view; new losses concentrate on ears /
 ear_shape (front, 3/4, side, profile close-up) - the exposed VRoid ear. Culprits: hair_short 0.55, patches 0.51,
 outline 0.48, back_flat 0.45, ears 0.43. NOT passing. Board q37_board_m59z.png, screens q37/.
+
+## q38 - "Fix the nose, chin and eyes ... the iris is a bit concave" + "smooth those edges" (m60a-m61t)
+Built on m58b with the VRoid hair kept for the A/B (hair is the pending q37 decision; same hair both sides keeps the
+face comparison fair). New probes: `defects_nose_chin_eyes.json` (vs Leo / face_profile_04), `culprit_eyes.json`.
+- Concave iris: `mhs3_reshape` knob `iris_concave` (dish 3 mm, rule E9_iris_dish, VRoid 0.4 mm) + paint (`concave`,
+  dark crescent at the top rim only, bright lower inner wall, dark arc; target rings removed - culprit iris_target
+  0.77), pupil and iris tone kept on Leo's numbers (E5, E6), catch light as one spark (`spark`).
+- Nose: `nose_tip_up` 2.5 mm / back 0.8 mm (shorter, softer tip; P5 under-nose now passes). The painted bridge
+  highlight was shortened at first (nose_highlight_big 0.64 -> 0.46) but the strict gate's nose_mhs3 fell 0.80 ->
+  0.66 - restored.
+- Chin: broader, squarer lower jaw (jaw table 1.15-1.7 D); P6 chin now passes.
+- Detector fix: the eye-opening mask ignored dark (green) iris pixels -> eye-shape RMS read 0.08 with the lid mesh
+  unchanged; fixed, Leo template re-derived with the same code (m58b 0.028, m61q 0.024).
+- Smoothing: `smooth_parts` (Catmull-Clark or simple + volume-preserving Laplacian with pinned borders). Eye white,
+  lash line, brows, iris subdivided = smoother lid curves and lines, eye close-up won, no losses. Face/body skin
+  subdivided = front/3/4 'clean' won but the side and profile close-up lost 2-3/3 every time (ears pulled off the
+  head with CC, lips / nose tip rounded) - not applied; see lessons.
+**m61q** strict gate: zero A/B losses in 6 views x 3 runs, eye close-up won; mhs3 0.593 -> 0.634, eyes_anime
+0.46 -> 0.60, face_anime 0.84 -> 0.86, shading 0.774 -> 0.798, polished 0.395 -> 0.409; FAIL only on too_anime
+0.62 -> 0.69 (limit +0.05). Rulebook: fails 4 (m58b 7) - P2/P3/M2 carried over, R2 eye height 0.288 (0.285 max).

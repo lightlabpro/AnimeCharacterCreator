@@ -99,14 +99,34 @@ def iris3d(img, mesh):
         top = np.clip((-v - 0.15) / 0.40, 0, 1) ** 0.8          # q36: Leo's lid shadow covers the top third
         col = col * (1 - top[..., None]) + np.array(K["iris_dark"], np.float32) * top[..., None]
         col = col * (1 + (0.025 * np.sin(th * 26 + 1.3) * np.clip((r - 0.35) / 0.4, 0, 1))[..., None])
-        ring = np.exp(-((r - 0.60) / 0.07) ** 2) * 0.22
+        ring = np.exp(-((r - 0.60) / 0.07) ** 2) * 0.22 * K.get("ring_k", 1.0)   # q38: culprit iris_target 0.77 -> 0
         col = col * (1 - ring[..., None]) + np.array(K["iris_ring"], np.float32) * ring[..., None]
         low = np.clip((v - 0.40) / 0.25, 0, 1) * np.clip((0.90 - r) / 0.1, 0, 1)   # q36c Leo: bright lower crescent
         col = col * (1 - low[..., None]) + np.array(K.get("iris_low", (158, 202, 136)), np.float32) * low[..., None]
         rim = np.clip((r - 0.80) / 0.10, 0, 1)
         col = col * (1 - rim[..., None]) + np.array(K["iris_rim"], np.float32) * rim[..., None]
+        if K.get("concave", 0.0):
+            # q38 (Sammy: the MHS3 iris is "a bit concave, just like real eyes"; TypeSafe iris_flat 0.83-0.88 vs Leo):
+            # paint the bowl as light from above sees it - the upper inner wall in shadow (a dark crescent under the
+            # top rim with a crisp inner edge), the lower inner wall catching the light (a bright crescent), and a
+            # thin dark inner ring where the bowl turns (Leo: a darker circle inside the iris, strongest at the top)
+            k = K["concave"]
+            bowl_top = np.clip((0.97 - np.hypot(u, v + 0.42)) / 0.04, 0, 1) * np.clip((-v + 0.05) / 0.25, 0, 1) \
+                * np.clip((r - K.get("bowl_r0", 0.0)) / 0.12, 0, 1)   # q38c: keep it at the rim (inside 0.62 R it read as pupil)
+            col = col * (1 - (k * 0.55 * bowl_top)[..., None])
+            lowc = np.clip((v - 0.05) / 0.35, 0, 1) * np.clip((0.86 - r) / 0.08, 0, 1) * np.clip((r - 0.30) / 0.15, 0, 1)
+            col = col * (1 - (k * 0.85 * lowc)[..., None]) + np.array(K.get("iris_lit", (182, 216, 152)), np.float32) * (k * 0.85 * lowc)[..., None]
+            inner = np.exp(-((r - K.get("inner_r", 0.70)) / 0.035) ** 2) * np.clip((-v + 0.15) / 0.45, 0, 1)   # an arc over the top, not a ring (m60c read as a target)
+            col = col * (1 - (k * 0.45 * inner)[..., None])
         pm = np.clip((1.0 - np.hypot(u / K["pupil_rx"], (v + 0.02) / K["pupil_ry"])) / 0.08, 0, 1)
         col = col * (1 - pm[..., None]) + np.array(K["pupil"], np.float32) * pm[..., None]
+        if K.get("spark", 0.0):
+            # q38: Leo's catch light - one white elongated spark over the upper outer iris, tilted
+            sx, sy = K.get("spark_xy", (0.42, -0.30))          # same world side on both eyes (one light)
+            du, dv = u - sx, v - sy; ca, sa = np.cos(0.35), np.sin(0.35)
+            e = np.hypot((du * ca + dv * sa) / 0.20, (-du * sa + dv * ca) / 0.085)
+            sp = np.clip((1.0 - e) / 0.15, 0, 1) * K["spark"]
+            col = col * (1 - sp[..., None]) + np.array([252, 252, 248], np.float32) * sp[..., None]
         for dx, dy, s in ((-0.45, 0.55, 0.08), (0.05, 0.68, 0.06), (0.42, 0.50, 0.06)):
             sm = np.exp(-(((u - dx) / s) ** 2 + ((v - dy) / s) ** 2)) * 0.7
             col = col * (1 - sm[..., None]) + np.array([235, 250, 220], np.float32) * sm[..., None]
@@ -297,19 +317,21 @@ def face(img, mesh):
         blend(front * np.exp(-r ** 2), K["cheek"], 0.10)   # m2: low and wide read as a pink jaw
     # nose: pale wedge down the lit side - narrow under the eye line, widening down the bridge, bottom edge slanting up
     # and out; soft 1-2 px edge (m5: a stepped hard strip, TypeSafe artifacts 0.92)
-    t = np.clip((dd - 0.12) / 0.33, 0, 1)
-    e_in = 0.020 + 0.025 * t; e_out = 0.055 + 0.105 * t
-    bottom = 0.45 - 0.45 * np.clip(u - 0.06, 0, None)
+    # q38: knobs - TypeSafe nose_highlight_big 0.64-0.85 vs Leo (his wedge is shorter, stops well above the tip)
+    hl_end = K.get("nose_hl_end", 0.45); hl_w = K.get("nose_hl_w", 1.0)
+    t = np.clip((dd - 0.12) / max(hl_end - 0.12, 1e-3), 0, 1)
+    e_in = 0.020 + 0.025 * t; e_out = e_in + (0.035 + 0.080 * t) * hl_w
+    bottom = hl_end - 0.45 * np.clip(u - 0.06, 0, None)
     sdf_w = np.minimum.reduce([u - e_in, e_out - u, dd - 0.12, bottom - dd])
     wedge = front * np.clip(sdf_w / 0.006, 0, 1)
-    blend(wedge, K["nose_hl"], 0.75)
+    blend(wedge, K["nose_hl"], K.get("nose_hl_a", 0.75))
     # m3: the wing read as a sharp boomerang bar -> MHS3: a small soft rounded shape under the tip, darker in the middle
     au = np.abs(u)
     # q35: crisp MHS3 nose base - a wide shallow shape under the tip, flat top dipping at the centre, rounded bottom
     top_e = 0.488 + 0.010 * np.exp(-(u / 0.05) ** 2) - 0.03 * (u / 0.16) ** 2
     bot_e = 0.518 - 0.035 * (u / 0.16) ** 2
     tip = front * np.clip((dd - top_e) / 0.003, 0, 1) * np.clip((bot_e - dd) / 0.003, 0, 1) * (np.abs(u) < 0.17)
-    blend(tip, K["nose_tip"], 0.75)
+    blend(tip, K["nose_tip"], K.get("nose_tip_a", 0.75))
     core = front * np.clip((1.0 - np.hypot(u / 0.05, (dd - 0.515) / 0.016)) / 0.5, 0, 1)
     blend(core, (170, 112, 92), 0.45)
     # erase VRoid's own mouth line (measured: dd 0.79-0.80, |u| < 0.22) before drawing ours on the same row

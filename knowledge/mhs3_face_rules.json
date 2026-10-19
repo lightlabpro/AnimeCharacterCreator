@@ -386,6 +386,15 @@
    "target": 0.0,
    "tol": 0.05,
    "source": "q36: mouth interior/teeth vertices stood up to the skin surface after the profile warps (grey patches on the philtrum and chin; TypeSafe artifacts 0.93)"
+  },
+  "E9_iris_dish": {
+   "kind": "mesh",
+   "region": "eyes",
+   "metric": "iris_dish_mm",
+   "target": 3.0,
+   "tol": 0.8,
+   "source": "Sammy 2026-10-18 (q38): 'in the mhs3 game the iris is a bit concave, just like real eyes'; real eyes: the iris sits ~3 mm behind the cornea (anterior chamber); VRoid iris 0.4 mm",
+   "why": "a flat iris reads pasted-on (TypeSafe iris_flat 0.83-0.88 vs Leo); the dish lets the floating highlight sit in front and the iris shift toward the viewer in turned views. Paint the bowl too: dark crescent under the top rim, bright lower inner wall, a dark arc (not a ring - rings read as a target)"
   }
  },
  "typesafe": {
@@ -603,11 +612,37 @@
   "q36c: a gate is only as good as its baseline - always re-render the baseline with the current pipeline and refuse on drift; one-run A/B 'disagree' results hid real side-view losses that 3 repeated runs exposed.",
   "q36c: a stale vroid_toon.py on the PC (the relocked spec was edited locally but not synced) rendered half the candidates with the rejected q36 shader; comparisons against correctly-rendered baselines were invalid (every 'side loss' 11:20-11:28). Fix: spec sidecar + sha1 check in the gate; sync the file and print its sha1 before rendering.",
   "q37: the VRoid hair cannot be judged 'by eye' against new hair - TypeSafe's A/B prefers it overall; the culprit probe (typesafe_ab_culprit.py) turns that into fixable causes. Fixed so far: colour too orange/light, hair 5-8 mm thicker than the VRoid hair (hair_nh blades are 0.3 x width thick), clump directions crossing in the side view, diagonal highlight strokes read as scratches, cap polygon edge showing at the temples. Open: hair_short, side-view patches/outline, flat back of the head, the exposed VRoid ear (ears / ear_shape lost in 4 of 6 views once the long VRoid hair stopped hiding them).",
-  "q37: clumps follow the skull with the ears left out - a clump that should cover the ear runs under the ear shell; riding over the ears needs the ears in the radius tree plus a cone max over the blade width, and still leaves gaps."
+  "q37: clumps follow the skull with the ears left out - a clump that should cover the ear runs under the ear shell; riding over the ears needs the ears in the radius tree plus a cone max over the blade width, and still leaves gaps.",
+  "q38: concave iris = geometry (iris_concave 3 mm dish, highlight left on the surface) + paint (dark crescent at the TOP RIM only, bright lower inner wall, a dark arc not a ring). Full rings read as a target (culprit iris_target 0.77); a crescent reaching inside 0.62 R is read as pupil (E5).",
+  "q38: the eye-opening detector dropped every dark pixel, so a dark iris top moved the measured lid edge down (eye-shape RMS 0.029 -> 0.08 with the lid mesh unchanged). Fixed (dark GREEN pixels count; brown lash/brow do not) and the Leo template re-derived with the same detector.",
+  "q38: smoothing - subdividing the eye white, lash line, brows and iris is a clear win (eye close-up won, front lines smoother, no losses). Subdividing the FACE SKIN always lost the profile views to m58b (side / profile close-up overall and nose_mouth 2-3 of 3): Catmull-Clark pulled the head off the ears (doubled ear edge) and rounded lips and nose tip; volume-preserving Laplacian with pinned borders and an unsmoothed midline still lost the profile. Keep the face skin unsubdivided until the profile can be protected.",
+  "q38: lid changes for 'eyes too small' (lid_up 0.0026, lid_low 0.0018) broke the eye-shape standard (RMS 0.087) and raised too_anime - the standard wins; the opening stays m58b's."
  ],
  "eye_shape_template": {
   "note": "Leo (mean of both eyes), opening outline inner->outer at 9 fractions of its width, edge height from the opening centre in units of its width (+ = down). Sammy q36: eye shape matching MHS3 is a standard.",
   "top": [
+   -0.118,
+   -0.233,
+   -0.284,
+   -0.318,
+   -0.318,
+   -0.314,
+   -0.268,
+   -0.228,
+   -0.149
+  ],
+  "bot": [
+   0.16,
+   0.246,
+   0.285,
+   0.308,
+   0.318,
+   0.308,
+   0.285,
+   0.239,
+   0.154
+  ],
+  "top_q36": [
    -0.12,
    -0.2,
    -0.282,
@@ -618,7 +653,7 @@
    -0.232,
    -0.152
   ],
-  "bot": [
+  "bot_q36": [
    0.158,
    0.243,
    0.283,
@@ -628,6 +663,7 @@
    0.283,
    0.236,
    0.151
-  ]
+  ],
+  "note_q38": "re-derived from Leo with the q38 detector (dark green iris/pupil pixels count as opening; the old mask dropped them and read the top edge low wherever the iris top is dark) - the same detector measures our renders"
  }
 }
