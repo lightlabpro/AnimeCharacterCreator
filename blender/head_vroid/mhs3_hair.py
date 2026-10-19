@@ -152,7 +152,7 @@ H.REGION_VARIANTS["Front"]["crop"] = _front_crop
 def recipe(style):
     if style == "crop":
         return dict(
-            Front=("crop", {"part": 20, "len": 100, "count_l": 3, "reach_l": 36, "count_r": 5, "reach_r": 56, "width": 0.95,
+            Front=("crop", {"part": 20, "len": K.get("front_len", 100), "count_l": 3, "reach_l": 36, "count_r": 5, "reach_r": 56, "width": 0.95,
                             "seed": 71}),
             Top=("flow", {"vol": 0.7, "p0": 14, "a_from": 125, "a_to": 235, "count": 8, "seed": 73}),
             SideL=("crop", {"len": 26, "seed": 75}), SideR=("crop", {"len": 26, "seed": 77}),
@@ -169,7 +169,11 @@ class Scalp:
     """Outer skin of the skull (face + head part of the body, ears removed) for H.clump_path's ray casts."""
     def __init__(self):
         V, P = [], []
-        for nm, zmin in (("Face_00_SKIN", 0.0), ("Body_00_SKIN", 1.47)):
+        names = [("Face_00_SKIN", 0.0), ("Body_00_SKIN", 1.47)]
+        if any(o.type == "MESH" and o.data.materials and o.data.materials[0] and "Body_01_SKIN_HeadBack" in o.data.materials[0].name
+               for o in bpy.data.objects):
+            names.append(("Body_01_SKIN_HeadBack", 1.47))          # q39 from-scratch head: skull back + neck object
+        for nm, zmin in names:
             o = mesh_obj(nm); M = o.matrix_world
             co = np.array([tuple(M @ v.co) for v in o.data.vertices])
             b = len(V); V += [tuple(c) for c in co]
@@ -226,7 +230,8 @@ class Scalp:
 def skull_centre(sc):
     V = sc.V[sc.V[:, 2] > 1.45]
     top = V[:, 2].max(); chin = mesh_obj("Face_00_SKIN")
-    zc = min(tuple(chin.matrix_world @ v.co)[2] for v in chin.data.vertices)
+    # chin = lowest FRONT face vertex (q39: the from-scratch head's skin mesh carries the neck too)
+    zc = min(w[2] for w in (chin.matrix_world @ v.co for v in chin.data.vertices) if w[1] > 0.04)
     S = top - zc
     z = zc + 0.56 * S
     band = V[np.abs(V[:, 2] - z) < 0.01]
