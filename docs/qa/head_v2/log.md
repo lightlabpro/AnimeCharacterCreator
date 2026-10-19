@@ -454,3 +454,15 @@ Boards q38/board_m58b_vs_m61q.png, eyes q38/eyes_m58b_m61q_leo.png, turned-view 
 - Strict gate (n13 vs m58b): FAIL - lost every view; mhs3 0.20 vs 0.60, polished 0.09 vs 0.40, shading_anime
   0.46 vs 0.77, nose 0.65 vs 0.80, mouth 0.52 vs 0.71. n7 (before the face paint) scored mhs3 0.31, nose 0.14.
   Board q39/compare_m63q_n14.png.
+
+## q40 - new model on another VRoid base through the validated pipeline (Sammy picked base D, ea4402ae)
+- q39 (from scratch) repeated the q22-q32 route the log had already shown plateaus (polished 0.20-0.28 then, 0.09
+  now); Sammy chose the validated route instead: m63q pipeline on a new base.
+- `vroid_normalize.py`: VRoid exports share the face mesh but not its vertex order, so the frame is solved by shape
+  (best of 24 axis rotations + scaled ICP onto 3f8f0119's face): residual 1.3-1.7 mm for all four bases (D was 2.4 m
+  tall and facing -Y; A, C Y-up). `vroid_extract.py`: textures + vroid_mesh.npz for mhs3_paint.
+- Lesson: `mhs3_fit_profile.py` evaluated the warp on the DEFAULT knobs, not the start file - its numbers disagreed
+  with the GLB measure (F3 0.42 vs 0.39, chin detection broke). Fixed (BASE.update(start)); `--ext` adds nose_tip_back,
+  nose_tip_up, chin_fwd and the new `bridge_back` (D's bridge stands high at the eye line).
+- d6 (m63q knobs + fit): every mesh rule passes (worst P5 0.60, P8 0.57). Renders / TypeSafe / strict gate pending:
+  Blender on the PC disconnected before the d6 render.

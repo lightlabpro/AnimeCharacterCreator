@@ -201,6 +201,13 @@ def warp(P, key):
         r0, r1, r2, r3 = K.get("root_d", (-0.30, -0.05, 0.20, 0.45))
         gr = np.clip((d - r0) / (r1 - r0), 0, 1) * np.clip((r3 - d) / (r3 - r2), 0, 1); gr = gr * gr * (3 - 2 * gr)
         y2 = y2 + rl * gr * np.exp(-(x / K.get("root_w", 0.012)) ** 2) * G(y > 0.03)
+    bb = K.get("bridge_back", 0.0)
+    if bb:
+        # q40: base ea4402ae's bridge stands high at the eye line (P4 0.6H 0.038 vs 0.052 H behind the tip) - push the
+        # bridge back between the eyes without moving the root above it or the tip below it
+        b0, b1, b2, b3 = K.get("bridge_d", (-0.06, 0.04, 0.16, 0.30))
+        gb = np.clip((d - b0) / (b1 - b0), 0, 1) * np.clip((b3 - d) / (b3 - b2), 0, 1); gb = gb * gb * (3 - 2 * gb)
+        y2 = y2 - bb * gb * np.exp(-(x / K.get("bridge_w", 0.012)) ** 2) * G(y > 0.03)
     lf = K.get("lowface_fwd", None)
     if lf:
         lt = np.array(lf, float); g3 = pchip(lt[:, 0], lt[:, 1])
