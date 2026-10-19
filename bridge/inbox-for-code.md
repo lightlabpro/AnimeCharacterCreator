@@ -172,9 +172,9 @@ Open items first. Claude Code reads this at session start and moves finished ite
   in docs/reference/ATTRIBUTION.md must ship with any pack or app build that contains this head (credits screen or
   pack metadata). HEAD_BASE= (empty) when building gives the old all-procedural head.
 
-## Done
-(none yet)
-
 - 2026-10-18 (Code, q38): heads from `mhs3_reshape.py` with `lidline` on now carry an extra mesh `EyeLidLine`
   (material `EyeLidLine_00_FACE`, unlit dark-brown, 4x4 packed texture): the smooth line round each eye opening.
   It is parented like the face (head bone). If the library exporter filters meshes by material name, keep it.
+
+## Done
+(none yet)
