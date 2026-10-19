@@ -423,3 +423,16 @@ Boards q38/board_m58b_vs_m61q.png, eyes q38/eyes_m58b_m61q_leo.png, turned-view 
   polished 0.393 -> 0.357; mhs3 0.594 -> 0.627 (not > 2 SE). Culprit vs m61q (eye close-up): better on every
   eye-border item (lash -0.13, faceted outline -0.10, ragged white edge -0.07). Rulebook: P2/P3 carried over from
   m58b, M2 mouth height at the edge (err 1.00, 0.622 vs 0.642; render-measured from the pupil line).
+
+### q38 smooth eye lines (Sammy: "They can be smoother ... how to do smooth curves. The eyes still look bad")
+- Diagnosis with isolation renders: the pale strip between the line and the eye white came from the face's
+  Solidify outline shell at the eye-hole rim; the lash texture and the skin rim were not the cause.
+- New `eye_line_ribbon()` (mhs3_reshape.py): each eye-hole boundary loop is resampled evenly (160 pts), smoothed
+  as a closed curve (Taubin, no shrinking), and a ribbon is swept along it - thick on top, thin below, tapered at
+  the corners, inner edge covering the rim, at the outline-shell depth (1.3 mm) so it sits over the shell. Unlit
+  dark-brown material `EyeLidLine_00_FACE` (no outline: not Face_00_SKIN). Also `curve_smooth()` / `_taubin()`
+  helpers (boundary vertices smoothed along true boundary edges only; welded topology).
+- Lower lid raised (lid_low 0.0016) to keep R2/R3 after the line; paint `lash_low_a` 0.
+- **m63q**: rulebook - all eye rules pass, ES2 0.0194 (was 0.0226), M2 passes; only P2/P3 (from m58b).
+  Strict gate vs m58b: zero A/B losses (6 views x 3 runs); absolute-score fails shading_anime -0.013,
+  polished -0.017, skin_mhs3 -0.07. Culprit vs m62h21 (eye close-up): better on every eye-border item.

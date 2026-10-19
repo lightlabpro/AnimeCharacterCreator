@@ -519,6 +519,207 @@ def smooth_eye_borders(levels=1):
           len(parts) - 1, "ear islands left as they were")
 
 
+def _taubin(co, edges, movable, bnd, iters, lam=0.5, mu=-0.53, bedge=None):
+    """Taubin (lambda|mu) smoothing - rounds a polyline / surface without shrinking it. Boundary vertices are
+    smoothed only along the boundary (so an outline becomes a smooth curve instead of being pulled inward).
+    bedge: per edge, True for real boundary edges (a rung across a one-face-wide strip joins two boundary vertices
+    but is not a boundary edge - using it zig-zagged the brows)."""
+    e = np.asarray(edges)
+    eb = np.asarray(bedge) if bedge is not None else (bnd[e[:, 0]] & bnd[e[:, 1]])
+    use = np.where(bnd[e[:, 0]] | bnd[e[:, 1]], eb, True)          # boundary verts: boundary edges only
+    a, b = e[use, 0], e[use, 1]
+    for _ in range(iters):
+        for f in (lam, mu):
+            acc = np.zeros_like(co); cnt = np.zeros(len(co))
+            np.add.at(acc, a, co[b]); np.add.at(acc, b, co[a]); np.add.at(cnt, a, 1); np.add.at(cnt, b, 1)
+            ok = movable & (cnt > 0)
+            co[ok] += f * (acc[ok] / cnt[ok, None] - co[ok])
+    return co
+
+
+def curve_smooth():
+    """q38j (Sammy: "They can be smoother ... how to do smooth curves. The eyes still look bad"): the lid lines,
+    the lash strip and the brows followed VRoid's coarse polygon path - every outline had kinks. Give each part
+    enough vertices (simple subdivision, shape unchanged) and run Taubin smoothing with outlines smoothed along
+    themselves only: the borders become smooth curves without shrinking. Parts: K curve_parts (material keys);
+    the face's eye holes are smoothed along the hole loop (K curve_hole_iter) and the next ring follows."""
+    import bmesh
+    parts = K.get("curve_parts", [])
+    for o in list(bpy.context.scene.objects):
+        if o.type != "MESH" or not o.data.materials or not o.data.materials[0]:
+            continue
+        mn = o.data.materials[0].name
+        if not any(k in mn for k in parts):
+            continue
+        for _ in range(K.get("curve_sub", 1)):
+            _apply_subsurf(o, "SIMPLE", 1, uv_smooth="NONE")
+        # VRoid meshes are split at UV seams (duplicate vertices): smooth on the welded topology, otherwise every
+        # seam counts as an outline and the two sides drift apart (the brows came out zig-zag)
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        co_all = np.array([v.co[:] for v in bm.verts])
+        _, uid, inv = np.unique(np.round(co_all, 6), axis=0, return_index=True, return_inverse=True)
+        inv = inv.ravel(); nu = len(uid)
+        eset = {}
+        for x in bm.edges:
+            a_, b_ = inv[x.verts[0].index], inv[x.verts[1].index]
+            if a_ != b_:
+                k_ = (min(a_, b_), max(a_, b_)); eset[k_] = eset.get(k_, 0) + len(x.link_faces)
+        bm.free()
+        ed = list(eset.keys())
+        bnd = np.zeros(nu, bool)
+        for (a_, b_), nf in eset.items():
+            if nf < 2:
+                bnd[a_] = bnd[b_] = True
+        co = co_all[uid].copy()
+        co = _taubin(co, ed, np.ones(nu, bool), bnd, K.get("curve_iter", 30), bedge=[eset[k_] < 2 for k_ in ed])
+        o.data.vertices.foreach_set("co", co[inv].astype(np.float32).ravel()); o.data.update()
+        for p_ in o.data.polygons:
+            p_.use_smooth = True
+        print("curve-smoothed", mn.split("_Instance")[0], len(co), "verts")
+    hi = K.get("curve_hole_iter", 0)
+    if not hi:
+        return
+    face = max((o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+                and "Face_00_SKIN" in o.data.materials[0].name), key=lambda o: len(o.data.vertices))
+    iris = next(o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+                and "EyeIris" in o.data.materials[0].name)
+    Mi = np.array(iris.matrix_world); I = (np.c_[np.array([v.co[:] for v in iris.data.vertices]), np.ones(len(iris.data.vertices))] @ Mi.T)[:, :3]
+    cents = [I[I[:, 0] > 0].mean(0), I[I[:, 0] < 0].mean(0)]
+    bm = bmesh.new(); bm.from_mesh(face.data)
+    bnd = np.array([v.is_boundary for v in bm.verts]); ed = [(x.verts[0].index, x.verts[1].index) for x in bm.edges]
+    be = [x.is_boundary for x in bm.edges]
+    co = np.array([v.co[:] for v in bm.verts]); bm.free()
+    Mf = np.array(face.matrix_world); W = (np.c_[co, np.ones(len(co))] @ Mf.T)[:, :3]
+    near = np.zeros(len(co), bool)
+    for c in cents:
+        near |= (np.hypot((W[:, 0] - c[0]) / 0.024, (W[:, 2] - c[2]) / 0.016) < 1.0) & (W[:, 1] > c[1] - 0.02)
+    hole = bnd & near
+    co0 = co.copy()
+    co = _taubin(co, ed, hole, bnd, hi, bedge=be)
+    d = co - co0
+    e = np.asarray(ed)
+    ring_d = np.zeros_like(co); cnt = np.zeros(len(co))          # the ring behind the hole edge follows it
+    for a, b in ((0, 1), (1, 0)):
+        sel = hole[e[:, a]] & ~bnd[e[:, b]]
+        np.add.at(ring_d, e[sel, b], d[e[sel, a]]); np.add.at(cnt, e[sel, b], 1)
+    ok = cnt > 0
+    co[ok] += ring_d[ok] / cnt[ok, None] * K.get("curve_ring_follow", 0.7)
+    face.data.vertices.foreach_set("co", co.astype(np.float32).ravel()); face.data.update()
+    print("eye holes curve-smoothed:", int(hole.sum()), "loop verts, max move %.2f mm" % (np.abs(d).max() * 1000))
+
+
+def eye_line_ribbon():
+    """q38k (Sammy: "They can be smoother ... how to do smooth curves. The eyes still look bad"). MHS3 draws one
+    clean, continuous dark line round each eye opening (thick on top, thin below) with the white right against it;
+    ours showed the lash, then the skin rim, then the outline shell - a messy double line with beads under the eye.
+    Build the line as a real curve: take each eye hole's boundary loop, resample it evenly, smooth it as a closed
+    curve (Taubin, no shrinking), and sweep a ribbon along it (width varies round the eye, tapered at the corners)
+    lying on the skin just in front of the hole edge, covering the rim. Unlit dark-brown material."""
+    import bmesh
+    from mathutils.bvhtree import BVHTree
+    face = max((o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+                and "Face_00_SKIN" in o.data.materials[0].name), key=lambda o: len(o.data.vertices))
+    iris = next(o for o in bpy.context.scene.objects if o.type == "MESH" and o.data.materials and o.data.materials[0]
+                and "EyeIris" in o.data.materials[0].name)
+    Mi = np.array(iris.matrix_world); I = (np.c_[np.array([v.co[:] for v in iris.data.vertices]), np.ones(len(iris.data.vertices))] @ Mi.T)[:, :3]
+    cents = [I[I[:, 0] > 0].mean(0), I[I[:, 0] < 0].mean(0)]
+    Mf = np.array(face.matrix_world)
+    bm = bmesh.new(); bm.from_mesh(face.data); bm.transform(face.matrix_world)
+    bm.verts.ensure_lookup_table()
+    bvh = BVHTree.FromBMesh(bm)
+    W = np.array([v.co[:] for v in bm.verts])
+    # boundary loops near the eyes
+    bedges = [e for e in bm.edges if e.is_boundary]
+    adj = {}
+    for e in bedges:
+        a, b = e.verts[0].index, e.verts[1].index
+        adj.setdefault(a, []).append(b); adj.setdefault(b, []).append(a)
+    seen = set(); loops = []
+    for st in adj:
+        if st in seen:
+            continue
+        lp = [st]; seen.add(st); prev = None; cur = st
+        while True:
+            nx = [n for n in adj[cur] if n != prev and n not in seen]
+            if not nx:
+                break
+            prev, cur = cur, nx[0]; lp.append(cur); seen.add(cur)
+        loops.append(lp)
+    verts, faces = [], []
+    tw_in, tw_out = K.get("lidline_top", (0.00035, 0.00055)); bw_in, bw_out = K.get("lidline_bot", (0.00015, 0.00018))
+    fwd = K.get("lidline_fwd", 0.0003)
+    for c in cents:
+        cand = [lp for lp in loops if len(lp) > 12 and np.hypot(*(W[lp][:, [0, 2]].mean(0) - c[[0, 2]])) < 0.012]
+        if not cand:
+            print("lid line: no hole loop near", np.round(c, 3)); continue
+        lp = max(cand, key=len)
+        P = W[lp]
+        # even resampling by arc length (closed)
+        Q = np.vstack([P, P[:1]]); sl = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))]
+        N = K.get("lidline_n", 160); t = np.linspace(0, sl[-1], N, endpoint=False)
+        R = np.stack([np.interp(t, sl, Q[:, k]) for k in range(3)], 1)
+        ed = [(i, (i + 1) % N) for i in range(N)]
+        R = _taubin(R, ed, np.ones(N, bool), np.zeros(N, bool), K.get("lidline_iter", 40))
+        ctr = R.mean(0); hz = (R[:, 2].max() - R[:, 2].min()) / 2; hx = (R[:, 0].max() - R[:, 0].min()) / 2
+        tan = np.roll(R, -1, 0) - np.roll(R, 1, 0)
+        nrm = np.cross(tan, np.array([0.0, 1.0, 0.0])); nrm[:, 1] = 0
+        nrm /= np.linalg.norm(nrm, axis=1, keepdims=True) + 1e-12
+        out_dir = R - ctr; out_dir[:, 1] = 0
+        nrm *= np.sign((nrm * out_dir).sum(1))[:, None]
+        f = np.clip((R[:, 2] - ctr[2]) / max(hz, 1e-6), -1, 1)            # +1 top, -1 bottom
+        top = np.clip((f + 0.25) / 0.75, 0, 1); top = top * top * (3 - 2 * top)
+        corner = np.clip(np.abs(R[:, 0] - ctr[0]) / max(hx, 1e-6), 0, 1)
+        taper = 1 - K.get("lidline_corner_taper", 0.45) * corner ** 6
+        win = (bw_in + (tw_in - bw_in) * top) * taper; wout = (bw_out + (tw_out - bw_out) * top) * taper
+        # the visible opening is smaller than the hole loop (the rim folds inward): find, along the inward normal,
+        # where a ray from the front stops hitting skin, and start the line's inner edge just past it
+        vis = np.zeros(N)
+        for i in range(N):
+            for d in np.arange(0.0, 0.0025, 0.00005):
+                q = R[i] - nrm[i] * d
+                hit = bvh.ray_cast((q[0], q[1] + 0.03, q[2]), (0.0, -1.0, 0.0), 0.06)
+                if hit[0] is None or hit[0][1] < R[i][1] - 0.004:
+                    vis[i] = d; break
+        vis = _taubin(vis[:, None].copy(), ed, np.ones(N, bool), np.zeros(N, bool), 20)[:, 0]
+        win = vis + win
+        print("  lid line: visible-opening offset mm min %.2f med %.2f max %.2f" % (vis.min()*1000, np.median(vis)*1000, vis.max()*1000))
+        base = len(verts)
+        for i in range(N):
+            pin = R[i] - nrm[i] * win[i]; pout = R[i] + nrm[i] * wout[i]
+            yy = []
+            for q in (pin, pout):
+                hit = bvh.ray_cast((q[0], q[1] + 0.03, q[2]), (0.0, -1.0, 0.0), 0.06)
+                yy.append(hit[0][1] if hit[0] is not None else R[i][1])
+            yb = max(R[i][1], yy[0])
+            verts.append((pin[0], yb + fwd, pin[2])); verts.append((pout[0], max(yy[1], yb) + fwd, pout[2]))
+        for i in range(N):
+            j = (i + 1) % N
+            faces.append((base + 2 * i, base + 2 * j, base + 2 * j + 1, base + 2 * i + 1))
+    bm.free()
+    if not faces:
+        return
+    me = bpy.data.meshes.new("EyeLidLine")
+    me.from_pydata([tuple(v) for v in verts], [], faces); me.update()
+    for p_ in me.polygons:
+        p_.use_smooth = True
+    uv = me.uv_layers.new(name="UVMap")
+    for l in me.loops:
+        uv.data[l.index].uv = (0.5, 0.5)
+    col = K.get("lidline_col", (0.24, 0.13, 0.09))
+    img = bpy.data.images.new("EyeLidLine_col", 4, 4, alpha=True)
+    img.pixels = (list(col) + [1.0]) * 16
+    img.pack()
+    mat = bpy.data.materials.new("EyeLidLine_00_FACE"); mat.use_nodes = True
+    nt = mat.node_tree; bsdf = nt.nodes.get("Principled BSDF")
+    tx = nt.nodes.new("ShaderNodeTexImage"); tx.image = img
+    nt.links.new(tx.outputs["Color"], bsdf.inputs["Base Color"])
+    me.materials.append(mat)
+    ob = bpy.data.objects.new("EyeLidLine", me); bpy.context.scene.collection.objects.link(ob)
+    if face.parent is not None:
+        ob.parent = face.parent; ob.matrix_parent_inverse = face.parent.matrix_world.inverted()
+    print("lid line ribbons:", len(faces), "quads")
+
+
 def smooth_parts(keys, levels=1):
     """q38 (Sammy: "the shapes and lines are not smooth like in the mhs3 model ... smooth those edges"): VRoid's face,
     eye and mouth meshes are low-poly, so the silhouette, the toon terminator and the outline (a shell of the same
@@ -643,7 +844,11 @@ def main():
     seat_brows()
     smooth_parts(K.get("smooth", []), K.get("smooth_levels", 1))
     if K.get("eye_border_smooth"):
-        smooth_eye_borders(K.get("smooth_levels", 1))
+        smooth_eye_borders(K.get("eye_levels", K.get("smooth_levels", 1)))
+    if K.get("curve_parts") or K.get("curve_hole_iter"):
+        curve_smooth()
+    if K.get("lidline"):
+        eye_line_ribbon()
     bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_image_format="AUTO")
     print("wrote", out)
 

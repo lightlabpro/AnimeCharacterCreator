@@ -189,7 +189,8 @@ def eyeline(img):
         # lower lid line, thin, light, outer two thirds
         pts = [(X(x), 124 - 2.2 * (1 - (x - 200) / 216)) for x in np.linspace(200, 416, 40)]
         pts2 = [(X(x), 124 + 0.8 + 1.2 * (1 - (x - 200) / 216)) for x in np.linspace(416, 200, 40)]
-        d.polygon(pts + pts2, fill=K["lash_low"] + (230,))
+        if K.get("lash_low_a", 230):     # q38k: 0 when the lid-line ribbon draws the lower lid (the light strip
+            d.polygon(pts + pts2, fill=K["lash_low"] + (K.get("lash_low_a", 230),))   # showed under the lash)
         # crease line above the lid (MHS3 double-lid line), thin
         cr = [(X(x), K.get("crease_row", 84) + 10 * ((x - 290) / 140) ** 2) for x in np.linspace(170, 420, 40)]   # q36 TS crease_missing 0.72: row 56 sat off the visible strip
         d.line(cr, fill=K["crease"] + (230,), width=4)
