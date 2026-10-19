@@ -302,6 +302,57 @@ def smooth_eye_borders(levels=1):
     face = max(parts, key=lambda o: len(o.data.vertices))
     Mi = np.array(iris.matrix_world); I = (np.c_[np.array([v.co[:] for v in iris.data.vertices]), np.ones(len(iris.data.vertices))] @ Mi.T)[:, :3]
     cents = [I[I[:, 0] > 0].mean(0), I[I[:, 0] < 0].mean(0)]
+    rest = None
+    if K.get("eye_smooth_local", True):
+        # q38h: even with the shape, UVs and normals kept, subdividing the whole face changed the strip in front of
+        # the ear and TypeSafe still saw it (side 'overall' lost 3/3 with < 900 px changed). Cut out only the faces
+        # round the eyes, subdivide those, split the matching seam edges of the rest so there are no T-junctions,
+        # join and weld - every polygon away from the eyes stays exactly as it was.
+        import bmesh
+        rx_, rz_ = K.get("eye_smooth_r", (0.030, 0.020)); lim = 1 + K.get("eye_smooth_fall", 0.6) + K.get("eye_smooth_margin", 0.3)
+        Mf0 = np.array(face.matrix_world); V0 = np.array([v.co[:] for v in face.data.vertices])
+        W0 = (np.c_[V0, np.ones(len(V0))] @ Mf0.T)[:, :3]
+        rr = np.full(len(W0), 99.0)
+        for c in cents:
+            rr = np.minimum(rr, np.hypot((W0[:, 0] - c[0]) / rx_, (W0[:, 2] - c[2]) / rz_) + 99.0 * (W0[:, 1] <= c[1] - 0.03))
+        inside = rr < lim
+        full_orig = bpy.data.objects.new("q38_full_orig", face.data.copy()); bpy.context.scene.collection.objects.link(full_orig)
+        full_orig.matrix_world = face.matrix_world
+        if not inside.any():
+            print("eye-border smoothing skipped: no faces round the eyes"); return
+        for p_ in face.data.polygons:
+            p_.select = bool(inside[list(p_.vertices)].any())
+        for v_ in face.data.vertices:
+            v_.select = False
+        for e_ in face.data.edges:
+            e_.select = False
+        bpy.ops.object.select_all(action="DESELECT"); face.select_set(True); bpy.context.view_layer.objects.active = face
+        bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_mode(type="FACE")
+        bpy.ops.mesh.separate(type="SELECTED"); bpy.ops.object.mode_set(mode="OBJECT")
+        eye_o = next(o for o in bpy.context.selected_objects if o is not face)
+        rest = face; face = eye_o
+        # seam = boundary vertices of the eye part that also lie on the rest's boundary
+        def bnd_co(o):
+            bm_ = bmesh.new(); bm_.from_mesh(o.data)
+            out_ = {tuple(np.round(v.co[:], 6)) for e in bm_.edges if e.is_boundary for v in e.verts}
+            bm_.free(); return out_
+        seam = bnd_co(face) & bnd_co(rest)
+        bm_ = bmesh.new(); bm_.from_mesh(rest.data)
+        es = [e for e in bm_.edges if e.is_boundary and all(tuple(np.round(v.co[:], 6)) in seam for v in e.verts)]
+        if K.get("eye_seam_split_rest", True):
+            r_ = bmesh.ops.subdivide_edges(bm_, edges=es, cuts=1, use_grid_fill=False, use_single_edge=True)
+            ng = [f for f in bm_.faces if len(f.verts) > 4]
+            bmesh.ops.triangulate(bm_, faces=ng, quad_method="BEAUTY", ngon_method="BEAUTY")
+        seam4 = {tuple(np.round(v.co[:], 4)) for e in bm_.edges if e.is_boundary for v in e.verts
+                 if any(tuple(np.round(w.co[:], 6)) in seam for w in [v])} | {tuple(np.round(np.array(c), 4)) for c in seam}
+        for e in bm_.edges:
+            if e.is_boundary and sum(tuple(np.round(w.co[:], 6)) in seam for w in e.verts) >= 1:
+                for w in e.verts:
+                    nb = [x for x in w.link_edges if x.is_boundary]
+                    if all(any(tuple(np.round(u.co[:], 6)) in seam for u in x.verts) for x in nb):
+                        seam4.add(tuple(np.round(w.co[:], 4)))
+        bm_.to_mesh(rest.data); bm_.free(); rest.data.update()
+        print("  local eye smoothing:", len(face.data.polygons), "faces cut out,", len(es), "seam edges split")
     tmp = bpy.data.objects.new("q38_simple", face.data.copy()); bpy.context.scene.collection.objects.link(tmp)
     tmp.matrix_world = face.matrix_world
     # the VRoid face carries custom (split) normals that the toon shading and the outline shell use; subdivision
@@ -383,6 +434,81 @@ def smooth_eye_borders(levels=1):
         face.vertex_groups.remove(face.vertex_groups["q38_keepn"])
         print("  custom normals transferred back outside the eye regions")
     bpy.data.objects.remove(tmp); bpy.data.objects.remove(orig)
+    if rest is not None:
+        import bmesh
+        if not K.get("eye_seam_split_rest", True):
+            # q38i: splitting the rest's seam edges re-triangulated its quads and the outline shell poked through
+            # in short strokes along the cut (forehead, cheeks). Leave the rest untouched and instead dissolve the
+            # eye part's seam midpoints (they lie on the straight original edges there, mask 0)
+            bm_ = bmesh.new(); bm_.from_mesh(face.data); bm_.verts.ensure_lookup_table()
+            mids = [v for v in bm_.verts if v.is_boundary and v.index < len(m) and m[v.index] < 1e-6
+                    and tuple(np.round(v.co[:], 6)) not in seam and len([e for e in v.link_edges if e.is_boundary]) == 2]
+            bmesh.ops.dissolve_verts(bm_, verts=mids)
+            # the merged faces are concave n-gons; the exporter's fan triangulation flipped some of them and the
+            # outline shell showed through as short strokes - ear-clip them here
+            ng = [f for f in bm_.faces if len(f.verts) > 4]
+            bmesh.ops.triangulate(bm_, faces=ng, quad_method="BEAUTY", ngon_method="EAR_CLIP")
+            bm_.to_mesh(face.data); bm_.free(); face.data.update()
+            print("  seam midpoints dissolved on the eye side:", len(mids))
+        bpy.ops.object.select_all(action="DESELECT"); face.select_set(True); rest.select_set(True)
+        bpy.context.view_layer.objects.active = rest; bpy.ops.object.join()
+        bm_ = bmesh.new(); bm_.from_mesh(rest.data)
+        bv = [v for v in bm_.verts if v.is_boundary]
+        nv = len(bm_.verts); bmesh.ops.remove_doubles(bm_, verts=bv, dist=2e-5); nw = len(bm_.verts)
+        bm_.to_mesh(rest.data); bm_.free(); rest.data.update()
+        print("  seam welded:", nv - nw, "vertices merged")
+        # the two sides of the seam carried different custom normals, so the glTF export split the seam vertices
+        # and the outline drew short strokes along the cut (forehead, cheeks) - average the corner normals of every
+        # seam vertex and set them back as one normal per vertex there
+        me = rest.data
+        bm_ = bmesh.new(); bm_.from_mesh(me)
+        seam_v = {v.index for v in bm_.verts if tuple(np.round(v.co[:], 4)) in seam4}
+        bm_.free()
+        cn = np.array([c.vector[:] for c in me.corner_normals])
+        cv = np.zeros(len(me.loops), np.int32); me.loops.foreach_get("vertex_index", cv)
+        acc = {}
+        for li, vi in enumerate(cv):
+            if vi in seam_v:
+                acc.setdefault(vi, []).append(li)
+        for vi, ls in acc.items():
+            n_ = cn[ls].mean(0); n_ /= max(np.linalg.norm(n_), 1e-9); cn[ls] = n_
+        me.normals_split_custom_set([tuple(x) for x in cn])
+        print("  seam normals unified on", len(acc), "vertices")
+        # final: custom normals of the whole joined face from the untouched original, weight 1 - eye mask (the
+        # per-part transfer left the seam ring off by > 5 degrees on 49 vertices -> outline strokes on the cheeks)
+        if full_orig.data.has_custom_normals:
+            Mj = np.array(rest.matrix_world); Vj = np.array([v.co[:] for v in me.vertices])
+            Wj = (np.c_[Vj, np.ones(len(Vj))] @ Mj.T)[:, :3]
+            rx2, rz2 = K.get("eye_smooth_r", (0.030, 0.020)); fall2 = K.get("eye_smooth_fall", 0.6)
+            mj = np.zeros(len(Wj))
+            for c in cents:
+                r2 = np.hypot((Wj[:, 0] - c[0]) / rx2, (Wj[:, 2] - c[2]) / rz2) + 99.0 * (Wj[:, 1] <= c[1] - 0.03)
+                w2 = np.clip((1 + fall2 - r2) / fall2, 0, 1); mj = np.maximum(mj, w2 * w2 * (3 - 2 * w2))
+            keep = np.round(1.0 - mj, 2)
+            vg = rest.vertex_groups.new(name="q38_keepn2")
+            for w in np.unique(keep):
+                if w > 0:
+                    vg.add([int(i) for i in np.where(keep == w)[0]], float(w), "REPLACE")
+            dt = rest.modifiers.new("q38_nrm2", "DATA_TRANSFER")
+            dt.object = full_orig; dt.use_loop_data = True; dt.data_types_loops = {"CUSTOM_NORMAL"}
+            dt.loop_mapping = "POLYINTERP_NEAREST"; dt.vertex_group = "q38_keepn2"; dt.mix_mode = "REPLACE"; dt.mix_factor = 1.0
+            bpy.ops.object.select_all(action="DESELECT"); rest.select_set(True); bpy.context.view_layer.objects.active = rest
+            bpy.ops.object.modifier_apply(modifier=dt.name)
+            rest.vertex_groups.remove(rest.vertex_groups["q38_keepn2"])
+            print("  custom normals of the joined face transferred from the original (1 - eye mask)")
+        bpy.data.objects.remove(full_orig)
+        if os.environ.get("Q38_DEBUG"):
+            for uvl in me.uv_layers:
+                uv = np.zeros(len(me.loops) * 2); uvl.data.foreach_get("uv", uv); uv = uv.reshape(-1, 2)
+                spread = [np.ptp(uv[ls], 0).max() for ls in acc.values()]
+                print("   dbg uv", uvl.name, "max spread at seam", max(spread), "n>1e-4", sum(x > 1e-4 for x in spread))
+            se = np.zeros(len(me.edges), bool)
+            if "sharp_edge" in me.attributes:
+                me.attributes["sharp_edge"].data.foreach_get("value", se)
+            ev = np.zeros(len(me.edges) * 2, np.int32); me.edges.foreach_get("vertices", ev); ev = ev.reshape(-1, 2)
+            sv = np.array(sorted(seam_v)); ons = np.isin(ev, sv).all(1)
+            print("   dbg sharp edges", se.sum(), "on seam", (se & ons).sum(), "seam edges", ons.sum())
+        face = rest
     if len(parts) > 1:
         bpy.ops.object.select_all(action="DESELECT")
         for o in parts:
