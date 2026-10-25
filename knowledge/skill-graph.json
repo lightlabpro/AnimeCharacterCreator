@@ -1,189 +1,197 @@
 {
- "note": "How the skills talk to each other. scripts/validate_skills.py enforces it: every skill is a node with at least one edge, every edge's consumer file really contains the `via` string, the consumer's SKILL.md names the producer, and the orchestrator receives every validator. Add an edge here when you add a dependency, never a hidden one.",
- "orchestrator": "character-gate",
- "validators": [
-  "library-pack-check",
-  "head-shape-audit",
-  "body-proportion-audit",
-  "render-validator",
-  "face-gate"
- ],
- "edges": [
-  {
-   "from": "library-pack-check",
-   "to": "character-gate",
-   "artifact": "pack check result (check_pack.check)",
-   "kind": "code",
-   "consumer_file": "character-gate/scripts/run_gate.py",
-   "via": "check_pack.py"
-  },
-  {
-   "from": "body-proportion-audit",
-   "to": "character-gate",
-   "artifact": "anatomy, pose, slider and proportion results",
-   "kind": "code",
-   "consumer_file": "character-gate/scripts/run_gate.py",
-   "via": "anatomy_rules.py"
-  },
-  {
-   "from": "head-shape-audit",
-   "to": "character-gate",
-   "artifact": "head_audit.json",
-   "kind": "code",
-   "consumer_file": "character-gate/scripts/run_gate.py",
-   "via": "--head-audit"
-  },
-  {
-   "from": "render-validator",
-   "to": "character-gate",
-   "artifact": "mesh_stats.json",
-   "kind": "code",
-   "consumer_file": "character-gate/scripts/run_gate.py",
-   "via": "--mesh-stats"
-  },
-  {
-   "from": "render-validator",
-   "to": "character-gate",
-   "artifact": "r_manifest.json",
-   "kind": "code",
-   "consumer_file": "character-gate/scripts/run_gate.py",
-   "via": "--manifest"
-  },
-  {
-   "from": "character-gate",
-   "to": "render-validator",
-   "artifact": "gate_report.json",
-   "kind": "code",
-   "consumer_file": "render-validator/scripts/validate.py",
-   "via": "--gate-report"
-  },
-  {
-   "from": "head-shape-audit",
-   "to": "render-validator",
-   "artifact": "head_audit.json",
-   "kind": "code",
-   "consumer_file": "render-validator/scripts/validate.py",
-   "via": "--head-audit"
-  },
-  {
-   "from": "library-pack-check",
-   "to": "body-proportion-audit",
-   "artifact": "glTF reader (read_gltf)",
-   "kind": "code",
-   "consumer_file": "body-proportion-audit/scripts/skin_io.py",
-   "via": "check_pack"
-  },
-  {
-   "from": "character-gate",
-   "to": "ai-3d-pipeline",
-   "artifact": "stage 6 and 7 gate",
-   "kind": "doc",
-   "consumer_file": "ai-3d-pipeline/SKILL.md",
-   "via": "run_gate.py"
-  },
-  {
-   "from": "head-shape-audit",
-   "to": "ai-3d-pipeline",
-   "artifact": "stage 2 gate",
-   "kind": "doc",
-   "consumer_file": "ai-3d-pipeline/SKILL.md",
-   "via": "head-shape-audit"
-  },
-  {
-   "from": "render-validator",
-   "to": "ai-3d-pipeline",
-   "artifact": "stage 3 and 5 gates",
-   "kind": "doc",
-   "consumer_file": "ai-3d-pipeline/SKILL.md",
-   "via": "render-validator"
-  },
-  {
-   "from": "body-proportion-audit",
-   "to": "ai-3d-pipeline",
-   "artifact": "stage 1 and 6 gates",
-   "kind": "doc",
-   "consumer_file": "ai-3d-pipeline/SKILL.md",
-   "via": "body-proportion-audit"
-  },
-  {
-   "from": "creator-bridge",
-   "to": "ai-3d-pipeline",
-   "artifact": "lessons log (log.py)",
-   "kind": "doc",
-   "consumer_file": "ai-3d-pipeline/SKILL.md",
-   "via": "creator-bridge"
-  },
-  {
-   "from": "character-gate",
-   "to": "creator-bridge",
-   "artifact": "gate failures logged as lessons",
-   "kind": "doc",
-   "consumer_file": "creator-bridge/SKILL.md",
-   "via": "character-gate"
-  },
-  {
-   "from": "face-gate",
-   "to": "character-gate",
-   "artifact": "face_gate.json (book rules, MHS3 look, no regression; TypeSafe with images)",
-   "kind": "code",
-   "consumer_file": "character-gate/scripts/run_gate.py",
-   "via": "--face-gate"
-  },
-  {
-   "from": "reference-match-judge",
-   "to": "face-gate",
-   "artifact": "per-element correction picked by TypeSafe from a menu (typesafe_visual_judge.py --images)",
-   "kind": "doc",
-   "consumer_file": "face-gate/SKILL.md",
-   "via": "typesafe_visual_judge.py"
-  },
-  {
-   "from": "mhs3-rulebook",
-   "to": "mhs3-master-loop",
-   "artifact": "knowledge/mhs3_face_rules.json (rules, eye_shape_template, lessons)",
-   "kind": "doc",
-   "consumer_file": "mhs3-master-loop/SKILL.md",
-   "via": "mhs3-rulebook"
-  },
-  {
-   "from": "mhs3-shader-match",
-   "to": "mhs3-master-loop",
-   "artifact": "MHS3_SPEC render spec + S rules",
-   "kind": "doc",
-   "consumer_file": "mhs3-master-loop/SKILL.md",
-   "via": "mhs3-shader-match"
-  },
-  {
-   "from": "face-gate",
-   "to": "mhs3-master-loop",
-   "artifact": "face_gate.json",
-   "kind": "doc",
-   "consumer_file": "mhs3-master-loop/SKILL.md",
-   "via": "face-gate"
-  },
-  {
-   "from": "head-shape-audit",
-   "to": "mhs3-master-loop",
-   "artifact": "head_audit.json",
-   "kind": "doc",
-   "consumer_file": "mhs3-master-loop/SKILL.md",
-   "via": "head-shape-audit"
-  },
-  {
-   "from": "reference-match-judge",
-   "to": "mhs3-master-loop",
-   "artifact": "TypeSafe correction pick",
-   "kind": "doc",
-   "consumer_file": "mhs3-master-loop/SKILL.md",
-   "via": "reference-match-judge"
-  },
-  {
-   "from": "mhs3-shader-match",
-   "to": "mhs3-rulebook",
-   "artifact": "shader rules S1-S8",
-   "kind": "doc",
-   "consumer_file": "mhs3-rulebook/SKILL.md",
-   "via": "mhs3-shader-match"
-  }
- ]
+  "note": "How the skills talk to each other. scripts/validate_skills.py enforces it: every skill is a node with at least one edge, every edge's consumer file really contains the `via` string, the consumer's SKILL.md names the producer, and the orchestrator receives every validator. Add an edge here when you add a dependency, never a hidden one.",
+  "orchestrator": "character-gate",
+  "validators": [
+    "library-pack-check",
+    "head-shape-audit",
+    "body-proportion-audit",
+    "render-validator",
+    "face-gate"
+  ],
+  "edges": [
+    {
+      "from": "library-pack-check",
+      "to": "character-gate",
+      "artifact": "pack check result (check_pack.check)",
+      "kind": "code",
+      "consumer_file": "character-gate/scripts/run_gate.py",
+      "via": "check_pack.py"
+    },
+    {
+      "from": "body-proportion-audit",
+      "to": "character-gate",
+      "artifact": "anatomy, pose, slider and proportion results",
+      "kind": "code",
+      "consumer_file": "character-gate/scripts/run_gate.py",
+      "via": "anatomy_rules.py"
+    },
+    {
+      "from": "head-shape-audit",
+      "to": "character-gate",
+      "artifact": "head_audit.json",
+      "kind": "code",
+      "consumer_file": "character-gate/scripts/run_gate.py",
+      "via": "--head-audit"
+    },
+    {
+      "from": "render-validator",
+      "to": "character-gate",
+      "artifact": "mesh_stats.json",
+      "kind": "code",
+      "consumer_file": "character-gate/scripts/run_gate.py",
+      "via": "--mesh-stats"
+    },
+    {
+      "from": "render-validator",
+      "to": "character-gate",
+      "artifact": "r_manifest.json",
+      "kind": "code",
+      "consumer_file": "character-gate/scripts/run_gate.py",
+      "via": "--manifest"
+    },
+    {
+      "from": "character-gate",
+      "to": "render-validator",
+      "artifact": "gate_report.json",
+      "kind": "code",
+      "consumer_file": "render-validator/scripts/validate.py",
+      "via": "--gate-report"
+    },
+    {
+      "from": "head-shape-audit",
+      "to": "render-validator",
+      "artifact": "head_audit.json",
+      "kind": "code",
+      "consumer_file": "render-validator/scripts/validate.py",
+      "via": "--head-audit"
+    },
+    {
+      "from": "library-pack-check",
+      "to": "body-proportion-audit",
+      "artifact": "glTF reader (read_gltf)",
+      "kind": "code",
+      "consumer_file": "body-proportion-audit/scripts/skin_io.py",
+      "via": "check_pack"
+    },
+    {
+      "from": "character-gate",
+      "to": "ai-3d-pipeline",
+      "artifact": "stage 6 and 7 gate",
+      "kind": "doc",
+      "consumer_file": "ai-3d-pipeline/SKILL.md",
+      "via": "run_gate.py"
+    },
+    {
+      "from": "head-shape-audit",
+      "to": "ai-3d-pipeline",
+      "artifact": "stage 2 gate",
+      "kind": "doc",
+      "consumer_file": "ai-3d-pipeline/SKILL.md",
+      "via": "head-shape-audit"
+    },
+    {
+      "from": "render-validator",
+      "to": "ai-3d-pipeline",
+      "artifact": "stage 3 and 5 gates",
+      "kind": "doc",
+      "consumer_file": "ai-3d-pipeline/SKILL.md",
+      "via": "render-validator"
+    },
+    {
+      "from": "body-proportion-audit",
+      "to": "ai-3d-pipeline",
+      "artifact": "stage 1 and 6 gates",
+      "kind": "doc",
+      "consumer_file": "ai-3d-pipeline/SKILL.md",
+      "via": "body-proportion-audit"
+    },
+    {
+      "from": "creator-bridge",
+      "to": "ai-3d-pipeline",
+      "artifact": "lessons log (log.py)",
+      "kind": "doc",
+      "consumer_file": "ai-3d-pipeline/SKILL.md",
+      "via": "creator-bridge"
+    },
+    {
+      "from": "character-gate",
+      "to": "creator-bridge",
+      "artifact": "gate failures logged as lessons",
+      "kind": "doc",
+      "consumer_file": "creator-bridge/SKILL.md",
+      "via": "character-gate"
+    },
+    {
+      "from": "face-gate",
+      "to": "character-gate",
+      "artifact": "face_gate.json (book rules, MHS3 look, no regression; TypeSafe with images)",
+      "kind": "code",
+      "consumer_file": "character-gate/scripts/run_gate.py",
+      "via": "--face-gate"
+    },
+    {
+      "from": "reference-match-judge",
+      "to": "face-gate",
+      "artifact": "per-element correction picked by TypeSafe from a menu (typesafe_visual_judge.py --images)",
+      "kind": "doc",
+      "consumer_file": "face-gate/SKILL.md",
+      "via": "typesafe_visual_judge.py"
+    },
+    {
+      "from": "mhs3-rulebook",
+      "to": "mhs3-master-loop",
+      "artifact": "knowledge/mhs3_face_rules.json (rules, eye_shape_template, lessons)",
+      "kind": "doc",
+      "consumer_file": "mhs3-master-loop/SKILL.md",
+      "via": "mhs3-rulebook"
+    },
+    {
+      "from": "mhs3-shader-match",
+      "to": "mhs3-master-loop",
+      "artifact": "MHS3_SPEC render spec + S rules",
+      "kind": "doc",
+      "consumer_file": "mhs3-master-loop/SKILL.md",
+      "via": "mhs3-shader-match"
+    },
+    {
+      "from": "face-gate",
+      "to": "mhs3-master-loop",
+      "artifact": "face_gate.json",
+      "kind": "doc",
+      "consumer_file": "mhs3-master-loop/SKILL.md",
+      "via": "face-gate"
+    },
+    {
+      "from": "head-shape-audit",
+      "to": "mhs3-master-loop",
+      "artifact": "head_audit.json",
+      "kind": "doc",
+      "consumer_file": "mhs3-master-loop/SKILL.md",
+      "via": "head-shape-audit"
+    },
+    {
+      "from": "reference-match-judge",
+      "to": "mhs3-master-loop",
+      "artifact": "TypeSafe correction pick",
+      "kind": "doc",
+      "consumer_file": "mhs3-master-loop/SKILL.md",
+      "via": "reference-match-judge"
+    },
+    {
+      "from": "mhs3-shader-match",
+      "to": "mhs3-rulebook",
+      "artifact": "shader rules S1-S8",
+      "kind": "doc",
+      "consumer_file": "mhs3-rulebook/SKILL.md",
+      "via": "mhs3-shader-match"
+    },
+    {
+      "from": "mhs3-master-loop",
+      "to": "parts-workflow",
+      "artifact": "master-loop pass for every head part",
+      "kind": "doc",
+      "consumer_file": "parts-workflow/SKILL.md",
+      "via": "mhs3-master-loop"
+    }
+  ]
 }
