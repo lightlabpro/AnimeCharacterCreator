@@ -67,7 +67,11 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 ## Session start
 1. `creator-bridge` start (LEARNINGS, inbox, `docs/qa/head_v2/log.md`, `docs/qa/parts/log.md`).
 2. `python3 .claude/skills/parts-workflow/scripts/parts_state.py status` (`scripts/parts_state.py`) - work only on the part it names.
-3. Load the `anthropic-skills:computer-use` skill and request access to Firefox and Discord before the first click.
+3. Web tools (Hunyuan, Midjourney web, Kimi) run in the **built-in browser** (Sammy signs in there himself; I never
+   enter passwords). Firefox is granted read-only to computer use - no clicks or typing, so it is only for looking at
+   what Sammy has open. Discord (desktop app, full tier) is the Midjourney fallback: load
+   `anthropic-skills:computer-use` and request access to `discord.exe` first. Hunyuan's free credits show top right
+   (20 on 2026-10-25).
 4. One sentence to Sammy: which part and stage, and what it will spend (Midjourney jobs, Hunyuan credits).
 
 ## Record
