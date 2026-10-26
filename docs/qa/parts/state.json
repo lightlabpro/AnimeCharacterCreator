@@ -3,7 +3,7 @@
   "head_base": {
    "skipped": false,
    "stages": {
-    "reference": "failed"
+    "reference": "passed"
    }
   },
   "hair": {
@@ -75,6 +75,14 @@
    "stage": "reference",
    "result": "failed",
    "note": "mj ce6f3794 tile 2: TypeSafe mhs3 0.41 (floor 0.835), polished 0.255 (0.80), culprit hair x2; prep cut-off on front, side, back (neck touches bottom)"
+  },
+  {
+   "t": "2026-10-25T20:19:46",
+   "cmd": "set",
+   "part": "head_base",
+   "stage": "reference",
+   "result": "passed",
+   "note": "Sammy override 2026-10-25: use ce6f3794 tile 2 in Hunyuan despite failed gate (mhs3 0.41, polished 0.255)"
   }
  ]
 }

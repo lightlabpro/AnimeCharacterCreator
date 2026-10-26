@@ -54,6 +54,11 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 | 8 | Toon | locked MHS3 shader `vroid_toon.py` (sha1 in the rulebook) in Blender | `render-validator`, strict gate |
 | 9 | Unity | Unity 6 URP, `com.unity.toonshader` from git URL, one shading feather, outline, rim light feather off | screenshot judged by TypeSafe vs the Blender toon render |
 
+## Sammy's decisions
+- 2026-10-25: "the hair will be made separately" - head_base stays bald; its stage-1 gate runs
+  `scripts/parts_ref_gate.py --skip hair_anime`. The bald sheet ce6f3794 failed mhs3 (0.41) and polished (0.255),
+  culprit hair; Sammy overrode and sent it to Hunyuan.
+
 ## Part checks (stage 3)
 - **head_base**: `head-shape-audit` HEAD_SHAPE_OK, then `mhs3_measure.py` profile and proportion rules.
 - **hair**: separate shell; `mhs3_hair.py --map` thickness near VRoid (crown ~19, temple ~8.5, back ~16, front ~20 mm);
@@ -75,6 +80,15 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 4. One sentence to Sammy: which part and stage, and what it will spend (Midjourney jobs, Hunyuan credits).
 
 ## Transfers
+- Midjourney's CDN refuses non-browser downloads (403 from Blender urllib and the cloud shell). From the built-in
+  browser a JS `fetch` of `cdn.midjourney.com/<job>/0_<i>.png` works from any tab (Hunyuan's too). A JS `a.download`
+  of the blob lands in `~\Downloads` as `<uuid>.tmp` (the real PNG); copy it with Blender MCP. `127.0.0.1` is not
+  reachable from the pane.
+- Hunyuan upload: in the Hunyuan tab fetch the sheet, crop each view on a canvas (768 square, sheet background
+  colour), wrap it in a `File`, set `input[type=file].files` via `DataTransfer` and dispatch `change`. Multi-image
+  slots in DOM order: 0 top, 1 left45, 2 front (required), 3 right45, 4 left, 5 right, 6 back, 7 bottom. A side view
+  whose nose points to image-left is the character's LEFT side (slot 4).
+- Hunyuan 3.1 multi-image at 500k faces cost 1 free credit (2026-10-25).
 - Generated images reach the PC through Blender MCP (`urllib` download into `datasets_work/parts/<part>/`); the cloud
   shell cannot reach cdn.midjourney.com. The PC root is `D:\Game Development\Tools\Anime Character Creator\datasets_work`.
 - Never run a recursive glob or any long scan in Blender MCP: it blocks Blender for minutes and every later call queues
