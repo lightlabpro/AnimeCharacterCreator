@@ -74,6 +74,12 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
    (20 on 2026-10-25).
 4. One sentence to Sammy: which part and stage, and what it will spend (Midjourney jobs, Hunyuan credits).
 
+## Transfers
+- Generated images reach the PC through Blender MCP (`urllib` download into `datasets_work/parts/<part>/`); the cloud
+  shell cannot reach cdn.midjourney.com. The PC root is `D:\Game Development\Tools\Anime Character Creator\datasets_work`.
+- Never run a recursive glob or any long scan in Blender MCP: it blocks Blender for minutes and every later call queues
+  behind it (q41). Use `device_list_dir` to find folders.
+
 ## Record
 After each gate: `parts_state.py set <part> <stage> passed|failed --note "<numbers>"`, a line in
 `docs/qa/parts/log.md` (job ids, credits used, TypeSafe numbers), commit and push. Failed gates: log the measured
