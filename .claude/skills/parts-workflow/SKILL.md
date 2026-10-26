@@ -27,8 +27,9 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 4. **Order is fixed.** `scripts/parts_state.py` holds the state. A part starts only when the part before it is
    `passed` or Sammy skipped it. Every face/head element is its OWN OBJECT (Sammy q41b: "the face elements are
    supposed to be separate, as it is intended in the project ... hair, eyes, eyebrows, hair, ears, mouth, teeth,
-   facial hair"). Order: `head_base` (bare head: skull, face skin, nose; NO ears, NO painted eyes/brows/mouth; eye
-   and mouth openings cut in Blender), then hair, eyes, eyebrows, ears, mouth, teeth, facial hair.
+   facial hair"). Order: `head_base` (BLANK shell: skull, face surface, neck; NO nose, NO mouth shape, NO ears, NO painted
+   features - Sammy q41c: "i literally told you that the nose is a separate element"), then hair, eyes, eyebrows,
+   ears, nose, mouth, teeth, facial hair. Every one of these is its own object.
    Then torso, arms_hands, legs_feet, then assembly, texture, rig, toon, unity.
 5. **TypeSafe judges, not my eye.** Every gate below is a TypeSafe call with images on. Never print the key. If the key
    is missing, stop and tell Sammy; never fake a judgment. Kimi may give a free second opinion or draft a prompt; it
@@ -86,6 +87,7 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 ## Face elements: which route (q41b)
 | Element | Object | Route | Why |
 |---|---|---|---|
+| nose | `NOSE` | separate object (Sammy q41/q41c), shaped by the nose rules N1/N2 and placed by the profile rules | small form on the blank face |
 | head_base | `HEAD_Base` | Midjourney blank-face sheet -> Hunyuan -> Blender (cut eye + mouth openings, decimate) | the generator paints eyes/mouth into one mesh otherwise (v1/v2 had them baked in) |
 | hair | `HAIR_*` | Midjourney hair sheet on a grey head -> Hunyuan -> Blender shell fitted to `HEAD_Base` | large shape, generator-friendly (video) |
 | eyes | `EYE_L/R` (white, iris, lash line) | built in Blender (eyeball + iris/lid texture), Midjourney sheet as the design reference | too small and layered for a generator; rulebook eye standard (R1-R4, E1-E9, ES1-ES2) |

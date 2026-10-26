@@ -13,11 +13,12 @@ import json
 import os
 import sys
 
-# Sammy q41b (2026-10-25): "The face/head elements separately are: hair, eyes, eyebrows, hair, ears, mouth, teeth,
-# facial hair." The nose stays part of head_base (bare head: skull, face skin, nose; no ears, no painted features).
-PARTS = ["head_base", "hair", "eyes", "eyebrows", "ears", "mouth", "teeth", "facial_hair",
+# Sammy q41 + q41c (2026-10-26): every face element is separate - hair, eyes, eyebrows, ears, NOSE, mouth, teeth,
+# facial hair ("i literally told you that the nose is a separate element"). head_base = blank shell: skull, face
+# surface, neck; no nose, no mouth shape, no ears, no painted features.
+PARTS = ["head_base", "hair", "eyes", "eyebrows", "ears", "nose", "mouth", "teeth", "facial_hair",
          "torso", "arms_hands", "legs_feet", "assembly", "texture", "rig", "toon", "unity"]
-STAGES = {p: ["reference", "generate", "blender"] for p in PARTS[:11]}
+STAGES = {p: ["reference", "generate", "blender"] for p in PARTS[:12]}
 STAGES.update({"assembly": ["blender"], "texture": ["blender"], "rig": ["blender"], "toon": ["blender"],
                "unity": ["unity"]})
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
