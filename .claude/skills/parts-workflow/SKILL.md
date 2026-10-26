@@ -43,6 +43,17 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
    `knowledge/mhs3_face_rules.json` lessons before writing a head prompt (no shrunk eyes, no lash tail, no tilted
    Egyptian opening, no lid glare).
 
+## head_base lessons (q41b, measured)
+- A head generated from a sheet with painted eyes/brows/mouth carries those features as RELIEF in the geometry
+  (brow ridges, eye rings, mouth slit, hairline ridge - visible only with studio/cavity light, Workbench). Cleaning it
+  in Blender failed: Laplacian / Taubin keep it, coarse voxel and collapse-decimation keep it or add holes, a smoothed
+  cage turns the head into a blob. Generate head_base from a BLANK-face sheet instead.
+- Judge geometry with Workbench STUDIO light + cavity renders, never the flat-lit texture render (it hides the form).
+- The TypeSafe anime check does not apply to a featureless sheet (every score low, culprit hair). Blank head sheets
+  are judged by silhouette IoU (`scripts/sil_iou.py`) against the accepted MHS3-proportion sheet 10a851d2: must be
+  at least as close as the earlier accepted sheet ce6f3794 was (front .915, side .906, back .904) minus 0.03.
+  112daf18 tile 0: .887 / .907 / .931 -> used. cf30a9c8 (mannequin, realistic): .58 / .76 / .58 -> rejected.
+
 ## Face elements: which route (q41b)
 | Element | Object | Route | Why |
 |---|---|---|---|
