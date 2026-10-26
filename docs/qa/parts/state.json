@@ -4,7 +4,7 @@
    "skipped": false,
    "stages": {
     "reference": "passed",
-    "generate": "failed"
+    "generate": "passed"
    }
   },
   "hair": {
@@ -92,6 +92,14 @@
    "stage": "generate",
    "result": "failed",
    "note": "hy3d v1 9c5eea57: watertight 1 island 250k v/500k tris; TypeSafe gen gate fail 14/15 (front same_head 0.72 ok; ears front .45/.475 side .135 back .21; silhouette .45/.25/.405 vs .63; clean .19/.10/.305 vs .385)"
+  },
+  {
+   "t": "2026-10-25T20:50:40",
+   "cmd": "set",
+   "part": "head_base",
+   "stage": "generate",
+   "result": "passed",
+   "note": "hy3d v2 b51e85d3 from sheet 10a851d2 tile 1 (all views prep-usable): sil IoU own/wrong front .951/.926 side .945/.898 back .938/.902 vs cross-sheet .918/.906/.898 (+0.02 rule) pass; TypeSafe front same_head .71 (floor .665) pass; front face .425 (floor .54) carried to eyes/mouth stages; mesh welded 249,994 v, 0 non-manifold, 1 island; 1 credit (19->18)"
   }
  ]
 }

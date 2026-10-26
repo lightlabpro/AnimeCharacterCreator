@@ -54,10 +54,22 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 | 8 | Toon | locked MHS3 shader `vroid_toon.py` (sha1 in the rulebook) in Blender | `render-validator`, strict gate |
 | 9 | Unity | Unity 6 URP, `com.unity.toonshader` from git URL, one shading feather, outline, rim light feather off | screenshot judged by TypeSafe vs the Blender toon render |
 
+## Stage-2 geometry standard (q41, provisional)
+- TypeSafe render-vs-drawing questions failed a discrimination test: v2 renders scored about the same against the
+  right and a wrong sheet on every side/back question (side silhouette 0.20 right vs 0.245 wrong). Only front
+  `same_head` and `face` separated them. So stage 2 uses `scripts/sil_iou.py` (best-alignment silhouette IoU) per view:
+  pass when IoU(model, own sheet) >= IoU(own sheet, a different head's sheet) + 0.02 in every view, plus TypeSafe
+  front `same_head` >= its control - 0.05 (`scripts/parts_gen_gate.py`). Calibrated on 2 sheets (ce6f3794, 10a851d2):
+  provisional until a third sheet is measured. Face-detail scores go to the eyes/eyebrows/mouth stages (face gate).
+
 ## Sammy's decisions
 - 2026-10-25: "the hair will be made separately" - head_base stays bald; its stage-1 gate runs
   `scripts/parts_ref_gate.py --skip hair_anime`. The bald sheet ce6f3794 failed mhs3 (0.41) and polished (0.255),
   culprit hair; Sammy overrode and sent it to Hunyuan.
+- 2026-10-25: "you can do it yourself, that's why i gave you control" - make the routine calls (re-rolls,
+  regenerations within the free quota and the Basic budget, fix strategy) without asking; still stop for anything
+  that costs money or cannot be undone. The bald-sheet override covers later bald head_base sheets too (mhs3 and
+  polished fail with culprit hair on every bald sheet).
 
 ## Part checks (stage 3)
 - **head_base**: `head-shape-audit` HEAD_SHAPE_OK, then `mhs3_measure.py` profile and proportion rules.
