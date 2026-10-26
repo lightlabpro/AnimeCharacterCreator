@@ -1,0 +1,80 @@
+{
+ "parts": {
+  "head_base": {
+   "skipped": false,
+   "stages": {
+    "reference": "failed"
+   }
+  },
+  "hair": {
+   "skipped": false,
+   "stages": {}
+  },
+  "eyes": {
+   "skipped": false,
+   "stages": {}
+  },
+  "eyebrows": {
+   "skipped": false,
+   "stages": {}
+  },
+  "mouth": {
+   "skipped": false,
+   "stages": {}
+  },
+  "ears": {
+   "skipped": false,
+   "stages": {}
+  },
+  "nose": {
+   "skipped": false,
+   "stages": {}
+  },
+  "facial_hair": {
+   "skipped": false,
+   "stages": {}
+  },
+  "torso": {
+   "skipped": false,
+   "stages": {}
+  },
+  "arms_hands": {
+   "skipped": false,
+   "stages": {}
+  },
+  "legs_feet": {
+   "skipped": false,
+   "stages": {}
+  },
+  "assembly": {
+   "skipped": false,
+   "stages": {}
+  },
+  "texture": {
+   "skipped": false,
+   "stages": {}
+  },
+  "rig": {
+   "skipped": false,
+   "stages": {}
+  },
+  "toon": {
+   "skipped": false,
+   "stages": {}
+  },
+  "unity": {
+   "skipped": false,
+   "stages": {}
+  }
+ },
+ "history": [
+  {
+   "t": "2026-10-25T20:18:59",
+   "cmd": "set",
+   "part": "head_base",
+   "stage": "reference",
+   "result": "failed",
+   "note": "mj ce6f3794 tile 2: TypeSafe mhs3 0.41 (floor 0.835), polished 0.255 (0.80), culprit hair x2; prep cut-off on front, side, back (neck touches bottom)"
+  }
+ ]
+}
