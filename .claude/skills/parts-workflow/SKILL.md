@@ -54,6 +54,18 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
   at least as close as the earlier accepted sheet ce6f3794 was (front .915, side .906, back .904) minus 0.03.
   112daf18 tile 0: .887 / .907 / .931 -> used. cf30a9c8 (mannequin, realistic): .58 / .76 / .58 -> rejected.
 
+## q41c (current): Sammy's reference set -> Hunyuan -> face fix (supersedes the q41b retopology route)
+- Sammy rejected the retopo head v3 ("this looks very bad") and gave references: Midjourney 69bade68 tiles 1 and 3
+  (blank bald heads with ears, clean cel style) = overall look; 5279f9f0 tile 0 side (with eye) = the GOAL for the
+  proportions and distribution of the face elements.
+- Hunyuan input = 69bade68 tile 3 front / back / left side (one drawing); paint the side view's eye and brow out
+  with the row's skin colour in the Hunyuan-tab canvas first. Result (task eaf7ac21): clean skull, ears, neck, closed-
+  lid eye areas, but an invented bulbous upturned nose and puffy lips (P1-P6 ~0.03 H too far forward, N1 -16 deg).
+- Fix with `blender/head_parts/face_fix.py` (decimate 30K -> flatten nose/mouth/brow -> Taubin -> parametric nose
+  fitted to P1-P6 + N1/N2). Deforming the generator nose/lips in place passed every rule but looked wrong (crease,
+  frown) - never show a version on numbers alone; studio-render it.
+- Probes: `blender/head_parts/head_probe.py` (exec each Blender session; read_homefile clears driver_namespace).
+
 ## head_base route chosen by Sammy (q41b): generator shape + clean retopology
 - Midjourney/niji will not draw a featureless or earless head (clay-sheet attempt 5279f9f0: ears on all 4, eyes on 3),
   and Hunyuan bakes painted features into relief. So the generator gives the SHAPE only:
