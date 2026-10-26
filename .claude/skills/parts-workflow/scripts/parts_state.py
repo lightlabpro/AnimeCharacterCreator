@@ -13,7 +13,9 @@ import json
 import os
 import sys
 
-PARTS = ["head_base", "hair", "eyes", "eyebrows", "mouth", "ears", "nose", "facial_hair",
+# Sammy q41b (2026-10-25): "The face/head elements separately are: hair, eyes, eyebrows, hair, ears, mouth, teeth,
+# facial hair." The nose stays part of head_base (bare head: skull, face skin, nose; no ears, no painted features).
+PARTS = ["head_base", "hair", "eyes", "eyebrows", "ears", "mouth", "teeth", "facial_hair",
          "torso", "arms_hands", "legs_feet", "assembly", "texture", "rig", "toon", "unity"]
 STAGES = {p: ["reference", "generate", "blender"] for p in PARTS[:11]}
 STAGES.update({"assembly": ["blender"], "texture": ["blender"], "rig": ["blender"], "toon": ["blender"],

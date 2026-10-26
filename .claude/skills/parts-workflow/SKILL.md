@@ -25,8 +25,10 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 3. **Hunyuan 3D quota.** Use the free credits shown on screen. Read the counter before Generate; one generation per
    part, a second only after a measured failure of the first. 500K faces is enough (the video's setting).
 4. **Order is fixed.** `scripts/parts_state.py` holds the state. A part starts only when the part before it is
-   `passed` or Sammy skipped it. Head sub-parts in order: hair, eyes, eyebrows, mouth, ears, nose, facial hair (the
-   head base mesh - skull, face, sockets - is generated first as `head_base`, because every head part attaches to it).
+   `passed` or Sammy skipped it. Every face/head element is its OWN OBJECT (Sammy q41b: "the face elements are
+   supposed to be separate, as it is intended in the project ... hair, eyes, eyebrows, hair, ears, mouth, teeth,
+   facial hair"). Order: `head_base` (bare head: skull, face skin, nose; NO ears, NO painted eyes/brows/mouth; eye
+   and mouth openings cut in Blender), then hair, eyes, eyebrows, ears, mouth, teeth, facial hair.
    Then torso, arms_hands, legs_feet, then assembly, texture, rig, toon, unity.
 5. **TypeSafe judges, not my eye.** Every gate below is a TypeSafe call with images on. Never print the key. If the key
    is missing, stop and tell Sammy; never fake a judgment. Kimi may give a free second opinion or draft a prompt; it
@@ -40,6 +42,19 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
 8. **Style.** MHS3 character art (Leo, Leia, Rudy, Eleanor in `docs/reference/mhs3/`), not an exact copy of Leo. Read
    `knowledge/mhs3_face_rules.json` lessons before writing a head prompt (no shrunk eyes, no lash tail, no tilted
    Egyptian opening, no lid glare).
+
+## Face elements: which route (q41b)
+| Element | Object | Route | Why |
+|---|---|---|---|
+| head_base | `HEAD_Base` | Midjourney blank-face sheet -> Hunyuan -> Blender (cut eye + mouth openings, decimate) | the generator paints eyes/mouth into one mesh otherwise (v1/v2 had them baked in) |
+| hair | `HAIR_*` | Midjourney hair sheet on a grey head -> Hunyuan -> Blender shell fitted to `HEAD_Base` | large shape, generator-friendly (video) |
+| eyes | `EYE_L/R` (white, iris, lash line) | built in Blender (eyeball + iris/lid texture), Midjourney sheet as the design reference | too small and layered for a generator; rulebook eye standard (R1-R4, E1-E9, ES1-ES2) |
+| eyebrows | `BROW_L/R` | built in Blender (ribbon), Midjourney reference | thin strip |
+| ears | `EAR_L/R` | Midjourney ear sheet -> Hunyuan -> Blender, mirrored like the video's hands, joined at a hidden seam | generator-friendly shape |
+| mouth | `MOUTH` (lips line, interior) | built in Blender, Midjourney reference | thin / interior |
+| teeth | `TEETH_Upper/Lower` | built in Blender | hidden interior |
+| facial hair | `FACIAL_HAIR` (empty slot, `SOC-Beard`) | none unless Sammy asks | contract: extra object |
+Object names: final names follow the contract when packed (`knowledge/expected-contract.json`); these working names are only for the Blender project.
 
 ## Stages per part
 | # | Stage | Tool | Gate (must pass to move on) |
@@ -62,6 +77,15 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
   front `same_head` >= its control - 0.05 (`scripts/parts_gen_gate.py`). Calibrated on 2 sheets (ce6f3794, 10a851d2):
   provisional until a third sheet is measured. Face-detail scores go to the eyes/eyebrows/mouth stages (face gate).
 
+## Tools Sammy listed, and the job each one does (q41b: "use my browser, discord, hunyuan, blender, kimi, Typesafe and unity")
+- Browser: the built-in browser pane (Firefox is read-only to computer use).
+- Discord: Midjourney's bot; the Midjourney website (same account, same Basic quota) is the fallback when the Discord
+  window cannot be brought forward.
+- Kimi (kimi.ai, free): drafts and critiques each Midjourney prompt before it is spent, and gives a second opinion on
+  a sheet. Its answer is advice; TypeSafe and the measured rules decide.
+- Hunyuan 3D: head_base, hair, ears, body parts. Blender 5.2: everything else, fixes, decimation, assembly.
+- TypeSafe: every gate. Unity: last stage (toon shader).
+
 ## Sammy's decisions
 - 2026-10-25: "the hair will be made separately" - head_base stays bald; its stage-1 gate runs
   `scripts/parts_ref_gate.py --skip hair_anime`. The bald sheet ce6f3794 failed mhs3 (0.41) and polished (0.255),
@@ -70,6 +94,8 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
   regenerations within the free quota and the Basic budget, fix strategy) without asking; still stop for anything
   that costs money or cannot be undone. The bald-sheet override covers later bald head_base sheets too (mhs3 and
   polished fail with culprit hair on every bald sheet).
+- 2026-10-25 q41b: "but now it looks bad" (head_base_v2b_30k: nose fix + 30K decimation) and "the face elements are
+  supposed to be separate" -> head redone from a blank-face sheet; every face element its own object.
 
 ## Triangle budget (Sammy q41: "make sure (in blender) that the triangles are lower than 500k")
 - Every generated part is decimated in Blender (weld by distance, Decimate COLLAPSE, triangulate, smooth shading)
