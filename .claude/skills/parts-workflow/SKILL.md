@@ -71,6 +71,16 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
   that costs money or cannot be undone. The bald-sheet override covers later bald head_base sheets too (mhs3 and
   polished fail with culprit hair on every bald sheet).
 
+## Triangle budget (Sammy q41: "make sure (in blender) that the triangles are lower than 500k")
+- Every generated part is decimated in Blender (weld by distance, Decimate COLLAPSE, triangulate, smooth shading)
+  before it counts as done. Start at the video budget (head 15K, body 20K, hands 10K tris) and keep the lowest
+  budget that loses no TypeSafe A/B (`blender/tools/typesafe_ab_compare.py`, front / 3/4 / side / profile close-up)
+  against the full-resolution part. head_base: 15K lost `clean` on the front, 30K tied everywhere -> 30K.
+
+## Nose (Sammy q41)
+- [nose rules](references/nose_rules.json): N1 nose points 9 deg down (+-6), N2 tip angle 108 deg (+-6), measured on
+  the MHS3 profile. The profile rules P1-P6 must still pass after any nose edit (moving the tip moves all of them).
+
 ## Part checks (stage 3)
 - **head_base**: `head-shape-audit` HEAD_SHAPE_OK, then `mhs3_measure.py` profile and proportion rules.
 - **hair**: separate shell; `mhs3_hair.py --map` thickness near VRoid (crown ~19, temple ~8.5, back ~16, front ~20 mm);

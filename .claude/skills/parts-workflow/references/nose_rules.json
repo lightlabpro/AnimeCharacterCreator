@@ -1,0 +1,9 @@
+{
+ "source": "Sammy q41 2026-10-25: 'The nose looks too pointy and upwards, make it look more like the mhs3 nose'. Measured on docs/reference/mhs3/profile/face_profile_04.png (profile edge trace) with the same windows as the mesh probe: 0.11-0.37 of the nose length (root to tip) above and below the tip.",
+ "rules": {
+  "N1_points_down_deg": {"target": 9.0, "tol": 6.0, "how": "direction of -(u_up + u_down) at the tip in the midline profile; + = the nose points down. MHS3-04 +9; v2a -18.6 (fails); v2b_30k +8.6"},
+  "N2_tip_angle_deg": {"target": 108.0, "tol": 6.0, "how": "angle between u_up and u_down; smaller = sharper. MHS3-04 108; v2a 101.6 (fails); v2b_30k 103.2"}
+ },
+ "typesafe": "defects_profile nose_pointed / nose_long stayed 0.79 / 0.69-0.71 on every variant (thresholds provisional: no MHS3 profile control). Decided by the A/B instead: v2b beat v2a on overall, head_shape and nose_mouth in both orders; sanity v2a vs v2a tie.",
+ "probe": "q41_nose in the PC Blender session (driver_namespace); code in docs/qa/parts/log.md entry q41 nose"
+}
