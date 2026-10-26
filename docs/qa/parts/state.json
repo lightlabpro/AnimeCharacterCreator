@@ -4,7 +4,8 @@
    "skipped": false,
    "stages": {
     "reference": "passed",
-    "generate": "passed"
+    "generate": "passed",
+    "blender": "passed"
    }
   },
   "hair": {
@@ -100,6 +101,14 @@
    "stage": "generate",
    "result": "passed",
    "note": "hy3d v2 b51e85d3 from sheet 10a851d2 tile 1 (all views prep-usable): sil IoU own/wrong front .951/.926 side .945/.898 back .938/.902 vs cross-sheet .918/.906/.898 (+0.02 rule) pass; TypeSafe front same_head .71 (floor .665) pass; front face .425 (floor .54) carried to eyes/mouth stages; mesh welded 249,994 v, 0 non-manifold, 1 island; 1 credit (19->18)"
+  },
+  {
+   "t": "2026-10-25T20:53:39",
+   "cmd": "set",
+   "part": "head_base",
+   "stage": "blender",
+   "result": "passed",
+   "note": "head_base_v2a: rulebook profile P1 .053 P2 .039 P3 .048 P4 .052 P5 .040 P6 .088 all within tol (v2: .080/.060/.059/.069/.040/.100); head_audit dataset bands all in with ears excluded (jaw 0.627H@0.75, 0.597H@0.8); screenshot targets fail on cranium/jaw width like every dataset model (flagged); sil IoU front .951 side .948 back .937 (no regression); TypeSafe front same_head .71 (no regression). Face gate + strict A/B run at the eyes/mouth stages when face elements are built."
   }
  ]
 }
