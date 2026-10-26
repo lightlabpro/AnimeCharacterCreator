@@ -54,6 +54,23 @@ it maps onto our tools: [video notes](references/video_notes.md). Prompts and pe
   at least as close as the earlier accepted sheet ce6f3794 was (front .915, side .906, back .904) minus 0.03.
   112daf18 tile 0: .887 / .907 / .931 -> used. cf30a9c8 (mannequin, realistic): .58 / .76 / .58 -> rejected.
 
+## head_base route chosen by Sammy (q41b): generator shape + clean retopology
+- Midjourney/niji will not draw a featureless or earless head (clay-sheet attempt 5279f9f0: ears on all 4, eyes on 3),
+  and Hunyuan bakes painted features into relief. So the generator gives the SHAPE only:
+  `blender/head_parts/radial_sample.py` (ray sampling of the Hunyuan head: neck cylinder, jaw fan, face cylinder,
+  skull cap; first hits, so the ears drop out; base colour sampled to find the painted features) ->
+  `blender/head_parts/retopo_head.py` (all-quad HEAD_Base, symmetric, edge-aware smoothing of the painted relief,
+  eye openings with ring loops from the MHS3 eye template placed by the rulebook F1/F3/R1, lower-face profile curve
+  for P5/P7/P8; every value a knob).
+- Measured on v3 (q41b): P1-P6, F1 .73, F3 .43, R1 .42, N1 within tolerance; P7 / P8 move with the jaw sampling
+  (0.164-0.187 / 0.211-0.231); N2 93-105 deg. Open: the jaw underside / neck junction (staircase with horizontal
+  rows; a jaw fan fixes the staircase but leaves a junction step). The neck joins the torso later anyway.
+- Lessons: the ear-speck median filter must not touch the nose (it flattened the tip 1.6 cm); smoothing must be
+  edge-aware or it ramps the chin step into a beak; the generator carves 3D sockets wider than the painted eyes,
+  so flatten an enlarged zone round them before re-forming sockets; MJ/Hunyuan eyes were 40% too wide-set for MHS3
+  (IPD/D 1.0 vs F1 0.728) - place openings by the rules, not the paint; re-staging into the same outputs folder
+  delivered stale scripts twice - always a new folder.
+
 ## Face elements: which route (q41b)
 | Element | Object | Route | Why |
 |---|---|---|---|
