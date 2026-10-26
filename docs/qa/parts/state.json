@@ -3,7 +3,8 @@
   "head_base": {
    "skipped": false,
    "stages": {
-    "reference": "passed"
+    "reference": "passed",
+    "generate": "failed"
    }
   },
   "hair": {
@@ -83,6 +84,14 @@
    "stage": "reference",
    "result": "passed",
    "note": "Sammy override 2026-10-25: use ce6f3794 tile 2 in Hunyuan despite failed gate (mhs3 0.41, polished 0.255)"
+  },
+  {
+   "t": "2026-10-25T20:30:57",
+   "cmd": "set",
+   "part": "head_base",
+   "stage": "generate",
+   "result": "failed",
+   "note": "hy3d v1 9c5eea57: watertight 1 island 250k v/500k tris; TypeSafe gen gate fail 14/15 (front same_head 0.72 ok; ears front .45/.475 side .135 back .21; silhouette .45/.25/.405 vs .63; clean .19/.10/.305 vs .385)"
   }
  ]
 }
